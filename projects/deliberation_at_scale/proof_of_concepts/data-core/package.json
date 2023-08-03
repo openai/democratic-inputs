@@ -1,0 +1,24 @@
+{
+  "name": "@deliberation-at-scale/data-core",
+  "version": "0.0.1",
+  "description": "Core package handling all the data storage and management for the Deliberation at Scale project.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "database:migrate-prod": "drizzle-kit push:pg --config=./src/config/drizzle.ts",
+    "database:login": "supabase login",
+    "database:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/database/types.ts'"
+  },
+  "keywords": [],
+  "author": "Pepijn Verburg",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.6",
+    "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.2.1",
+    "drizzle-kit": "^0.19.12",
+    "drizzle-orm": "^0.27.2",
+    "postgres": "^3.3.5",
+    "supabase": "^1.82.6"
+  }
+}
