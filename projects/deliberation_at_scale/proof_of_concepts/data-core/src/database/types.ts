@@ -176,63 +176,92 @@ export interface Database {
           active: boolean
           created_at: string
           id: string
+          started_at: string
+          topic_id: string
           updated_at: string
         }
         Insert: {
           active?: boolean
           created_at?: string
           id?: string
+          started_at?: string
+          topic_id: string
           updated_at?: string
         }
         Update: {
           active?: boolean
           created_at?: string
           id?: string
+          started_at?: string
+          topic_id?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "rooms_topic_id_topics_id_fk"
+            columns: ["topic_id"]
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       topics: {
         Row: {
           active: boolean
+          content: string
           created_at: string
           id: string
+          original_topic_id: string | null
           type: Database["public"]["Enums"]["topicType"]
           updated_at: string
         }
         Insert: {
           active?: boolean
+          content?: string
           created_at?: string
           id?: string
+          original_topic_id?: string | null
           type?: Database["public"]["Enums"]["topicType"]
           updated_at?: string
         }
         Update: {
           active?: boolean
+          content?: string
           created_at?: string
           id?: string
+          original_topic_id?: string | null
           type?: Database["public"]["Enums"]["topicType"]
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "topics_original_topic_id_topics_id_fk"
+            columns: ["original_topic_id"]
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       users: {
         Row: {
           active: boolean
           created_at: string
           id: string
+          nick_name: string
           updated_at: string
         }
         Insert: {
           active?: boolean
           created_at?: string
           id?: string
+          nick_name?: string
           updated_at?: string
         }
         Update: {
           active?: boolean
           created_at?: string
           id?: string
+          nick_name?: string
           updated_at?: string
         }
         Relationships: []
