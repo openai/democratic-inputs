@@ -15,12 +15,14 @@ const DISCUSSIONS_TABLE_NAME = 'discussions';
 const OUTCOMES_TABLE_NAME = 'outcomes';
 const OUTCOME_SOURCES_TABLE_NAME = 'outcome_sources';
 const OPINIONS_TABLE_NAME = 'opinions';
+const CROSS_POLLINATIONS_TABLE_NAME = 'cross_pollinations';
 
 // enums
 export const topicType = pgEnum('topicType', ['original', 'remixed']);
 export const discussionType = pgEnum('discussionType', ['chat', 'voice', 'bot']);
 export const outcomeType = pgEnum('outcomeType', ['milestone', 'consensus', 'off_topic']);
 export const opinionType = pgEnum('opinionType', ['relevance_range', 'agreement_range', 'statement']);
+export const crossPollinationType = pgEnum('crossPollinationType', ['discussion', 'closing', 'afterwards']);
 
 export const topics = pgTable(TOPICS_TABLE_NAME, {
   id: generateIdField(),
@@ -68,6 +70,8 @@ export const outcomes = pgTable(OUTCOMES_TABLE_NAME, {
   id: generateIdField(),
   active: generateActiveField(),
   type: outcomeType('type').notNull().default('milestone'),
+  originalOutcomeId: uuid('original_outcome_id').references(() => outcomes.id),
+  content: text('content').notNull().default(''),
   ...generateTimestampFields(),
 });
 
@@ -84,6 +88,19 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
   type: opinionType('type').notNull().default('statement'),
   rangeValue: integer('range_value').notNull().default(0),
   statement: text('statement').notNull().default(''),
+  ...generateTimestampFields(),
+});
+
+export const crossPollinations = pgTable(CROSS_POLLINATIONS_TABLE_NAME, {
+  id: generateIdField(),
+  active: generateActiveField(),
+  type: crossPollinationType('type').notNull().default('discussion'),
+  outcomeId: uuid('outcome_id').notNull().references(() => outcomes.id),
+
+  // an outcome can be cross-pollinated to a room, participant, or user
+  roomId: uuid('room_id').references(() => discussions.id),
+  participantId: uuid('participant_id').references(() => participants.id),
+  userId: uuid('user_id').references(() => users.id),
   ...generateTimestampFields(),
 });
 
