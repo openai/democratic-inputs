@@ -26,18 +26,23 @@ export const topics = pgTable(TOPICS_TABLE_NAME, {
   id: generateIdField(),
   active: generateActiveField(),
   type: topicType('type').notNull().default('original'),
+  originalTopicId: uuid('original_topic_id').references(() => topics.id),
+  content: text('content').notNull().default(''),
   ...generateTimestampFields(),
 });
 
 export const rooms = pgTable(ROOMS_TABLE_NAME, {
   id: generateIdField(),
   active: generateActiveField(),
+  topicId: uuid('topic_id').notNull().references(() => topics.id),
+  startedAt: timestamp('started_at').notNull().defaultNow(),
   ...generateTimestampFields(),
 });
 
 export const users = pgTable(USERS_TABLE_NAME, {
   id: generateIdField(),
   active: generateActiveField(),
+  nickName: generateNickNameField(),
   ...generateTimestampFields(),
 });
 
@@ -45,7 +50,8 @@ export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
   id: generateIdField(),
   active: generateActiveField(),
   roomId: uuid('room_id').notNull().references(() => rooms.id),
-  nickName: varchar('nick_name', { length: 255 }).notNull().default('Anonymous'),
+  userId: uuid('user_id').references(() => users.id),
+  nickName: generateNickNameField(),
   ...generateTimestampFields(),
 });
 
@@ -53,7 +59,7 @@ export const discussions = pgTable(DISCUSSIONS_TABLE_NAME, {
   id: generateIdField(),
   active: generateActiveField(),
   type: discussionType('type').notNull().default('chat'),
-  participantId: uuid('participant_id').references(() => participants.id), // can be null to support bot discussions
+  participantId: uuid('participant_id').references(() => participants.id), // can be null to track bot discussions
   content: text('content').notNull().default(''),
   ...generateTimestampFields(),
 });
@@ -89,9 +95,13 @@ function generateActiveField() {
   return boolean(ACTIVE_FIELD_NAME).notNull().default(true);
 };
 
+function generateNickNameField() {
+  return varchar('nick_name', { length: 255 }).notNull().default('Anonymous');
+};
+
 function generateTimestampFields() {
   return {
-    created_at: timestamp(CREATED_AT_FIELD_NAME).notNull().defaultNow(),
-    updated_at: timestamp(UPDATED_AT_FIELD_NAME).notNull().defaultNow(),
+    createdAt: timestamp(CREATED_AT_FIELD_NAME).notNull().defaultNow(),
+    updatedAt: timestamp(UPDATED_AT_FIELD_NAME).notNull().defaultNow(),
   };
 };
