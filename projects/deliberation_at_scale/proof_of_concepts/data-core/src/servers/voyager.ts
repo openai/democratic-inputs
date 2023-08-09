@@ -4,13 +4,16 @@ import { buildHTTPExecutor } from '@graphql-tools/executor-http';
 import { schemaFromExecutor } from '@graphql-tools/wrap';
 import { stitchSchemas } from '@graphql-tools/stitch';
 import { createYoga } from 'graphql-yoga';
+import debug from 'debug';
 
 import { GRAPHQL_URL, VOYAGER_SERVER_PORT, SUPABASE_ANONYMOUS_API_KEY } from '../config/constants';
 
 const VOYAGER_PATH = '/voyager';
 const GRAPHQL_PATH = '/graphql';
+const logger = debug('voyager');
 
-async function main() {
+export async function startVoyagerServer() {
+  logger('Initializing server...');
   const expressApp = express();
   const remoteExecutor = buildHTTPExecutor({
     endpoint: GRAPHQL_URL,
@@ -33,8 +36,5 @@ async function main() {
   }));
 
   expressApp.listen(VOYAGER_SERVER_PORT);
+  logger(`Server started and is listening on port ${VOYAGER_SERVER_PORT}...`);
 }
-
-(async () => {
-  main();
-})();
