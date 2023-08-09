@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "a8f36f4c-f0eb-49d8-852c-1545e72f94fd",
+  "id": "d9a5aef7-1459-4d65-b92c-0c7ac211061a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "discussions": {
-      "name": "discussions",
+    "completions": {
+      "name": "completions",
       "schema": "",
       "columns": {
         "id": {
@@ -24,10 +24,53 @@
         },
         "type": {
           "name": "type",
-          "type": "discussionType",
+          "type": "completionType",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prompt": {
+          "name": "prompt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model": {
+          "name": "model",
+          "type": "json",
           "primaryKey": false,
           "notNull": true,
-          "default": "'chat'"
+          "default": "'{}'::json"
+        },
+        "variables": {
+          "name": "variables",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::json"
+        },
+        "target_type": {
+          "name": "target_type",
+          "type": "targetType",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "topic_id": {
+          "name": "topic_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "room_id": {
+          "name": "room_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "participant_id": {
           "name": "participant_id",
@@ -35,12 +78,41 @@
           "primaryKey": false,
           "notNull": false
         },
-        "content": {
-          "name": "content",
-          "type": "text",
+        "message_id": {
+          "name": "message_id",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true,
-          "default": "''"
+          "notNull": false
+        },
+        "outcome_id": {
+          "name": "outcome_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opinion_id": {
+          "name": "opinion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cross_pollination_id": {
+          "name": "cross_pollination_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completion_id": {
+          "name": "completion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "moderation_id": {
+          "name": "moderation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -59,12 +131,629 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "discussions_participant_id_participants_id_fk": {
-          "name": "discussions_participant_id_participants_id_fk",
-          "tableFrom": "discussions",
+        "completions_user_id_users_id_fk": {
+          "name": "completions_user_id_users_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_topic_id_topics_id_fk": {
+          "name": "completions_topic_id_topics_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "topics",
+          "columnsFrom": [
+            "topic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_room_id_rooms_id_fk": {
+          "name": "completions_room_id_rooms_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "rooms",
+          "columnsFrom": [
+            "room_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_participant_id_participants_id_fk": {
+          "name": "completions_participant_id_participants_id_fk",
+          "tableFrom": "completions",
           "tableTo": "participants",
           "columnsFrom": [
             "participant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_message_id_messages_id_fk": {
+          "name": "completions_message_id_messages_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "messages",
+          "columnsFrom": [
+            "message_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_outcome_id_outcomes_id_fk": {
+          "name": "completions_outcome_id_outcomes_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "outcomes",
+          "columnsFrom": [
+            "outcome_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_opinion_id_opinions_id_fk": {
+          "name": "completions_opinion_id_opinions_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "opinions",
+          "columnsFrom": [
+            "opinion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_cross_pollination_id_cross_pollinations_id_fk": {
+          "name": "completions_cross_pollination_id_cross_pollinations_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "cross_pollinations",
+          "columnsFrom": [
+            "cross_pollination_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_completion_id_completions_id_fk": {
+          "name": "completions_completion_id_completions_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "completions",
+          "columnsFrom": [
+            "completion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "completions_moderation_id_moderations_id_fk": {
+          "name": "completions_moderation_id_moderations_id_fk",
+          "tableFrom": "completions",
+          "tableTo": "moderations",
+          "columnsFrom": [
+            "moderation_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "cross_pollinations": {
+      "name": "cross_pollinations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "type": {
+          "name": "type",
+          "type": "crossPollinationType",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timing_type": {
+          "name": "timing_type",
+          "type": "timingType",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'during_room'"
+        },
+        "outcome_id": {
+          "name": "outcome_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "topic_id": {
+          "name": "topic_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "room_id": {
+          "name": "room_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "participant_id": {
+          "name": "participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cross_pollinations_outcome_id_outcomes_id_fk": {
+          "name": "cross_pollinations_outcome_id_outcomes_id_fk",
+          "tableFrom": "cross_pollinations",
+          "tableTo": "outcomes",
+          "columnsFrom": [
+            "outcome_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cross_pollinations_topic_id_topics_id_fk": {
+          "name": "cross_pollinations_topic_id_topics_id_fk",
+          "tableFrom": "cross_pollinations",
+          "tableTo": "topics",
+          "columnsFrom": [
+            "topic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cross_pollinations_room_id_messages_id_fk": {
+          "name": "cross_pollinations_room_id_messages_id_fk",
+          "tableFrom": "cross_pollinations",
+          "tableTo": "messages",
+          "columnsFrom": [
+            "room_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cross_pollinations_participant_id_participants_id_fk": {
+          "name": "cross_pollinations_participant_id_participants_id_fk",
+          "tableFrom": "cross_pollinations",
+          "tableTo": "participants",
+          "columnsFrom": [
+            "participant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cross_pollinations_user_id_users_id_fk": {
+          "name": "cross_pollinations_user_id_users_id_fk",
+          "tableFrom": "cross_pollinations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "messages": {
+      "name": "messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "type": {
+          "name": "type",
+          "type": "messageType",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'chat'"
+        },
+        "original_message_id": {
+          "name": "original_message_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "timing_type": {
+          "name": "timing_type",
+          "type": "timingType",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'during_room'"
+        },
+        "participant_id": {
+          "name": "participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "embeddings": {
+          "name": "embeddings",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::json"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "messages_original_message_id_messages_id_fk": {
+          "name": "messages_original_message_id_messages_id_fk",
+          "tableFrom": "messages",
+          "tableTo": "messages",
+          "columnsFrom": [
+            "original_message_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "messages_participant_id_participants_id_fk": {
+          "name": "messages_participant_id_participants_id_fk",
+          "tableFrom": "messages",
+          "tableTo": "participants",
+          "columnsFrom": [
+            "participant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "moderations": {
+      "name": "moderations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "type": {
+          "name": "type",
+          "type": "moderationType",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "statement": {
+          "name": "statement",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "target_type": {
+          "name": "target_type",
+          "type": "targetType",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "topic_id": {
+          "name": "topic_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "room_id": {
+          "name": "room_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "participant_id": {
+          "name": "participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "message_id": {
+          "name": "message_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "outcome_id": {
+          "name": "outcome_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opinion_id": {
+          "name": "opinion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cross_pollination_id": {
+          "name": "cross_pollination_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completion_id": {
+          "name": "completion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "moderation_id": {
+          "name": "moderation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "moderations_user_id_users_id_fk": {
+          "name": "moderations_user_id_users_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_topic_id_topics_id_fk": {
+          "name": "moderations_topic_id_topics_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "topics",
+          "columnsFrom": [
+            "topic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_room_id_rooms_id_fk": {
+          "name": "moderations_room_id_rooms_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "rooms",
+          "columnsFrom": [
+            "room_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_participant_id_participants_id_fk": {
+          "name": "moderations_participant_id_participants_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "participants",
+          "columnsFrom": [
+            "participant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_message_id_messages_id_fk": {
+          "name": "moderations_message_id_messages_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "messages",
+          "columnsFrom": [
+            "message_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_outcome_id_outcomes_id_fk": {
+          "name": "moderations_outcome_id_outcomes_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "outcomes",
+          "columnsFrom": [
+            "outcome_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_opinion_id_opinions_id_fk": {
+          "name": "moderations_opinion_id_opinions_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "opinions",
+          "columnsFrom": [
+            "opinion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_cross_pollination_id_cross_pollinations_id_fk": {
+          "name": "moderations_cross_pollination_id_cross_pollinations_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "cross_pollinations",
+          "columnsFrom": [
+            "cross_pollination_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_completion_id_completions_id_fk": {
+          "name": "moderations_completion_id_completions_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "completions",
+          "columnsFrom": [
+            "completion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "moderations_moderation_id_moderations_id_fk": {
+          "name": "moderations_moderation_id_moderations_id_fk",
+          "tableFrom": "moderations",
+          "tableTo": "moderations",
+          "columnsFrom": [
+            "moderation_id"
           ],
           "columnsTo": [
             "id"
@@ -152,8 +841,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "discussion_id": {
-          "name": "discussion_id",
+        "message_id": {
+          "name": "message_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -188,12 +877,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "outcome_sources_discussion_id_discussions_id_fk": {
-          "name": "outcome_sources_discussion_id_discussions_id_fk",
+        "outcome_sources_message_id_messages_id_fk": {
+          "name": "outcome_sources_message_id_messages_id_fk",
           "tableFrom": "outcome_sources",
-          "tableTo": "discussions",
+          "tableTo": "messages",
           "columnsFrom": [
-            "discussion_id"
+            "message_id"
           ],
           "columnsTo": [
             "id"
@@ -230,6 +919,19 @@
           "notNull": true,
           "default": "'milestone'"
         },
+        "original_outcome_id": {
+          "name": "original_outcome_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -246,7 +948,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "outcomes_original_outcome_id_outcomes_id_fk": {
+          "name": "outcomes_original_outcome_id_outcomes_id_fk",
+          "tableFrom": "outcomes",
+          "tableTo": "outcomes",
+          "columnsFrom": [
+            "original_outcome_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -274,12 +990,25 @@
           "primaryKey": false,
           "notNull": true
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "nick_name": {
           "name": "nick_name",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "default": "'Anonymous'"
+        },
+        "participation_score": {
+          "name": "participation_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -304,6 +1033,19 @@
           "tableTo": "rooms",
           "columnsFrom": [
             "room_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "participants_user_id_users_id_fk": {
+          "name": "participants_user_id_users_id_fk",
+          "tableFrom": "participants",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -339,8 +1081,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "started_at": {
-          "name": "started_at",
+        "starts_at": {
+          "name": "starts_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -463,6 +1205,12 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "auth_user_id": {
+          "name": "auth_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "active": {
           "name": "active",
           "type": "boolean",
@@ -476,6 +1224,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'Anonymous'"
+        },
+        "demographics": {
+          "name": "demographics",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::json"
         },
         "created_at": {
           "name": "created_at",
@@ -495,16 +1250,46 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "users_auth_user_id_unique": {
+          "name": "users_auth_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "auth_user_id"
+          ]
+        }
+      }
     }
   },
   "enums": {
-    "discussionType": {
-      "name": "discussionType",
+    "completionType": {
+      "name": "completionType",
+      "values": {
+        "gpt4": "gpt4"
+      }
+    },
+    "crossPollinationType": {
+      "name": "crossPollinationType",
+      "values": {
+        "outcome": "outcome",
+        "topic": "topic"
+      }
+    },
+    "messageType": {
+      "name": "messageType",
       "values": {
         "chat": "chat",
         "voice": "voice",
         "bot": "bot"
+      }
+    },
+    "moderationType": {
+      "name": "moderationType",
+      "values": {
+        "harrashment": "harrashment",
+        "spam": "spam",
+        "off_topic": "off_topic",
+        "other": "other"
       }
     },
     "opinionType": {
@@ -521,6 +1306,30 @@
         "milestone": "milestone",
         "consensus": "consensus",
         "off_topic": "off_topic"
+      }
+    },
+    "targetType": {
+      "name": "targetType",
+      "values": {
+        "user": "user",
+        "topic": "topic",
+        "room": "room",
+        "participant": "participant",
+        "message": "message",
+        "outcome": "outcome",
+        "opinion": "opinion",
+        "cross_pollination": "cross_pollination",
+        "completion": "completion",
+        "moderation": "moderation"
+      }
+    },
+    "timingType": {
+      "name": "timingType",
+      "values": {
+        "before_room": "before_room",
+        "during_room": "during_room",
+        "after_room": "after_room",
+        "standalone": "standalone"
       }
     },
     "topicType": {

@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1691097911085,
-      "tag": "0000_dusty_firedrake",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1691101154948,
-      "tag": "0001_conscious_justice",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1691144703252,
-      "tag": "0002_natural_solo",
+      "when": 1691573002325,
+      "tag": "0000_tough_marten_broadcloak",
       "breakpoints": true
     }
   ]
