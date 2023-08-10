@@ -1,48 +1,34 @@
-# Supabase Starter
+# Deliberation at Scale - Frontend
+![Screenshot overview](./documentation/images/basic-prototype-overview.png)
 
-This starter configures Supabase Auth to use cookies, making the user's session available throughout the entire Next.js app - Client Components, Server Components, Route Handlers, Server Actions and Middleware.
+This frontend demonstrates a basic prototype with a simple chat window where an AI facilitator occasionally summarizes the conversation to actionable and insightful outcomes.
 
-## Deploy your own
+# Installation
+Install all the dependencies:
+```
+npm run setup
+```
 
-The Vercel deployment will guide you through creating a Supabase account and project. After installation of the Supabase integration, all relevant environment variables will be set up so that the project is usable immediately after deployment 🚀
+Provision your `.env` file if you don't have it yet (this will overwrite an existing `.env` file):
+```
+npm run setup:env
+```
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&integration-ids=oac_jUduyjQgOyzev1fjrW83NYOv)
+Make sure all the environment variables are properly filled in.
 
-## How to use
+# Running in development
+To run in development:
+```
+npm run start
+```
 
-1. Create a [new Supabase project](https://database.new)
-1. Run `npx create-next-app -e with-supabase` to create a Next.js app using the Supabase Starter template
-1. Use `cd` to change into the app's directory
-1. Run `npm install` to install dependencies
-1. Rename `.env.local.example` to `.env.local` and update the values for `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
-1. Run `npm run dev` to start the local development server
+# Authentication
+This frontend works only with [Magic Links](https://supabase.com/docs/guides/auth/auth-magic-link) provided by Supabase Authentication. This makes the sign in and sign up page essentially the same page. To make sure users are also created on the first ever login you need to turn off `confirm email` in the `Authentication > Providers` page in the `Email` section.
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+![Screenshot of disabling confirm email](./documentation/images/confirm-email-off.png)
 
-### Create a Supabase client
-
-Check out the [`/app/_examples`](./app/_examples/) folder for an example of creating a Supabase client in:
-
-- [Client Components](./app/_examples/client-component/page.tsx)
-- [Server Components](./app/_examples/server-component/page.tsx)
-- [Route Handlers](./app/_examples/route-handler/route.ts)
-- [Server Actions](./app/_examples/server-action/page.tsx)
-
-### Create `todo` table and seed with data (optional)
-
-Navigate to [your project's SQL Editor](https://app.supabase.com/project/_/sql), click `New query`, paste the contents of the [init.sql](./supabase/migrations/20230618024722_init.sql) file and click `RUN`.
-
-This will create a basic `todos` table, enable Row Level Security (RLS), and write RLS policies enabling `select` and `insert` actions for `authenticated` users.
-
-To seed your `todos` table with some dummy data, run the contents of the [seed.sql](./supabase/seed.sql) file.
-
-## Feedback and issues
-
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
-
-## More Supabase examples
-
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
-- [Next.js Auth Helpers Docs](https://supabase.com/docs/guides/auth/auth-helpers/nextjs)
+# Type generation
+To make the various clients fetching data type-safe you can generate types from introspecting the database:
+```
+npm run db:generate-types
+```

@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "setup": "npm install",
+    "setup:env": "cp .env.example .env",
     "start": "ts-node ./src/index.ts",
     "start:supabase": "supabase start",
     "db:migrate": "ts-node ./src/commands/migrate.ts",

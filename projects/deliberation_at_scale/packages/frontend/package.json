@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "setup": "npm install",
-    "dev": "next dev",
+    "setup:env": "cp .env.example .env",
+    "start": "next dev -p 3200",
     "build": "next build",
-    "start": "next start",
+    "start:prod": "next start -p 3200",
     "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./types/database.ts'",
     "db:login": "supabase login"
   },
