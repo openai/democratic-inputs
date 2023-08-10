@@ -32,6 +32,7 @@
     "dotenv-cli": "7.2.1",
     "encoding": "0.1.13",
     "radash": "11.0.0",
-    "supabase": "1.83.7"
+    "supabase": "1.83.7",
+    "vercel": "31.2.3"
   }
 }

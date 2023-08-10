@@ -85,7 +85,7 @@ export default function Login() {
             setEmail(event.target.value);
           }}
         />
-        <button type="submit" className="bg-green-700 rounded px-4 py-2 text-foreground mb-2">
+        <button type="submit" className="bg-btn-background hover:bg-btn-background-hover rounded px-4 py-2 text-foreground mb-2">
           {isSending ? 'Requesting...' : 'Send magic link'}
         </button>
       </form>
