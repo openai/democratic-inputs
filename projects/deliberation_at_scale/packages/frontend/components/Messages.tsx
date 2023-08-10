@@ -64,9 +64,10 @@ export default function Messages() {
           const isToday = dayjs().isSame(createdAt, 'day');
           const formatTemplate = (isToday ? 'HH:mm:ss' : 'MMM DD, HH:mm:ss');
           const formattedCreatedAt = createdAt.format(formatTemplate);
+          const typeClassName = (type === 'bot' ? 'bg-gray-400/20' : '');
 
           return (
-            <div key={id} className="border rounded px-4 pt-2 pb-3 mb-6 hover:bg-white/30">
+            <div key={id} className={`border rounded px-4 pt-2 pb-3 mb-6 ${typeClassName}`}>
               <small className="opacity-50">{formattedCreatedAt} - {type}</small>
               <p>{content}</p>
             </div>
