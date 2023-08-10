@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import Messages from './messages'
+import Link from 'next/link';
+import Messages from './messages';
 
 export default function Login() {
   return (
@@ -54,7 +54,7 @@ export default function Login() {
         </button>
         <button
           formAction="/auth/sign-up"
-          className="border border-gray-700 rounded px-4 py-2 text-black mb-2"
+          className="border border-gray-700 rounded px-4 py-2 text-white mb-2"
         >
           Sign Up
         </button>

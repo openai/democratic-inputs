@@ -2,4 +2,6 @@
 
 # Packages
 
+# Configuring a double remote
+
 # Commit guidelines
