@@ -2,7 +2,7 @@
 <img align="left" width="100" height="100" style="margin-right: 20px;" src="./documentation/images/logo.png">
 The prototype available in this repository aims to test whether intimate, small group discussions, enhanced by scalable intra-group communication protocols, can generate valuable contributions to the wider debate about challenges facing AI.
 
-<br/>
+<br/><br/>
 
 # Packages
 | name | description                  |
