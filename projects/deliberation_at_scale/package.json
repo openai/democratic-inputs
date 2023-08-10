@@ -1,0 +1,14 @@
+{
+  "name": "@deliberation-at-scale/mono-repo",
+  "version": "0.0.1",
+  "description": "Mono-repository for the Deliberation at Scale project.",
+  "scripts": {
+    "start": "npm-run-all --parallel start:*"
+  },
+  "keywords": [],
+  "author": "Pepijn Verburg <pepijn@bmd.studio>, Lei Nelissen <lei@bmd.studio>, Jorim Theuns <jorim@dembrane.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
