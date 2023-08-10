@@ -3,14 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "setup": "npm install",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./types/database.ts'",
+    "db:login": "supabase login"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "0.7.4",
     "@supabase/supabase-js": "2.32.0",
     "autoprefixer": "10.4.14",
+    "dayjs": "1.11.9",
     "next": "13.4.13",
     "postcss": "8.4.24",
     "react": "18.2.0",
@@ -22,6 +26,9 @@
     "@types/node": "20.3.1",
     "@types/react": "18.2.12",
     "@types/react-dom": "18.2.5",
-    "encoding": "^0.1.13"
+    "dotenv-cli": "7.2.1",
+    "encoding": "0.1.13",
+    "radash": "11.0.0",
+    "supabase": "1.83.7"
   }
 }

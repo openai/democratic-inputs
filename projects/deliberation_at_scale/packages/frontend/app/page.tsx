@@ -1,13 +1,13 @@
 'use client';
 import Link from 'next/link';
 
-import LogoutButton from '@/components/LogoutButton'
 import useAuth from '@/hooks/useAuth'
-import useMessages from '@/hooks/useMessages';
+import LogoutButton from '@/components/LogoutButton'
+import Messages from '@/components/Messages';
 
 export default function Index() {
   const { user } = useAuth();
-  const { messages } = useMessages();
+  const isLoggedIn = !!user;
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -15,16 +15,14 @@ export default function Index() {
         <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm text-foreground">
           <div />
           <div>
-            {user ? (
+            {isLoggedIn && (
               <div className="flex items-center gap-4">
                 Hey, {user.email}!
                 <LogoutButton />
               </div>
-            ) : (
-              <Link
-                href="/login"
-                className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
-              >
+            )}
+            {!isLoggedIn && (
+              <Link href="/login" className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
                 Login
               </Link>
             )}
@@ -32,13 +30,14 @@ export default function Index() {
         </div>
       </nav>
 
-      <div className="animate-in flex flex-col gap-14 opacity-0 max-w-4xl px-3 py-16 lg:py-24 text-foreground">
-        {messages.map((message) => {
-          return (
-            <div key={message.id}>{message.id}</div>
-          );
-        })}
-      </div>
+      {isLoggedIn && (
+        <Messages />
+      )}
+      {!isLoggedIn && (
+        <div className="py-10 px-4 text-white">
+          <h1>Login to start deliberating</h1>
+        </div>
+      )}
     </div>
-  )
+  );
 }
