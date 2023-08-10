@@ -4,6 +4,7 @@
   "description": "Core package handling all the data storage and management for the Deliberation at Scale project.",
   "main": "dist/index.js",
   "scripts": {
+    "setup": "npm install",
     "start": "ts-node ./src/index.ts",
     "start:supabase": "supabase start",
     "db:migrate": "ts-node ./src/commands/migrate.ts",
@@ -12,8 +13,8 @@
     "db:login": "supabase login"
   },
   "keywords": [],
-  "author": "Pepijn Verburg",
-  "license": "ISC",
+  "author": "Pepijn Verburg <pepijn@bmd.studio>",
+  "license": "MIT",
   "devDependencies": {
     "@graphql-tools/executor-http": "1.0.2",
     "@graphql-tools/schema": "10.0.0",

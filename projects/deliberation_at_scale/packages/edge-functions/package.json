@@ -1,5 +1,5 @@
 {
-  "name": "@deliberation-at-scale/common",
+  "name": "@deliberation-at-scale/edge-functions",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",

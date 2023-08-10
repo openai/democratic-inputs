@@ -7,6 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Lei Nelissen <lei@bmd.studio>",
+  "license": "MIT"
 }
