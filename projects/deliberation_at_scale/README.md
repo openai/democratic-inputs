@@ -57,9 +57,3 @@ More Examples:
 - `refactor`: (refactoring production code, eg. renaming a variable)
 - `test`: (adding missing tests, refactoring tests; no production code change)
 - `chore`: (updating grunt tasks etc; no production code change)
-
-References:
-
-- https://www.conventionalcommits.org/
-- https://seesparkbox.com/foundry/semantic_commit_messages
-- http://karma-runner.github.io/1.0/dev/git-commit-msg.html
