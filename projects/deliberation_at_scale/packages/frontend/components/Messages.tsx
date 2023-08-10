@@ -12,8 +12,8 @@ export default function Messages() {
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasMessages = !isEmpty(messages);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
   };
   const sendMessage = async () => {
     const formattedMessage = message.trim();
@@ -80,7 +80,7 @@ export default function Messages() {
           sendMessage();
         }}>
           <input
-            className="w-full h-[38px] px-4 bg-inherit text-white mb-6 rounded-l-lg"
+            className="w-full h-[38px] px-4 bg-inherit text-foreground mb-6 rounded-l-lg"
             name="message"
             placeholder="Write down what you think..."
             required
@@ -90,7 +90,7 @@ export default function Messages() {
             }}
           />
           <button
-            className="h-full py-2 px-4 no-underline bg-btn-background hover:bg-btn-background-hover text-white"
+            className="h-full py-2 px-4 no-underline bg-btn-background hover:bg-btn-background-hover text-foreground"
             onClick={(event) => {
               event.preventDefault();
               sendMessage();
