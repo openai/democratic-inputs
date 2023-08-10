@@ -1,6 +1,7 @@
 'use client';
 import { isEmpty } from 'radash';
 import { useEffect, useRef, useState } from 'react';
+import dayjs from 'dayjs';
 
 import useMessages from '@/hooks/useMessages';
 import { supabase } from '@/utilities/supabase';
@@ -34,15 +35,22 @@ export default function Messages() {
 
   return (
     <div className="w-full p-10 max-w-4xl">
-      <div className="w-full h-[calc(100vh-200px)] overflow-y-scroll overflow-x-hidden animate-in flex flex-col gap-14 opacity-0 px-3 py-16 lg:py-24 text-foreground rounded-lg border m-auto">
+      <div className="w-full h-[calc(100vh-200px)] overflow-y-scroll overflow-x-hidden animate-in flex flex-col gap-6 opacity-0 px-3 py-16 lg:py-24 text-foreground rounded-lg border m-auto">
         {!hasMessages && (
           <h2>No messages</h2>
         )}
         {messages.map((message) => {
-          const { id, content } = message;
+          const { id, content, created_at } = message;
+          const createdAt = dayjs(created_at);
+          const isToday = dayjs().isSame(createdAt, 'day');
+          const formatTemplate = (isToday ? 'HH:mm:ss' : 'MMM DD, HH:mm:ss');
+          const formattedCreatedAt = createdAt.format(formatTemplate);
 
           return (
-            <div key={id}>{content}</div>
+            <div key={id} className="border rounded px-4 pt-2 pb-3">
+              <small className="opacity-50">{formattedCreatedAt}</small>
+              <p>{content}</p>
+            </div>
           );
         })}
         <div ref={messagesEndRef} />
