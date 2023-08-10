@@ -4,14 +4,42 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { supabase } from '@/utilities/supabase';
+import { isEmpty } from 'radash';
 
 export default function Login() {
   const [email, setEmail] = useState('');
+  const [isSending, setIsSending] = useState(false);
   const sendMagicLink = async () => {
-    await supabase.auth.signInWithOtp({
-      email,
-    });
-    setEmail('');
+    const formattedEmail = email.trim();
+
+    // guard: skip when email invalid
+    if (isEmpty(formattedEmail)) {
+      return;
+    }
+
+    // guard: skip when already sending
+    if (isSending) {
+      return;
+    }
+
+    setIsSending(true);
+
+    try {
+      const result = await supabase.auth.signInWithOtp({
+        email,
+      });
+      const hasError = !!result.error;
+
+      if (hasError) {
+        throw new Error(result.error.message);
+      }
+
+      setEmail('');
+    } catch (error) {
+      // TODO: handle errors
+    }
+
+    setIsSending(false);
   };
 
   return (
@@ -39,12 +67,16 @@ export default function Login() {
 
       <form
         className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
+        onSubmit={(event) => {
+          event.preventDefault();
+          sendMagicLink();
+        }}
       >
         <label className="text-md" htmlFor="email">
           Email
         </label>
         <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          className="rounded-md px-4 py-2 bg-inherit border mb-6 text-foreground"
           name="email"
           placeholder="you@example.com"
           required
@@ -53,8 +85,8 @@ export default function Login() {
             setEmail(event.target.value);
           }}
         />
-        <button onClick={sendMagicLink} className="bg-green-700 rounded px-4 py-2 text-white mb-2">
-          Get Magic Link
+        <button type="submit" className="bg-green-700 rounded px-4 py-2 text-foreground mb-2">
+          {isSending ? 'Requesting...' : 'Send magic link'}
         </button>
       </form>
     </div>

@@ -34,7 +34,7 @@ export default function Index() {
         <Messages />
       )}
       {!isLoggedIn && (
-        <div className="py-10 px-4 text-white">
+        <div className="py-10 px-4 text-foreground">
           <h1>Login to start deliberating</h1>
         </div>
       )}
