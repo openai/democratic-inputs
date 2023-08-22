@@ -1,4 +1,34 @@
 # Research log
+## 8/22/23 - Selecting and refining an intial set of policy clauses
+We have decided to stick to the sequency of participation events for our current process cycle laid out yesterday. The next phase of our current process is use the data from collective dialouge #1 around AI assistants and medical advice to generate an initial set of policy clauses, then tweak those policy clauses based on expert input before running collective dialouge #2 to refine them. The process to go from collective response data to an initial coherent set of policy clauses looks like this:
+
+![](https://i.ibb.co/s3hc061/Screen-Shot-2023-08-22-at-5-09-16-PM.png)
+
+Using conensus repsonses to four differnt prompts from collective dialouge #1, we generated an intial set of 32 policy clauses using gpt4 ([jupyter notbook here](https://colab.research.google.com/drive/1oWbk22LReXcX0iunUnK3xcPFL5yGUKF9?usp=sharing)). Out of those 32 we selected a set of 10 policy clauses which could potentially form a coherent policy:
+- Avoid advising on complex or urgent conditions: The AI should not provide advice for complex or urgent medical conditions, instead directing users to seek professional medical help.
+- Emergency Situations: In case of an emergency or life-threatening situation, the AI should immediately instruct the user to dial 911 or provide contact information for relevant emergency services.
+- Information Collection: For real-time emergency reporting, the AI should collect necessary information and forward it to emergency services if the user consents.
+- Transparency: The AI should always clarify that it's not a qualified medical professional and that the advice given is general and should not replace a consultation with a healthcare professional.
+- Mental Health Support: The AI should be equipped to handle mental health crises by suggesting the user reach out to a counselor, therapist, or helpline, and even connect them to a human crisis counselor online if necessary.
+- Uphold professional medical ethics: The AI should not diagnose fatal conditions or provide survival statistics for life-threatening diseases. Such information should be communicated by healthcare professionals in a supportive environment.
+- Non-Emergency Situations: For non-emergency medical inquiries, the AI should provide potential options based on scientific research from trusted sources, but always clarify that it is not a licensed medical professional and advise seeking help from healthcare providers.
+- Advocate for healthy lifestyle: AI should give advice on maintaining a healthy lifestyle, including diet, exercise, stress management, and sleep hygiene.
+- Assist with minor ailments: AI should provide first aid instructions, home remedies for minor symptoms, and information on minor injuries
+
+We then tweaked these clauses slightly for increased clarity and self-consistency:
+- Avoid advising on complex or urgent conditions: The AI should not provide advice for complex or urgent medical conditions, instead directing users to seek professional medical help.
+- Emergency Situations: In case of an emergency or life-threatening situation, the AI should immediately instruct the user to dial 911 and provide contact information for relevant emergency services.
+- Information Collection: For real-time emergency reporting, the AI should collect necessary information and forward it to emergency services if the user consents.
+- Transparency: The AI should always clarify that it's not a qualified medical professional and that any advice given should not replace a consultation with a healthcare professional.
+- Mental Health Support: In the case mental health crises like suicidial ideation, the AI should suggest the user reach out to a counselor, therapist, or helpline, and offer to connect them to a human crisis counselor online.
+- Uphold professional medical ethics: The AI should not diagnose fatal conditions or provide survival statistics for life-threatening diseases.
+- Non-Emergency Situations: For simple non-emergency medical inquiries, the AI should provide information based on scientific research from trusted sources, but clarify that it is not a licensed medical professional and advise seeking help from healthcare providers.
+- Advocate for healthy lifestyle: AI should give advice on maintaining a healthy lifestyle, including diet, exercise, stress management, and sleep hygiene.
+- Assist with minor ailments: AI should provide basic first aid instructions, home remedies for minor symptoms, and information on treating minor injuries.
+
+As a final step, prior to refining these policy clauses during collective dialouge #2, we will share them with some medical professionals to get their input on any tweaks that should be made based on their knowedlge of medical law and general best practices. For this cycle we will do this in a relativly informal way. In future process cyles we may develop a more principaled and repeatable approach to invovle experts at this phase of the process. 
+
+
 ## 8/21/23 - Deciding on participant scale for first end-to-end process
 We need to decide what scale of participants we want to include in phase I of our first end-to-end process. Our pre-test session involved 50 people and our live session involved 200 people. We've noticed that the summaies of bridging results, and thus the associated policies generated did not vary a ton as we scaled from N=50 async to N=200 live. This leads us to believe that scaling up to N=1000 participants during this stage of the process is not likely to significantly impact the policies it outputs, though it would inclur significant costs (another $5-10k). Our inclination at this point is proceed to phase II of our process with the goal of completing one full end-to-end cycle of he process with minimum costs, then evaluate the completed process as a whole to identify where increased scale is most justified. Our current thinking is to approach the first end-to-end cycle with the folling sequence of participation events:
 
