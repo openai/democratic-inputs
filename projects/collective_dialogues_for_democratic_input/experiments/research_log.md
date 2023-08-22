@@ -4,7 +4,7 @@ We have decided to stick to the sequency of participation events for our current
 
 ![](https://i.ibb.co/s3hc061/Screen-Shot-2023-08-22-at-5-09-16-PM.png)
 
-Using conensus repsonses to four differnt prompts from collective dialouge #1, we generated an intial set of 32 policy clauses using gpt4 ([jupyter notbook here](https://colab.research.google.com/drive/1oWbk22LReXcX0iunUnK3xcPFL5yGUKF9?usp=sharing)). Out of those 32 we selected a set of 10 policy clauses which could potentially form a coherent policy:
+Using conensus repsonses to four differnt prompts from collective dialouge #1, we generated an intial set of 32 policy clauses using gpt4 ([jupyter notbook here](https://colab.research.google.com/drive/1oWbk22LReXcX0iunUnK3xcPFL5yGUKF9?usp=sharing)). Out of those 32 we selected a set of 9 policy clauses which could potentially form a coherent policy:
 - Avoid advising on complex or urgent conditions: The AI should not provide advice for complex or urgent medical conditions, instead directing users to seek professional medical help.
 - Emergency Situations: In case of an emergency or life-threatening situation, the AI should immediately instruct the user to dial 911 or provide contact information for relevant emergency services.
 - Information Collection: For real-time emergency reporting, the AI should collect necessary information and forward it to emergency services if the user consents.
