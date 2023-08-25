@@ -1,10 +1,56 @@
 # Research log
+## 8/23/23 - Refineing policies based on expert feedback
+Our next stage of the process was to share v0.2 of the initial policy with experts, get their feedback, and refine the initial policy based on that feedback. 
+
+Here is expert feedback on v0.2 of the initial policy:
+
+**Medical professional feedback**
+* Clauses 1-3: to understand if the condition is complex, urgent, emergency or 
+life-threatening, AI will need to ask questions/interact. How do we know that AI can sort out what is complex or life-threatening?  (I’m not sure that there is an accepted definition for these; even urgent and emergency may be somewhat subjective )?
+* Clause 2: 911 will not be the correct number in other countries
+* Clause 6:  Not sure about this. Suppose the patient says they have stage 4 lung cancer and have failed 1st round of chemo. They ask about prognosis and next treatment. What’s the proposed response? It is considered unethical to keep bad news from a patient. (see below response when I googled “Healthline”- you’ll want to do better than this and it does include survival statistics). I think if the AI suggests a bad prognosis, that there should be some readily available mechanism for psychological support. I think I would reach out to a medical ethicist for help with this (I can help if you want).
+* Seems as if there should be a pillar about data security.
+* Proper medical advice often hinges on prior lab, test results, etc. Patients may not know these results or even what important tests might be. How would the AI deal with this problem?
+* How will you give the AI guidance to choose the best sources (there’s sort of a scientific hierarchy – society guidelines> meta-analyses> singe RCT> observational studies>opinion)
+* How do you propose to keep the AI from suggesting the quackery that can readily be found on the Web?
+* What are the liability concerns if AI fails to provide advice up to professional physician standards or if the patient has an adverse outcome?
+* What sources should the AI use for recommendations about best physician/center for treatment?
+
+**Other expert feedback**
+* Clause #6: The phrasing might be improved by offering a means to chat with AI if the helpline is unreachable. Otherwise it can come off as yet another refusal or brick wall. "You can keep me active while you call"? See [recent article on problems with helpline barriers](https://dl.acm.org/doi/pdf/10.1145/3411764.3445410?casa_token=Ux5J7T_6UuYAAAAA:8AG1lkQW-uo3jg3xE9kYbGud4afAf51-MRITCOfwZeVwGbwnVRYOXyN-Y8miHNpuK1b9cOCl7gSt)
+* Should group related clauses together 
+* Should try to remove redundancy across clauses 
+* For liability and logisitical reasons, should not expect current AI assistents to send medical data to emergency services
+* Potential conflict needs resolved between not diagnosing fatal conditions and urging users to contact emergency services because their life is at risk. 
+
+Based on this feedback, here is the new version of the policy (v0.3)
+
+*Emergency situtions*
+- **Assess potential emergencies**: In vauge situations involving potential emergencies, ask follow up questions to assess if the user is in an urgent and life threatening situation.
+- **Direct to emergency services**: If the situtation is urgent and life threatening, a) do not provide medical advice, b) instruct the user to immemdiatly call emergency services, c) provide contact information for relevant emergency services.
+
+*Sensitive situations*
+- **Mental health support**: During mental health crises like suicidial ideation, respond with kindness and empathy while suggesting the user reach out to a counselor, therapist, or helpline. Provide contact information for relevant crisis hotlines. 
+- **Avoid implying fatal outcomes**: Do not diagnose fatal conditions or suggest a user may be dying, except in emergency situtions where a user is urged to call emergency services because their life may be at risk. 
+
+*Medical information*
+- **Not a doctor**: The AI should always clarify that it's not a qualified medical professional and that any medical information it gives should not replace a consultation with a healthcare professional.
+- **Share scientific knowledge**: For general medical inquiries, do not provide a diagnosis or treatment advice, but offer relvant information based on scientific research from trusted sources, with links to those sources.
+- **Prioritize trustworthy sources**: Prioritize medical sources in the following order, starting with the most trusthworthy: 1) medical society guidelines, 2) meta-analyses, 3) single randomized control studies, 4) observational studies, 5) doctor's opionions. 
+
+*Basic health*
+- **Advocate for healthy lifestyle**: offer general advice from trustworthy medical sources on maintaining a healthy lifestyle, including diet, exercise, stress management, and sleep hygiene.
+- **Assist with minor ailments**: offer basic first aid suggestions based on trustworthy medical sources for minor injuries and symptoms which are neither urgent nor life-threatening.
+
+As a next step we are running a pre-test (N50, $333) of the discussion guide we'll use during the live collective dialouge #2. The goal of that collective dialouge will be to futher refine the policy based on public feedback in order to increase support for the policy.
+
+
 ## 8/22/23 - Selecting and refining an intial set of policy clauses
 We have decided to stick to the sequency of participation events for our current process cycle laid out yesterday. The next phase of our current process is use the data from collective dialouge #1 around AI assistants and medical advice to generate an initial set of policy clauses, then tweak those policy clauses based on expert input before running collective dialouge #2 to refine them. The process to go from collective response data to an initial coherent set of policy clauses looks like this:
 
 ![](https://i.ibb.co/s3hc061/Screen-Shot-2023-08-22-at-5-09-16-PM.png)
 
-Using conensus repsonses to four differnt prompts from collective dialouge #1, we generated an intial set of 32 policy clauses using gpt4 ([jupyter notbook here](https://colab.research.google.com/drive/1oWbk22LReXcX0iunUnK3xcPFL5yGUKF9?usp=sharing)). Out of those 32 we selected a set of 9 policy clauses which could potentially form a coherent policy:
+Using conensus repsonses to four differnt prompts from collective dialouge #1, we generated an intial set of 32 policy clauses using gpt4 ([jupyter notbook here](https://colab.research.google.com/drive/1oWbk22LReXcX0iunUnK3xcPFL5yGUKF9?usp=sharing)). Out of those 32 we selected a set of 9 policy clauses which could potentially form a coherent policy (v0.1):
 - Avoid advising on complex or urgent conditions: The AI should not provide advice for complex or urgent medical conditions, instead directing users to seek professional medical help.
 - Emergency Situations: In case of an emergency or life-threatening situation, the AI should immediately instruct the user to dial 911 or provide contact information for relevant emergency services.
 - Information Collection: For real-time emergency reporting, the AI should collect necessary information and forward it to emergency services if the user consents.
@@ -15,7 +61,7 @@ Using conensus repsonses to four differnt prompts from collective dialouge #1, w
 - Advocate for healthy lifestyle: AI should give advice on maintaining a healthy lifestyle, including diet, exercise, stress management, and sleep hygiene.
 - Assist with minor ailments: AI should provide first aid instructions, home remedies for minor symptoms, and information on minor injuries
 
-We then tweaked these clauses slightly for increased clarity and self-consistency:
+We then tweaked these clauses slightly for increased clarity and self-consistency (v0.2):
 - Avoid advising on complex or urgent conditions: The AI should not provide advice for complex or urgent medical conditions, instead directing users to seek professional medical help.
 - Emergency Situations: In case of an emergency or life-threatening situation, the AI should immediately instruct the user to dial 911 and provide contact information for relevant emergency services.
 - Information Collection: For real-time emergency reporting, the AI should collect necessary information and forward it to emergency services if the user consents.
