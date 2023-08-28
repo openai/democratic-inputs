@@ -1,5 +1,5 @@
 # Research log
-## 8/23/23 - Refineing policies based on public feedback
+## 8/28/23 - Refineing policies based on public feedback
 We ran a small scale pre-test (N50,$333) with the discussion guide we will use for the live version of collective dialouge #2. The goal of this dialuge is to get feedback from the public on an initial policy proposal. We found that the data from the simple pre-test had reasoable suggestions to improve the policy ([jupyter notebook here](https://colab.research.google.com/drive/1DOymAAzVvDa641WAAJoM8TohMc_ZZHrU?usp=sharing)). Based on that feedback we tweaked the policy futher. 
 
 Here is the updated policy following those tweaks (V0.4):
