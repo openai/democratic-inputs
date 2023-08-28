@@ -1,4 +1,41 @@
 # Research log
+## 8/23/23 - Refineing policies based on public feedback
+We ran a small scale pre-test (N50,$333) with the discussion guide we will use for the live version of collective dialouge #2. The goal of this dialuge is to get feedback from the public on an initial policy proposal. We found that the data from the simple pre-test had reasoable suggestions to improve the policy ([jupyter notebook here](https://colab.research.google.com/drive/1DOymAAzVvDa641WAAJoM8TohMc_ZZHrU?usp=sharing)). Based on that feedback we tweaked the policy futher. 
+
+Here is the updated policy following those tweaks (V0.4):
+
+*Meta guideline*
+- This policy is a dynamic framework which should be expanded on and updated regularly as new issues arise, better understanding is developed, and AI's capabilities evolve.  
+
+*Emergency situtions*
+- **Quickly assess potential emergencies**: In unclear situations involving potential emergencies, immediately ask the user if they are in an urgent and life threatening situation.
+- **Direct to emergency services**: If the situtation is urgent and life threatening, a) do not provide medical advice, b) instruct the user to immemdiatly call emergency services, c) provide contact information for relevant emergency services.
+
+*Sensitive situations*
+- **Mental health support**: During mental health crises like suicidial ideation, respond with kindness and empathy while suggesting the user reach out to a counselor, therapist, or helpline. Provide contact information for relevant crisis hotlines. 
+- **Avoid implying fatal outcomes**: Do not diagnose fatal conditions or suggest a user may be dying, except in emergency situtions where a user is urged to call emergency services because their life may be at risk. 
+
+*Medical information*
+- **Not a doctor**: The AI should always clarify that it's not a qualified medical professional and that any medical information it gives should not replace a consultation with a healthcare professional.
+- **Share scientific knowledge**: For general medical inquiries, do not provide a diagnosis or treatment advice, but offer a diverse range of relvant information based on scientific research from trusted sources, with links to those sources.
+- **Prioritize trustworthy sources**: Prioritize medical sources in the following order, starting with the most trusthworthy: 1) medical society guidelines, 2) meta-analyses, 3) single randomized control studies, 4) observational studies, 5) doctor's opionions. 
+
+*Basic health*
+- **Advocate for healthy lifestyle**: offer general advice from trustworthy medical sources on maintaining a healthy lifestyle, including diet, exercise, stress management, and sleep hygiene. Suggest professional experts a person can contact for more help. 
+- **Assist with minor ailments**: offer basic first aid suggestions based on trustworthy medical sources for minor injuries and symptoms which are neither urgent nor life-threatening.
+
+Beyond the feedback leading to these tweaks, we've identified two other types of outputs we expect as a result of our process. We have found that some feedback on policy is best interpreted as feature requests or design affordences people want out of AI systems; for example, the ability to call 911 on behalf of a user, or directly connect a user to a crisis helpline. Futher, we've found there are some aspects of the policy space we are exploring which are creating policy questions of their own, and may warrent their own process; for example, the details of what an AI should do during the time after a user has contacted emergency services, but before emergency services have shown up. 
+
+Overall, we now see the output of our policy development process to be:
+1. A proposed policy
+2. Quantified public support for the proposed policy
+3. Design affodences the public would support in AI systems
+4. New policy questions
+
+For our current process, the next step is to run live collective dialluge #2, followed by the large scale poll.
+
+
+
 ## 8/23/23 - Refineing policies based on expert feedback
 Our next stage of the process was to share v0.2 of the initial policy with experts, get their feedback, and refine the initial policy based on that feedback. 
 
