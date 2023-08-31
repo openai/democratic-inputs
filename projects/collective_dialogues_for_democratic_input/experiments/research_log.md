@@ -1,8 +1,31 @@
 # Research log
-## 8/29/23 - Refineing policies live based on public feedback
-We ran a live collective dialouge (N222,$3700ish) during which we got live feedback on policy V0.4, made tweaks to the policy based on that feedback to produce policy v0.5, and then measured public support for that policy (>80%).
+## 8/31/23 - Preparing for large-scale policy test
+We are now preparing to run the large-scale policy test where we will ask a large representative public to evaluate their support for the policy our process has produced. Our goal is to capture participants' *informed* evaluation of the policy. As part of this we will include the same education materials as we're given to the participants who we're part of the deliberative collective dialogues to develop the policy. However, this group will themselves be deliberating. To increase the degree to which participants evaluations are informed by similar understanding as the participants who did the deliberating, we provide them with a *citizens statement* which includes arguments provided by participants after deliberation most participants view as good (ie. they had relatively high agreement -- 70%). Here is the citizens' statement:
 
-**Here is the refined poicy (v0.5)**
+ **Citizens’ Statement on Policy v0.5** 
+
+**Reasons to support:**
+
+- *It's a good foundation for reasonable, quick assistance and has a guiding principle to always improve as information develops, issues arise, and AI evolves.*
+- *The policy focuses on making sure you're safe and well. If you're in urgent danger, it tells you to get help right away. It also helps when you're feeling really down, suggesting people you can talk to.*
+- *It provides a good, consistent framework for AI models to follow when giving medical advice. It can give information and options while not overstepping the boundaries of its capabilities, instead connecting users to medical professionals who are better equipped and educated to help.*
+- *It tries to have the AI direct people toward more trustworthy sources and has plans in place to stop the AI from giving people advice that might harm them. It is a very well-intentioned policy that is trying to do the most good and avoid doing any harm.*
+- *This policy is more thorough than some of the well-known medical sites. It achieves the basics that most people in a medical/mental crisis would benefit from.*
+
+**Reasons to not support:**
+
+- *It risks wrong information being given to people in need, putting both the users and developers at risk.*
+- *If they believe that AI should have no involvement in providing medical information or that the suggested approach does not provide sufficient protection against inaccurate or misleading information.*
+- *Some individuals might be concerned about the policy's potential impact on privacy. They might worry that the AI's involvement in sensitive topics could lead to the collection and sharing of personal information, even if the intention is to offer support and guidance.*
+- *Concern whether AI really has the capability to respond with empathy in a crisis, especially in a mental health crisis, and how trustworthy sources will actually be vetted.*
+- *The AI might be a little bit too restrained, and limited in what it can help you with because of the guidelines.*
+
+Our next step is to integrate this citizens' statement into the discussion guide which will be used in the large-scale policy test. 
+
+## 8/30/23 - Refining policies live based on public feedback
+We ran a live collective dialouge (N228,$3700ish) during which we got live feedback on policy V0.4, made tweaks to the policy based on that feedback to produce policy v0.5, and then measured public support for that policy (>80%). Data and discussion guide can be found [here](https://github.com/openai/democratic-inputs/tree/main/projects/collective_dialogues_for_democratic_input/experiments/CD2%20-%20med).
+
+**Here is the refined policy (v0.5)**
 
 *Overall guideline*
 - This policy is a dynamic framework that should be expanded on and updated regularly as new issues arise, better understanding is developed, and AI's capabilities evolve.
@@ -27,7 +50,7 @@ We ran a live collective dialouge (N222,$3700ish) during which we got live feedb
 
 
 
-## 8/28/23 - Refineing policies based on public feedback
+## 8/28/23 - Refining policies based on public feedback
 We ran a small scale pre-test (N50,$333) with the discussion guide we will use for the live version of collective dialouge #2. The goal of this dialuge is to get feedback from the public on an initial policy proposal. We found that the data from the simple pre-test had reasoable suggestions to improve the policy ([jupyter notebook here](https://colab.research.google.com/drive/1DOymAAzVvDa641WAAJoM8TohMc_ZZHrU?usp=sharing)). Based on that feedback we tweaked the policy futher. 
 
 Here is the updated policy following those tweaks (V0.4):
