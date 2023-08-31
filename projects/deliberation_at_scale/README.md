@@ -47,6 +47,9 @@ git remote set-url --add --push origin https://github.com/openai/democratic-inpu
 git remote set-url --add --push origin https://[INTERNAL_GIT_HERE].com/democratic-inputs/democratic-inputs.git
 ```
 
+### Nx Console VSCode Extension
+To make development a bit more smooth it is recommended to install the [Nx Console](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console) (when using VSCode). This extension gives you an overview of all the packages in the monorepo and gives you some shortcuts to execute various scripts.
+
 ## Semantic Commit Messages
 We are using semantic commit messages in this project. The `scope` is `deliberation-at-scale` to be able to quickly filter on all the commits applicable on this project.
 
