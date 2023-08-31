@@ -5,6 +5,8 @@ The prototype available in this repository aims to test whether intimate, small 
 <br/><br/>
 
 # Packages
+All packages in this monorepo are managed by [Nx](https://nx.dev/) to make it easy to have dependencies between them and run them in development.
+
 | name | description                  |
 |------|------------------------------|
 | [data-core](./packages/data-core/) |Package with all the data model definitions  |
@@ -12,6 +14,18 @@ The prototype available in this repository aims to test whether intimate, small 
 | [orchestrator](./packages/orchestrator/) | Manager for all the deliberations and job queue handler |
 | [edge-functions](./packages/edge-functions/) | Supabase Edge functions   |
 | [common](./packages/common/) | Shared library between packages   |
+
+# Installation
+To setup all the packages run the following command:
+```
+npm run setup
+```
+
+# Running in development
+To start all services in development:
+```
+npm run start
+```
 
 # Development guidelines
 
