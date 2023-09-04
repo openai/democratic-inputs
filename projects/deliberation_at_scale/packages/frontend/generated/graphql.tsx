@@ -2331,9 +2331,9 @@ export const ParticipantMessageFragmentDoc = gql`
 export const GetParticipantMessagesDocument = gql`
     query GetParticipantMessages($participantIds: [UUID!]) {
   messagesCollection(
-    filter: {participant_id: {in: $participantIds}}
+    filter: {active: {eq: true}, participant_id: {in: $participantIds}}
     orderBy: {created_at: AscNullsLast}
-    first: 1000
+    last: 30
   ) {
     edges {
       node {

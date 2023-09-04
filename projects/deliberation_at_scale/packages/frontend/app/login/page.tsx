@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { supabase } from '@/state/supabase';
+import { supabaseClient } from '@/state/supabase';
 import { isEmpty } from 'radash';
 
 export default function Login() {
@@ -25,7 +25,7 @@ export default function Login() {
     setIsSending(true);
 
     try {
-      const result = await supabase.auth.signInWithOtp({
+      const result = await supabaseClient.auth.signInWithOtp({
         email,
       });
       const hasError = !!result.error;

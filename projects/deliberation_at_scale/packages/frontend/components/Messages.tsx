@@ -3,11 +3,12 @@ import { isEmpty } from "radash"
 import { useEffect, useRef, useState } from "react"
 import dayjs from "dayjs"
 
-import { supabase } from "@/state/supabase"
+import { supabaseClient } from "@/state/supabase"
 import { useGetParticipantMessagesQuery } from "@/generated/graphql"
+import useRealtimeQuery from "@/hooks/useRealtimeQuery";
 
 export default function Messages() {
-  const { data: messagesData } = useGetParticipantMessagesQuery();
+  const { data: messagesData } = useRealtimeQuery(useGetParticipantMessagesQuery());
   const messages = messagesData?.messagesCollection?.edges ?? [];
   const [message, setMessage] = useState("")
   const [isSending, setIsSending] = useState(false)
@@ -32,7 +33,7 @@ export default function Messages() {
     // send the message and clear the form
     setIsSending(true)
     try {
-      const result = await supabase.from("messages").insert({
+      const result = await supabaseClient.from("messages").insert({
         content: formattedMessage,
       })
       const hasError = !!result.error

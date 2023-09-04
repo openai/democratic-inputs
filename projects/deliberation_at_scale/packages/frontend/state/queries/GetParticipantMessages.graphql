@@ -6,7 +6,7 @@ fragment ParticipantMessage on messages {
 }
 
 query GetParticipantMessages($participantIds: [UUID!]) {
-  messagesCollection(filter: { participant_id: { in: $participantIds } }, orderBy: { created_at: AscNullsLast }, first: 1000) {
+  messagesCollection(filter: { active: { eq: true }, participant_id: { in: $participantIds } }, orderBy: { created_at: AscNullsLast }, last: 30) {
     edges {
       node {
         ...ParticipantMessage

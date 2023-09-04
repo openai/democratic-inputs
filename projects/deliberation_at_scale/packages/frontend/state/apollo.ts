@@ -1,14 +1,14 @@
 import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
-import { supabase } from './supabase';
+import { supabaseClient } from './supabase';
 
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
 });
 
 const authMiddleware = setContext(async () =>{
-  const sessionData = await supabase.auth.getSession();
+  const sessionData = await supabaseClient.auth.getSession();
   const accessToken = sessionData.data.session?.access_token;
   const apiKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 

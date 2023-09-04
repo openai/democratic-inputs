@@ -1,8 +1,8 @@
-import { supabase } from "@/state/supabase";
+import { supabaseClient } from "@/state/supabase";
 
 export default function LogoutButton() {
   const logout = () => {
-    supabase.auth.signOut();
+    supabaseClient.auth.signOut();
   };
 
   return (

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { alphabetical } from "radash"
 
 import useAuth from "./useAuth"
-import { supabase } from "@/state/supabase"
+import { supabaseClient } from "@/state/supabase"
 import { Database } from "@/types/database"
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
@@ -16,7 +16,7 @@ export default function useMessages() {
     "asc"
   )
   const fetchMessages = () => {
-    supabase
+    supabaseClient
       .from("messages")
       .select("*")
       .then((messageResult) => {
@@ -47,7 +47,7 @@ export default function useMessages() {
   useEffect(() => {
     fetchMessages()
 
-    const messageInsertListener = supabase
+    const messageInsertListener = supabaseClient
       .channel("supabase_realtime")
       .on(
         "postgres_changes",
