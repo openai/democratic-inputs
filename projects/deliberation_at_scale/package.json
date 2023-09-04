@@ -2,10 +2,11 @@
   "name": "@deliberation-at-scale/mono-repo",
   "version": "0.0.1",
   "description": "Mono-repository for the Deliberation at Scale project.",
+  "private": true,
   "scripts": {
     "setup": "npm install && nx run-many -t setup",
     "test": "nx run-many -t test",
-    "start": "nx run-many -t start",
+    "start": "nx run-many --targets=start",
     "clean": "npm-run-all clean:*",
     "clean:packages": "nx run-many -t clean && lerna clean",
     "clean:git": "git clean -fXd"
