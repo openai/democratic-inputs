@@ -91,6 +91,10 @@ export const timingType = pgEnum("timingType", [
   "after_room",
   "standalone",
 ])
+export const messageVisibilityType = pgEnum("visibilityType", [
+  "public",
+  "private",
+]);
 
 export const users = pgTable(USERS_TABLE_NAME, {
   id: generateIdField(),
@@ -138,6 +142,7 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
   id: generateIdField(),
   active: generateActiveField(),
   type: messageType("type").notNull().default("chat"),
+  visibilityType: messageVisibilityType("visibility_type").notNull().default("public"),
   originalMessageId: uuid(ORIGINAL_MESSAGE_ID_FIELD_NAME).references(
     (): AnyPgColumn => messages.id
   ),
