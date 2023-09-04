@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { alphabetical } from "radash"
 
 import useAuth from "./useAuth"
-import { supabase } from "@/utilities/supabase"
+import { supabase } from "@/state/supabase"
 import { Database } from "@/types/database"
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]

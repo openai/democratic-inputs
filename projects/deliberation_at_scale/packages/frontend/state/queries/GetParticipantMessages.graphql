@@ -1,0 +1,16 @@
+fragment ParticipantMessage on messages {
+  id
+  content
+  created_at
+  type
+}
+
+query GetParticipantMessages($participantIds: [UUID!]) {
+  messagesCollection(filter: { participant_id: { in: $participantIds } }, orderBy: { created_at: AscNullsLast }, first: 1000) {
+    edges {
+      node {
+        ...ParticipantMessage
+      }
+    }
+  }
+}

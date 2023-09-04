@@ -3,11 +3,12 @@ import { isEmpty } from "radash"
 import { useEffect, useRef, useState } from "react"
 import dayjs from "dayjs"
 
-import useMessages from "@/hooks/useMessages"
-import { supabase } from "@/utilities/supabase"
+import { supabase } from "@/state/supabase"
+import { useGetParticipantMessagesQuery } from "@/generated/graphql"
 
 export default function Messages() {
-  const { messages } = useMessages()
+  const { data: messagesData } = useGetParticipantMessagesQuery();
+  const messages = messagesData?.messagesCollection?.edges ?? [];
   const [message, setMessage] = useState("")
   const [isSending, setIsSending] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -57,7 +58,7 @@ export default function Messages() {
       <div className="w-full h-[calc(50dvh-160px)] md:h-[calc(100dvh-160px)] overflow-y-scroll overflow-x-hidden animate-in flex flex-col opacity-0 px-3 pt-6 text-foreground rounded-lg border mx-auto">
         {!hasMessages && <h2 className="m-auto">No messages</h2>}
         {messages.map((message) => {
-          const { id, content, created_at, type } = message
+          const { id, content, created_at, type } = message.node ?? {};
           const createdAt = dayjs(created_at)
           const isToday = dayjs().isSame(createdAt, "day")
           const formatTemplate = isToday ? "HH:mm:ss" : "MMM DD, HH:mm:ss"

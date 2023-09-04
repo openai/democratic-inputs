@@ -1,4 +1,4 @@
-import { supabase } from "@/utilities/supabase";
+import { supabase } from "@/state/supabase";
 
 export default function LogoutButton() {
   const logout = () => {

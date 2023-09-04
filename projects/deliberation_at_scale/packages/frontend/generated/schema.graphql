@@ -1,0 +1,2724 @@
+"""A high precision floating point value represented as a string"""
+scalar BigFloat
+
+"""
+Boolean expression comparing fields on type "BigFloat"
+"""
+input BigFloatFilter {
+  eq: BigFloat
+  gt: BigFloat
+  gte: BigFloat
+  in: [BigFloat!]
+  is: FilterIs
+  lt: BigFloat
+  lte: BigFloat
+  neq: BigFloat
+}
+
+"""An arbitrary size integer represented as a string"""
+scalar BigInt
+
+"""
+Boolean expression comparing fields on type "BigInt"
+"""
+input BigIntFilter {
+  eq: BigInt
+  gt: BigInt
+  gte: BigInt
+  in: [BigInt!]
+  is: FilterIs
+  lt: BigInt
+  lte: BigInt
+  neq: BigInt
+}
+
+"""
+Boolean expression comparing fields on type "Boolean"
+"""
+input BooleanFilter {
+  eq: Boolean
+  is: FilterIs
+}
+
+"""
+An opaque string using for tracking a position in results during pagination
+"""
+scalar Cursor
+
+"""A date wihout time information"""
+scalar Date
+
+"""
+Boolean expression comparing fields on type "Date"
+"""
+input DateFilter {
+  eq: Date
+  gt: Date
+  gte: Date
+  in: [Date!]
+  is: FilterIs
+  lt: Date
+  lte: Date
+  neq: Date
+}
+
+"""A date and time"""
+scalar Datetime
+
+"""
+Boolean expression comparing fields on type "Datetime"
+"""
+input DatetimeFilter {
+  eq: Datetime
+  gt: Datetime
+  gte: Datetime
+  in: [Datetime!]
+  is: FilterIs
+  lt: Datetime
+  lte: Datetime
+  neq: Datetime
+}
+
+enum FilterIs {
+  NOT_NULL
+  NULL
+}
+
+"""
+Boolean expression comparing fields on type "Float"
+"""
+input FloatFilter {
+  eq: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  is: FilterIs
+  lt: Float
+  lte: Float
+  neq: Float
+}
+
+"""
+Boolean expression comparing fields on type "ID"
+"""
+input IDFilter {
+  eq: ID
+}
+
+"""
+Boolean expression comparing fields on type "Int"
+"""
+input IntFilter {
+  eq: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  is: FilterIs
+  lt: Int
+  lte: Int
+  neq: Int
+}
+
+"""A Javascript Object Notation value serialized as a string"""
+scalar JSON
+
+"""The root type for creating and mutating data"""
+type Mutation {
+  """Deletes zero or more records from the `completions` collection"""
+  deleteFromcompletionsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: completionsFilter
+  ): completionsDeleteResponse!
+
+  """Deletes zero or more records from the `cross_pollinations` collection"""
+  deleteFromcross_pollinationsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: cross_pollinationsFilter
+  ): cross_pollinationsDeleteResponse!
+
+  """Deletes zero or more records from the `messages` collection"""
+  deleteFrommessagesCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: messagesFilter
+  ): messagesDeleteResponse!
+
+  """Deletes zero or more records from the `moderations` collection"""
+  deleteFrommoderationsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: moderationsFilter
+  ): moderationsDeleteResponse!
+
+  """Deletes zero or more records from the `opinions` collection"""
+  deleteFromopinionsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: opinionsFilter
+  ): opinionsDeleteResponse!
+
+  """Deletes zero or more records from the `outcome_sources` collection"""
+  deleteFromoutcome_sourcesCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: outcome_sourcesFilter
+  ): outcome_sourcesDeleteResponse!
+
+  """Deletes zero or more records from the `outcomes` collection"""
+  deleteFromoutcomesCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: outcomesFilter
+  ): outcomesDeleteResponse!
+
+  """Deletes zero or more records from the `participants` collection"""
+  deleteFromparticipantsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: participantsFilter
+  ): participantsDeleteResponse!
+
+  """Deletes zero or more records from the `rooms` collection"""
+  deleteFromroomsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: roomsFilter
+  ): roomsDeleteResponse!
+
+  """Deletes zero or more records from the `topics` collection"""
+  deleteFromtopicsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: topicsFilter
+  ): topicsDeleteResponse!
+
+  """Deletes zero or more records from the `users` collection"""
+  deleteFromusersCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: usersFilter
+  ): usersDeleteResponse!
+
+  """Adds one or more `completions` records to the collection"""
+  insertIntocompletionsCollection(objects: [completionsInsertInput!]!): completionsInsertResponse
+
+  """Adds one or more `cross_pollinations` records to the collection"""
+  insertIntocross_pollinationsCollection(objects: [cross_pollinationsInsertInput!]!): cross_pollinationsInsertResponse
+
+  """Adds one or more `messages` records to the collection"""
+  insertIntomessagesCollection(objects: [messagesInsertInput!]!): messagesInsertResponse
+
+  """Adds one or more `moderations` records to the collection"""
+  insertIntomoderationsCollection(objects: [moderationsInsertInput!]!): moderationsInsertResponse
+
+  """Adds one or more `opinions` records to the collection"""
+  insertIntoopinionsCollection(objects: [opinionsInsertInput!]!): opinionsInsertResponse
+
+  """Adds one or more `outcome_sources` records to the collection"""
+  insertIntooutcome_sourcesCollection(objects: [outcome_sourcesInsertInput!]!): outcome_sourcesInsertResponse
+
+  """Adds one or more `outcomes` records to the collection"""
+  insertIntooutcomesCollection(objects: [outcomesInsertInput!]!): outcomesInsertResponse
+
+  """Adds one or more `participants` records to the collection"""
+  insertIntoparticipantsCollection(objects: [participantsInsertInput!]!): participantsInsertResponse
+
+  """Adds one or more `rooms` records to the collection"""
+  insertIntoroomsCollection(objects: [roomsInsertInput!]!): roomsInsertResponse
+
+  """Adds one or more `topics` records to the collection"""
+  insertIntotopicsCollection(objects: [topicsInsertInput!]!): topicsInsertResponse
+
+  """Adds one or more `users` records to the collection"""
+  insertIntousersCollection(objects: [usersInsertInput!]!): usersInsertResponse
+
+  """Updates zero or more records in the `completions` collection"""
+  updatecompletionsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: completionsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: completionsUpdateInput!
+  ): completionsUpdateResponse!
+
+  """Updates zero or more records in the `cross_pollinations` collection"""
+  updatecross_pollinationsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: cross_pollinationsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: cross_pollinationsUpdateInput!
+  ): cross_pollinationsUpdateResponse!
+
+  """Updates zero or more records in the `messages` collection"""
+  updatemessagesCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: messagesFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: messagesUpdateInput!
+  ): messagesUpdateResponse!
+
+  """Updates zero or more records in the `moderations` collection"""
+  updatemoderationsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: moderationsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: moderationsUpdateInput!
+  ): moderationsUpdateResponse!
+
+  """Updates zero or more records in the `opinions` collection"""
+  updateopinionsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: opinionsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: opinionsUpdateInput!
+  ): opinionsUpdateResponse!
+
+  """Updates zero or more records in the `outcome_sources` collection"""
+  updateoutcome_sourcesCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: outcome_sourcesFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: outcome_sourcesUpdateInput!
+  ): outcome_sourcesUpdateResponse!
+
+  """Updates zero or more records in the `outcomes` collection"""
+  updateoutcomesCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: outcomesFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: outcomesUpdateInput!
+  ): outcomesUpdateResponse!
+
+  """Updates zero or more records in the `participants` collection"""
+  updateparticipantsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: participantsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: participantsUpdateInput!
+  ): participantsUpdateResponse!
+
+  """Updates zero or more records in the `rooms` collection"""
+  updateroomsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: roomsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: roomsUpdateInput!
+  ): roomsUpdateResponse!
+
+  """Updates zero or more records in the `topics` collection"""
+  updatetopicsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: topicsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: topicsUpdateInput!
+  ): topicsUpdateResponse!
+
+  """Updates zero or more records in the `users` collection"""
+  updateusersCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: usersFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: usersUpdateInput!
+  ): usersUpdateResponse!
+}
+
+interface Node {
+  """Retrieves a record by `ID`"""
+  nodeId: ID!
+}
+
+"""Any type not handled by the type system"""
+scalar Opaque
+
+"""
+Boolean expression comparing fields on type "Opaque"
+"""
+input OpaqueFilter {
+  eq: Opaque
+  is: FilterIs
+}
+
+"""Defines a per-field sorting order"""
+enum OrderByDirection {
+  """Ascending order, nulls first"""
+  AscNullsFirst
+
+  """Ascending order, nulls last"""
+  AscNullsLast
+
+  """Descending order, nulls first"""
+  DescNullsFirst
+
+  """Descending order, nulls last"""
+  DescNullsLast
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+"""The root type for querying data"""
+type Query {
+  """A pagable collection of type `completions`"""
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+
+  """A pagable collection of type `cross_pollinations`"""
+  cross_pollinationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: cross_pollinationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [cross_pollinationsOrderBy!]
+  ): cross_pollinationsConnection
+
+  """A pagable collection of type `messages`"""
+  messagesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: messagesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [messagesOrderBy!]
+  ): messagesConnection
+
+  """A pagable collection of type `moderations`"""
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Retrieve a record by its `ID`"""
+  node(
+    """The record's `ID`"""
+    nodeId: ID!
+  ): Node
+
+  """A pagable collection of type `opinions`"""
+  opinionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: opinionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [opinionsOrderBy!]
+  ): opinionsConnection
+
+  """A pagable collection of type `outcome_sources`"""
+  outcome_sourcesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: outcome_sourcesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [outcome_sourcesOrderBy!]
+  ): outcome_sourcesConnection
+
+  """A pagable collection of type `outcomes`"""
+  outcomesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: outcomesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [outcomesOrderBy!]
+  ): outcomesConnection
+
+  """A pagable collection of type `participants`"""
+  participantsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: participantsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [participantsOrderBy!]
+  ): participantsConnection
+
+  """A pagable collection of type `rooms`"""
+  roomsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: roomsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [roomsOrderBy!]
+  ): roomsConnection
+
+  """A pagable collection of type `topics`"""
+  topicsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: topicsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [topicsOrderBy!]
+  ): topicsConnection
+
+  """A pagable collection of type `users`"""
+  usersCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: usersFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [usersOrderBy!]
+  ): usersConnection
+}
+
+"""
+Boolean expression comparing fields on type "String"
+"""
+input StringFilter {
+  eq: String
+  gt: String
+  gte: String
+  ilike: String
+  in: [String!]
+  iregex: String
+  is: FilterIs
+  like: String
+  lt: String
+  lte: String
+  neq: String
+  regex: String
+  startsWith: String
+}
+
+"""A time without date information"""
+scalar Time
+
+"""
+Boolean expression comparing fields on type "Time"
+"""
+input TimeFilter {
+  eq: Time
+  gt: Time
+  gte: Time
+  in: [Time!]
+  is: FilterIs
+  lt: Time
+  lte: Time
+  neq: Time
+}
+
+"""A universally unique identifier"""
+scalar UUID
+
+"""
+Boolean expression comparing fields on type "UUID"
+"""
+input UUIDFilter {
+  eq: UUID
+  in: [UUID!]
+  is: FilterIs
+  neq: UUID
+}
+
+enum completionType {
+  gpt4
+}
+
+"""
+Boolean expression comparing fields on type "completionType"
+"""
+input completionTypeFilter {
+  eq: completionType
+  in: [completionType!]
+  is: FilterIs
+  neq: completionType
+}
+
+type completions implements Node {
+  active: Boolean!
+  completion_id: UUID
+  completions: completions
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  created_at: Datetime!
+  cross_pollination_id: UUID
+  cross_pollinations: cross_pollinations
+  id: UUID!
+  message_id: UUID
+  messages: messages
+  model: JSON!
+  moderation_id: UUID
+  moderations: moderations
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  opinion_id: UUID
+  opinions: opinions
+  outcome_id: UUID
+  outcomes: outcomes
+  participant_id: UUID
+  participants: participants
+  prompt: String!
+  room_id: UUID
+  rooms: rooms
+  target_type: targetType!
+  topic_id: UUID
+  topics: topics
+  type: completionType!
+  updated_at: Datetime!
+  user_id: UUID
+  users: users
+  variables: JSON!
+}
+
+type completionsConnection {
+  edges: [completionsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type completionsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [completions!]!
+}
+
+type completionsEdge {
+  cursor: String!
+  node: completions!
+}
+
+input completionsFilter {
+  active: BooleanFilter
+  completion_id: UUIDFilter
+  created_at: DatetimeFilter
+  cross_pollination_id: UUIDFilter
+  id: UUIDFilter
+  message_id: UUIDFilter
+  moderation_id: UUIDFilter
+  nodeId: IDFilter
+  opinion_id: UUIDFilter
+  outcome_id: UUIDFilter
+  participant_id: UUIDFilter
+  prompt: StringFilter
+  room_id: UUIDFilter
+  target_type: targetTypeFilter
+  topic_id: UUIDFilter
+  type: completionTypeFilter
+  updated_at: DatetimeFilter
+  user_id: UUIDFilter
+}
+
+input completionsInsertInput {
+  active: Boolean
+  completion_id: UUID
+  created_at: Datetime
+  cross_pollination_id: UUID
+  id: UUID
+  message_id: UUID
+  model: JSON
+  moderation_id: UUID
+  opinion_id: UUID
+  outcome_id: UUID
+  participant_id: UUID
+  prompt: String
+  room_id: UUID
+  target_type: targetType
+  topic_id: UUID
+  type: completionType
+  updated_at: Datetime
+  user_id: UUID
+  variables: JSON
+}
+
+type completionsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [completions!]!
+}
+
+input completionsOrderBy {
+  active: OrderByDirection
+  completion_id: OrderByDirection
+  created_at: OrderByDirection
+  cross_pollination_id: OrderByDirection
+  id: OrderByDirection
+  message_id: OrderByDirection
+  moderation_id: OrderByDirection
+  opinion_id: OrderByDirection
+  outcome_id: OrderByDirection
+  participant_id: OrderByDirection
+  prompt: OrderByDirection
+  room_id: OrderByDirection
+  target_type: OrderByDirection
+  topic_id: OrderByDirection
+  type: OrderByDirection
+  updated_at: OrderByDirection
+  user_id: OrderByDirection
+}
+
+input completionsUpdateInput {
+  active: Boolean
+  completion_id: UUID
+  created_at: Datetime
+  cross_pollination_id: UUID
+  id: UUID
+  message_id: UUID
+  model: JSON
+  moderation_id: UUID
+  opinion_id: UUID
+  outcome_id: UUID
+  participant_id: UUID
+  prompt: String
+  room_id: UUID
+  target_type: targetType
+  topic_id: UUID
+  type: completionType
+  updated_at: Datetime
+  user_id: UUID
+  variables: JSON
+}
+
+type completionsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [completions!]!
+}
+
+enum crossPollinationType {
+  afterwards
+  closing
+  discussion
+}
+
+"""
+Boolean expression comparing fields on type "crossPollinationType"
+"""
+input crossPollinationTypeFilter {
+  eq: crossPollinationType
+  in: [crossPollinationType!]
+  is: FilterIs
+  neq: crossPollinationType
+}
+
+type cross_pollinations implements Node {
+  active: Boolean!
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  created_at: Datetime!
+  id: UUID!
+  messages: messages
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  outcome_id: UUID
+  outcomes: outcomes
+  participant_id: UUID
+  participants: participants
+  room_id: UUID
+  timing_type: timingType!
+  topic_id: UUID
+  topics: topics
+  type: crossPollinationType!
+  updated_at: Datetime!
+  user_id: UUID
+  users: users
+}
+
+type cross_pollinationsConnection {
+  edges: [cross_pollinationsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type cross_pollinationsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [cross_pollinations!]!
+}
+
+type cross_pollinationsEdge {
+  cursor: String!
+  node: cross_pollinations!
+}
+
+input cross_pollinationsFilter {
+  active: BooleanFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  nodeId: IDFilter
+  outcome_id: UUIDFilter
+  participant_id: UUIDFilter
+  room_id: UUIDFilter
+  timing_type: timingTypeFilter
+  topic_id: UUIDFilter
+  type: crossPollinationTypeFilter
+  updated_at: DatetimeFilter
+  user_id: UUIDFilter
+}
+
+input cross_pollinationsInsertInput {
+  active: Boolean
+  created_at: Datetime
+  id: UUID
+  outcome_id: UUID
+  participant_id: UUID
+  room_id: UUID
+  timing_type: timingType
+  topic_id: UUID
+  type: crossPollinationType
+  updated_at: Datetime
+  user_id: UUID
+}
+
+type cross_pollinationsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [cross_pollinations!]!
+}
+
+input cross_pollinationsOrderBy {
+  active: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  outcome_id: OrderByDirection
+  participant_id: OrderByDirection
+  room_id: OrderByDirection
+  timing_type: OrderByDirection
+  topic_id: OrderByDirection
+  type: OrderByDirection
+  updated_at: OrderByDirection
+  user_id: OrderByDirection
+}
+
+input cross_pollinationsUpdateInput {
+  active: Boolean
+  created_at: Datetime
+  id: UUID
+  outcome_id: UUID
+  participant_id: UUID
+  room_id: UUID
+  timing_type: timingType
+  topic_id: UUID
+  type: crossPollinationType
+  updated_at: Datetime
+  user_id: UUID
+}
+
+type cross_pollinationsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [cross_pollinations!]!
+}
+
+enum discussionType {
+  bot
+  chat
+  voice
+}
+
+"""
+Boolean expression comparing fields on type "discussionType"
+"""
+input discussionTypeFilter {
+  eq: discussionType
+  in: [discussionType!]
+  is: FilterIs
+  neq: discussionType
+}
+
+enum messageType {
+  bot
+  chat
+  voice
+}
+
+"""
+Boolean expression comparing fields on type "messageType"
+"""
+input messageTypeFilter {
+  eq: messageType
+  in: [messageType!]
+  is: FilterIs
+  neq: messageType
+}
+
+type messages implements Node {
+  active: Boolean!
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  content: String!
+  created_at: Datetime!
+  cross_pollinationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: cross_pollinationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [cross_pollinationsOrderBy!]
+  ): cross_pollinationsConnection
+  embeddings: JSON!
+  id: UUID!
+  messages: messages
+  messagesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: messagesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [messagesOrderBy!]
+  ): messagesConnection
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  original_message_id: UUID
+  outcome_sourcesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: outcome_sourcesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [outcome_sourcesOrderBy!]
+  ): outcome_sourcesConnection
+  participant_id: UUID
+  participants: participants
+  timing_type: timingType!
+  type: messageType!
+  updated_at: Datetime!
+}
+
+type messagesConnection {
+  edges: [messagesEdge!]!
+  pageInfo: PageInfo!
+}
+
+type messagesDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [messages!]!
+}
+
+type messagesEdge {
+  cursor: String!
+  node: messages!
+}
+
+input messagesFilter {
+  active: BooleanFilter
+  content: StringFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  nodeId: IDFilter
+  original_message_id: UUIDFilter
+  participant_id: UUIDFilter
+  timing_type: timingTypeFilter
+  type: messageTypeFilter
+  updated_at: DatetimeFilter
+}
+
+input messagesInsertInput {
+  active: Boolean
+  content: String
+  created_at: Datetime
+  embeddings: JSON
+  id: UUID
+  original_message_id: UUID
+  participant_id: UUID
+  timing_type: timingType
+  type: messageType
+  updated_at: Datetime
+}
+
+type messagesInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [messages!]!
+}
+
+input messagesOrderBy {
+  active: OrderByDirection
+  content: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  original_message_id: OrderByDirection
+  participant_id: OrderByDirection
+  timing_type: OrderByDirection
+  type: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input messagesUpdateInput {
+  active: Boolean
+  content: String
+  created_at: Datetime
+  embeddings: JSON
+  id: UUID
+  original_message_id: UUID
+  participant_id: UUID
+  timing_type: timingType
+  type: messageType
+  updated_at: Datetime
+}
+
+type messagesUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [messages!]!
+}
+
+enum moderationType {
+  harrashment
+  off_topic
+  other
+  spam
+}
+
+"""
+Boolean expression comparing fields on type "moderationType"
+"""
+input moderationTypeFilter {
+  eq: moderationType
+  in: [moderationType!]
+  is: FilterIs
+  neq: moderationType
+}
+
+type moderations implements Node {
+  active: Boolean!
+  completion_id: UUID
+  completions: completions
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  created_at: Datetime!
+  cross_pollination_id: UUID
+  cross_pollinations: cross_pollinations
+  id: UUID!
+  message_id: UUID
+  messages: messages
+  moderation_id: UUID
+  moderations: moderations
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  opinion_id: UUID
+  opinions: opinions
+  outcome_id: UUID
+  outcomes: outcomes
+  participant_id: UUID
+  participants: participants
+  room_id: UUID
+  rooms: rooms
+  statement: String!
+  target_type: targetType!
+  topic_id: UUID
+  topics: topics
+  type: moderationType!
+  updated_at: Datetime!
+  user_id: UUID
+  users: users
+}
+
+type moderationsConnection {
+  edges: [moderationsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type moderationsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [moderations!]!
+}
+
+type moderationsEdge {
+  cursor: String!
+  node: moderations!
+}
+
+input moderationsFilter {
+  active: BooleanFilter
+  completion_id: UUIDFilter
+  created_at: DatetimeFilter
+  cross_pollination_id: UUIDFilter
+  id: UUIDFilter
+  message_id: UUIDFilter
+  moderation_id: UUIDFilter
+  nodeId: IDFilter
+  opinion_id: UUIDFilter
+  outcome_id: UUIDFilter
+  participant_id: UUIDFilter
+  room_id: UUIDFilter
+  statement: StringFilter
+  target_type: targetTypeFilter
+  topic_id: UUIDFilter
+  type: moderationTypeFilter
+  updated_at: DatetimeFilter
+  user_id: UUIDFilter
+}
+
+input moderationsInsertInput {
+  active: Boolean
+  completion_id: UUID
+  created_at: Datetime
+  cross_pollination_id: UUID
+  id: UUID
+  message_id: UUID
+  moderation_id: UUID
+  opinion_id: UUID
+  outcome_id: UUID
+  participant_id: UUID
+  room_id: UUID
+  statement: String
+  target_type: targetType
+  topic_id: UUID
+  type: moderationType
+  updated_at: Datetime
+  user_id: UUID
+}
+
+type moderationsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [moderations!]!
+}
+
+input moderationsOrderBy {
+  active: OrderByDirection
+  completion_id: OrderByDirection
+  created_at: OrderByDirection
+  cross_pollination_id: OrderByDirection
+  id: OrderByDirection
+  message_id: OrderByDirection
+  moderation_id: OrderByDirection
+  opinion_id: OrderByDirection
+  outcome_id: OrderByDirection
+  participant_id: OrderByDirection
+  room_id: OrderByDirection
+  statement: OrderByDirection
+  target_type: OrderByDirection
+  topic_id: OrderByDirection
+  type: OrderByDirection
+  updated_at: OrderByDirection
+  user_id: OrderByDirection
+}
+
+input moderationsUpdateInput {
+  active: Boolean
+  completion_id: UUID
+  created_at: Datetime
+  cross_pollination_id: UUID
+  id: UUID
+  message_id: UUID
+  moderation_id: UUID
+  opinion_id: UUID
+  outcome_id: UUID
+  participant_id: UUID
+  room_id: UUID
+  statement: String
+  target_type: targetType
+  topic_id: UUID
+  type: moderationType
+  updated_at: Datetime
+  user_id: UUID
+}
+
+type moderationsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [moderations!]!
+}
+
+enum opinionType {
+  agreement_range
+  relevance_range
+  statement
+}
+
+"""
+Boolean expression comparing fields on type "opinionType"
+"""
+input opinionTypeFilter {
+  eq: opinionType
+  in: [opinionType!]
+  is: FilterIs
+  neq: opinionType
+}
+
+type opinions implements Node {
+  active: Boolean!
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  created_at: Datetime!
+  id: UUID!
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  range_value: Int!
+  statement: String!
+  type: opinionType!
+  updated_at: Datetime!
+}
+
+type opinionsConnection {
+  edges: [opinionsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type opinionsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [opinions!]!
+}
+
+type opinionsEdge {
+  cursor: String!
+  node: opinions!
+}
+
+input opinionsFilter {
+  active: BooleanFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  nodeId: IDFilter
+  range_value: IntFilter
+  statement: StringFilter
+  type: opinionTypeFilter
+  updated_at: DatetimeFilter
+}
+
+input opinionsInsertInput {
+  active: Boolean
+  created_at: Datetime
+  id: UUID
+  range_value: Int
+  statement: String
+  type: opinionType
+  updated_at: Datetime
+}
+
+type opinionsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [opinions!]!
+}
+
+input opinionsOrderBy {
+  active: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  range_value: OrderByDirection
+  statement: OrderByDirection
+  type: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input opinionsUpdateInput {
+  active: Boolean
+  created_at: Datetime
+  id: UUID
+  range_value: Int
+  statement: String
+  type: opinionType
+  updated_at: Datetime
+}
+
+type opinionsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [opinions!]!
+}
+
+enum outcomeType {
+  consensus
+  milestone
+  off_topic
+}
+
+"""
+Boolean expression comparing fields on type "outcomeType"
+"""
+input outcomeTypeFilter {
+  eq: outcomeType
+  in: [outcomeType!]
+  is: FilterIs
+  neq: outcomeType
+}
+
+type outcome_sources implements Node {
+  created_at: Datetime!
+  id: UUID!
+  message_id: UUID!
+  messages: messages!
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  outcome_id: UUID!
+  outcomes: outcomes!
+  updated_at: Datetime!
+}
+
+type outcome_sourcesConnection {
+  edges: [outcome_sourcesEdge!]!
+  pageInfo: PageInfo!
+}
+
+type outcome_sourcesDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [outcome_sources!]!
+}
+
+type outcome_sourcesEdge {
+  cursor: String!
+  node: outcome_sources!
+}
+
+input outcome_sourcesFilter {
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  message_id: UUIDFilter
+  nodeId: IDFilter
+  outcome_id: UUIDFilter
+  updated_at: DatetimeFilter
+}
+
+input outcome_sourcesInsertInput {
+  created_at: Datetime
+  id: UUID
+  message_id: UUID
+  outcome_id: UUID
+  updated_at: Datetime
+}
+
+type outcome_sourcesInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [outcome_sources!]!
+}
+
+input outcome_sourcesOrderBy {
+  created_at: OrderByDirection
+  id: OrderByDirection
+  message_id: OrderByDirection
+  outcome_id: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input outcome_sourcesUpdateInput {
+  created_at: Datetime
+  id: UUID
+  message_id: UUID
+  outcome_id: UUID
+  updated_at: Datetime
+}
+
+type outcome_sourcesUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [outcome_sources!]!
+}
+
+type outcomes implements Node {
+  active: Boolean!
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  content: String!
+  created_at: Datetime!
+  cross_pollinationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: cross_pollinationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [cross_pollinationsOrderBy!]
+  ): cross_pollinationsConnection
+  id: UUID!
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  original_outcome_id: UUID
+  outcome_sourcesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: outcome_sourcesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [outcome_sourcesOrderBy!]
+  ): outcome_sourcesConnection
+  outcomes: outcomes
+  outcomesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: outcomesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [outcomesOrderBy!]
+  ): outcomesConnection
+  type: outcomeType!
+  updated_at: Datetime!
+}
+
+type outcomesConnection {
+  edges: [outcomesEdge!]!
+  pageInfo: PageInfo!
+}
+
+type outcomesDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [outcomes!]!
+}
+
+type outcomesEdge {
+  cursor: String!
+  node: outcomes!
+}
+
+input outcomesFilter {
+  active: BooleanFilter
+  content: StringFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  nodeId: IDFilter
+  original_outcome_id: UUIDFilter
+  type: outcomeTypeFilter
+  updated_at: DatetimeFilter
+}
+
+input outcomesInsertInput {
+  active: Boolean
+  content: String
+  created_at: Datetime
+  id: UUID
+  original_outcome_id: UUID
+  type: outcomeType
+  updated_at: Datetime
+}
+
+type outcomesInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [outcomes!]!
+}
+
+input outcomesOrderBy {
+  active: OrderByDirection
+  content: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  original_outcome_id: OrderByDirection
+  type: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input outcomesUpdateInput {
+  active: Boolean
+  content: String
+  created_at: Datetime
+  id: UUID
+  original_outcome_id: UUID
+  type: outcomeType
+  updated_at: Datetime
+}
+
+type outcomesUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [outcomes!]!
+}
+
+type participants implements Node {
+  active: Boolean!
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  created_at: Datetime!
+  cross_pollinationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: cross_pollinationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [cross_pollinationsOrderBy!]
+  ): cross_pollinationsConnection
+  id: UUID!
+  messagesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: messagesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [messagesOrderBy!]
+  ): messagesConnection
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+  nick_name: String!
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  participation_score: Int!
+  room_id: UUID!
+  rooms: rooms!
+  updated_at: Datetime!
+  user_id: UUID
+  users: users
+}
+
+type participantsConnection {
+  edges: [participantsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type participantsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [participants!]!
+}
+
+type participantsEdge {
+  cursor: String!
+  node: participants!
+}
+
+input participantsFilter {
+  active: BooleanFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  nick_name: StringFilter
+  nodeId: IDFilter
+  participation_score: IntFilter
+  room_id: UUIDFilter
+  updated_at: DatetimeFilter
+  user_id: UUIDFilter
+}
+
+input participantsInsertInput {
+  active: Boolean
+  created_at: Datetime
+  id: UUID
+  nick_name: String
+  participation_score: Int
+  room_id: UUID
+  updated_at: Datetime
+  user_id: UUID
+}
+
+type participantsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [participants!]!
+}
+
+input participantsOrderBy {
+  active: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  nick_name: OrderByDirection
+  participation_score: OrderByDirection
+  room_id: OrderByDirection
+  updated_at: OrderByDirection
+  user_id: OrderByDirection
+}
+
+input participantsUpdateInput {
+  active: Boolean
+  created_at: Datetime
+  id: UUID
+  nick_name: String
+  participation_score: Int
+  room_id: UUID
+  updated_at: Datetime
+  user_id: UUID
+}
+
+type participantsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [participants!]!
+}
+
+type rooms implements Node {
+  active: Boolean!
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  created_at: Datetime!
+  id: UUID!
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  participantsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: participantsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [participantsOrderBy!]
+  ): participantsConnection
+  starts_at: Datetime!
+  topic_id: UUID!
+  topics: topics!
+  updated_at: Datetime!
+}
+
+type roomsConnection {
+  edges: [roomsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type roomsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [rooms!]!
+}
+
+type roomsEdge {
+  cursor: String!
+  node: rooms!
+}
+
+input roomsFilter {
+  active: BooleanFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  nodeId: IDFilter
+  starts_at: DatetimeFilter
+  topic_id: UUIDFilter
+  updated_at: DatetimeFilter
+}
+
+input roomsInsertInput {
+  active: Boolean
+  created_at: Datetime
+  id: UUID
+  starts_at: Datetime
+  topic_id: UUID
+  updated_at: Datetime
+}
+
+type roomsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [rooms!]!
+}
+
+input roomsOrderBy {
+  active: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  starts_at: OrderByDirection
+  topic_id: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input roomsUpdateInput {
+  active: Boolean
+  created_at: Datetime
+  id: UUID
+  starts_at: Datetime
+  topic_id: UUID
+  updated_at: Datetime
+}
+
+type roomsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [rooms!]!
+}
+
+enum targetType {
+  completion
+  cross_pollination
+  message
+  moderation
+  opinion
+  outcome
+  participant
+  room
+  topic
+  user
+}
+
+"""
+Boolean expression comparing fields on type "targetType"
+"""
+input targetTypeFilter {
+  eq: targetType
+  in: [targetType!]
+  is: FilterIs
+  neq: targetType
+}
+
+enum timingType {
+  after_room
+  before_room
+  during_room
+  standalone
+}
+
+"""
+Boolean expression comparing fields on type "timingType"
+"""
+input timingTypeFilter {
+  eq: timingType
+  in: [timingType!]
+  is: FilterIs
+  neq: timingType
+}
+
+enum topicType {
+  original
+  remixed
+}
+
+"""
+Boolean expression comparing fields on type "topicType"
+"""
+input topicTypeFilter {
+  eq: topicType
+  in: [topicType!]
+  is: FilterIs
+  neq: topicType
+}
+
+type topics implements Node {
+  active: Boolean!
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  content: String!
+  created_at: Datetime!
+  cross_pollinationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: cross_pollinationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [cross_pollinationsOrderBy!]
+  ): cross_pollinationsConnection
+  id: UUID!
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  original_topic_id: UUID
+  roomsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: roomsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [roomsOrderBy!]
+  ): roomsConnection
+  topics: topics
+  topicsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: topicsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [topicsOrderBy!]
+  ): topicsConnection
+  type: topicType!
+  updated_at: Datetime!
+}
+
+type topicsConnection {
+  edges: [topicsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type topicsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [topics!]!
+}
+
+type topicsEdge {
+  cursor: String!
+  node: topics!
+}
+
+input topicsFilter {
+  active: BooleanFilter
+  content: StringFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  nodeId: IDFilter
+  original_topic_id: UUIDFilter
+  type: topicTypeFilter
+  updated_at: DatetimeFilter
+}
+
+input topicsInsertInput {
+  active: Boolean
+  content: String
+  created_at: Datetime
+  id: UUID
+  original_topic_id: UUID
+  type: topicType
+  updated_at: Datetime
+}
+
+type topicsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [topics!]!
+}
+
+input topicsOrderBy {
+  active: OrderByDirection
+  content: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  original_topic_id: OrderByDirection
+  type: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input topicsUpdateInput {
+  active: Boolean
+  content: String
+  created_at: Datetime
+  id: UUID
+  original_topic_id: UUID
+  type: topicType
+  updated_at: Datetime
+}
+
+type topicsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [topics!]!
+}
+
+type users implements Node {
+  active: Boolean!
+  auth_user_id: UUID
+  completionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: completionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [completionsOrderBy!]
+  ): completionsConnection
+  created_at: Datetime!
+  cross_pollinationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: cross_pollinationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [cross_pollinationsOrderBy!]
+  ): cross_pollinationsConnection
+  demographics: JSON!
+  id: UUID!
+  moderationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: moderationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [moderationsOrderBy!]
+  ): moderationsConnection
+  nick_name: String!
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  participantsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: participantsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [participantsOrderBy!]
+  ): participantsConnection
+  updated_at: Datetime!
+}
+
+type usersConnection {
+  edges: [usersEdge!]!
+  pageInfo: PageInfo!
+}
+
+type usersDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [users!]!
+}
+
+type usersEdge {
+  cursor: String!
+  node: users!
+}
+
+input usersFilter {
+  active: BooleanFilter
+  auth_user_id: UUIDFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  nick_name: StringFilter
+  nodeId: IDFilter
+  updated_at: DatetimeFilter
+}
+
+input usersInsertInput {
+  active: Boolean
+  auth_user_id: UUID
+  created_at: Datetime
+  demographics: JSON
+  id: UUID
+  nick_name: String
+  updated_at: Datetime
+}
+
+type usersInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [users!]!
+}
+
+input usersOrderBy {
+  active: OrderByDirection
+  auth_user_id: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  nick_name: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input usersUpdateInput {
+  active: Boolean
+  auth_user_id: UUID
+  created_at: Datetime
+  demographics: JSON
+  id: UUID
+  nick_name: String
+  updated_at: Datetime
+}
+
+type usersUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [users!]!
+}

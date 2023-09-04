@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { supabase } from '@/utilities/supabase';
+import { supabase } from '@/state/supabase';
 import { isEmpty } from 'radash';
 
 export default function Login() {

@@ -1,4 +1,5 @@
-import './globals.css'
+import Providers from '@/components/Providers';
+import './globals.css';
 
 export const metadata = {
   title: 'Deliberation at Scale',
@@ -13,9 +14,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main className="min-h-screen bg-background flex flex-col items-center">
-          {children}
-        </main>
+        <Providers>
+          <main className="min-h-screen bg-background flex flex-col items-center">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   )
