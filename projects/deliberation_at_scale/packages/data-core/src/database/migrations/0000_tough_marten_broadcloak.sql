@@ -394,7 +394,7 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 
-COMMENT ON SCHEMA public IS e'@graphql({"inflect_names": true})';
+COMMENT ON SCHEMA public IS e'@graphql({"inflect_names": false})';
 
 DO
 $$
