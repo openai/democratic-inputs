@@ -17,7 +17,7 @@ export default function useAuth() {
     return () => {
       authListener.subscription.unsubscribe();
     }
-  }, []);
+  }, [updateUser]);
 
   return {
     user,
