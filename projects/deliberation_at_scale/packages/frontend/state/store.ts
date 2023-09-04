@@ -1,9 +1,10 @@
-import { configureStore, useDispatch } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
 const store = configureStore({
   reducer: {
-    one: oneSlice.reducer,
-    two: twoSlice.reducer,
+    // one: oneSlice.reducer,
+    // two: twoSlice.reducer,
   },
 });
 
