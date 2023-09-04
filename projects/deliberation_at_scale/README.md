@@ -21,6 +21,8 @@ To setup all the packages run the following command:
 npm run setup
 ```
 
+Now in the `data-core`, `frontend` and `orchestrator` packages you should initialize the `.env` files that are filled in by you or shared via a password manager.
+
 # Running in development
 To start all services in development:
 ```

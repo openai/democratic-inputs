@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Mono-repository for the Deliberation at Scale project.",
   "scripts": {
-    "setup": "npm install",
+    "setup": "npm install && nx run-many -t setup",
     "test": "nx run-many -t test",
     "start": "nx run-many -t start",
     "clean": "npm-run-all clean:*",
