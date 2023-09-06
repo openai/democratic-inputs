@@ -22,12 +22,12 @@ async function moderator(messages: Message[]) {
   // badLanguage(lastMessage);
   
   // CONSENSUS
-  // consensus(messages);
+  consensus(messages);
 
   // CONTRIBUTION
   const contributionCheckMessagesCount = 5; // Amount of messages that are used to compare the contribution between participants.
   const contributionMessages = (messages.length <= contributionCheckMessagesCount) ? messages : messages.slice((messages.length - contributionCheckMessagesCount - 1), messages.length - 1);
-  equalContribution(contributionMessages)
+  //equalContribution(contributionMessages)
 
 }
 

@@ -11,7 +11,7 @@ export default async function equalContribution(messages: Message[]) {
 
   const completion = await openai.chat.completions.create({
     messages: [
-      {role: 'system', content: 'Note the contribution in percentages of all participants in the format: {name: [name of participant], percentage: [percentage of contribution]}'},
+      {role: 'system', content: 'The following shows part of a discussion between three participants on the topic: "Students are not allowed to use AI technology for their exams" in the JSON format { name: {name}, message: {message}}. Note the contribution in percentages of all participants in the format: {name: [name of participant], percentage: [percentage of contribution]}'},
       ...formattedMessages,
     ],
     model: 'gpt-4',
