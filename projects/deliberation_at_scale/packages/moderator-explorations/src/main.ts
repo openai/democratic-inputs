@@ -1,37 +1,17 @@
 require("dotenv").config();
-import messages from './chats/example_chat';
-import Message from './types/message';
-import consensus from './moderators/consensus';
-import unequalContribution from './moderators/unequal-contribution';
+import OpenAI from 'openai';
 
-async function main(messages: Message[], messagesCount: number) {
-  const messagesForModeration = messages.slice(0, messagesCount);
+const openai = new OpenAI({
+  apiKey: process.env["OPENAI_API_KEY"], 
+});
 
-  moderator(messagesForModeration);
+async function main() {
+  const completion = await openai.chat.completions.create({
+    messages: [{ role: 'user', content: 'Say this is a test' }],
+    model: 'gpt-3.5-turbo',
+  });
 
-  if(messagesCount < messages.length) {
-    const nextCount = messagesCount + 1;
-    main(messages, nextCount);
-  }
+  console.log(completion.choices);
 }
 
-async function moderator(messages: Message[]) {
-
-  const lastMessage = messages[messages.length - 1];
-
-  //DIFFICULT LANGUAGE
-  //const difficultLanguageMessage = await difficultLanguage(lastMessage);
-  //console.log(difficultLanguageMessage);
-
-  // CONSENSUS
-  //const consensusMessage = await consensus(messages);
-  //console.log(consensusMessage)
-
-  //  UNEQUAL CONTRIBUTION
-  //const contributionCheckMessagesCount = 5; // Amount of messages that are used to compare the contribution between participants.
-  //const contributionMessages = (messages.length <= contributionCheckMessagesCount) ? messages : messages.slice((messages.length - contributionCheckMessagesCount - 1), messages.length - 1);
-  //unequalContribution(contributionMessages);
-
-}
-
-main(messages, 1);
+main();
