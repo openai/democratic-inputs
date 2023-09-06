@@ -1,17 +1,23 @@
 require("dotenv").config();
-import OpenAI from 'openai';
+import messages from './chats/example_chat';
+import Message from './types/message';
+import badLanguage from './moderators/bad-language';
 
-const openai = new OpenAI({
-  apiKey: process.env["OPENAI_API_KEY"], 
-});
+async function main(messages: Message[], messagesCount: number) {
+  const messagesForModeration = messages.slice(0, messagesCount);
 
-async function main() {
-  const completion = await openai.chat.completions.create({
-    messages: [{ role: 'user', content: 'Say this is a test' }],
-    model: 'gpt-3.5-turbo',
-  });
+  moderator(messagesForModeration);
 
-  console.log(completion.choices);
+  if(messagesCount < messages.length) {
+    const nextCount = messagesCount + 1;
+    main(messages, nextCount);
+  }
 }
 
-main();
+async function moderator(messages: Message[]) {
+  console.log('Run moderation for amount of messages: ', messages.length);
+  const lastMessage = messages[messages.length - 1];
+  // badLanguage(lastMessage);
+}
+
+main(messages, 1);
