@@ -20,5 +20,6 @@ export default async function badLanguage(message: Message) {
     }); 
     console.log(completion.choices[0].message);
 
+    // TODO: push moderation message to supabase.
   }
 } 
