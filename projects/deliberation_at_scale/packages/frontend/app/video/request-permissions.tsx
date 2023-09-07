@@ -1,6 +1,5 @@
 import { useLocalMedia } from '@/hooks/useLocalMedia';
 import { VideoView } from '@whereby.com/browser-sdk';
-import { useCallback, useState } from 'react';
 
 export default function RequestPermissions() {
     const { state, actions } = useLocalMedia();

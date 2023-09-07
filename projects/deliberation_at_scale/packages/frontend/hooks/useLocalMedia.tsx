@@ -35,12 +35,12 @@ export function LocalMediaProvider({ children }: PropsWithChildren) {
     const toggleCameraEnabled = useCallback((...args: Parameters<LocalMediaContext['actions']['toggleCameraEnabled']>) => {
         setActionNo((n) => n + 1);
         actions.toggleCameraEnabled(...args);
-    }, []);
+    }, [actions]);
 
     const toggleMicrophoneEnabled = useCallback((...args: Parameters<LocalMediaContext['actions']['toggleMicrophoneEnabled']>) => {
         setActionNo((n) => n + 1);
         actions.toggleMicrophoneEnabled(...args);
-    }, []);
+    }, [actions]);
 
     const context: LocalMediaContext = useMemo(() => ({
         actions: {
@@ -54,7 +54,7 @@ export function LocalMediaProvider({ children }: PropsWithChildren) {
             isVideoEnabled,
         },
         ...rest,
-    }), [actions, state, toggleCameraEnabled, toggleMicrophoneEnabled]);
+    }), [actions, state, toggleCameraEnabled, toggleMicrophoneEnabled, rest, isAudioEnabled, isVideoEnabled]);
 
     return (
         <LocalMediaContext.Provider value={context}>

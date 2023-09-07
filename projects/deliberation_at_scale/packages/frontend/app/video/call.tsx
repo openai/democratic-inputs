@@ -5,7 +5,7 @@ const ROOM_URL = "https://deliberation-at-scale.whereby.com/test-small-fe4e9a23-
 
 export default function Call() {
     const localMedia = useLocalMedia();
-    const { state, actions, components } = useRoomConnection(ROOM_URL, {
+    const { state, actions } = useRoomConnection(ROOM_URL, {
         displayName: 'TEST',
         localMediaConstraints: { audio: true, video: true, },
         localMedia,
@@ -38,13 +38,13 @@ export default function Call() {
                                                 animationDelay: `1000ms`,
                                                 ...(participant.isAudioEnabled
                                                     ? {
-                                                            border: "2px solid grey",
-                                                        }
+                                                        border: "2px solid grey",
+                                                    }
                                                     : null),
                                                 ...(!participant.isVideoEnabled
                                                     ? {
-                                                            backgroundColor: "green",
-                                                        }
+                                                        backgroundColor: "green",
+                                                    }
                                                     : null),
                                             }}
                                         >
