@@ -9,7 +9,6 @@ import {
     text,
     json,
     AnyPgColumn,
-    bigint,
 } from "drizzle-orm/pg-core";
 
 // table names to make it easy to rename them
@@ -99,7 +98,7 @@ export const messageVisibilityType = pgEnum("visibilityType", [
 
 export const users = pgTable(USERS_TABLE_NAME, {
     id: generateIdField(),
-    authUserId: bigint(AUTH_USER_ID_FIELD_NAME, { mode: 'number' }).unique(),
+    authUserId: uuid(AUTH_USER_ID_FIELD_NAME).unique(),
     active: generateActiveField(),
     nickName: generateNickNameField(),
     demographics: json("demographics").notNull().default({}),
