@@ -1,3 +1,4 @@
+'use client';
 import { useLocalMedia } from '@whereby.com/browser-sdk';
 import { createContext } from 'react';
 

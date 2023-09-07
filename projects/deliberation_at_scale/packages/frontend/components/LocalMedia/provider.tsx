@@ -1,6 +1,5 @@
+'use client';
 import { useLocalMedia as useBaseLocalMedia } from '@whereby.com/browser-sdk';
-import { PermissionState } from '@/state/slices/room';
-import { useAppSelector } from '@/state/store';
 import { PropsWithChildren, useState, useCallback, useMemo } from 'react';
 import { LocalMediaContext } from './context';
 
@@ -8,7 +7,7 @@ import { LocalMediaContext } from './context';
  * This initializes Local Media for the Whereby SDK and adds some convenience
  * functions for later use.
  */
-export function LocalMediaProvider({ children }: PropsWithChildren) {
+export default function LocalMediaProvider({ children }: PropsWithChildren) {
     // Run the base hook from the Whereby SDK
     const { actions, state, ...rest } = useBaseLocalMedia();
 
@@ -51,22 +50,4 @@ export function LocalMediaProvider({ children }: PropsWithChildren) {
             {children}
         </LocalMediaContext.Provider>
     );
-}
-
-/**
- * This Provider conditionally loads the LocalMediaProvider so that it's only
- * triggered when a flag is explicitly set to trigger permission requests to the user.
- */
-export function ConditionalLocalMediaProvider({ children }: PropsWithChildren) {
-    const permission = useAppSelector((state) => state.room.permission);
-
-    if (permission === PermissionState.REQUESTED) {
-        return (
-            <LocalMediaProvider>{children}</LocalMediaProvider>
-        );
-    } else if (permission === PermissionState.NONE) {
-        return children;
-    } else {
-        return null;
-    }
 }

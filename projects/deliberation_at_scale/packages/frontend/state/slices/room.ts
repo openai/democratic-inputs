@@ -16,8 +16,6 @@ export interface RoomState {
   permission: PermissionState;
 }
 
-export type JoinRoomAction = PayloadAction<{ roomId: string }>;
-
 const initialState: RoomState = {
     currentRoomId: null,
     permission: PermissionState.NONE,
@@ -27,20 +25,18 @@ const slice = createSlice({
     name: 'room',
     initialState,
     reducers: {
-        joinRoom: (state, action: JoinRoomAction) => {
-            const { roomId } = action.payload;
-
-            return {
-                ...state,
-                currentRoomId: roomId,
-            };
+        joinRoom: (state, action: PayloadAction<string>) => {
+            state.currentRoomId = action.payload;
+        },
+        leaveRoom: (state) => {
+            state.currentRoomId = null;
         },
         setPermissionState(state, action: PayloadAction<PermissionState>) {
             state.permission = action.payload;
-        }
+        },
     },
 });
 
 export default slice;
 
-export const { joinRoom, setPermissionState } = slice.actions;
+export const { joinRoom, leaveRoom, setPermissionState } = slice.actions;

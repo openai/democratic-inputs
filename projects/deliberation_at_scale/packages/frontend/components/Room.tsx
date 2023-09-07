@@ -1,23 +1,18 @@
 'use client';
+import { useRoomConnection } from '@/components/RoomConnection/context';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
-import { NEXT_PUBLIC_WHEREBY_SUBDOMAIN } from '@/utilities/constants';
-import { useRoomConnection } from '@whereby.com/browser-sdk';
-import { useMemo } from 'react';
 
-export default function Room({ params }: { params: { roomId: string }}) {
-    const roomUrl = useMemo(() => (
-        `https://${NEXT_PUBLIC_WHEREBY_SUBDOMAIN}/${params.roomId}`
-    ), [params.roomId]);
-
+export default function Room() {
     const localMedia = useLocalMedia();
-    const { state, components: { VideoView } } = useRoomConnection(roomUrl, {
-        displayName: 'TEST',
-        localMediaConstraints: { audio: true, video: true, },
-        localMedia,
-        logger: console,
-    });
+    const connection = useRoomConnection();
 
-    const { localParticipant, remoteParticipants, roomConnectionStatus } = state; 
+    if (!connection) {
+        return null;
+    }
+
+    const { roomConnectionStatus, localParticipant, remoteParticipants } = connection.state;
+    const { VideoView } = connection.components;
+
 
     return (
         <div>

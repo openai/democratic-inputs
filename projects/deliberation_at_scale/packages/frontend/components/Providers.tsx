@@ -4,23 +4,22 @@ import { Provider as ReduxProvider } from 'react-redux';
 
 import { apolloClient } from '@/state/apollo';
 import store from '@/state/store';
-import dynamic from 'next/dynamic';
+import ConditionalLocalMediaProvider from './LocalMedia/conditional';
+import ConditionalRoomConnectionProvider from './RoomConnection/conditional';
 
 interface Props {
   children: React.ReactNode
 }
 
-const LocalMediaProvider = dynamic(async () => (
-    (await import('@/components/LocalMedia/provider')).ConditionalLocalMediaProvider
-), { ssr: false });
-
 export default function Providers({ children }: Props) {
     return (
         <ApolloProvider client={apolloClient}>
             <ReduxProvider store={store}>
-                <LocalMediaProvider>
-                    {children}
-                </LocalMediaProvider>
+                <ConditionalLocalMediaProvider>
+                    <ConditionalRoomConnectionProvider>
+                        {children}
+                    </ConditionalRoomConnectionProvider>
+                </ConditionalLocalMediaProvider>
             </ReduxProvider>
         </ApolloProvider>
     );

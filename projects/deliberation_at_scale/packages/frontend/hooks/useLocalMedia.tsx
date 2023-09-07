@@ -3,7 +3,7 @@ import { LocalMediaContext } from '@/components/LocalMedia/context';
 import { PermissionState, setPermissionState } from '@/state/slices/room';
 import { useAppDispatch, useAppSelector } from '@/state/store';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 
 export interface UseLocalMediaOptions {
     request: boolean;
@@ -35,14 +35,16 @@ export function useLocalMedia(options: Partial<UseLocalMediaOptions> = {}) {
     const { push  } = useRouter();
     const pathname = usePathname();
 
-    if (permission === PermissionState.NONE) {
-        if (redirect) {
-            push(`/permission?redirect=${pathname}`);
-        } 
-        if (request) {
-            dispatch(setPermissionState(PermissionState.REQUESTED));
+    useEffect(() => {
+        if (permission === PermissionState.NONE) {
+            if (redirect) {
+                push(`/permission?redirect=${pathname}`);
+            } 
+            if (request) {
+                dispatch(setPermissionState(PermissionState.REQUESTED));
+            }
         }
-    }
+    }, [permission, redirect, request, dispatch, pathname, push]);
 
     // GUARD: Check that the context provider is somewhere in the tree
     if (!ctx) {
