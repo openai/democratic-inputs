@@ -4,6 +4,7 @@ import Message from './types/message';
 import badLanguage from './moderators/bad-language';
 import consensus from './moderators/consensus';
 import equalContribution from './moderators/equal-contribution';
+import difficultLanguage from './moderators/difficult-language';
 
 async function main(messages: Message[], messagesCount: number) {
   const messagesForModeration = messages.slice(0, messagesCount);
@@ -20,9 +21,12 @@ async function moderator(messages: Message[]) {
   // BAD LANGUAGE
   const lastMessage = messages[messages.length - 1];
   // badLanguage(lastMessage);
+
+  //DIFFICULT LANGUAGE
+  difficultLanguage(lastMessage);
   
   // CONSENSUS
-  consensus(messages);
+  //consensus(messages);
 
   // CONTRIBUTION
   const contributionCheckMessagesCount = 5; // Amount of messages that are used to compare the contribution between participants.

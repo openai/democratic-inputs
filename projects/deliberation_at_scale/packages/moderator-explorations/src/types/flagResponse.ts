@@ -1,5 +1,5 @@
 export default interface FlagResponse {
-    result: boolean, 
-    content: string | null,
+    flagged: boolean, 
+    reason: string | null,
   }
   
