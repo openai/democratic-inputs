@@ -119,6 +119,7 @@ export const topics = pgTable(TOPICS_TABLE_NAME, {
 export const rooms = pgTable(ROOMS_TABLE_NAME, {
   id: generateIdField(),
   active: generateActiveField(),
+  externalRoomId: text("external_room_id"),
   topicId: uuid(TOPIC_ID_FIELD_NAME)
     .notNull()
     .references(() => topics.id),
@@ -150,6 +151,7 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
   participantId: uuid(PARTICIPANT_ID_FIELD_NAME).references(
     () => participants.id
   ), // can be null to track bot messages
+  roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id), // can be null to send messages to specific participants outside of room
   content: text("content").notNull().default(""),
   embeddings: json("embeddings").notNull().default({}),
   ...generateTimestampFields(),
