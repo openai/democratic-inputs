@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '../data/database.types';
