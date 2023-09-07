@@ -9,6 +9,7 @@ import {
     text,
     json,
     AnyPgColumn,
+    bigint,
 } from "drizzle-orm/pg-core";
 
 // table names to make it easy to rename them
@@ -98,7 +99,7 @@ export const messageVisibilityType = pgEnum("visibilityType", [
 
 export const users = pgTable(USERS_TABLE_NAME, {
     id: generateIdField(),
-    authUserId: uuid(AUTH_USER_ID_FIELD_NAME).unique(),
+    authUserId: bigint(AUTH_USER_ID_FIELD_NAME, { mode: 'number' }).unique(),
     active: generateActiveField(),
     nickName: generateNickNameField(),
     demographics: json("demographics").notNull().default({}),
@@ -183,6 +184,7 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
     type: opinionType("type").notNull().default("statement"),
+    outcomeId: uuid(OUTCOME_ID_FIELD_NAME).references(() => outcomes.id),
     rangeValue: integer("range_value").notNull().default(0),
     statement: text("statement").notNull().default(""),
     ...generateTimestampFields(),
@@ -204,6 +206,7 @@ export const crossPollinations = pgTable(CROSS_POLLINATIONS_TABLE_NAME, {
         () => participants.id
     ),
     userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
+
     ...generateTimestampFields(),
 });
 
