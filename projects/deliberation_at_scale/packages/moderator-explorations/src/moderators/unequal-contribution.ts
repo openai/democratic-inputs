@@ -7,7 +7,9 @@ const openai = new OpenAI({
   apiKey: process.env["OPENAI_API_KEY"],
 });
 
-export default async function equalContribution(messages: Message[]) {
+export default async function unequalContribution(messages: Message[]) {
+
+  //TODO: Add a check whether it has been < 5 min since topic start and remove the check below
 
   //Check if all participants have contributed in the conversation
   const allContributed = await allContributedCheck(messages);
@@ -21,20 +23,18 @@ async function equalContributionCheck(messages: Message[]) {
   const formattedMessages: Array<ChatCompletionMessageParam> = messages.map((message) => ({ role: 'user', content: JSON.stringify(message) }));
 
   const completion = await openai.chat.completions.create({
-    temperature: 0.8,
+    temperature: 0.2,
     messages: [
 
       {
         role: 'user', content: `The following shows part of a transcript of a discussion between three participants. 
     The transcript is written in the following JSON format { id: id, "name": "name", "message": "message"}. 
-    Check if all participants are expressing their views equally. If an interruption is needed provide the message you would respond as a moderator. Otherwise say null.
-
-    Follow these rules:
-    - interrupt as little as possible
-    - only respond as the moderator, do not add to the conversation
-    - do not respond as if you are a participant in the conversation
     
-    Reply in the following JSON object { result: "true/false", message: "The interruption message."}
+    You are a moderator of the discussion, is everyone expressing their views equally? 
+    
+    If yes say true if no say false.
+    
+    Reply in the following JSON object { result: "boolean, true if message does not pass the check" }
     ` },
       ...formattedMessages,
     ],
@@ -42,7 +42,11 @@ async function equalContributionCheck(messages: Message[]) {
   });
 
   const contributionResult = completion.choices[0].message.content;
-  console.log('Equal contribution', messages[messages.length - 1].id, contributionResult);
+  console.log(contributionResult);
+  //const checkResult = JSON.parse(contributionResult);
+
+ 
+  //console.log('Equal contribution', messages[messages.length - 1].id, contributionResult);
 
 }
 
