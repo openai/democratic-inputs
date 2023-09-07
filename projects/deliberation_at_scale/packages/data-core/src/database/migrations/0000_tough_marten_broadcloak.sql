@@ -394,7 +394,14 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 
+
+--> CUSTOM MIGRATIONS
+
 COMMENT ON SCHEMA public IS e'@graphql({"inflect_names": false})';
+
+CREATE OR REPLACE FUNCTION public.current_user_id() RETURNS text AS $$
+    SELECT id FROM public.users WHERE auth_user_id = auth.uid();
+$$ LANGUAGE sql STABLE SECURITY DEFINER;
 
 DO
 $$
