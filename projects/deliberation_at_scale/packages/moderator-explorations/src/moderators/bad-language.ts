@@ -1,14 +1,11 @@
 import OpenAI from 'openai';
 import Message from '../types/message';
+import FlagResponse from '../types/flagResponse';
 
 const openai = new OpenAI({
   apiKey: process.env["OPENAI_API_KEY"], 
 });
 
-interface FlagResponse {
-  flagged: boolean, 
-  reason: string | null,
-}
 
 export default async function badLanguage(message: Message) {    
   const flaggedByModeration = await isFlaggedByModeration(message);
