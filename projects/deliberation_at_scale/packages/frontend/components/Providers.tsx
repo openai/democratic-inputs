@@ -10,11 +10,11 @@ interface Props {
 }
 
 export default function Providers({ children }: Props) {
-  return (
-    <ApolloProvider client={apolloClient}>
-      <ReduxProvider store={store}>
-        {children}
-      </ReduxProvider>
-    </ApolloProvider>
-  );
+    return (
+        <ApolloProvider client={apolloClient}>
+            <ReduxProvider store={store}>
+                {children}
+            </ReduxProvider>
+        </ApolloProvider>
+    );
 }

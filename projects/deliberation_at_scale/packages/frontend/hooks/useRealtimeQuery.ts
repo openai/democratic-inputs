@@ -26,198 +26,201 @@ const allTablesWildcard = '*';
 const defaultListenOperations: TableOperation[] = ['*'];
 const defaultRefetchOperations: TableOperation[] = ['INSERT', 'DELETE'];
 const defaultTableEventsLookup: TableEventsLookup = {
-  [allTablesWildcard]: {
-    listenOperations: defaultListenOperations,
-    refetchOperations: defaultRefetchOperations,
-  },
+    [allTablesWildcard]: {
+        listenOperations: defaultListenOperations,
+        refetchOperations: defaultRefetchOperations,
+    },
 };
 
 export default function useRealtimeQuery<DataType>(queryResult: QueryResult<DataType>, options?: UseNestedLiveQueryOptions): QueryResult<DataType> {
-  const {
-    channelName = 'supabase_realtime',
-    schemaName = 'public',
-    tableEventsLookup = defaultTableEventsLookup,
-    maxNestedDepth = 9999,
-  } = options ?? {};
-  const { data, loading, refetch } = queryResult;
+    const {
+        channelName = 'supabase_realtime',
+        schemaName = 'public',
+        tableEventsLookup = defaultTableEventsLookup,
+        maxNestedDepth = 9999,
+    } = options ?? {};
+    const { data, loading, refetch } = queryResult;
 
-  useEffect(() => {
+    useEffect(() => {
 
-    // guard: skip subscriptions when loading
-    if (loading) {
-      return;
-    }
+        // guard: skip subscriptions when loading
+        if (loading) {
+            return;
+        }
 
-    const subscription = supabaseClient.channel(channelName);
-    const candidateRowIdsLookup: Record<string, string[]> = {};
-    const extractCandidateNodes = (node: any, depth: number) => {
-      const typeName = node?.__typename;
-      const id = node?.id;
-      const isTrackableNode = !!typeName && !!id;
+        const subscription = supabaseClient.channel(channelName);
+        const candidateRowIdsLookup: Record<string, string[]> = {};
+        const extractCandidateNodes = (node: any, depth: number) => {
+            const typeName = node?.__typename;
+            const id = node?.id;
+            const isTrackableNode = !!typeName && !!id;
 
-      // guard: skip when depth is too high
-      if (depth > maxNestedDepth) {
-        return;
-      }
+            // guard: skip when depth is too high
+            if (depth > maxNestedDepth) {
+                return;
+            }
 
-      // only if node is trackable by ID and typename add to the pool
-      if (isTrackableNode) {
-        candidateRowIdsLookup[typeName] = [
-          ...(candidateRowIdsLookup[typeName] ?? []),
-          id,
-        ];
-      }
+            // only if node is trackable by ID and typename add to the pool
+            if (isTrackableNode) {
+                candidateRowIdsLookup[typeName] = [
+                    ...(candidateRowIdsLookup[typeName] ?? []),
+                    id,
+                ];
+            }
 
-      // attempt to track its properties / entries
-      if (Array.isArray(node)) {
-        node.map((nodeEntry) => {
-          extractCandidateNodes(nodeEntry, depth + 1);
+            // attempt to track its properties / entries
+            if (Array.isArray(node)) {
+                node.map((nodeEntry) => {
+                    extractCandidateNodes(nodeEntry, depth + 1);
+                });
+            } else if (typeof node == 'object') {
+                Object.values(node).map((nodeValue) => {
+                    extractCandidateNodes(nodeValue, depth + 1);
+                });
+            }
+        };
+        // eslint-disable-next-line no-prototype-builtins
+        const shouldHandleAllTables = tableEventsLookup.hasOwnProperty(allTablesWildcard);
+        const getTableEvents = (tableName: string) => {
+            return tableEventsLookup?.[tableName] ?? tableEventsLookup?.[allTablesWildcard];
+        };
+        const shouldHandleOperation = (operationsKey: 'listenOperations' | 'refetchOperations', defaultOperations: TableOperation[], operation: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, tableName: string) => {
+            const tableEvents = getTableEvents(tableName);
+            // eslint-disable-next-line no-prototype-builtins
+            const shouldHandleTable = tableEventsLookup.hasOwnProperty(tableName) || shouldHandleAllTables;
+            const operations = tableEvents?.[operationsKey] ?? defaultOperations;
+            const shouldHandleOperation = operations.includes(operation) || operations.includes('*');
+
+            return shouldHandleTable && shouldHandleOperation;
+        };
+        const shouldListenToOperation = (operation: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, tableName: string) => {
+            return shouldHandleOperation('listenOperations', defaultListenOperations, operation, tableName);
+        };
+        const shouldRefetchOnOperation = (operation: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, tableName: string) => {
+            return shouldHandleOperation('refetchOperations', defaultRefetchOperations, operation, tableName);
+        };
+
+        // extract all the candidate nodes grouped by table name (aka typename)
+        // this creates a lookup table to be handled for all the subscriptions looking like:
+        // { messages: ['id1', 'id2', 'id3', 'id4'], topics: ['id1', 'id2'] }
+        extractCandidateNodes(data, 0);
+
+        const tableNames = Object.keys(candidateRowIdsLookup);
+        let isTrackingSomething = false;
+
+        tableNames.map((tableName) => {
+            const tableEvents = getTableEvents(tableName);
+            const rowIds = candidateRowIdsLookup[tableName];
+            const joinedRowIds = rowIds.join(',');
+            const nodeIdFilter = `id=in.(${joinedRowIds})`;
+
+            // check which operations we should listen to
+            const shouldListenToAllOperations = shouldListenToOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, tableName);
+            const shouldListenToInsert = shouldListenToOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, tableName) || shouldListenToAllOperations;
+            const shouldListenToUpdate = shouldListenToOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, tableName) || shouldListenToAllOperations;
+            const shouldListenToDelete = shouldListenToOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE, tableName) || shouldListenToAllOperations;
+            const shouldListenToNone = !shouldListenToInsert && !shouldListenToUpdate && !shouldListenToDelete;
+
+            // check on which operations the whole query needs to be rerun
+            const shouldRefetchOnAllOperations = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, tableName);
+            const shouldRefetchOnInsert = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, tableName) || shouldRefetchOnAllOperations;
+            const shouldRefetchOnUpdate = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, tableName) || shouldRefetchOnAllOperations;
+            const shouldRefectchOnDelete = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE, tableName) || shouldRefetchOnAllOperations;
+
+            // any filters on the operation listeners that might be overriden or can be the default
+            const listenFilters = tableEvents?.listenFilters;
+            const insertFilter = listenFilters?.INSERT ?? undefined;
+            const updateFilter = listenFilters?.UPDATE ?? nodeIdFilter;
+            const deleteFilter = listenFilters?.DELETE ?? nodeIdFilter;
+
+            const getNodeId = (rowId: string) => {
+                return `${tableName}:${rowId}`;
+            };
+
+            // guard: skip this entry when none should be tracked
+            if (shouldListenToNone) {
+                return;
+            }
+
+            // if not set this skips the subscription
+            isTrackingSomething = true;
+
+            if (shouldListenToInsert) {
+                subscription.on(
+                    "postgres_changes",
+                    {
+                        event: "INSERT",
+                        schema: schemaName,
+                        table: tableName,
+                        filter: insertFilter,
+                    },
+                    () => {
+                        if (shouldRefetchOnInsert) {
+                            refetch();
+                        }
+                    }
+                );
+            }
+
+            if (shouldListenToUpdate) {
+                subscription.on(
+                    "postgres_changes",
+                    {
+                        event: "UPDATE",
+                        schema: schemaName,
+                        table: tableName,
+                        filter: updateFilter,
+                    },
+                    (payload) => {
+                        const newRow = payload.new;
+                        const fragment = `
+                            fragment UpdatedRow on ${tableName} {
+                                ${Object.keys(newRow).join(", ")}
+                            }
+                        `;
+
+                        apolloClient.cache.writeFragment({
+                            id: getNodeId(newRow?.id),
+                            data: newRow,
+                            fragment: gql(fragment),
+                        });
+                        if (shouldRefetchOnUpdate) {
+                            refetch();
+                        }
+                    }
+                );
+            }
+
+            if (shouldListenToDelete) {
+                subscription.on(
+                    "postgres_changes",
+                    {
+                        event: "DELETE",
+                        schema: schemaName,
+                        table: tableName,
+                        filter: deleteFilter,
+                    },
+                    () => {
+                        if (shouldRefectchOnDelete) {
+                            refetch();
+                        }
+                    }
+                );
+            }
         });
-      } else if (typeof node == 'object') {
-        Object.values(node).map((nodeValue) => {
-          extractCandidateNodes(nodeValue, depth + 1);
-        });
-      }
-    };
-    const shouldHandleAllTables = tableEventsLookup.hasOwnProperty(allTablesWildcard);
-    const getTableEvents = (tableName: string) => {
-      return tableEventsLookup?.[tableName] ?? tableEventsLookup?.[allTablesWildcard];
-    };
-    const shouldHandleOperation = (operationsKey: 'listenOperations' | 'refetchOperations', defaultOperations: TableOperation[], operation: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, tableName: string) => {
-      const tableEvents = getTableEvents(tableName);
-      const shouldHandleTable = tableEventsLookup.hasOwnProperty(tableName) || shouldHandleAllTables;
-      const operations = tableEvents?.[operationsKey] ?? defaultOperations;
-      const shouldHandleOperation = operations.includes(operation) || operations.includes('*');
 
-      return shouldHandleTable && shouldHandleOperation;
-    };
-    const shouldListenToOperation = (operation: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, tableName: string) => {
-      return shouldHandleOperation('listenOperations', defaultListenOperations, operation, tableName);
-    };
-    const shouldRefetchOnOperation = (operation: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, tableName: string) => {
-      return shouldHandleOperation('refetchOperations', defaultRefetchOperations, operation, tableName);
-    };
+        // guard: only subscribe when anything is tracked
+        if (!isTrackingSomething) {
+            return;
+        }
 
-    // extract all the candidate nodes grouped by table name (aka typename)
-    // this creates a lookup table to be handled for all the subscriptions looking like:
-    // { messages: ['id1', 'id2', 'id3', 'id4'], topics: ['id1', 'id2'] }
-    extractCandidateNodes(data, 0);
+        // subscribe to all the requested tables and nodes
+        subscription.subscribe();
 
-    const tableNames = Object.keys(candidateRowIdsLookup);
-    let isTrackingSomething = false;
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, [channelName, data, loading, maxNestedDepth, refetch, schemaName, tableEventsLookup]);
 
-    tableNames.map((tableName) => {
-      const tableEvents = getTableEvents(tableName);
-      const rowIds = candidateRowIdsLookup[tableName];
-      const joinedRowIds = rowIds.join(',');
-      const nodeIdFilter = `id=in.(${joinedRowIds})`;
-
-      // check which operations we should listen to
-      const shouldListenToAllOperations = shouldListenToOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, tableName);
-      const shouldListenToInsert = shouldListenToOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, tableName) || shouldListenToAllOperations;
-      const shouldListenToUpdate = shouldListenToOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, tableName) || shouldListenToAllOperations;
-      const shouldListenToDelete = shouldListenToOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE, tableName) || shouldListenToAllOperations;
-      const shouldListenToNone = !shouldListenToInsert && !shouldListenToUpdate && !shouldListenToDelete;
-
-      // check on which operations the whole query needs to be rerun
-      const shouldRefetchOnAllOperations = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, tableName);
-      const shouldRefetchOnInsert = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, tableName) || shouldRefetchOnAllOperations;
-      const shouldRefetchOnUpdate = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, tableName) || shouldRefetchOnAllOperations;
-      const shouldRefectchOnDelete = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE, tableName) || shouldRefetchOnAllOperations;
-
-      // any filters on the operation listeners that might be overriden or can be the default
-      const listenFilters = tableEvents?.listenFilters;
-      const insertFilter = listenFilters?.INSERT ?? undefined;
-      const updateFilter = listenFilters?.UPDATE ?? nodeIdFilter;
-      const deleteFilter = listenFilters?.DELETE ?? nodeIdFilter;
-
-      const getNodeId = (rowId: string) => {
-        return `${tableName}:${rowId}`;
-      };
-
-      // guard: skip this entry when none should be tracked
-      if (shouldListenToNone) {
-        return;
-      }
-
-      // if not set this skips the subscription
-      isTrackingSomething = true;
-
-      if (shouldListenToInsert) {
-        subscription.on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: schemaName,
-            table: tableName,
-            filter: insertFilter,
-          },
-          (payload) => {
-            if (shouldRefetchOnInsert) {
-              refetch();
-            }
-          }
-        )
-      }
-
-      if (shouldListenToUpdate) {
-        subscription.on(
-          "postgres_changes",
-          {
-            event: "UPDATE",
-            schema: schemaName,
-            table: tableName,
-            filter: updateFilter,
-          },
-          (payload) => {
-            const newRow = payload.new;
-            const fragment = `
-              fragment UpdatedRow on ${tableName} {
-                ${Object.keys(newRow).join(", ")}
-              }
-            `;
-            apolloClient.cache.writeFragment({
-              id: getNodeId(newRow?.id),
-              data: newRow,
-              fragment: gql(fragment),
-            });
-            if (shouldRefetchOnUpdate) {
-              refetch();
-            }
-          }
-        )
-      }
-
-      if (shouldListenToDelete) {
-        subscription.on(
-          "postgres_changes",
-          {
-            event: "DELETE",
-            schema: schemaName,
-            table: tableName,
-            filter: deleteFilter,
-          },
-          (payload) => {
-            if (shouldRefectchOnDelete) {
-              refetch();
-            }
-          }
-        )
-      }
-    });
-
-    // guard: only subscribe when anything is tracked
-    if (!isTrackingSomething) {
-      return;
-    }
-
-    // subscribe to all the requested tables and nodes
-    subscription.subscribe();
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [JSON.stringify(data), loading, refetch]);
-
-  return queryResult;
+    return queryResult;
 }

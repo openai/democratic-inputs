@@ -2361,13 +2361,13 @@ export const GetParticipantMessagesDocument = gql`
  * });
  */
 export function useGetParticipantMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
+}
 export function useGetParticipantMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
-        }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useLazyQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
+}
 export type GetParticipantMessagesQueryHookResult = ReturnType<typeof useGetParticipantMessagesQuery>;
 export type GetParticipantMessagesLazyQueryHookResult = ReturnType<typeof useGetParticipantMessagesLazyQuery>;
 export type GetParticipantMessagesQueryResult = Apollo.QueryResult<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>;

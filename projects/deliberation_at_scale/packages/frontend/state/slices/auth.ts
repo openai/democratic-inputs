@@ -4,13 +4,13 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {
-    increment: (state) => {
-      return state;
+    name: 'auth',
+    initialState,
+    reducers: {
+        increment: (state) => {
+            return state;
+        },
     },
-  },
 });
 
 export default slice;

@@ -14,22 +14,22 @@ export interface JoinRoomAction {
 }
 
 const initialState: RoomState = {
-  currentRoomId: null,
+    currentRoomId: null,
 };
 
 const slice = createSlice({
-  name: 'room',
-  initialState,
-  reducers: {
-    joinRoom: (state, action: JoinRoomAction) => {
-      const { roomId } = action.payload;
+    name: 'room',
+    initialState,
+    reducers: {
+        joinRoom: (state, action: JoinRoomAction) => {
+            const { roomId } = action.payload;
 
-      return {
-        ...state,
-        currentRoomId: roomId,
-      };
+            return {
+                ...state,
+                currentRoomId: roomId,
+            };
+        },
     },
-  },
 });
 
 export default slice;

@@ -9,25 +9,25 @@ export interface UseMessagesOptions {
 }
 
 export default function useMessages(options?: UseMessagesOptions) {
-  const { roomId } = options ?? {};
-  const insertFilter = (!!roomId ? `room_id=eq.(${roomId})` : undefined);
-  const { data: messagesData } = useRealtimeQuery(useGetParticipantMessagesQuery(), {
-    tableEventsLookup: {
-      messages: {
-        listenFilters: {
-          INSERT: insertFilter,
+    const { roomId } = options ?? {};
+    const insertFilter = (roomId ? `room_id=eq.(${roomId})` : undefined);
+    const { data: messagesData } = useRealtimeQuery(useGetParticipantMessagesQuery(), {
+        tableEventsLookup: {
+            messages: {
+                listenFilters: {
+                    INSERT: insertFilter,
+                },
+            },
         },
-      },
-    },
-  });
-  const messages = messagesData?.messagesCollection?.edges ?? [];
-  const orderedMessages = alphabetical(
-    messages,
-    (message) => message.node.created_at,
-    "asc"
-  )
+    });
+    const messages = messagesData?.messagesCollection?.edges ?? [];
+    const orderedMessages = alphabetical(
+        messages,
+        (message) => message.node.created_at,
+        "asc"
+    );
 
-  return {
-    messages: orderedMessages,
-  };
+    return {
+        messages: orderedMessages,
+    };
 }
