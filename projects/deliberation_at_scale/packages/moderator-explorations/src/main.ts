@@ -3,7 +3,7 @@ import messages from './chats/example_chat';
 import Message from './types/message';
 import badLanguage from './moderators/bad-language';
 import consensus from './moderators/consensus';
-import equalContribution from './moderators/equal-contribution';
+import unequalContribution from './moderators/unequal-contribution';
 import difficultLanguage from './moderators/difficult-language';
 
 async function main(messages: Message[], messagesCount: number) {
@@ -23,15 +23,16 @@ async function moderator(messages: Message[]) {
   // badLanguage(lastMessage);
 
   //DIFFICULT LANGUAGE
-  difficultLanguage(lastMessage);
+  //difficultLanguage(lastMessage);
   
   // CONSENSUS
-  //consensus(messages);
+  //const consensusMessage = await consensus(messages);
+  //console.log(consensusMessage)
 
-  // CONTRIBUTION
+  //  UNEQUAL CONTRIBUTION
   const contributionCheckMessagesCount = 5; // Amount of messages that are used to compare the contribution between participants.
   const contributionMessages = (messages.length <= contributionCheckMessagesCount) ? messages : messages.slice((messages.length - contributionCheckMessagesCount - 1), messages.length - 1);
-  //equalContribution(contributionMessages)
+  //unequalContribution(contributionMessages);
 
 }
 
