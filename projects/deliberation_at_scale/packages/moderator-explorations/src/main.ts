@@ -20,7 +20,8 @@ async function main(messages: Message[], messagesCount: number) {
 async function moderator(messages: Message[]) {
   // BAD LANGUAGE
   const lastMessage = messages[messages.length - 1];
-  // badLanguage(lastMessage);
+  const badLanguageMessage = await badLanguage(lastMessage);
+  console.log(badLanguageMessage);
 
   //DIFFICULT LANGUAGE
   //difficultLanguage(lastMessage);
