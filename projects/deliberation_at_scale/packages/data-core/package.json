@@ -11,7 +11,8 @@
     "db:migrate": "ts-node ./src/commands/migrate.ts",
     "db:generate-migrations": "drizzle-kit generate:pg",
     "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/database/types.ts'",
-    "db:login": "supabase login"
+    "db:login": "supabase login",
+    "lint": "eslint src --ext .ts"
   },
   "keywords": [],
   "author": "Pepijn Verburg <pepijn@bmd.studio>",

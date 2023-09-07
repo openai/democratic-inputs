@@ -13,28 +13,28 @@ const GRAPHQL_PATH = '/graphql';
 const logger = debug('voyager');
 
 export async function startVoyagerServer() {
-  logger('Initializing server...');
-  const expressApp = express();
-  const remoteExecutor = buildHTTPExecutor({
-    endpoint: GRAPHQL_URL,
-    headers: {
-      apiKey: SUPABASE_ANONYMOUS_API_KEY,
-    },
-  });
-  const dataCoreSchema = {
-    schema: await schemaFromExecutor(remoteExecutor),
-    executor: remoteExecutor
-  };
-  const gatewaySchema = stitchSchemas({
-    subschemas: [dataCoreSchema]
-  });
-  const gatewayServer = createYoga({ schema: gatewaySchema });
+    logger('Initializing server...');
+    const expressApp = express();
+    const remoteExecutor = buildHTTPExecutor({
+        endpoint: GRAPHQL_URL,
+        headers: {
+            apiKey: SUPABASE_ANONYMOUS_API_KEY,
+        },
+    });
+    const dataCoreSchema = {
+        schema: await schemaFromExecutor(remoteExecutor),
+        executor: remoteExecutor
+    };
+    const gatewaySchema = stitchSchemas({
+        subschemas: [dataCoreSchema]
+    });
+    const gatewayServer = createYoga({ schema: gatewaySchema });
 
-  expressApp.use(GRAPHQL_PATH, gatewayServer);
-  expressApp.use(VOYAGER_PATH, voyagerMiddleware({
-    endpointUrl: GRAPHQL_PATH,
-  }));
+    expressApp.use(GRAPHQL_PATH, gatewayServer);
+    expressApp.use(VOYAGER_PATH, voyagerMiddleware({
+        endpointUrl: GRAPHQL_PATH,
+    }));
 
-  expressApp.listen(VOYAGER_SERVER_PORT);
-  logger(`Server started and is listening on port ${VOYAGER_SERVER_PORT}...`);
+    expressApp.listen(VOYAGER_SERVER_PORT);
+    logger(`Server started and is listening on port ${VOYAGER_SERVER_PORT}...`);
 }
