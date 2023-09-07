@@ -11,15 +11,20 @@ export default async function badLanguage(message: Message) {
   const flaggedByModeration = await isFlaggedByModeration(message);
   const flaggedByRules = await isFlaggedByDiscussionRules(message);
 
-  if(flaggedByModeration.flagged || flaggedByRules?.flagged) {
-    const reasons = [flaggedByRules?.reason, flaggedByModeration.reason].filter(Boolean).join(', '); // Join reasons if not null
+  if(flaggedByModeration.result || flaggedByRules?.flagged) {
+    const reasons = [flaggedByRules?.reason, flaggedByModeration.content].filter(Boolean).join(', '); // Join reasons if not null
     const moderationMessage = await writeModerationResponse(reasons);
-    console.log('Message\t\t', message.id, '\nReason\t\t', reasons, '\nModeration\t', moderationMessage, '\n');
+    //console.log('Message\t\t', message.id, '\nReason\t\t', reasons, '\nModeration\t', moderationMessage, '\n');
 
-    // TODO: add rate limiting how often a moderation message can be send
+    const outputMessage = {
+      type: "badLanguage",
+      message: moderationMessage
+    }
+
+    return outputMessage;
   }
 
-  return;
+  return null;
 } 
 
 // Use OpenAI's moderation API endpoint
@@ -33,8 +38,8 @@ async function isFlaggedByModeration(message: Message): Promise<FlagResponse> {
   const flaggedCategories = Object.keys(Object.fromEntries(Object.entries(allCategories).filter(([,v]) => v)));
 
   const result = {
-    flagged: moderationResponse.results[0].flagged, 
-    reason: (flaggedCategories.length === 0) ? null : `Message violates categories: ${flaggedCategories.join(', ')}`,
+    result: moderationResponse.results[0].flagged, 
+    content: (flaggedCategories.length === 0) ? null : `Message violates categories: ${flaggedCategories.join(', ')}`,
   }
 
   return result;
@@ -49,7 +54,7 @@ async function isFlaggedByDiscussionRules(message: Message): Promise<{flagged: b
           - Messages may not contain insults to humans or other entities
           - Messages may not describe physical attributes of humans
 
-          return a JSON object in the following format: { flagged: {boolean, true if message does not pass rules}, reason: {short reason why a message is flagged. Null if flagged is false} }
+          return a JSON object in the following format: { result: {boolean, true if message does not pass rules}, content: {short reason why a message is flagged. Null if flagged is false} }
 
           Message: ${message.content}
         `},      
