@@ -9,10 +9,17 @@ const openai = new OpenAI({
 export default async function difficultLanguage(message: Message) {
     const flaggedByRules = await isFlaggedByRules(message);
 
-    if(flaggedByRules.flagged) {
-        const moderationMessage = await writeModerationResponse(flaggedByRules?.reason);
-        console.log('Message\t\t', message.id, '\nReason\t\t', flaggedByRules?.reason, '\nModeration\t', moderationMessage, '\n');
-    }
+    if(flaggedByRules.result) {
+        const moderationMessage = await writeModerationResponse(flaggedByRules?.content);
+        //console.log('Message\t\t', message.id, '\nReason\t\t', flaggedByRules?.reason, '\nModeration\t', moderationMessage, '\n');
+
+        const outputMessage = {
+          type: "difficultLanguage",
+          message: moderationMessage
+        }
+    
+        return outputMessage;
+    } return null;
 }
 
 async function isFlaggedByRules(message: Message) {
@@ -24,7 +31,7 @@ async function isFlaggedByRules(message: Message) {
             You are the supervisor of a discussion. You must make sure that the message below adheres to the following rules: 
             - Messages may not contain words that are difficult to understand
   
-            return a JSON object in the following format: { flagged: {true if message does not pass rules, false if the message does pass the rules}, reason: {short reason why a message is flagged. Null if flagged is false} }
+            return a JSON object in the following format: { result: {true if message does not pass rules, false if the message does pass the rules}, content: {short reason why a message is flagged. Null if flagged is false} }
 
             Only return the JSON object, do not add any other information.
 
