@@ -1,11 +1,16 @@
+'use client';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
-import { VideoView, useRoomConnection } from '@whereby.com/browser-sdk';
+import { NEXT_PUBLIC_WHEREBY_SUBDOMAIN } from '@/utilities/constants';
+import { useRoomConnection } from '@whereby.com/browser-sdk';
+import { useMemo } from 'react';
 
-const ROOM_URL = "https://deliberation-at-scale.whereby.com/test-small-fe4e9a23-b20e-4d8d-b455-3512bb162943";
+export default function Room({ params }: { params: { roomId: string }}) {
+    const roomUrl = useMemo(() => (
+        `https://${NEXT_PUBLIC_WHEREBY_SUBDOMAIN}/${params.roomId}`
+    ), [params.roomId]);
 
-export default function Call() {
     const localMedia = useLocalMedia();
-    const { state, actions } = useRoomConnection(ROOM_URL, {
+    const { state, components: { VideoView } } = useRoomConnection(roomUrl, {
         displayName: 'TEST',
         localMediaConstraints: { audio: true, video: true, },
         localMedia,
@@ -17,14 +22,14 @@ export default function Call() {
     return (
         <div>
             {roomConnectionStatus === "connecting" && <span>Connecting...</span>}
-            {roomConnectionStatus === "room_locked" && (
+            {/* {roomConnectionStatus === "room_locked" && (
                 <div style={{ color: "red" }}>
                     <span>Room locked, please knock....</span>
                     <button onClick={() => actions.knock()}>Knock</button>
                 </div>
             )}
             {roomConnectionStatus === "knocking" && <span>Knocking...</span>}
-            {roomConnectionStatus === "rejected" && <span>Rejected :(</span>}
+            {roomConnectionStatus === "rejected" && <span>Rejected :(</span>} */}
             {roomConnectionStatus === "connected" && (
                 <>
                     <div className="container">

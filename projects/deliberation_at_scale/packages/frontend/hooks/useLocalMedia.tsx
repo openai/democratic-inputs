@@ -1,77 +1,52 @@
-import { useLocalMedia as useBaseLocalMedia } from '@whereby.com/browser-sdk';
-import { PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react';
+'use client';
+import { LocalMediaContext } from '@/components/LocalMedia/context';
+import { PermissionState, setPermissionState } from '@/state/slices/room';
+import { useAppDispatch, useAppSelector } from '@/state/store';
+import { usePathname, useRouter } from 'next/navigation';
+import { useContext, useMemo } from 'react';
 
-export type LocalMediaRef = ReturnType<typeof useBaseLocalMedia>;
-
-export interface LocalMediaContext extends LocalMediaRef {
-    state: LocalMediaRef['state'] & {
-        isVideoEnabled: boolean;
-        isAudioEnabled: boolean;
-    }
+export interface UseLocalMediaOptions {
+    request: boolean;
+    redirect: boolean;
 }
 
-/** This stores the context for any local media */
-export const LocalMediaContext = createContext<LocalMediaContext | null>(null);
+const defaultUseLocalMediaOptions: UseLocalMediaOptions = {
+    /** When permissions are missing, request them from the user. This will
+     * cause a permission pop up to appear in the user's browser. */
+    request: true,
+    /** When permissions are missing,  */
+    redirect: true,
+};
 
 /**
- * This initializes Local Media for the Whereby SDK and adds some convenience
- * functions for later use.
+ * Retrieve the state for the current local media. 
  */
-export function LocalMediaProvider({ children }: PropsWithChildren) {
-    // Run the base hook from the Whereby SDK
-    const { actions, state, ...rest } = useBaseLocalMedia();
+export function useLocalMedia(): LocalMediaContext;
+export function useLocalMedia(options: Partial<UseLocalMediaOptions>): LocalMediaContext | { state: null, actions: null, _ref: null };
+export function useLocalMedia(options: Partial<UseLocalMediaOptions> = {}) {
+    const { 
+        request, redirect,
+    } = useMemo(() => Object.assign({}, defaultUseLocalMediaOptions, options), [options]);
 
-    // Keep some arbitrary state that we can change so that we can force a re-render
-    const [, setActionNo] = useState(0);
-
-    // Check whether both the audio and video are currently enabled. Since the
-    // SDK switches this directly using the mediaDevices API, we have no way of
-    // detecting when this changes. Hence, we use the above state to force state
-    // updates so that is connected.
-    const isAudioEnabled = state.localStream?.getAudioTracks().some((t) => t.enabled) || false;
-    const isVideoEnabled = state.localStream?.getVideoTracks().some((t) => t.enabled) || false;
-
-    
-    const toggleCameraEnabled = useCallback((...args: Parameters<LocalMediaContext['actions']['toggleCameraEnabled']>) => {
-        setActionNo((n) => n + 1);
-        actions.toggleCameraEnabled(...args);
-    }, [actions]);
-
-    const toggleMicrophoneEnabled = useCallback((...args: Parameters<LocalMediaContext['actions']['toggleMicrophoneEnabled']>) => {
-        setActionNo((n) => n + 1);
-        actions.toggleMicrophoneEnabled(...args);
-    }, [actions]);
-
-    const context: LocalMediaContext = useMemo(() => ({
-        actions: {
-            ...actions,
-            toggleCameraEnabled,
-            toggleMicrophoneEnabled,
-        },
-        state: {
-            ...state,
-            isAudioEnabled,
-            isVideoEnabled,
-        },
-        ...rest,
-    }), [actions, state, toggleCameraEnabled, toggleMicrophoneEnabled, rest, isAudioEnabled, isVideoEnabled]);
-
-    return (
-        <LocalMediaContext.Provider value={context}>
-            {children}
-        </LocalMediaContext.Provider>
-    );
-}
-
-/**
- * Retrieve the state for the current local media
- */
-export function useLocalMedia() {
     const ctx = useContext(LocalMediaContext);
+
+    const permission = useAppSelector((state) => state.room.permission);
+    const dispatch = useAppDispatch();
+    const { push  } = useRouter();
+    const pathname = usePathname();
+
+    if (permission === PermissionState.NONE) {
+        if (redirect) {
+            push(`/permission?redirect=${pathname}`);
+        } 
+        if (request) {
+            dispatch(setPermissionState(PermissionState.REQUESTED));
+        }
+    }
 
     // GUARD: Check that the context provider is somewhere in the tree
     if (!ctx) {
-        throw new Error('LocalMediaContextProvider not found. Make sure you add a <LocalMediaProvider /> in the tree when using the useLocalMedia hook.');
+        return { state: null, actions: null, _ref: null };
     }
 
     return ctx;

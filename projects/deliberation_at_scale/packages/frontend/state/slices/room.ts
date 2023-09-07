@@ -1,20 +1,26 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type RoomId = string | null;
 
-export interface RoomState {
-  currentRoomId: RoomId;
+export enum PermissionState {
+    /** We're currently checking whether permissions have already been given */
+    INITIALIZING = 'INITIALIZING',
+    /** Sufficient permissions were not given */
+    NONE = 'NONE',
+    /** Permissions have been requested */
+    REQUESTED = 'REQUESTED',
 }
 
-export interface JoinRoomAction {
-  type: string;
-  payload: {
-    roomId: string;
-  };
+export interface RoomState {
+  currentRoomId: RoomId;
+  permission: PermissionState;
 }
+
+export type JoinRoomAction = PayloadAction<{ roomId: string }>;
 
 const initialState: RoomState = {
     currentRoomId: null,
+    permission: PermissionState.NONE,
 };
 
 const slice = createSlice({
@@ -29,9 +35,12 @@ const slice = createSlice({
                 currentRoomId: roomId,
             };
         },
+        setPermissionState(state, action: PayloadAction<PermissionState>) {
+            state.permission = action.payload;
+        }
     },
 });
 
 export default slice;
 
-export const { joinRoom } = slice.actions;
+export const { joinRoom, setPermissionState } = slice.actions;
