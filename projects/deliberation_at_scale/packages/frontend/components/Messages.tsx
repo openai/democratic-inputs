@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from "react"
 import dayjs from "dayjs"
 
 import { supabaseClient } from "@/state/supabase"
-import { useGetParticipantMessagesQuery } from "@/generated/graphql"
-import useRealtimeQuery from "@/hooks/useRealtimeQuery";
+import useMessages from "@/hooks/useMessages"
+import { useAppSelector } from "@/state/store"
 
 export default function Messages() {
-  const { data: messagesData } = useRealtimeQuery(useGetParticipantMessagesQuery());
-  const messages = messagesData?.messagesCollection?.edges ?? [];
+  const currentRoomId = useAppSelector((state) => state.room.currentRoomId);
+  const { messages } = useMessages({
+    roomId: currentRoomId,
+  });
   const [message, setMessage] = useState("")
   const [isSending, setIsSending] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
