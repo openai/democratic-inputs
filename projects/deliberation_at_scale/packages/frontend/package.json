@@ -45,6 +45,7 @@
     "@typescript-eslint/eslint-plugin": "6.6.0",
     "dotenv-cli": "7.2.1",
     "encoding": "0.1.13",
+    "es6-object-assign": "1.1.0",
     "eslint-config-next": "13.4.19",
     "radash": "11.0.0",
     "supabase": "1.83.7",
