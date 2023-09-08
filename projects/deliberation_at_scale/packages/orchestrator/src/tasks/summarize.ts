@@ -80,6 +80,7 @@ function reschedule(initialDate: string | null) {
 
 async function checkForConsensus(messages: Message[]): Promise<{ result: boolean } | null> {
     const completion = await openai.chat.completions.create({
+        temperature: 0,
         model: "gpt-4",
         messages: [
             {
@@ -87,7 +88,7 @@ async function checkForConsensus(messages: Message[]): Promise<{ result: boolean
                 content:
           `The following shows part of a discussion at this point in the discussion do the three participants have a consensus on the topic: "Students are not allowed to use AI technology for their exams"?
 
-        return a JSON object in the following format: { result: {boolean, true if there is a consensus} }
+        return a JSON object in the following format: { result: {boolean, true if there is a consensus, false if no consensus can be formulated} }
         If yes say true if no say false.`,
             },
             ...messages.map(
