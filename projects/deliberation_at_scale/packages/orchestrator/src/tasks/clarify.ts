@@ -117,8 +117,6 @@ async function addClarificationMessageToChat(message: Message, moderationMessage
 async function addModerationMessage(message: Message, moderationMessageContent: string) {
     // update the message
     isAddingModeration = true
-
-    // FIX: other moderations types (e.g. clarification) is not added to moderations table
     try {
       const result = await supabase.from("moderations").insert({
         type: 'clarification' ,
