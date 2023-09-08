@@ -11,6 +11,14 @@ interface VideoViewSelfProps {
 type VideoViewProps = VideoViewSelfProps &
     React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>;
 
+/**
+ * @deprecated This component is lifted from the Whereby SDK. This is because
+ * when we're only using the `useLocalMedia` hook, we can't import VideoView
+ * without importing the full Whereby SDK. In almost all circumstances, you
+ * should be using the `VideoView` that is available from `components` in the
+ * `useRoomConnection` hook.
+ * @see https://github.com/whereby/browser-sdk/blob/development/src/lib/react/VideoView.tsx
+ */
 export default function VideoView({ muted, stream, onResize, ...rest }: VideoViewProps) {
     const videoEl = useRef<HTMLVideoElement>(null);
 
