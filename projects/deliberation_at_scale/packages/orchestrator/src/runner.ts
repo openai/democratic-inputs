@@ -1,8 +1,8 @@
-require("dotenv").config();
-import { parseCronItems, run, quickAddJob } from "graphile-worker";
-import crontab from "./crontab";
-import supabase from "./lib/supabase";
-import startScheduler from './scheduler';
+require("dotenv").config()
+import { parseCronItems, run, quickAddJob } from "graphile-worker"
+import crontab from "./crontab"
+import supabase from "./lib/supabase"
+import startScheduler from './scheduler'
 
 async function main() {
     const runner = await run({
@@ -54,11 +54,11 @@ listenForNewMessages().catch((err) => {
 });
 
 main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+  console.error(err)
+  process.exit(1)
+})
 
 startScheduler().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+  console.error(err)
+  process.exit(1)
+})
