@@ -68,6 +68,7 @@ export const crossPollinationType = pgEnum("crossPollinationType", [
 ])
 export const moderationType = pgEnum("moderationType", [
   "harrashment",
+  "consensus",
   "clarification",
   "spam",
   "off_topic",
