@@ -17,7 +17,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "moderationType" AS ENUM('harrashment', 'spam', 'off_topic', 'other');
+ CREATE TYPE "moderationType" AS ENUM('harrashment', 'consensus', 'spam', 'off_topic', 'other');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
