@@ -17,14 +17,6 @@ export default function Room() {
     return (
         <div>
             {roomConnectionStatus === "connecting" && <span>Connecting...</span>}
-            {/* {roomConnectionStatus === "room_locked" && (
-                <div style={{ color: "red" }}>
-                    <span>Room locked, please knock....</span>
-                    <button onClick={() => actions.knock()}>Knock</button>
-                </div>
-            )}
-            {roomConnectionStatus === "knocking" && <span>Knocking...</span>}
-            {roomConnectionStatus === "rejected" && <span>Rejected :(</span>} */}
             {roomConnectionStatus === "connected" && (
                 <>
                     <div className="container">
@@ -32,22 +24,7 @@ export default function Room() {
                             <div className="participantWrapper" key={participant?.id || i}>
                                 {participant ? (
                                     <>
-                                        <div
-                                            className="bouncingball"
-                                            style={{
-                                                animationDelay: `1000ms`,
-                                                ...(participant.isAudioEnabled
-                                                    ? {
-                                                        border: "2px solid grey",
-                                                    }
-                                                    : null),
-                                                ...(!participant.isVideoEnabled
-                                                    ? {
-                                                        backgroundColor: "green",
-                                                    }
-                                                    : null),
-                                            }}
-                                        >
+                                        <div>
                                             {participant.stream && participant.isVideoEnabled && (
                                                 <VideoView
                                                     muted={participant.isLocalParticipant}
