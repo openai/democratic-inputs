@@ -109,7 +109,7 @@ async function writeModerationResponse(reason: string): Promise<{content: string
 
 async function replaceFlaggedMessage(message: Message, moderationMessageContent: string) {
     // update the message
-    isUpdating = true
+    isUpdatingMessage = true
     try {
       const result = await supabase
         .from("messages")
@@ -156,12 +156,12 @@ async function isFlaggedByDiscussionRules(message: Message): Promise<{result: bo
         return null;
     }
 
-    isUpdating = false
+    isUpdatingMessage = false
 }
 
 async function addModerationMessage(message: Message, moderationMessageContent: string) {
     // update the message
-    isUpdating = true
+    isAddingModeration = true
     try {
       const result = await supabase.from("moderations").insert({
         type: 'harrashment',
@@ -180,5 +180,5 @@ async function addModerationMessage(message: Message, moderationMessageContent: 
       // TODO: handle errors
     }
 
-    isUpdating = false
+    isAddingModeration = false
 }
