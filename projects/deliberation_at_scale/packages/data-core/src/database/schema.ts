@@ -68,15 +68,11 @@ export const crossPollinationType = pgEnum("crossPollinationType", [
 ]);
 export const moderationType = pgEnum("moderationType", [
     "harrashment",
+    "clarification",
     "spam",
     "off_topic",
     "other",
 ]);
-// export const moderationStatus = pgEnum("moderationStatus", [
-//     "pending",
-//     "declined",
-//     "accepted",
-// ]);
 export const completionType = pgEnum("completionType", ["gpt4"]);
 export const targetType = pgEnum("targetType", [
     "user",
