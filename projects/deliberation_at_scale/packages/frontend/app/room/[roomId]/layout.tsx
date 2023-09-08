@@ -53,7 +53,6 @@ export default function RoomLayout({ children }: PropsWithChildren) {
 
     return (
         <>
-            <Room />
             {children}
             <RoomMenu />
         </>
