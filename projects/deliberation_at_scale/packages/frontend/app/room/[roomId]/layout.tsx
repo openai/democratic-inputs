@@ -1,7 +1,6 @@
 'use client';
 import { joinRoom, leaveRoom } from '@/state/slices/room';
 import { useAppDispatch } from '@/state/store';
-import Room from '@/components/Room';
 import { useParams } from 'next/navigation';
 import { PropsWithChildren, useEffect, useMemo } from 'react';
 import RoomMenu from './menu';
