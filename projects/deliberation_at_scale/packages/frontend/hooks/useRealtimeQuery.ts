@@ -3,7 +3,7 @@ import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from "@supabase/supabase-js";
 import { useEffect } from "react";
 
 import { supabaseClient } from "@/state/supabase";
-import { apolloClient } from "@/state/apollo";
+import { get, isEmpty, set } from "radash";
 
 export interface UseNestedLiveQueryOptions {
   channelName?: string;
@@ -16,6 +16,8 @@ export interface TableEvents {
   listenOperations?: TableOperation[];
   listenFilters?: Partial<Record<TableOperation, string>>;
   refetchOperations?: TableOperation[];
+  evictOnDelete?: boolean;
+  appendOnInsertEdgePaths?: string[];
 }
 
 export type TableEventsLookup = Record<string, TableEvents>;
@@ -24,11 +26,15 @@ export type TableOperation = '*' | 'INSERT' | 'UPDATE' | 'DELETE';
 
 const allTablesWildcard = '*';
 const defaultListenOperations: TableOperation[] = ['*'];
-const defaultRefetchOperations: TableOperation[] = ['INSERT', 'DELETE'];
+const defaultRefetchOperations: TableOperation[] = ['INSERT'];
+const defaultEvictOnDelete = true;
+const defaultAppendOnInsertEdgePaths: string[] = [];
 const defaultTableEventsLookup: TableEventsLookup = {
     [allTablesWildcard]: {
         listenOperations: defaultListenOperations,
         refetchOperations: defaultRefetchOperations,
+        evictOnDelete: defaultEvictOnDelete,
+        appendOnInsertEdgePaths: defaultAppendOnInsertEdgePaths,
     },
 };
 
@@ -39,7 +45,8 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         tableEventsLookup = defaultTableEventsLookup,
         maxNestedDepth = 9999,
     } = options ?? {};
-    const { data, loading, refetch } = queryResult;
+    const { data, loading, refetch, client: apolloClient, observable: { query } } = queryResult;
+    const { cache } = apolloClient;
 
     useEffect(() => {
 
@@ -127,6 +134,13 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
             const shouldRefetchOnUpdate = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, tableName) || shouldRefetchOnAllOperations;
             const shouldRefectchOnDelete = shouldRefetchOnOperation(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE, tableName) || shouldRefetchOnAllOperations;
 
+            // delete handlers
+            const shouldEvictOnDelete = tableEvents?.evictOnDelete ?? defaultEvictOnDelete;
+
+            // insert handlers
+            const appendOnInsertEdgePaths = tableEvents?.appendOnInsertEdgePaths ?? defaultAppendOnInsertEdgePaths;
+            const shouldInsertForEdgePaths = !isEmpty(appendOnInsertEdgePaths);
+
             // any filters on the operation listeners that might be overriden or can be the default
             const listenFilters = tableEvents?.listenFilters;
             const insertFilter = listenFilters?.INSERT ?? undefined;
@@ -154,9 +168,43 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                         table: tableName,
                         filter: insertFilter,
                     },
-                    () => {
+                    (payload) => {
+                        const newRow = payload.new;
+
                         if (shouldRefetchOnInsert) {
                             refetch();
+                        }
+
+                        if (shouldInsertForEdgePaths) {
+                            appendOnInsertEdgePaths.map((path) => {
+                                const edgePath = `${path}.edges`;
+                                const currentEdges = get(data, edgePath);
+                                const newNode = {
+                                    __typename: tableName,
+                                    ...newRow,
+                                };
+                                const newEdge = {
+                                    __typename: `${tableName}Edge`,
+                                    node: newNode
+                                };
+
+                                // guard: ensure this is an array
+                                if (!Array.isArray(currentEdges)) {
+                                    return;
+                                }
+
+                                const cacheMutationData = set({}, edgePath, [
+                                    ...currentEdges,
+                                    newEdge,
+                                ]);
+
+                                cache.writeQuery({
+                                    query,
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore
+                                    data: cacheMutationData,
+                                });
+                            });
                         }
                     }
                 );
@@ -179,7 +227,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                             }
                         `;
 
-                        apolloClient.cache.writeFragment({
+                        cache.writeFragment({
                             id: getNodeId(newRow?.id),
                             data: newRow,
                             fragment: gql(fragment),
@@ -200,9 +248,20 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                         table: tableName,
                         filter: deleteFilter,
                     },
-                    () => {
+                    (payload) => {
+                        const { id: deletedId } = payload.old;
+
                         if (shouldRefectchOnDelete) {
                             refetch();
+                        }
+
+                        if (shouldEvictOnDelete && deletedId) {
+                            const normalizedId = cache.identify({
+                                id: deletedId,
+                                __typename: tableName,
+                            });
+
+                            cache.evict({ id: normalizedId });
                         }
                     }
                 );

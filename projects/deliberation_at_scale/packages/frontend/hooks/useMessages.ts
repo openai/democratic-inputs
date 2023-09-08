@@ -14,6 +14,8 @@ export default function useMessages(options?: UseMessagesOptions) {
     const { data: messagesData } = useRealtimeQuery(useGetParticipantMessagesQuery(), {
         tableEventsLookup: {
             messages: {
+                refetchOperations: [],
+                appendOnInsertEdgePaths: ['messagesCollection'],
                 listenFilters: {
                     INSERT: insertFilter,
                 },
