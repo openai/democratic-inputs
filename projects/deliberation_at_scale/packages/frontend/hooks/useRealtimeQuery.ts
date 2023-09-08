@@ -82,7 +82,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         // eslint-disable-next-line no-prototype-builtins
         const shouldHandleAllTables = tableEventsLookup.hasOwnProperty(allTablesWildcard);
         const getTableEvents = (tableName: string) => {
-            return tableEventsLookup?.[tableName] ?? tableEventsLookup?.[allTablesWildcard];
+            return tableEventsLookup?.[tableName] ?? defaultTableEventsLookup?.[allTablesWildcard];
         };
         const shouldHandleOperation = (operationsKey: 'listenOperations' | 'refetchOperations', defaultOperations: TableOperation[], operation: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, tableName: string) => {
             const tableEvents = getTableEvents(tableName);
@@ -220,7 +220,8 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         return () => {
             subscription.unsubscribe();
         };
-    }, [channelName, data, loading, maxNestedDepth, refetch, schemaName, tableEventsLookup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [channelName, JSON.stringify(data), loading, maxNestedDepth, refetch, schemaName, JSON.stringify(tableEventsLookup)]);
 
     return queryResult;
 }

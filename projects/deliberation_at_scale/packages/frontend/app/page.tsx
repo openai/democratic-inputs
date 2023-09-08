@@ -6,8 +6,8 @@ import LogoutButton from "@/components/LogoutButton";
 import Messages from "@/components/Messages";
 
 export default function Index() {
-    const { user } = useAuth();
-    const isLoggedIn = !!user;
+    const { user, authUser } = useAuth();
+    const isLoggedIn = !!user && !!authUser;
 
     return (
         <div className="w-full flex flex-col items-center">
@@ -17,7 +17,7 @@ export default function Index() {
                     <div>
                         {isLoggedIn && (
                             <div className="flex items-center gap-4">
-                Hey, {user.email}!
+                                Hey, {user?.nick_name} ({authUser?.email})
                                 <LogoutButton />
                             </div>
                         )}
@@ -26,7 +26,7 @@ export default function Index() {
                                 href="/login"
                                 className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
                             >
-                Login
+                                Login
                             </Link>
                         )}
                     </div>

@@ -2320,12 +2320,31 @@ export type GetParticipantMessagesQueryVariables = Exact<{
 
 export type GetParticipantMessagesQuery = { __typename?: 'Query', messagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, content: string, created_at: any, type: MessageType } }> } | null };
 
+export type FullUserFragment = { __typename?: 'users', id: any, active: boolean, nick_name: string, auth_user_id?: any | null, updated_at: any, created_at: any };
+
+export type GetUserQueryVariables = Exact<{
+  authUserId: Scalars['UUID']['input'];
+}>;
+
+
+export type GetUserQuery = { __typename?: 'Query', usersCollection?: { __typename?: 'usersConnection', edges: Array<{ __typename?: 'usersEdge', node: { __typename?: 'users', id: any, active: boolean, nick_name: string, auth_user_id?: any | null, updated_at: any, created_at: any } }> } | null };
+
 export const ParticipantMessageFragmentDoc = gql`
     fragment ParticipantMessage on messages {
   id
   content
   created_at
   type
+}
+    `;
+export const FullUserFragmentDoc = gql`
+    fragment FullUser on users {
+  id
+  active
+  nick_name
+  auth_user_id
+  updated_at
+  created_at
 }
     `;
 export const GetParticipantMessagesDocument = gql`
@@ -2361,13 +2380,55 @@ export const GetParticipantMessagesDocument = gql`
  * });
  */
 export function useGetParticipantMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>) {
-    const options = {...defaultOptions, ...baseOptions};
-    return Apollo.useQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
+      }
 export function useGetParticipantMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>) {
-    const options = {...defaultOptions, ...baseOptions};
-    return Apollo.useLazyQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
+        }
 export type GetParticipantMessagesQueryHookResult = ReturnType<typeof useGetParticipantMessagesQuery>;
 export type GetParticipantMessagesLazyQueryHookResult = ReturnType<typeof useGetParticipantMessagesLazyQuery>;
 export type GetParticipantMessagesQueryResult = Apollo.QueryResult<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>;
+export const GetUserDocument = gql`
+    query GetUser($authUserId: UUID!) {
+  usersCollection(
+    filter: {active: {eq: true}, auth_user_id: {eq: $authUserId}}
+    first: 1
+  ) {
+    edges {
+      node {
+        ...FullUser
+      }
+    }
+  }
+}
+    ${FullUserFragmentDoc}`;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      authUserId: // value for 'authUserId'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;

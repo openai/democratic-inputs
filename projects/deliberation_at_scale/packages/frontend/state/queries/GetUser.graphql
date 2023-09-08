@@ -1,0 +1,18 @@
+fragment FullUser on users {
+  id
+  active
+  nick_name
+  auth_user_id
+  updated_at
+  created_at
+}
+
+query GetUser($authUserId: UUID!) {
+  usersCollection(filter: { active: { eq: true }, auth_user_id: { eq: $authUserId } }, first: 1) {
+    edges {
+      node {
+        ...FullUser
+      }
+    }
+  }
+}
