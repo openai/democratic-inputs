@@ -666,4 +666,36 @@ export interface Database {
             [_ in never]: never
         }
     }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      completionType: "gpt4"
+      crossPollinationType: "discussion" | "closing" | "afterwards"
+      discussionType: "chat" | "voice" | "bot"
+      messageType: "chat" | "voice" | "bot"
+      moderationType: "harrashment" | "spam" | "off_topic" | "other" | "clarification"
+      opinionType: "relevance_range" | "agreement_range" | "statement"
+      outcomeType: "milestone" | "consensus" | "off_topic"
+      targetType:
+        | "user"
+        | "topic"
+        | "room"
+        | "participant"
+        | "message"
+        | "outcome"
+        | "opinion"
+        | "cross_pollination"
+        | "completion"
+        | "moderation"
+      timingType: "before_room" | "during_room" | "after_room" | "standalone"
+      topicType: "original" | "remixed"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
 }

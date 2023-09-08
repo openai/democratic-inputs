@@ -35,6 +35,10 @@ async function listenForNewMessages() {
                     jobKey: "moderate",
                     jobKeyMode: "preserve_run_at",
                 });
+                quickAddJob({}, "clarify", newMessage, {
+                    jobKey: "clarify",
+                    jobKeyMode: "preserve_run_at",
+                });
             }
         )
         .subscribe();
