@@ -1,10 +1,8 @@
 require("dotenv").config();
 import messages from './chats/example_chat';
 import Message from './types/message';
-import badLanguage from './moderators/bad-language';
 import consensus from './moderators/consensus';
 import unequalContribution from './moderators/unequal-contribution';
-import difficultLanguage from './moderators/difficult-language';
 
 async function main(messages: Message[], messagesCount: number) {
   const messagesForModeration = messages.slice(0, messagesCount);
@@ -22,8 +20,8 @@ async function moderator(messages: Message[]) {
   const lastMessage = messages[messages.length - 1];
 
   //DIFFICULT LANGUAGE
-  const difficultLanguageMessage = await difficultLanguage(lastMessage);
-  console.log(difficultLanguageMessage);
+  //const difficultLanguageMessage = await difficultLanguage(lastMessage);
+  //console.log(difficultLanguageMessage);
 
   // CONSENSUS
   //const consensusMessage = await consensus(messages);
