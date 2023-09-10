@@ -46,7 +46,11 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         tableEventsLookup = defaultTableEventsLookup,
         maxNestedDepth = 9999,
     } = options ?? {};
-    const { data, loading, refetch, client: apolloClient, observable: { query } } = queryResult;
+    const {
+        data, loading, refetch,
+        client: apolloClient,
+        observable: { query: query, variables: queryVariables },
+    } = queryResult;
     const { cache } = apolloClient;
 
     useEffect(() => {
@@ -58,8 +62,9 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
 
         const candidateRowIdsLookup: Record<string, string[]> = {};
         const extractCandidateNodes = (node: any, depth: number) => {
-            const typeName = node?.__typename;
+            const typeName: string = node?.__typename;
             const id = node?.id;
+            const isTrackableConnection = !!typeName && typeName.endsWith('Connection');
             const isTrackableNode = !!typeName && !!id;
 
             // guard: skip when depth is too high
@@ -73,6 +78,13 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                     ...(candidateRowIdsLookup[typeName] ?? []),
                     id,
                 ];
+            }
+
+            // only if this might be a connection which is potentially empty without any records
+            // we still want to track the connection when a first entry is added
+            if (isTrackableConnection) {
+                const tableTypeName = typeName.replaceAll('Connection', '');
+                candidateRowIdsLookup[tableTypeName] = [];
             }
 
             // attempt to track its properties / entries
@@ -172,7 +184,6 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                     },
                     (payload) => {
                         const newRow = payload.new;
-
                         if (shouldRefetchOnInsert) {
                             refetch();
                         }
@@ -195,13 +206,14 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                                     return;
                                 }
 
-                                const cacheMutationData = set({}, edgePath, [
+                                const cacheMutationData = set({ __typename:  `${tableName}Connection` }, edgePath, [
                                     ...currentEdges,
                                     newEdge,
                                 ]);
 
                                 cache.writeQuery({
                                     query,
+                                    variables: queryVariables,
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-ignore
                                     data: cacheMutationData,
