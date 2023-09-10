@@ -1,15 +1,21 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import useProfile from "@/hooks/useProfile";
 import LogoutButton from "@/components/LogoutButton";
 import Messages from "@/components/Messages";
 import useRoom from "@/hooks/useRoom";
+import { useAppSelector } from "@/state/store";
 
 export default function Index() {
+    const currentRoomId = useAppSelector((state) => state.room.currentRoomId);
     const { user, authUser } = useProfile();
-    const room = useRoom();
+    const room = useRoom({
+        roomId: currentRoomId,
+    });
     const isLoggedIn = !!user && !!authUser;
+    const { push } = useRouter();
 
     return (
         <div className="w-full flex flex-col items-center">
@@ -21,6 +27,9 @@ export default function Index() {
                             <div className="flex items-center gap-4">
                                 Hey, {user?.nick_name} ({authUser?.email})
                                 {room ? <p>Current room: {room.id}</p> : ''}
+                                <button onClick={() => { push('/room-tester'); }} className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+                                    Switch Room
+                                </button>
                                 <LogoutButton />
                             </div>
                         )}
