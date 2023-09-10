@@ -1,0 +1,19 @@
+fragment FullTopic on topics {
+  id
+  active
+  type
+  content
+  original_topic_id
+  updated_at
+  created_at
+}
+
+query GetTopics {
+  topicsCollection(filter: { active: { eq: true } }) {
+    edges {
+      node {
+        ...FullTopic
+      }
+    }
+  }
+}

@@ -2397,6 +2397,13 @@ export type GetRoomsQueryVariables = Exact<{
 
 export type GetRoomsQuery = { __typename?: 'Query', roomsCollection?: { __typename?: 'roomsConnection', edges: Array<{ __typename?: 'roomsEdge', node: { __typename?: 'rooms', id: any, active: boolean, updated_at: any, created_at: any, topics: { __typename?: 'topics', id: any, active: boolean, content: string, updated_at: any, created_at: any } } }> } | null };
 
+export type FullTopicFragment = { __typename?: 'topics', id: any, active: boolean, type: TopicType, content: string, original_topic_id?: any | null, updated_at: any, created_at: any };
+
+export type GetTopicsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTopicsQuery = { __typename?: 'Query', topicsCollection?: { __typename?: 'topicsConnection', edges: Array<{ __typename?: 'topicsEdge', node: { __typename?: 'topics', id: any, active: boolean, type: TopicType, content: string, original_topic_id?: any | null, updated_at: any, created_at: any } }> } | null };
+
 export type FullUserFragment = { __typename?: 'users', id: any, active: boolean, nick_name: string, demographics: any, auth_user_id?: any | null, updated_at: any, created_at: any };
 
 export type GetUserQueryVariables = Exact<{
@@ -2469,6 +2476,17 @@ export const SimpleRoomFragmentDoc = gql`
   created_at
 }
     ${SimpleRoomTopicFragmentDoc}`;
+export const FullTopicFragmentDoc = gql`
+    fragment FullTopic on topics {
+  id
+  active
+  type
+  content
+  original_topic_id
+  updated_at
+  created_at
+}
+    `;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on users {
   id
@@ -2564,7 +2582,10 @@ export type GetRoomParticipantsLazyQueryHookResult = ReturnType<typeof useGetRoo
 export type GetRoomParticipantsQueryResult = Apollo.QueryResult<GetRoomParticipantsQuery, GetRoomParticipantsQueryVariables>;
 export const GetRoomsDocument = gql`
     query GetRooms($roomId: UUID) {
-  roomsCollection(filter: {active: {eq: true}, id: {eq: $roomId}}) {
+  roomsCollection(
+    filter: {active: {eq: true}, id: {eq: $roomId}}
+    orderBy: {created_at: DescNullsLast}
+  ) {
     edges {
       node {
         ...SimpleRoom
@@ -2601,6 +2622,44 @@ export function useGetRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetRoomsQueryHookResult = ReturnType<typeof useGetRoomsQuery>;
 export type GetRoomsLazyQueryHookResult = ReturnType<typeof useGetRoomsLazyQuery>;
 export type GetRoomsQueryResult = Apollo.QueryResult<GetRoomsQuery, GetRoomsQueryVariables>;
+export const GetTopicsDocument = gql`
+    query GetTopics {
+  topicsCollection(filter: {active: {eq: true}}) {
+    edges {
+      node {
+        ...FullTopic
+      }
+    }
+  }
+}
+    ${FullTopicFragmentDoc}`;
+
+/**
+ * __useGetTopicsQuery__
+ *
+ * To run a query within a React component, call `useGetTopicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTopicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTopicsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTopicsQuery(baseOptions?: Apollo.QueryHookOptions<GetTopicsQuery, GetTopicsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTopicsQuery, GetTopicsQueryVariables>(GetTopicsDocument, options);
+      }
+export function useGetTopicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTopicsQuery, GetTopicsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTopicsQuery, GetTopicsQueryVariables>(GetTopicsDocument, options);
+        }
+export type GetTopicsQueryHookResult = ReturnType<typeof useGetTopicsQuery>;
+export type GetTopicsLazyQueryHookResult = ReturnType<typeof useGetTopicsLazyQuery>;
+export type GetTopicsQueryResult = Apollo.QueryResult<GetTopicsQuery, GetTopicsQueryVariables>;
 export const GetUserDocument = gql`
     query GetUser($authUserId: UUID!) {
   usersCollection(

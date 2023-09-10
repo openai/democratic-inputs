@@ -1,23 +1,24 @@
 import { QueryResult, gql } from "@apollo/client";
 import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from "@supabase/supabase-js";
 import { useEffect } from "react";
+import objectHash from "object-hash";
 
 import { supabaseClient } from "@/state/supabase";
 import { get, isEmpty, set } from "radash";
 
 export interface UseNestedLiveQueryOptions {
-  channelName?: string;
-  schemaName?: string;
-  tableEventsLookup?: TableEventsLookup;
-  maxNestedDepth?: number;
+    channelPrefix?: string;
+    schemaName?: string;
+    tableEventsLookup?: TableEventsLookup;
+    maxNestedDepth?: number;
 }
 
 export interface TableEvents {
-  listenOperations?: TableOperation[];
-  listenFilters?: Partial<Record<TableOperation, string>>;
-  refetchOperations?: TableOperation[];
-  evictOnDelete?: boolean;
-  appendOnInsertEdgePaths?: string[];
+    listenOperations?: TableOperation[];
+    listenFilters?: Partial<Record<TableOperation, string>>;
+    refetchOperations?: TableOperation[];
+    evictOnDelete?: boolean;
+    appendOnInsertEdgePaths?: string[];
 }
 
 export type TableEventsLookup = Record<string, TableEvents>;
@@ -40,7 +41,7 @@ const defaultTableEventsLookup: TableEventsLookup = {
 
 export default function useRealtimeQuery<DataType>(queryResult: QueryResult<DataType, any>, options?: UseNestedLiveQueryOptions): QueryResult<DataType> {
     const {
-        channelName = 'supabase_realtime',
+        channelPrefix = 'realtime',
         schemaName = 'public',
         tableEventsLookup = defaultTableEventsLookup,
         maxNestedDepth = 9999,
@@ -55,7 +56,6 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
             return;
         }
 
-        const subscription = supabaseClient.channel(channelName);
         const candidateRowIdsLookup: Record<string, string[]> = {};
         const extractCandidateNodes = (node: any, depth: number) => {
             const typeName = node?.__typename;
@@ -112,6 +112,8 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         // { messages: ['id1', 'id2', 'id3', 'id4'], topics: ['id1', 'id2'] }
         extractCandidateNodes(data, 0);
 
+        const channelName = `${channelPrefix}_${objectHash({ options, candidateRowIdsLookup })}`;
+        const subscription = supabaseClient.channel(channelName);
         const tableNames = Object.keys(candidateRowIdsLookup);
         let isTrackingSomething = false;
 
@@ -280,7 +282,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
             subscription.unsubscribe();
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [channelName, JSON.stringify(data), loading, maxNestedDepth, refetch, schemaName, JSON.stringify(tableEventsLookup)]);
+    }, [JSON.stringify(data), loading, maxNestedDepth, refetch, schemaName, JSON.stringify(tableEventsLookup)]);
 
     return queryResult;
 }

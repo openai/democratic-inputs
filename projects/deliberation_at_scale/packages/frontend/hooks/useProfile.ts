@@ -16,8 +16,8 @@ export default function useProfile() {
     const { data: roomsData } = useRealtimeQuery(useGetRoomsQuery(), {
         tableEventsLookup: {
             rooms: {
-                refetchOperations: [],
-                appendOnInsertEdgePaths: ['roomsCollection'],
+                //refetchOperations: [],
+                //appendOnInsertEdgePaths: ['roomsCollection'],
             },
         },
     });

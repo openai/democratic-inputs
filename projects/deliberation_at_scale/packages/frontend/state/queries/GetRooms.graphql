@@ -17,7 +17,7 @@ fragment SimpleRoomTopic on topics {
 }
 
 query GetRooms($roomId: UUID) {
-  roomsCollection(filter: { active: { eq: true }, id: { eq: $roomId } }) {
+  roomsCollection(filter: { active: { eq: true }, id: { eq: $roomId } }, orderBy: { created_at: DescNullsLast }) {
     edges {
       node {
         ...SimpleRoom
