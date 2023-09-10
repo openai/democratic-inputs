@@ -72,6 +72,11 @@ export const moderationType = pgEnum("moderationType", [
     "off_topic",
     "other",
 ]);
+// export const moderationStatus = pgEnum("moderationStatus", [
+//     "pending",
+//     "declined",
+//     "accepted",
+// ]);
 export const completionType = pgEnum("completionType", ["gpt4"]);
 export const targetType = pgEnum("targetType", [
     "user",

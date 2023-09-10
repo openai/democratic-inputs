@@ -8,6 +8,13 @@
       "when": 1691573002325,
       "tag": "0000_tough_marten_broadcloak",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1694161503128,
+      "tag": "0001_quick_scourge",
+      "breakpoints": true
     }
   ]
 }
