@@ -16,7 +16,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         participantMessageHistoryAmount = 1,
         botMessageHistoryAmount = 1,
     } = options ?? {};
-    const insertFilter = (roomId ? `room_id=eq.(${roomId})` : undefined);
+    const insertFilter = (roomId ? `room_id=eq.${roomId}` : undefined);
     const { data: messagesData } = useRealtimeQuery(useGetRoomMessagesQuery({ variables: { roomId } }), {
         tableEventsLookup: {
             messages: {

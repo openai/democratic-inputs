@@ -37,6 +37,7 @@ export default function Messages() {
         try {
             const result = await supabaseClient.from("messages").insert({
                 content: formattedMessage,
+                room_id: currentRoomId,
             });
             const hasError = !!result.error;
 

@@ -49,7 +49,8 @@ export default function Index() {
                             <li key={id}>
                                 <button onClick={() => {
                                     dispatch(joinRoom(id));
-                                    push(`/room/${id}/ai`);
+                                    //push(`/room/${id}/ai`);
+                                    push(`/message-tester`);
                                 }}>JOIN</button>&nbsp;
                                 {id}: {topicContent}
                             </li>

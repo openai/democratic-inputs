@@ -2,6 +2,7 @@ import { useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graph
 import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId, RoomStatus } from "@/state/slices/room";
 import useRoomMessages from "./useRoomMessages";
+import { useAppSelector } from "@/state/store";
 
 export interface UseRoomOptions {
   roomId: RoomId;
@@ -9,7 +10,8 @@ export interface UseRoomOptions {
 }
 
 export default function useRoom(options?: UseRoomOptions) {
-    const { roomId, roomStatus } = options ?? {};
+    const currentRoomId = useAppSelector((state) => state.room.currentRoomId);
+    const { roomId = currentRoomId, roomStatus } = options ?? {};
     const { data: roomData } = useRealtimeQuery(useGetRoomsQuery({
         variables: {
             roomId,
