@@ -1027,9 +1027,12 @@ export type Messages = Node & {
   outcome_sourcesCollection?: Maybe<Outcome_SourcesConnection>;
   participant_id?: Maybe<Scalars['UUID']['output']>;
   participants?: Maybe<Participants>;
+  room_id?: Maybe<Scalars['UUID']['output']>;
+  rooms?: Maybe<Rooms>;
   timing_type: TimingType;
   type: MessageType;
   updated_at: Scalars['Datetime']['output'];
+  visibility_type: VisibilityType;
 };
 
 
@@ -1110,9 +1113,11 @@ export type MessagesFilter = {
   nodeId?: InputMaybe<IdFilter>;
   original_message_id?: InputMaybe<UuidFilter>;
   participant_id?: InputMaybe<UuidFilter>;
+  room_id?: InputMaybe<UuidFilter>;
   timing_type?: InputMaybe<TimingTypeFilter>;
   type?: InputMaybe<MessageTypeFilter>;
   updated_at?: InputMaybe<DatetimeFilter>;
+  visibility_type?: InputMaybe<VisibilityTypeFilter>;
 };
 
 export type MessagesInsertInput = {
@@ -1123,9 +1128,11 @@ export type MessagesInsertInput = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   original_message_id?: InputMaybe<Scalars['UUID']['input']>;
   participant_id?: InputMaybe<Scalars['UUID']['input']>;
+  room_id?: InputMaybe<Scalars['UUID']['input']>;
   timing_type?: InputMaybe<TimingType>;
   type?: InputMaybe<MessageType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
+  visibility_type?: InputMaybe<VisibilityType>;
 };
 
 export type MessagesInsertResponse = {
@@ -1143,9 +1150,11 @@ export type MessagesOrderBy = {
   id?: InputMaybe<OrderByDirection>;
   original_message_id?: InputMaybe<OrderByDirection>;
   participant_id?: InputMaybe<OrderByDirection>;
+  room_id?: InputMaybe<OrderByDirection>;
   timing_type?: InputMaybe<OrderByDirection>;
   type?: InputMaybe<OrderByDirection>;
   updated_at?: InputMaybe<OrderByDirection>;
+  visibility_type?: InputMaybe<OrderByDirection>;
 };
 
 export type MessagesUpdateInput = {
@@ -1156,9 +1165,11 @@ export type MessagesUpdateInput = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   original_message_id?: InputMaybe<Scalars['UUID']['input']>;
   participant_id?: InputMaybe<Scalars['UUID']['input']>;
+  room_id?: InputMaybe<Scalars['UUID']['input']>;
   timing_type?: InputMaybe<TimingType>;
   type?: InputMaybe<MessageType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
+  visibility_type?: InputMaybe<VisibilityType>;
 };
 
 export type MessagesUpdateResponse = {
@@ -1379,6 +1390,8 @@ export type Opinions = Node & {
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
+  outcome_id?: Maybe<Scalars['UUID']['output']>;
+  outcomes?: Maybe<Outcomes>;
   range_value: Scalars['Int']['output'];
   statement: Scalars['String']['output'];
   type: OpinionType;
@@ -1430,6 +1443,7 @@ export type OpinionsFilter = {
   created_at?: InputMaybe<DatetimeFilter>;
   id?: InputMaybe<UuidFilter>;
   nodeId?: InputMaybe<IdFilter>;
+  outcome_id?: InputMaybe<UuidFilter>;
   range_value?: InputMaybe<IntFilter>;
   statement?: InputMaybe<StringFilter>;
   type?: InputMaybe<OpinionTypeFilter>;
@@ -1440,6 +1454,7 @@ export type OpinionsInsertInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  outcome_id?: InputMaybe<Scalars['UUID']['input']>;
   range_value?: InputMaybe<Scalars['Int']['input']>;
   statement?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<OpinionType>;
@@ -1458,6 +1473,7 @@ export type OpinionsOrderBy = {
   active?: InputMaybe<OrderByDirection>;
   created_at?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
+  outcome_id?: InputMaybe<OrderByDirection>;
   range_value?: InputMaybe<OrderByDirection>;
   statement?: InputMaybe<OrderByDirection>;
   type?: InputMaybe<OrderByDirection>;
@@ -1468,6 +1484,7 @@ export type OpinionsUpdateInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  outcome_id?: InputMaybe<Scalars['UUID']['input']>;
   range_value?: InputMaybe<Scalars['Int']['input']>;
   statement?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<OpinionType>;
@@ -1589,6 +1606,7 @@ export type Outcomes = Node & {
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
+  opinionsCollection?: Maybe<OpinionsConnection>;
   original_outcome_id?: Maybe<Scalars['UUID']['output']>;
   outcome_sourcesCollection?: Maybe<Outcome_SourcesConnection>;
   outcomes?: Maybe<Outcomes>;
@@ -1625,6 +1643,16 @@ export type OutcomesModerationsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ModerationsOrderBy>>;
+};
+
+
+export type OutcomesOpinionsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<OpinionsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OpinionsOrderBy>>;
 };
 
 
@@ -1870,7 +1898,9 @@ export type Rooms = Node & {
   active: Scalars['Boolean']['output'];
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
+  external_room_id?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
+  messagesCollection?: Maybe<MessagesConnection>;
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
@@ -1889,6 +1919,16 @@ export type RoomsCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
+};
+
+
+export type RoomsMessagesCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<MessagesFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MessagesOrderBy>>;
 };
 
 
@@ -1934,6 +1974,7 @@ export type RoomsEdge = {
 export type RoomsFilter = {
   active?: InputMaybe<BooleanFilter>;
   created_at?: InputMaybe<DatetimeFilter>;
+  external_room_id?: InputMaybe<StringFilter>;
   id?: InputMaybe<UuidFilter>;
   nodeId?: InputMaybe<IdFilter>;
   starts_at?: InputMaybe<DatetimeFilter>;
@@ -1944,6 +1985,7 @@ export type RoomsFilter = {
 export type RoomsInsertInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  external_room_id?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   starts_at?: InputMaybe<Scalars['Datetime']['input']>;
   topic_id?: InputMaybe<Scalars['UUID']['input']>;
@@ -1961,6 +2003,7 @@ export type RoomsInsertResponse = {
 export type RoomsOrderBy = {
   active?: InputMaybe<OrderByDirection>;
   created_at?: InputMaybe<OrderByDirection>;
+  external_room_id?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
   starts_at?: InputMaybe<OrderByDirection>;
   topic_id?: InputMaybe<OrderByDirection>;
@@ -1970,6 +2013,7 @@ export type RoomsOrderBy = {
 export type RoomsUpdateInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  external_room_id?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   starts_at?: InputMaybe<Scalars['Datetime']['input']>;
   topic_id?: InputMaybe<Scalars['UUID']['input']>;
@@ -2311,6 +2355,19 @@ export type UsersUpdateResponse = {
   records: Array<Users>;
 };
 
+export enum VisibilityType {
+  Private = 'private',
+  Public = 'public'
+}
+
+/** Boolean expression comparing fields on type "visibilityType" */
+export type VisibilityTypeFilter = {
+  eq?: InputMaybe<VisibilityType>;
+  in?: InputMaybe<Array<VisibilityType>>;
+  is?: InputMaybe<FilterIs>;
+  neq?: InputMaybe<VisibilityType>;
+};
+
 export type ParticipantMessageFragment = { __typename?: 'messages', id: any, content: string, created_at: any, type: MessageType };
 
 export type GetParticipantMessagesQueryVariables = Exact<{
@@ -2361,13 +2418,13 @@ export const GetParticipantMessagesDocument = gql`
  * });
  */
 export function useGetParticipantMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>) {
-    const options = {...defaultOptions, ...baseOptions};
-    return Apollo.useQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
+      }
 export function useGetParticipantMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>) {
-    const options = {...defaultOptions, ...baseOptions};
-    return Apollo.useLazyQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>(GetParticipantMessagesDocument, options);
+        }
 export type GetParticipantMessagesQueryHookResult = ReturnType<typeof useGetParticipantMessagesQuery>;
 export type GetParticipantMessagesLazyQueryHookResult = ReturnType<typeof useGetParticipantMessagesLazyQuery>;
 export type GetParticipantMessagesQueryResult = Apollo.QueryResult<GetParticipantMessagesQuery, GetParticipantMessagesQueryVariables>;
