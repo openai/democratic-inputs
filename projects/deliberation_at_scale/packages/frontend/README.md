@@ -22,6 +22,14 @@ To run in development:
 npm run start
 ```
 
+If you want to do test the app on devices within your local network, you will
+need to use HTTPS, as the `mediaDevices` API is only available on trusted
+origins (i.e. HTTPS and localhost). To this, run the above command, and then run
+this command in a seperate terminal
+```
+npm run start:proxy
+```
+
 # Deploying to production
 
 ## Vercel

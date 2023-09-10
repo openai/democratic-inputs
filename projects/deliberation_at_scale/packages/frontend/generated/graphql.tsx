@@ -2531,13 +2531,13 @@ export const GetRoomMessagesDocument = gql`
  * });
  */
 export function useGetRoomMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>(GetRoomMessagesDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useQuery<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>(GetRoomMessagesDocument, options);
+}
 export function useGetRoomMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>(GetRoomMessagesDocument, options);
-        }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useLazyQuery<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>(GetRoomMessagesDocument, options);
+}
 export type GetRoomMessagesQueryHookResult = ReturnType<typeof useGetRoomMessagesQuery>;
 export type GetRoomMessagesLazyQueryHookResult = ReturnType<typeof useGetRoomMessagesLazyQuery>;
 export type GetRoomMessagesQueryResult = Apollo.QueryResult<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>;
@@ -2570,13 +2570,13 @@ export const GetRoomParticipantsDocument = gql`
  * });
  */
 export function useGetRoomParticipantsQuery(baseOptions: Apollo.QueryHookOptions<GetRoomParticipantsQuery, GetRoomParticipantsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetRoomParticipantsQuery, GetRoomParticipantsQueryVariables>(GetRoomParticipantsDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useQuery<GetRoomParticipantsQuery, GetRoomParticipantsQueryVariables>(GetRoomParticipantsDocument, options);
+}
 export function useGetRoomParticipantsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRoomParticipantsQuery, GetRoomParticipantsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetRoomParticipantsQuery, GetRoomParticipantsQueryVariables>(GetRoomParticipantsDocument, options);
-        }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useLazyQuery<GetRoomParticipantsQuery, GetRoomParticipantsQueryVariables>(GetRoomParticipantsDocument, options);
+}
 export type GetRoomParticipantsQueryHookResult = ReturnType<typeof useGetRoomParticipantsQuery>;
 export type GetRoomParticipantsLazyQueryHookResult = ReturnType<typeof useGetRoomParticipantsLazyQuery>;
 export type GetRoomParticipantsQueryResult = Apollo.QueryResult<GetRoomParticipantsQuery, GetRoomParticipantsQueryVariables>;
@@ -2612,13 +2612,13 @@ export const GetRoomsDocument = gql`
  * });
  */
 export function useGetRoomsQuery(baseOptions?: Apollo.QueryHookOptions<GetRoomsQuery, GetRoomsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetRoomsQuery, GetRoomsQueryVariables>(GetRoomsDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useQuery<GetRoomsQuery, GetRoomsQueryVariables>(GetRoomsDocument, options);
+}
 export function useGetRoomsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRoomsQuery, GetRoomsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetRoomsQuery, GetRoomsQueryVariables>(GetRoomsDocument, options);
-        }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useLazyQuery<GetRoomsQuery, GetRoomsQueryVariables>(GetRoomsDocument, options);
+}
 export type GetRoomsQueryHookResult = ReturnType<typeof useGetRoomsQuery>;
 export type GetRoomsLazyQueryHookResult = ReturnType<typeof useGetRoomsLazyQuery>;
 export type GetRoomsQueryResult = Apollo.QueryResult<GetRoomsQuery, GetRoomsQueryVariables>;
@@ -2650,13 +2650,13 @@ export const GetTopicsDocument = gql`
  * });
  */
 export function useGetTopicsQuery(baseOptions?: Apollo.QueryHookOptions<GetTopicsQuery, GetTopicsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTopicsQuery, GetTopicsQueryVariables>(GetTopicsDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useQuery<GetTopicsQuery, GetTopicsQueryVariables>(GetTopicsDocument, options);
+}
 export function useGetTopicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTopicsQuery, GetTopicsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTopicsQuery, GetTopicsQueryVariables>(GetTopicsDocument, options);
-        }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useLazyQuery<GetTopicsQuery, GetTopicsQueryVariables>(GetTopicsDocument, options);
+}
 export type GetTopicsQueryHookResult = ReturnType<typeof useGetTopicsQuery>;
 export type GetTopicsLazyQueryHookResult = ReturnType<typeof useGetTopicsLazyQuery>;
 export type GetTopicsQueryResult = Apollo.QueryResult<GetTopicsQuery, GetTopicsQueryVariables>;
@@ -2692,13 +2692,13 @@ export const GetUserDocument = gql`
  * });
  */
 export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+}
 export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
-        }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+}
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
@@ -2730,9 +2730,9 @@ export type JoinRoomMutationFn = Apollo.MutationFunction<JoinRoomMutation, JoinR
  * });
  */
 export function useJoinRoomMutation(baseOptions?: Apollo.MutationHookOptions<JoinRoomMutation, JoinRoomMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<JoinRoomMutation, JoinRoomMutationVariables>(JoinRoomDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useMutation<JoinRoomMutation, JoinRoomMutationVariables>(JoinRoomDocument, options);
+}
 export type JoinRoomMutationHookResult = ReturnType<typeof useJoinRoomMutation>;
 export type JoinRoomMutationResult = Apollo.MutationResult<JoinRoomMutation>;
 export type JoinRoomMutationOptions = Apollo.BaseMutationOptions<JoinRoomMutation, JoinRoomMutationVariables>;
@@ -2766,9 +2766,9 @@ export type StartRoomMutationFn = Apollo.MutationFunction<StartRoomMutation, Sta
  * });
  */
 export function useStartRoomMutation(baseOptions?: Apollo.MutationHookOptions<StartRoomMutation, StartRoomMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<StartRoomMutation, StartRoomMutationVariables>(StartRoomDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useMutation<StartRoomMutation, StartRoomMutationVariables>(StartRoomDocument, options);
+}
 export type StartRoomMutationHookResult = ReturnType<typeof useStartRoomMutation>;
 export type StartRoomMutationResult = Apollo.MutationResult<StartRoomMutation>;
 export type StartRoomMutationOptions = Apollo.BaseMutationOptions<StartRoomMutation, StartRoomMutationVariables>;
@@ -2803,9 +2803,9 @@ export type UpdateDemographicsMutationFn = Apollo.MutationFunction<UpdateDemogra
  * });
  */
 export function useUpdateDemographicsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDemographicsMutation, UpdateDemographicsMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateDemographicsMutation, UpdateDemographicsMutationVariables>(UpdateDemographicsDocument, options);
-      }
+    const options = {...defaultOptions, ...baseOptions};
+    return Apollo.useMutation<UpdateDemographicsMutation, UpdateDemographicsMutationVariables>(UpdateDemographicsDocument, options);
+}
 export type UpdateDemographicsMutationHookResult = ReturnType<typeof useUpdateDemographicsMutation>;
 export type UpdateDemographicsMutationResult = Apollo.MutationResult<UpdateDemographicsMutation>;
 export type UpdateDemographicsMutationOptions = Apollo.BaseMutationOptions<UpdateDemographicsMutation, UpdateDemographicsMutationVariables>;
