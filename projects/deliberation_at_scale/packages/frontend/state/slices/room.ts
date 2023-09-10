@@ -1,6 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export type RoomId = string | null;
+export type RoomId = string | undefined;
+
+export enum RoomStatus {
+    SETUP,
+    LOBBY,
+    GROUP_INTRODUCTION,
+    TOPIC_INTRODUCTION,
+    DELIBERATION,
+    CONSENSUS,
+    REFLECTION,
+}
 
 export interface RoomState {
   currentRoomId: RoomId;
@@ -14,7 +24,7 @@ export interface JoinRoomAction {
 }
 
 const initialState: RoomState = {
-    currentRoomId: null,
+    currentRoomId: undefined,
 };
 
 const slice = createSlice({

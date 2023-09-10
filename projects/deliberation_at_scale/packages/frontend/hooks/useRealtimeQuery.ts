@@ -38,7 +38,7 @@ const defaultTableEventsLookup: TableEventsLookup = {
     },
 };
 
-export default function useRealtimeQuery<DataType>(queryResult: QueryResult<DataType>, options?: UseNestedLiveQueryOptions): QueryResult<DataType> {
+export default function useRealtimeQuery<DataType>(queryResult: QueryResult<DataType, any>, options?: UseNestedLiveQueryOptions): QueryResult<DataType> {
     const {
         channelName = 'supabase_realtime',
         schemaName = 'public',

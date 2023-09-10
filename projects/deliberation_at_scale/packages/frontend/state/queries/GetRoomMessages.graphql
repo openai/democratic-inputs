@@ -1,0 +1,19 @@
+fragment RoomMessage on messages {
+  id
+  type
+  timing_type
+  visibility_type
+  content
+  created_at
+  type
+}
+
+query GetRoomMessages($roomId: UUID) {
+  messagesCollection(filter: { active: { eq: true }, room_id: { eq: $roomId } }, orderBy: { created_at: AscNullsLast }, last: 30) {
+    edges {
+      node {
+        ...RoomMessage
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 
 import { supabaseClient } from "@/state/supabase";
-import useMessages from "@/hooks/useMessages";
+import useMessages from "@/hooks/useRoomMessages";
 import { useAppSelector } from "@/state/store";
 
 export default function Messages() {

@@ -2,6 +2,7 @@ fragment FullUser on users {
   id
   active
   nick_name
+  demographics
   auth_user_id
   updated_at
   created_at

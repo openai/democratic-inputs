@@ -1,0 +1,5 @@
+mutation UpdateDemographics($userId: UUID!, $demographics: JSON) {
+  updateusersCollection(filter: { id: { eq: $userId } }, set: { demographics: $demographics }) {
+    affectedCount
+  }
+}

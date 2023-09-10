@@ -1295,9 +1295,12 @@ type messages implements Node {
   ): outcome_sourcesConnection
   participant_id: UUID
   participants: participants
+  room_id: UUID
+  rooms: rooms
   timing_type: timingType!
   type: messageType!
   updated_at: Datetime!
+  visibility_type: visibilityType!
 }
 
 type messagesConnection {
@@ -1326,9 +1329,11 @@ input messagesFilter {
   nodeId: IDFilter
   original_message_id: UUIDFilter
   participant_id: UUIDFilter
+  room_id: UUIDFilter
   timing_type: timingTypeFilter
   type: messageTypeFilter
   updated_at: DatetimeFilter
+  visibility_type: visibilityTypeFilter
 }
 
 input messagesInsertInput {
@@ -1339,9 +1344,11 @@ input messagesInsertInput {
   id: UUID
   original_message_id: UUID
   participant_id: UUID
+  room_id: UUID
   timing_type: timingType
   type: messageType
   updated_at: Datetime
+  visibility_type: visibilityType
 }
 
 type messagesInsertResponse {
@@ -1359,9 +1366,11 @@ input messagesOrderBy {
   id: OrderByDirection
   original_message_id: OrderByDirection
   participant_id: OrderByDirection
+  room_id: OrderByDirection
   timing_type: OrderByDirection
   type: OrderByDirection
   updated_at: OrderByDirection
+  visibility_type: OrderByDirection
 }
 
 input messagesUpdateInput {
@@ -1372,9 +1381,11 @@ input messagesUpdateInput {
   id: UUID
   original_message_id: UUID
   participant_id: UUID
+  room_id: UUID
   timing_type: timingType
   type: messageType
   updated_at: Datetime
+  visibility_type: visibilityType
 }
 
 type messagesUpdateResponse {
@@ -1649,6 +1660,8 @@ type opinions implements Node {
 
   """Globally Unique Record Identifier"""
   nodeId: ID!
+  outcome_id: UUID
+  outcomes: outcomes
   range_value: Int!
   statement: String!
   type: opinionType!
@@ -1678,6 +1691,7 @@ input opinionsFilter {
   created_at: DatetimeFilter
   id: UUIDFilter
   nodeId: IDFilter
+  outcome_id: UUIDFilter
   range_value: IntFilter
   statement: StringFilter
   type: opinionTypeFilter
@@ -1688,6 +1702,7 @@ input opinionsInsertInput {
   active: Boolean
   created_at: Datetime
   id: UUID
+  outcome_id: UUID
   range_value: Int
   statement: String
   type: opinionType
@@ -1706,6 +1721,7 @@ input opinionsOrderBy {
   active: OrderByDirection
   created_at: OrderByDirection
   id: OrderByDirection
+  outcome_id: OrderByDirection
   range_value: OrderByDirection
   statement: OrderByDirection
   type: OrderByDirection
@@ -1716,6 +1732,7 @@ input opinionsUpdateInput {
   active: Boolean
   created_at: Datetime
   id: UUID
+  outcome_id: UUID
   range_value: Int
   statement: String
   type: opinionType
@@ -1891,6 +1908,25 @@ type outcomes implements Node {
 
   """Globally Unique Record Identifier"""
   nodeId: ID!
+  opinionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: opinionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [opinionsOrderBy!]
+  ): opinionsConnection
   original_outcome_id: UUID
   outcome_sourcesCollection(
     """Query values in the collection after the provided cursor"""
@@ -2203,7 +2239,27 @@ type rooms implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
+  external_room_id: String
   id: UUID!
+  messagesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: messagesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [messagesOrderBy!]
+  ): messagesConnection
   moderationsCollection(
     """Query values in the collection after the provided cursor"""
     after: Cursor
@@ -2272,6 +2328,7 @@ type roomsEdge {
 input roomsFilter {
   active: BooleanFilter
   created_at: DatetimeFilter
+  external_room_id: StringFilter
   id: UUIDFilter
   nodeId: IDFilter
   starts_at: DatetimeFilter
@@ -2282,6 +2339,7 @@ input roomsFilter {
 input roomsInsertInput {
   active: Boolean
   created_at: Datetime
+  external_room_id: String
   id: UUID
   starts_at: Datetime
   topic_id: UUID
@@ -2299,6 +2357,7 @@ type roomsInsertResponse {
 input roomsOrderBy {
   active: OrderByDirection
   created_at: OrderByDirection
+  external_room_id: OrderByDirection
   id: OrderByDirection
   starts_at: OrderByDirection
   topic_id: OrderByDirection
@@ -2308,6 +2367,7 @@ input roomsOrderBy {
 input roomsUpdateInput {
   active: Boolean
   created_at: Datetime
+  external_room_id: String
   id: UUID
   starts_at: Datetime
   topic_id: UUID
@@ -2721,4 +2781,19 @@ type usersUpdateResponse {
 
   """Array of records impacted by the mutation"""
   records: [users!]!
+}
+
+enum visibilityType {
+  private
+  public
+}
+
+"""
+Boolean expression comparing fields on type "visibilityType"
+"""
+input visibilityTypeFilter {
+  eq: visibilityType
+  in: [visibilityType!]
+  is: FilterIs
+  neq: visibilityType
 }

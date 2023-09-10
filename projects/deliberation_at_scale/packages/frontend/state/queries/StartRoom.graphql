@@ -1,0 +1,10 @@
+mutation StartRoom($topicId: UUID!) {
+  insertIntoroomsCollection(objects: {
+    topic_id: $topicId
+  }) {
+    affectedCount
+    records {
+        id
+    }
+  }
+}

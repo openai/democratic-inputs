@@ -1,0 +1,17 @@
+fragment RoomParticipant on participants {
+  id
+  active
+  nick_name
+  updated_at
+  created_at
+}
+
+query GetRoomParticipants($roomId: UUID!) {
+  participantsCollection(filter: { active: { eq: true }, id: { eq: $roomId } }) {
+    edges {
+      node {
+        ...RoomParticipant
+      }
+    }
+  }
+}

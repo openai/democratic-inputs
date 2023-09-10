@@ -1,0 +1,27 @@
+fragment SimpleRoom on rooms {
+  id
+  active
+  topics {
+    ...SimpleRoomTopic
+  }
+  updated_at
+  created_at
+}
+
+fragment SimpleRoomTopic on topics {
+  id
+  active
+  content
+  updated_at
+  created_at
+}
+
+query GetRooms($roomId: UUID) {
+  roomsCollection(filter: { active: { eq: true }, id: { eq: $roomId } }) {
+    edges {
+      node {
+        ...SimpleRoom
+      }
+    }
+  }
+}

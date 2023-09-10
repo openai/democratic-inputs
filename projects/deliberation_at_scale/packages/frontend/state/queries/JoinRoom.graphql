@@ -1,0 +1,8 @@
+mutation JoinRoom($roomId: UUID!, $userId: UUID!) {
+  insertIntoparticipantsCollection(objects: {
+    room_id: $roomId
+    user_id: $userId
+  }) {
+    affectedCount
+  }
+}

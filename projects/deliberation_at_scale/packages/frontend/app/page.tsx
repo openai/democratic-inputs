@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 
-import useAuth from "@/hooks/useAuth";
+import useProfile from "@/hooks/useProfile";
 import LogoutButton from "@/components/LogoutButton";
 import Messages from "@/components/Messages";
 
 export default function Index() {
-    const { user, authUser } = useAuth();
+    const { user, authUser } = useProfile();
     const isLoggedIn = !!user && !!authUser;
 
     return (

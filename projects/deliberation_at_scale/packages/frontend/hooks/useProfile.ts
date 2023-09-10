@@ -2,17 +2,28 @@ import { useCallback, useEffect, useState } from "react";
 import { User } from "@supabase/gotrue-js";
 
 import { supabaseClient } from "@/state/supabase";
-import { useGetUserQuery } from "@/generated/graphql";
+import { useGetRoomsQuery, useGetUserQuery } from "@/generated/graphql";
+import useRealtimeQuery from "./useRealtimeQuery";
 
-export default function useAuth() {
+export default function useProfile() {
     const [authUser, setAuthUser] = useState<User | null>(null);
     const authUserId = authUser?.id;
-    const { data: usersData, refetch: refetchUser } = useGetUserQuery({
+    const { data: usersData, refetch: refetchUser } = useRealtimeQuery(useGetUserQuery({
         variables: {
             authUserId,
-        }
+        },
+    }));
+    const { data: roomsData } = useRealtimeQuery(useGetRoomsQuery(), {
+        tableEventsLookup: {
+            rooms: {
+                refetchOperations: [],
+                appendOnInsertEdgePaths: ['roomsCollection'],
+            },
+        },
     });
     const user = usersData?.usersCollection?.edges?.[0]?.node;
+    const rooms = roomsData?.roomsCollection?.edges;
+
     const updateAuthUser = useCallback(async () => {
         const { data: { user } } = await supabaseClient.auth.getUser();
         setAuthUser(user);
@@ -36,5 +47,6 @@ export default function useAuth() {
     return {
         authUser,
         user,
+        rooms,
     };
 }

@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 
-import authSlice from './slices/auth';
+import profileSlice from './slices/profile';
 import roomSlice from './slices/room';
 
 const store = configureStore({
     reducer: {
-        auth: authSlice.reducer,
+        profile: profileSlice.reducer,
         room: roomSlice.reducer,
     },
 });
