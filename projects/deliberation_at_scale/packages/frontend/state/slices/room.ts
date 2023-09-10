@@ -35,7 +35,7 @@ const slice = createSlice({
     name: 'room',
     initialState,
     reducers: {
-        joinRoom: (state, action: PayloadAction<string>) => {
+        joinRoom: (state, action: PayloadAction<RoomId>) => {
             state.currentRoomId = action.payload;
         },
         leaveRoom: (state) => {

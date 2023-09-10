@@ -19,7 +19,7 @@ export default function RoomLayout({ children }: PropsWithChildren) {
     // Retrieve the roomId from the URL params
     const params = useParams();
     const roomId = useMemo(() => (
-        params?.roomId && !Array.isArray(params.roomId) ? params.roomId : null 
+        params?.roomId && !Array.isArray(params.roomId) ? params.roomId : null
     ), [params?.roomId]);
 
     // Retrieve the Redux dispatch action
@@ -31,7 +31,7 @@ export default function RoomLayout({ children }: PropsWithChildren) {
         && connection
         && localMedia
         && localMedia.state?.localStream
-        && connection.state.roomConnectionStatus !== 'connecting'
+        && connection?.state?.roomConnectionStatus !== 'connecting'
             ? true : false
     ), [roomId, localMedia, connection]);
 
@@ -40,7 +40,7 @@ export default function RoomLayout({ children }: PropsWithChildren) {
         if (roomId && localMedia?.state?.localStream) {
             dispatch(joinRoom(roomId));
         }
-        
+
         // Whenever the page is unmounted, we can leave the room
         return () => { dispatch(leaveRoom()); };
     }, [dispatch, localMedia, roomId]);

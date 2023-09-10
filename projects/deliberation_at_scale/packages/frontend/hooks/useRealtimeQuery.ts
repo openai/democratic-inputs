@@ -80,7 +80,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                 node.map((nodeEntry) => {
                     extractCandidateNodes(nodeEntry, depth + 1);
                 });
-            } else if (typeof node == 'object') {
+            } else if (!!node && typeof node == 'object') {
                 Object.values(node).map((nodeValue) => {
                     extractCandidateNodes(nodeValue, depth + 1);
                 });

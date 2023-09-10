@@ -4,6 +4,7 @@ fragment SimpleRoom on rooms {
   topics {
     ...SimpleRoomTopic
   }
+  external_room_id
   updated_at
   created_at
 }

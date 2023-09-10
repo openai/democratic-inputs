@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useGetTopicsQuery, useStartRoomMutation } from "@/generated/graphql";
 import useProfile from "@/hooks/useProfile";
@@ -9,6 +10,7 @@ import { joinRoom } from "@/state/slices/room";
 export default function Index() {
     const { rooms } = useProfile();
     const dispatch = useAppDispatch();
+    const { push } = useRouter();
     const [startRoom, { loading: loadingStartRoom }] = useStartRoomMutation();
     const { data: topicsData } = useGetTopicsQuery();
     const topics = topicsData?.topicsCollection?.edges;
@@ -46,9 +48,8 @@ export default function Index() {
                         return (
                             <li key={id}>
                                 <button onClick={() => {
-                                    dispatch(joinRoom({
-                                        roomId: id,
-                                    }));
+                                    dispatch(joinRoom(id));
+                                    push(`/room/${id}/ai`);
                                 }}>JOIN</button>&nbsp;
                                 {id}: {topicContent}
                             </li>
