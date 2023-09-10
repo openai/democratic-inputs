@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import useProfile from "@/hooks/useProfile";
 import LogoutButton from "@/components/LogoutButton";
-import Messages from "@/components/Messages";
+import Messages from "@/app/tests/messages/Messages";
 import useRoom from "@/hooks/useRoom";
 import { useAppSelector } from "@/state/store";
 
@@ -27,7 +27,7 @@ export default function Index() {
                             <div className="flex items-center gap-4">
                                 Hey, {user?.nick_name} ({authUser?.email})
                                 {room ? <p>Current room: {room.id}</p> : ''}
-                                <button onClick={() => { push('/room-tester'); }} className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+                                <button onClick={() => { push('/tests/rooms'); }} className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
                                     Switch Room
                                 </button>
                                 <LogoutButton />
