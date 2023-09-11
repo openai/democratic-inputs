@@ -15,7 +15,7 @@ let isAddingModeration = false;
 /**
  * Run this task at most every n seconds
  */
-const TASK_INTERVAL_SECONDS = 10;
+const TASK_INTERVAL_SECONDS = 45;
 
 /**
  * This task retrieves all messages since its last execution and attempts to
@@ -80,7 +80,7 @@ function reschedule(initialDate: string | null) {
 
 async function checkForConsensus(messages: Message[]): Promise<{ result: boolean } | null> {
     const completion = await openai.chat.completions.create({
-        temperature: 0,
+        temperature: 0.1,
         model: "gpt-4",
         messages: [
             {
@@ -89,7 +89,7 @@ async function checkForConsensus(messages: Message[]): Promise<{ result: boolean
           `The following shows part of a discussion at this point in the discussion do the three participants have a consensus on the topic: "Students are not allowed to use AI technology for their exams"?
 
         return a JSON object in the following format: { result: {boolean, true if there is a consensus, false if no consensus can be formulated} }
-        If yes say true if no say false.`,
+        `,
             },
             ...messages.map(
                 (message) =>
