@@ -28,8 +28,8 @@ async function moderator(messages: Message[]) {
   //console.log(consensusMessage)
 
   //  UNEQUAL CONTRIBUTION
-  const contributionCheckMessagesCount = 5; // Amount of messages that are used to compare the contribution between participants.
-  const contributionMessages = (messages.length <= contributionCheckMessagesCount) ? messages : messages.slice((messages.length - contributionCheckMessagesCount - 1), messages.length - 1);
+  //const contributionCheckMessagesCount = 5; // Amount of messages that are used to compare the contribution between participants.
+  //const contributionMessages = (messages.length <= contributionCheckMessagesCount) ? messages : messages.slice((messages.length - contributionCheckMessagesCount - 1), messages.length - 1);
   //unequalContribution(contributionMessages);
 
 }
