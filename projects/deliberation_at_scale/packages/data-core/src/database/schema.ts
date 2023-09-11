@@ -134,7 +134,6 @@ export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
     roomId: uuid(ROOM_ID_FIELD_NAME)
-        .notNull()
         .references(() => rooms.id),
     userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
     nickName: generateNickNameField(),
