@@ -2,7 +2,7 @@ import { Helpers } from "graphile-worker";
 import supabase from "../lib/supabase";
 import openai from "../lib/openai";
 import { json } from "stream/consumers";
-import { Database } from "src/data/database.types";
+import { Database } from "../data/database.types";
 import { type } from "os";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
