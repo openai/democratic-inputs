@@ -2,7 +2,7 @@ import { Helpers, quickAddJob } from "graphile-worker";
 import supabase from "../lib/supabase";
 import openai from "../lib/openai";
 import { CreateChatCompletionRequestMessage } from "openai/resources/chat";
-import { Database } from "src/data/database.types";
+import { Database } from "../data/database.types";
 
 //TODO: Retrieve this from database
 const DISCUSSION_TOPIC = "Students are not allowed to use AI technology for their exams";
