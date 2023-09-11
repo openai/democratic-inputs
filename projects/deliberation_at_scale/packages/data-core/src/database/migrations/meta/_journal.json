@@ -15,6 +15,13 @@
       "when": 1694161503128,
       "tag": "0001_quick_scourge",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1694433453815,
+      "tag": "0002_talented_crusher_hogan",
+      "breakpoints": true
     }
   ]
 }
