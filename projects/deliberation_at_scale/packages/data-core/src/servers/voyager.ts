@@ -26,6 +26,8 @@ export async function startVoyagerServer() {
         executor: remoteExecutor
     };
     const gatewaySchema = stitchSchemas({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         subschemas: [dataCoreSchema]
     });
     const gatewayServer = createYoga({ schema: gatewaySchema });
