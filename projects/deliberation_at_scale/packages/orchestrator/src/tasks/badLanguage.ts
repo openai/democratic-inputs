@@ -10,7 +10,8 @@ type Message = Database["public"]["Tables"]["messages"]["Row"]
 let isUpdatingMessage = false;
 let isAddingModeration = false;
 
-export default async function moderate(message: Message, helpers: Helpers) {
+export default async function badLanguage(message: Message, helpers: Helpers) {
+    console.log("badlanguage");
     // GUARD
     if (!message) {
         console.error('Moderation', "No message in payload");
