@@ -33,10 +33,8 @@ export default function RoomConnectionProvider({ children }: PropsWithChildren) 
     // Retrieve the local media data, which should already be initialized.
     const localMedia = useLocalMedia();
 
-    // TMP: remove null connection when Whereby login is shared in 1password
     // Then, start the room connection
-    // const connection = useRoomConnection(roomUrl, { localMedia });
-    const connection = null;
+    const connection = useRoomConnection(roomUrl, { localMedia });
 
     return (
         <RoomConnectionContext.Provider value={connection}>
