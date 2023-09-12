@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "setup": "npm install",
+    "setup": "npm install && cp -n .env.example .env",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "swc src -d dist",
     "start": "npm run build && node dist/runner.js",
