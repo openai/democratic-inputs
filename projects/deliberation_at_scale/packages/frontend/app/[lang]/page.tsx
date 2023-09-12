@@ -12,6 +12,7 @@ export default function Index() {
 
             <NavLink href="/tests/rooms">Go to Room Tester</NavLink>
             <NavLink href="/tests/messages">Go to Message Tester</NavLink>
+            <NavLink href="/tests/lobby">Go to lobby Tester</NavLink>
         </div>
     );
 }
