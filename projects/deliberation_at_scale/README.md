@@ -7,13 +7,13 @@ The prototype available in this repository aims to test whether intimate, small 
 # Packages
 All packages in this monorepo are managed by [Nx](https://nx.dev/) to make it easy to have dependencies between them and run them in development.
 
-| name | description                  |
-|------|------------------------------|
-| [data-core](./packages/data-core/) |Package with all the data model definitions  |
-| [frontend](./packages/frontend/) | Package with the end-user and admin frontend |
-| [orchestrator](./packages/orchestrator/) | Manager for all the deliberations and job queue handler |
-| [edge-functions](./packages/edge-functions/) | Supabase Edge functions   |
-| [common](./packages/common/) | Shared library between packages   |
+| name | description                  | location
+|------|------------------------------|----------------|
+| [data-core](./packages/data-core/) |Package with all the data model definitions  | https://localhost:3201/ |
+| [frontend](./packages/frontend/) | Package with the end-user and admin frontend | https://localhost:3200/ |
+| [orchestrator](./packages/orchestrator/) | Manager for all the deliberations and job queue handler | |
+| [edge-functions](./packages/edge-functions/) | Supabase Edge functions   | |
+| [common](./packages/common/) | Shared library between packages   | |
 
 # Installation
 To setup all the packages run the following command:
