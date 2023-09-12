@@ -1,8 +1,10 @@
-require("dotenv").config()
-import { parseCronItems, run, quickAddJob } from "graphile-worker"
-import crontab from "./crontab"
-import supabase from "./lib/supabase"
-import startScheduler from './scheduler'
+//TODO: change naming of tasks to new names
+
+require("dotenv").config();
+import { parseCronItems, run, quickAddJob } from "graphile-worker";
+import crontab from "./crontab";
+import supabase from "./lib/supabase";
+import startScheduler from './scheduler';
 
 async function main() {
     const runner = await run({
