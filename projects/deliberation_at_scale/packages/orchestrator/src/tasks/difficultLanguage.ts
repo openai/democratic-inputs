@@ -10,7 +10,7 @@ type Message = Database["public"]["Tables"]["messages"]["Row"]
 let isUpdatingMessage = false;
 let isAddingModeration = false;
 
-export default async function clarify(message: Message, helpers: Helpers) {
+export default async function difficultLanguage(message: Message, helpers: Helpers) {
     // GUARD
     if (!message) {
         console.error('Moderation', "No message in payload");

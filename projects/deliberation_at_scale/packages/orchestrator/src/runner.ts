@@ -18,32 +18,32 @@ async function main() {
 }
 
 async function listenForNewMessages() {
-  const messageInsertListener = supabase
-    .channel("supabase_realtime")
-    .on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "messages",
-        filter: "type=eq.chat",
-      },
-      (payload) => {
-        const newMessage = payload.new
-        console.log(newMessage)
-        // add logic for supabase triggers.
-        // for every message from supabase, quickAdd job the moderation task with the message as payload
-        quickAddJob({}, "moderate", newMessage, {
-          jobKey: "moderate",
-          jobKeyMode: "preserve_run_at",
-        });
-        quickAddJob({}, "clarify", newMessage, {
-          jobKey: "clarify",
-          jobKeyMode: "preserve_run_at",
-        });
-      }
-    )
-    .subscribe()
+    const messageInsertListener = supabase
+        .channel("supabase_realtime")
+        .on(
+            "postgres_changes",
+            {
+                event: "INSERT",
+                schema: "public",
+                table: "messages",
+                filter: "type=eq.chat",
+            },
+            (payload) => {
+                const newMessage = payload.new;
+                console.log(newMessage);
+                // add logic for supabase triggers.
+                // for every message from supabase, quickAdd job the moderation task with the message as payload
+                quickAddJob({}, "badLanguage", newMessage, {
+                    jobKey: "badLanguage",
+                    jobKeyMode: "preserve_run_at",
+                });
+                quickAddJob({}, "difficultLanguage", newMessage, {
+                    jobKey: "difficultLanguage",
+                    jobKeyMode: "preserve_run_at",
+                });
+            }
+        )
+        .subscribe();
 
     return () => {
         messageInsertListener.unsubscribe();
