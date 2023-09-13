@@ -29,6 +29,13 @@
       "when": 1694438124970,
       "tag": "0003_wet_tana_nile",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1694591622138,
+      "tag": "0004_melted_sprite",
+      "breakpoints": true
     }
   ]
 }
