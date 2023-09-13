@@ -143,7 +143,7 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
     topicId: uuid(TOPIC_ID_FIELD_NAME)
         .notNull()
         .references(() => topics.id),
-    startsAt: timestamp("starts_at").notNull().defaultNow(),
+    startsAt: timestamp("starts_at"),
     ...generateTimestampFields(),
 }, (table) => {
     return {
