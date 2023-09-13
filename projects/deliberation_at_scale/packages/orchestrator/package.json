@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@swc-node/register": "^1.6.6",
-    "@swc/cli": "^0.1.62",
+    "@swc/cli": "0.1.62",
     "@types/node": "^20.4.9"
   }
 }
