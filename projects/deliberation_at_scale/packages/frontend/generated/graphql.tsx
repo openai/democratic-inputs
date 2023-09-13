@@ -1181,10 +1181,13 @@ export type MessagesUpdateResponse = {
 };
 
 export enum ModerationType {
+  Clarification = 'clarification',
+  Consensus = 'consensus',
   Harrashment = 'harrashment',
   OffTopic = 'off_topic',
   Other = 'other',
-  Spam = 'spam'
+  Spam = 'spam',
+  Unequal = 'unequal'
 }
 
 /** Boolean expression comparing fields on type "moderationType" */
@@ -1765,8 +1768,8 @@ export type Participants = Node & {
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
   participation_score: Scalars['Int']['output'];
-  room_id: Scalars['UUID']['output'];
-  rooms: Rooms;
+  room_id?: Maybe<Scalars['UUID']['output']>;
+  rooms?: Maybe<Rooms>;
   updated_at: Scalars['Datetime']['output'];
   user_id?: Maybe<Scalars['UUID']['output']>;
   users?: Maybe<Users>;

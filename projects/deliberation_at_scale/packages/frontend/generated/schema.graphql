@@ -1397,10 +1397,13 @@ type messagesUpdateResponse {
 }
 
 enum moderationType {
+  clarification
+  consensus
   harrashment
   off_topic
   other
   spam
+  unequal
 }
 
 """
@@ -2131,8 +2134,8 @@ type participants implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
   participation_score: Int!
-  room_id: UUID!
-  rooms: rooms!
+  room_id: UUID
+  rooms: rooms
   updated_at: Datetime!
   user_id: UUID
   users: users
