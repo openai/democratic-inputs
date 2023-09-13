@@ -1,16 +1,14 @@
 import Providers from '@/components/Providers';
 import './globals.css';
-
+import { PropsWithChildren } from 'react';
 export const metadata = {
     title: 'Deliberation at Scale',
     description: 'Deliberation at Scale',
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode
-}) {
+export default async function RootLayout({
+    children
+}: PropsWithChildren) {
     return (
         <html lang="en">
             <body>

@@ -48,3 +48,26 @@ To make the various clients fetching data type-safe you can generate types from 
 ```
 npm run db:generate-types
 ```
+
+# Internationalization
+This codebase has been setup to use Lingui for internationalization. This means
+you'll need to utilize some utility functions in order to make the right strings
+are displayed for the right language. Import the following helpers from
+`@lingui/macro`:
+
+```tsx
+import { t, Trans } from '@lingui/macro';
+
+const surprise = Math.random() > 0.5
+    ? t('Heads')
+    : t('Tails');
+
+export default function Page() {
+    return (
+        <h1><Trans>Welcome to this special page</Trans></h1>
+    )
+}
+```
+
+Language is determined based on route. All routes starting with `/en/` will
+display in English, `/nl/` will render in Dutch, and so on.

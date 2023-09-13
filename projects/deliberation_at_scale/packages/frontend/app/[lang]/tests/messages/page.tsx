@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 
 import useProfile from "@/hooks/useProfile";
 import LogoutButton from "@/components/LogoutButton";
-import Messages from "@/app/tests/messages/Messages";
 import useRoom from "@/hooks/useRoom";
 import { useAppSelector } from "@/state/store";
+import Messages from './Messages';
 
 export default function Index() {
     const currentRoomId = useAppSelector((state) => state.room.currentRoomId);
