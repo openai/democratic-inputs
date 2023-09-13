@@ -1,9 +1,11 @@
-import { parseCronItems, run } from "graphile-worker";
+import { Runner, parseCronItems, run } from "graphile-worker";
 import crontab from "./crontab";
 
+let runner: Runner;
+
 export async function startRunner() {
-    const runner = await run({
-        concurrency: 5,
+    runner = await run({
+        concurrency: 10,
         taskDirectory: `${__dirname}/tasks`,
         parsedCronItems: parseCronItems(crontab),
         noPreparedStatements: true,
@@ -11,6 +13,10 @@ export async function startRunner() {
     await runner.promise;
 }
 
-export async function stopRunner() {
+export function getRunner() {
+    return runner;
+}
 
+export async function stopRunner() {
+    await runner?.stop();
 }

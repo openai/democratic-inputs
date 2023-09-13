@@ -1,5 +1,5 @@
 import { quickAddJob } from "graphile-worker";
-import supabase from "./lib/supabase";
+import supabaseClient from "./lib/supabase";
 import objectHash from "object-hash";
 import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, RealtimeChannel, RealtimePostgresChangesFilter, RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
@@ -43,7 +43,7 @@ async function startMessageListener() {
 function registerRealtimeListener<T extends `${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT}`, K extends { [key: string]: any }>(filter: RealtimePostgresChangesFilter<T>, callback: (payload: RealtimePostgresChangesPayload<K>) => void) {
     const channelName = objectHash(filter);
 
-    const listener = supabase
+    const listener = supabaseClient
         .channel(channelName)
         .on(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

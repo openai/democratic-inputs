@@ -1,24 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require("dotenv").config();
 import { OpenAI } from "openai";
+import { OPENAI_API_KEY } from "src/contants";
 
-declare global {
-    namespace NodeJS {
-        interface ProcessEnv {
-            OPENAI_API_KEY: string
-        }
-    }
-}
-
-// GUARD: Double-check that OPENAI_API_KEY are part of the environment
-if (!("OPENAI_API_KEY" in process.env)) {
-    throw new Error(
-        "Missing OPENAI_API_KEY environment variable. Please add it to your environment or .env file"
-    );
-}
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+const openaiClient = new OpenAI({
+    apiKey: OPENAI_API_KEY,
 });
 
-export default openai;
+export default openaiClient;

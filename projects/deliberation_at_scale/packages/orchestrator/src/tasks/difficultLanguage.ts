@@ -1,8 +1,8 @@
 import { Helpers } from "graphile-worker";
-import supabase from "../lib/supabase";
-import openai from "../lib/openai";
+import supabaseClient from "../lib/supabase";
+import openaiClient from "../lib/openai";
 import { json } from "stream/consumers";
-import { Database } from "../data/database.types";
+import { Database } from "../generated/database.types";
 import { type } from "os";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
@@ -34,7 +34,7 @@ export default async function difficultLanguage(message: Message, helpers: Helpe
 
 // Use custom ruleset with completions API
 async function isFlaggedByClarityRules(message: Message): Promise<{ result: boolean, content: string | null } | null> {
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
         temperature: 0.2,
         messages: [
             {
@@ -65,7 +65,7 @@ async function isFlaggedByClarityRules(message: Message): Promise<{ result: bool
 }
 
 async function writeClarityResponse(words: string): Promise<{ content: string, words: { word: string, explanation: string }[] } | null> {
-    const moderationMessage = await openai.chat.completions.create({
+    const moderationMessage = await openaiClient.chat.completions.create({
         temperature: 0.8,
         messages: [
             {
@@ -97,7 +97,7 @@ async function addClarificationMessageToChat(message: Message, moderationMessage
     // update the message
     isUpdatingMessage = true;
     try {
-        const result = await supabase
+        const result = await supabaseClient
             .from("messages")
             .insert({
                 content: moderationMessageContent,
@@ -121,7 +121,7 @@ async function addModerationMessage(message: Message, moderationMessageContent: 
 
     // FIX: other moderations types (e.g. clarification) is not added to moderations table
     try {
-        const result = await supabase.from("moderations").insert({
+        const result = await supabaseClient.from("moderations").insert({
             type: 'clarification',
             statement: moderationMessageContent,
             target_type: 'moderation',

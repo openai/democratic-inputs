@@ -1,10 +1,10 @@
 
 
 import { Helpers, quickAddJob } from "graphile-worker";
-import supabase from "../lib/supabase";
-import openai from "../lib/openai";
+import supabaseClient from "../lib/supabase";
+import openaiClient from "../lib/openai";
 import { ChatCompletionMessageParam, CreateChatCompletionRequestMessage } from "openai/resources/chat";
-import { Database } from "../data/database.types";
+import { Database } from "../generated/database.types";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
 
@@ -15,7 +15,7 @@ export default async function equalize(
     helpers: Helpers
 ) {
     // Retrieve all messages from supabase
-    let statement = supabase.from("messages").select().eq("type", "chat")
+    let statement = supabaseClient.from("messages").select().eq("type", "chat")
 
     if (lastRun) {
         statement = statement.gt("created_at", lastRun);
@@ -57,7 +57,7 @@ export default async function equalize(
 async function equalContributedCheck(messages: Message[]): Promise<boolean | null> {
 
     // Request GPT to equal the set of messages
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
         model: "gpt-4",
         messages: [
             {
@@ -97,7 +97,7 @@ async function equalContributedCheck(messages: Message[]): Promise<boolean | nul
 
 //Can be used to check the percentages of equal contribution
 async function equalContributionCheckPercentages(messages: Message[]) {
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
         temperature: 0,
         messages: [
             {
