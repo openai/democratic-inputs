@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
 
+import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions";
 import { OrchestratorRole, ProgressionTopology } from "./types";
 
 declare global {

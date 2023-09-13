@@ -78,7 +78,7 @@ export const moderationType = pgEnum("moderationType", [
     "off_topic",
     "other",
 ]);
-export const completionType = pgEnum("completionType", ["gpt4"]);
+export const completionType = pgEnum("completionType", ["gpt"]);
 export const targetType = pgEnum("targetType", [
     "user",
     "topic",
@@ -361,7 +361,7 @@ function generateActiveFieldIndex(table) {
 
 function generateTargetFields() {
     return {
-        targetType: targetType(TARGET_TYPE_FIELD_NAME).notNull(),
+        targetType: targetType(TARGET_TYPE_FIELD_NAME),
         userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
         topicId: uuid(TOPIC_ID_FIELD_NAME).references(() => topics.id),
         roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id),
