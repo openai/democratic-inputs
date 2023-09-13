@@ -1,0 +1,6 @@
+
+mutation UpdateParticipant($participantID: UUID!, $updateTime: Datetime!) {
+    updateparticipantsCollection(filter: {id: {eq: $participantID} }, set: {updated_at: $updateTime}) {
+        affectedCount
+    }
+}

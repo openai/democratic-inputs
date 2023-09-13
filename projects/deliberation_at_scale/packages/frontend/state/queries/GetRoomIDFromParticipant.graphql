@@ -1,0 +1,10 @@
+
+query GetRoomIdFromParticipant($participantID: UUID!) {
+    participantsCollection(filter: {id: {eq: $participantID}}, first: 1) {
+        edges {
+            node {
+                room_id
+            }
+        }
+    }
+}

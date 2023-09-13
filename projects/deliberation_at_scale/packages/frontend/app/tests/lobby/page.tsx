@@ -6,10 +6,12 @@ import { useGetTopicsQuery, useStartRoomMutation } from "@/generated/graphql";
 import useProfile from "@/hooks/useProfile";
 import { useAppDispatch } from "@/state/store";
 import { joinRoom } from "@/state/slices/room";
+import useLobby from "@/hooks/useLobby";
 
 
 export default function Index() {
     const { user, rooms } = useProfile();
+    const {participant, loading: participantLoading} = useLobby(user?.id);
 
     return (
         <div className="w-full flex flex-col items-center">
@@ -18,6 +20,10 @@ export default function Index() {
                 <p>welcome {user?.nick_name}</p>
                 <br></br>
                 <h2>Waiting to join discussion</h2>
+                {
+                    participantLoading ? (<p>LOADING</p>) : 
+                    <p>{JSON.stringify(participant,null,4)}</p>
+                }
             </div>
         </div >
     );

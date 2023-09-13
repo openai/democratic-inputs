@@ -1767,6 +1767,7 @@ input outcomeTypeFilter {
 }
 
 type outcome_sources implements Node {
+  active: Boolean!
   created_at: Datetime!
   id: UUID!
   message_id: UUID!
@@ -1798,6 +1799,7 @@ type outcome_sourcesEdge {
 }
 
 input outcome_sourcesFilter {
+  active: BooleanFilter
   created_at: DatetimeFilter
   id: UUIDFilter
   message_id: UUIDFilter
@@ -1807,6 +1809,7 @@ input outcome_sourcesFilter {
 }
 
 input outcome_sourcesInsertInput {
+  active: Boolean
   created_at: Datetime
   id: UUID
   message_id: UUID
@@ -1823,6 +1826,7 @@ type outcome_sourcesInsertResponse {
 }
 
 input outcome_sourcesOrderBy {
+  active: OrderByDirection
   created_at: OrderByDirection
   id: OrderByDirection
   message_id: OrderByDirection
@@ -1831,6 +1835,7 @@ input outcome_sourcesOrderBy {
 }
 
 input outcome_sourcesUpdateInput {
+  active: Boolean
   created_at: Datetime
   id: UUID
   message_id: UUID
