@@ -7,6 +7,7 @@
     "setup": "npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "swc src -d dist",
+    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/data/database.types.ts'",
     "start": "npm run build && node dist/runner.js",
     "lint": "eslint src --ext .ts"
   },
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@swc-node/register": "^1.6.6",
     "@swc/cli": "^0.1.62",
-    "@types/node": "^20.4.9"
+    "@types/node": "^20.4.9",
+    "dotenv-cli": "7.3.0"
   }
 }
