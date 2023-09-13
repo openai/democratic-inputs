@@ -13,7 +13,8 @@
     "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./types/database.ts' && eslint --fix ./types/database.ts",
     "db:login": "supabase login",
     "codegen": "dotenv -e .env -- gql-gen --config codegen.ts --watch",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "clean": "rimraf ./node_modules"
   },
   "author": "Pepijn Verburg <pepijn@bmd.studio>, Lei Nelissen <lei@bmd.studio>, Jorim Theuns <jorim@dembrane.com>",
   "license": "MIT",
@@ -52,6 +53,7 @@
     "es6-object-assign": "1.1.0",
     "eslint-config-next": "13.4.19",
     "radash": "11.0.0",
+    "rimraf": "5.0.1",
     "supabase": "1.83.7",
     "typescript": "5.2.2",
     "vercel": "31.2.3"

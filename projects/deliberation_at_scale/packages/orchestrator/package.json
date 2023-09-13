@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "swc src -d dist",
     "start": "npm run build && node dist/runner.js",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "clean": "rimraf ./node_modules"
   },
   "keywords": [],
   "author": "Lei Nelissen <lei@bmd.studio>",
@@ -23,6 +24,7 @@
     "@swc-node/register": "^1.6.6",
     "@swc/cli": "0.1.62",
     "@swc/core": "1.3.84",
-    "@types/node": "^20.4.9"
+    "@types/node": "^20.4.9",
+    "rimraf": "5.0.1"
   }
 }
