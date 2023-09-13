@@ -415,3 +415,15 @@ BEGIN
     END LOOP;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION listen_insert_auth_user() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO public.users (auth_user_id) VALUES(NEW.id);
+    RETURN NEW;
+END;
+$$ SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER listen_insert_auth_user BEFORE INSERT ON auth.users
+FOR EACH ROW EXECUTE FUNCTION listen_insert_auth_user();
