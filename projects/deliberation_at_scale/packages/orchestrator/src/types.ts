@@ -2,6 +2,13 @@ import { Database } from "./generated/database.types";
 
 export type OrchestratorRole = 'all' | 'runner' | 'listener' | 'scheduler';
 
+export interface OrchestratorRoleTask {
+    name: string;
+    roles: OrchestratorRole[];
+    startTask: () => Promise<void>;
+    stopTask: () => Promise<void>;
+}
+
 /** The root of the topology containing all the different layers where the deliberation can go through. */
 export interface ProgressionTopology {
     layers: ProgressionLayer[];

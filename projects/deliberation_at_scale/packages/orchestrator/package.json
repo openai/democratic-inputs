@@ -7,7 +7,11 @@
     "setup": "npm install",
     "build": "swc src -d dist",
     "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/generated/database.types.ts'",
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && npm run start:all",
+    "start:all": "ORCHESTRATOR_ROLE=all node dist/index.js",
+    "start:runner": "ORCHESTRATOR_ROLE=runner node dist/index.js",
+    "start:scheduler": "ORCHESTRATOR_ROLE=scheduler node dist/index.js",
+    "start:listener": "ORCHESTRATOR_ROLE=listener node dist/index.js",
     "lint": "eslint src --ext .ts",
     "clean": "rimraf ./node_modules"
   },
