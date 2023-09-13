@@ -12,43 +12,12 @@ import {
     index,
 } from "drizzle-orm/pg-core";
 
-// table names to make it easy to rename them
-// NOTE: rename the variable name here and in the schema definition!
-const USERS_TABLE_NAME = "users";
-const TOPICS_TABLE_NAME = "topics";
-const ROOMS_TABLE_NAME = "rooms";
-const PARTICIPANTS_TABLE_NAME = "participants";
-const MESSAGES_TABLE_NAME = "messages";
-const OUTCOMES_TABLE_NAME = "outcomes";
-const OUTCOME_SOURCES_TABLE_NAME = "outcome_sources";
-const OPINIONS_TABLE_NAME = "opinions";
-const CROSS_POLLINATIONS_TABLE_NAME = "cross_pollinations";
-const COMPLETIONS_TABLE_NAME = "completions";
-const MODERATIONS_TABLE_NAME = "moderations";
-
-// foreign key field names to make it easy to keep track when renaming tables
-// NOTE: rename the variable name here and the field key in the schema definition!
-const TOPIC_ID_FIELD_NAME = "topic_id";
-const ORIGINAL_TOPIC_ID_FIELD_NAME = "original_topic_id";
-const ROOM_ID_FIELD_NAME = "room_id";
-const PARTICIPANT_ID_FIELD_NAME = "participant_id";
-const AUTH_USER_ID_FIELD_NAME = "auth_user_id";
-const USER_ID_FIELD_NAME = "user_id";
-const ORIGINAL_MESSAGE_ID_FIELD_NAME = "original_message_id";
-const MESSAGE_ID_FIELD_NAME = "message_id";
-const OUTCOME_ID_FIELD_NAME = "outcome_id";
-const ORIGINAL_OUTCOME_ID_FIELD_NAME = "original_outcome_id";
-const OPINION_ID_FIELD_NAME = "opinion_id";
-const CROSS_POLLINATION_ID_FIELD_NAME = "cross_pollination_id";
-const COMPLETION_ID_FIELD_NAME = "completion_id";
-const MODERATION_ID_FIELD_NAME = "moderation_id";
-
 // common field names
-const ID_FIELD_NAME = "id";
-const ACTIVE_FIELD_NAME = "active";
-const TARGET_TYPE_FIELD_NAME = "target_type";
-const CREATED_AT_FIELD_NAME = "created_at";
-const UPDATED_AT_FIELD_NAME = "updated_at";
+export const ID_FIELD_NAME = "id";
+export const ACTIVE_FIELD_NAME = "active";
+export const TARGET_TYPE_FIELD_NAME = "target_type";
+export const CREATED_AT_FIELD_NAME = "created_at";
+export const UPDATED_AT_FIELD_NAME = "updated_at";
 
 // enums
 // NOTE: use lowercase for enum values to avoid issues with postgres
