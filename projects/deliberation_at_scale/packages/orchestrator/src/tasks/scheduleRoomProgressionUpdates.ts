@@ -15,11 +15,11 @@ export default async function scheduleRoomProgressionUpdates(payload: ScheduleRo
 
     activeRooms.map((activeRoom) => {
         const { id: roomId } = activeRoom;
-        const payload: UpdateRoomProgressionPayload = {
+        const newJobPayload: UpdateRoomProgressionPayload = {
             roomId,
         };
 
         helpers.logger.info(`Scheduling progression update for room ${roomId}...`);
-        helpers.addJob("updateRoomProgression", payload);
+        helpers.addJob("updateRoomProgression", newJobPayload);
     });
 }
