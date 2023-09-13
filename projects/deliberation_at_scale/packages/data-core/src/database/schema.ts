@@ -52,6 +52,7 @@ const UPDATED_AT_FIELD_NAME = "updated_at";
 // NOTE: use lowercase for enum values to avoid issues with postgres
 export const topicType = pgEnum("topicType", ["original", "remixed"]);
 export const messageType = pgEnum("messageType", ["chat", "voice", "bot"]);
+export const roomStatusType = pgEnum("roomStatusType", ["safe", "informed", "debate", "results"]);
 export const outcomeType = pgEnum("outcomeType", [
     "milestone",
     "consensus",
@@ -123,6 +124,7 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
     externalRoomId: text("external_room_id"),
+    statusType: roomStatusType("room_status_type").notNull().default("safe"),
     topicId: uuid(TOPIC_ID_FIELD_NAME)
         .notNull()
         .references(() => topics.id),
