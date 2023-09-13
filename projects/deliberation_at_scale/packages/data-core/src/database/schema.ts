@@ -9,6 +9,7 @@ import {
     text,
     json,
     AnyPgColumn,
+    index,
 } from "drizzle-orm/pg-core";
 
 // table names to make it easy to rename them
@@ -45,6 +46,7 @@ const MODERATION_ID_FIELD_NAME = "moderation_id";
 // common field names
 const ID_FIELD_NAME = "id";
 const ACTIVE_FIELD_NAME = "active";
+const TARGET_TYPE_FIELD_NAME = "target_type";
 const CREATED_AT_FIELD_NAME = "created_at";
 const UPDATED_AT_FIELD_NAME = "updated_at";
 
@@ -107,6 +109,12 @@ export const users = pgTable(USERS_TABLE_NAME, {
     nickName: generateNickNameField(),
     demographics: json("demographics").notNull().default({}),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        authUserIdIndex: index("auth_user_id_index").on(table.authUserId),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const topics = pgTable(TOPICS_TABLE_NAME, {
@@ -118,6 +126,13 @@ export const topics = pgTable(TOPICS_TABLE_NAME, {
     ),
     content: text("content").notNull().default(""),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        typeIndex: index("type_index").on(table.type),
+        originalTopicIdIndex: index("original_topic_id_index").on(table.originalTopicId),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const rooms = pgTable(ROOMS_TABLE_NAME, {
@@ -130,6 +145,15 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
         .references(() => topics.id),
     startsAt: timestamp("starts_at").notNull().defaultNow(),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        statusTypeIndex: index("status_type_index").on(table.statusType),
+        externalRoomIdIndex: index("external_room_id_index").on(table.externalRoomId),
+        topicIdIndex: index("topic_id_index").on(table.topicId),
+        startsAtIndex: index("starts_at_index").on(table.startsAt),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
@@ -142,6 +166,15 @@ export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     nickName: generateNickNameField(),
     participationScore: integer("participation_score").notNull().default(0),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        readyIndex: index("ready_index").on(table.ready),
+        roomIdIndex: index("room_id_index").on(table.roomId),
+        userIdIndex: index("user_id_index").on(table.userId),
+        participationScore: index("participation_score_index").on(table.participationScore),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const messages = pgTable(MESSAGES_TABLE_NAME, {
@@ -149,10 +182,10 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
     active: generateActiveField(),
     type: messageType("type").notNull().default("chat"),
     visibilityType: messageVisibilityType("visibility_type").notNull().default("public"),
+    timingType: timingType("timing_type").notNull().default("during_room"),
     originalMessageId: uuid(ORIGINAL_MESSAGE_ID_FIELD_NAME).references(
         (): AnyPgColumn => messages.id
     ),
-    timingType: timingType("timing_type").notNull().default("during_room"),
     participantId: uuid(PARTICIPANT_ID_FIELD_NAME).references(
         () => participants.id
     ), // can be null to track bot messages
@@ -160,6 +193,17 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
     content: text("content").notNull().default(""),
     embeddings: json("embeddings").notNull().default({}),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        typeIndex: index("type_index").on(table.type),
+        visibilityTypeIndex: index("visibility_type_index").on(table.visibilityType),
+        timingTypeIndex: index("timing_type_index").on(table.timingType),
+        originalMessageIdIndex: index("original_message_id_index").on(table.originalMessageId),
+        participantIdIndex: index("participant_id_index").on(table.participantId),
+        roomIdIndex: index("room_id_index").on(table.roomId),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const outcomes = pgTable(OUTCOMES_TABLE_NAME, {
@@ -171,10 +215,18 @@ export const outcomes = pgTable(OUTCOMES_TABLE_NAME, {
     ),
     content: text("content").notNull().default(""),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        typeIndex: index("type_index").on(table.type),
+        originalOutcomeIdIndex: index("original_outcome_id_index").on(table.originalOutcomeId),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const outcomeSources = pgTable(OUTCOME_SOURCES_TABLE_NAME, {
     id: generateIdField(),
+    active: generateActiveField(),
     outcomeId: uuid(OUTCOME_ID_FIELD_NAME)
         .notNull()
         .references(() => outcomes.id),
@@ -182,6 +234,13 @@ export const outcomeSources = pgTable(OUTCOME_SOURCES_TABLE_NAME, {
         .notNull()
         .references(() => messages.id),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
+        messageIdIndex: index("message_id_index").on(table.messageId),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const opinions = pgTable(OPINIONS_TABLE_NAME, {
@@ -192,6 +251,14 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
     rangeValue: integer("range_value").notNull().default(0),
     statement: text("statement").notNull().default(""),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        typeIndex: index("type_index").on(table.type),
+        outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
+        rangeValueIndex: index("range_value_index").on(table.rangeValue),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const crossPollinations = pgTable(CROSS_POLLINATIONS_TABLE_NAME, {
@@ -212,6 +279,18 @@ export const crossPollinations = pgTable(CROSS_POLLINATIONS_TABLE_NAME, {
     userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
 
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        typeIndex: index("type_index").on(table.type),
+        timingTypeIndex: index("timing_type_index").on(table.timingType),
+        outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
+        topicIdIndex: index("topic_id_index").on(table.topicId),
+        roomIdIndex: index("room_id_index").on(table.roomId),
+        participantIdIndex: index("participant_id_index").on(table.participantId),
+        userIdIndex: index("user_id_index").on(table.userId),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
@@ -219,9 +298,14 @@ export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
     active: generateActiveField(),
     type: moderationType("type").notNull(),
     statement: text("statement").notNull().default(""),
-    targetType: targetType("target_type").notNull(),
     ...generateTargetFields(),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        typeIndex: index("type_index").on(table.type),
+        ...generateTargetFieldIndexes(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 export const completions = pgTable(COMPLETIONS_TABLE_NAME, {
@@ -232,9 +316,15 @@ export const completions = pgTable(COMPLETIONS_TABLE_NAME, {
     model: json("model").notNull().default({}),
     variables: json("variables").notNull().default({}),
     response: text("prompt").notNull(),
-    targetType: targetType("target_type").notNull(),
     ...generateTargetFields(),
     ...generateTimestampFields(),
+}, (table) => {
+    return {
+        typeIndex: index("type_index").on(table.type),
+        ...generateActiveFieldIndex(table),
+        ...generateTargetFieldIndexes(table),
+        ...generateTimestampFieldIndexes(table),
+    };
 });
 
 function generateIdField() {
@@ -256,8 +346,22 @@ function generateTimestampFields() {
     };
 }
 
+function generateTimestampFieldIndexes(table) {
+    return {
+        createdAtIndex: index(`${CREATED_AT_FIELD_NAME}_index`).on(table.createdAt),
+        updatedAtIndex: index(`${UPDATED_AT_FIELD_NAME}_index`).on(table.updatedAt),
+    };
+}
+
+function generateActiveFieldIndex(table) {
+    return {
+        active: index(`${ACTIVE_FIELD_NAME}_index`).on(table.active),
+    };
+}
+
 function generateTargetFields() {
     return {
+        targetType: targetType(TARGET_TYPE_FIELD_NAME).notNull(),
         userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
         topicId: uuid(TOPIC_ID_FIELD_NAME).references(() => topics.id),
         roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id),
@@ -276,5 +380,21 @@ function generateTargetFields() {
         moderationId: uuid(MODERATION_ID_FIELD_NAME).references(
             () => moderations.id
         ),
+    };
+}
+
+function generateTargetFieldIndexes(table) {
+    return {
+        targetTypeIndex: index(`${TARGET_TYPE_FIELD_NAME}_index`).on(table.targetType),
+        userIdIndex: index(`${USER_ID_FIELD_NAME}_index`).on(table.userId),
+        topicIdIndex: index(`${TOPIC_ID_FIELD_NAME}_index`).on(table.topicId),
+        roomIdIndex: index(`${ROOM_ID_FIELD_NAME}_index`).on(table.roomId),
+        participantIdIndex: index(`${PARTICIPANT_ID_FIELD_NAME}_index`).on(table.participantId),
+        messageIdIndex: index(`${MESSAGE_ID_FIELD_NAME}_index`).on(table.messageId),
+        outcomeIdIndex: index(`${OUTCOME_ID_FIELD_NAME}_index`).on(table.outcomeId),
+        opinionIdIndex: index(`${OPINION_ID_FIELD_NAME}_index`).on(table.opinionId),
+        crossPollinationIdIndex: index(`${CROSS_POLLINATION_ID_FIELD_NAME}_index`).on(table.crossPollinationId),
+        completionIdIndex: index(`${COMPLETION_ID_FIELD_NAME}_index`).on(table.completionId),
+        moderationIdIndex: index(`${MODERATION_ID_FIELD_NAME}_index`).on(table.moderationId),
     };
 }
