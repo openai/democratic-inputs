@@ -1,15 +1,15 @@
 import { Helpers } from "graphile-worker";
 import { isEmpty } from "radash";
 
-import { progressionTopology } from "../../constants";
-import supabaseClient from "../../lib/supabase";
-import { waitForAllJobCompletions } from "../../lib/graphileWorker";
+import { progressionTopology } from "../constants";
+import supabaseClient from "../lib/supabase";
+import { waitForAllJobCompletions } from "../lib/graphileWorker";
 
-export interface UpdateProgressionPayload {
+export interface UpdateRoomProgressionPayload {
     roomId: string;
 }
 
-export default async function updateProgression(payload: UpdateProgressionPayload, helpers: Helpers) {
+export default async function updateRoomProgression(payload: UpdateRoomProgressionPayload, helpers: Helpers) {
     const { roomId } = payload;
     const roomData = await supabaseClient.from('rooms').select().eq('id', roomId);
     const room = roomData?.data?.[0];
@@ -34,9 +34,11 @@ export default async function updateProgression(payload: UpdateProgressionPayloa
 
     helpers.logger.info(`Running update progression task for room ${roomId} in progression layer ${currentTopologyLayerId}.`);
 
-    const verificationJobs = await Promise.allSettled(currentTopologyLayer.verifications.map((verification) => {
+    const activeVerifications = currentTopologyLayer.verifications.filter((verification) => verification.active ?? true);
+    const verificationJobs = await Promise.allSettled(activeVerifications.map((verification) => {
         const { id: taskId, context } = verification;
 
+        helpers.logger.info(`Adding verification job ${taskId} for room ${roomId}.`);
         return helpers.addJob(taskId, {
             progressionContext: context,
         });

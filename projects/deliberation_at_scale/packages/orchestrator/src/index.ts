@@ -48,15 +48,19 @@ async function runTasks(taskType: 'startTask' | 'stopTask') {
 }
 
 async function start() {
-    runTasks('startTask');
+    console.log('Starting up peacefully...');
+    await runTasks('startTask');
 }
 
 async function shutdown() {
-    runTasks('stopTask');
+    console.log('Shutting down gracefully...');
+    await runTasks('stopTask');
 }
 
 // handle graceful shutdowns
 process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
+process.on('SIGQUIT', shutdown);
 
 // startup
 (async() => {

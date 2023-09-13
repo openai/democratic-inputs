@@ -1,8 +1,8 @@
 import { quickAddJob } from "graphile-worker";
 
 export async function startScheduler() {
-    quickAddJob({}, "consensusForming", 0, {
-        jobKey: "consensusForming",
+    quickAddJob({}, "scheduleRoomProgressionUpdates", 0, {
+        jobKey: "scheduleRoomProgressionUpdates",
         jobKeyMode: "preserve_run_at",
     });
 }

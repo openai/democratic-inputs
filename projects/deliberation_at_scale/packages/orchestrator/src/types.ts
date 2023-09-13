@@ -36,6 +36,8 @@ export type ProgressionTaskId = 'badLanguage';
 export interface ProgressionTask {
     /** The task to execute for this part of the progression. */
     id: ProgressionTaskId;
+    /** By default all tasks are active, use this to temporarily disable tasks */
+    active?: boolean;
     /** The context passed to the task to know what data to pay attention to. */
     context?: ProgressionContext;
     /** An optional minimum cooldown in terms of time before checking this task again. */

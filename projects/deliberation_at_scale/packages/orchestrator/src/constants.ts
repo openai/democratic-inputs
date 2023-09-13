@@ -42,6 +42,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             verifications: [
                 {
                     id: 'badLanguage',
+                    active: false,
                     context: {
                         messages: {
                             historyAmountSeconds: 10,
@@ -49,6 +50,11 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     },
                 },
             ],
+        },
+        {
+            id: 'informed',
+            roomStatus: 'informed',
+            verifications: [],
         },
     ],
 };
