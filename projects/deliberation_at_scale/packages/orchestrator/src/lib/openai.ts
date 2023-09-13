@@ -1,5 +1,5 @@
 import { OpenAI } from "openai";
-import { DEFAULT_FUNCTION_COMPLETION_MODEL_NAME, OPENAI_API_KEY } from "../constants";
+import { OPENAI_API_KEY } from "../constants";
 import { ChatCompletionCreateParams } from "openai/resources/chat";
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions";
 import supabaseClient from "./supabase";
@@ -16,7 +16,8 @@ export interface FunctionCompletionOptions {
     model?: ChatCompletionCreateParamsBase['model'];
 }
 
-export function createLoggedFunctionCompletion(options: FunctionCompletionOptions) {
+// TODO: finish this helper
+export async function createLoggedFunctionCompletion(options: FunctionCompletionOptions) {
     const {
         prompt,
         functionSchema,
