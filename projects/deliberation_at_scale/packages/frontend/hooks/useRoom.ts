@@ -4,8 +4,8 @@ import { RoomId, RoomStatus } from "@/state/slices/room";
 import useRoomMessages from "./useRoomMessages";
 
 export interface UseRoomOptions {
-  roomId: RoomId;
-  roomStatus?: RoomStatus;
+    roomId: RoomId;
+    roomStatus?: RoomStatus;
 }
 
 export default function useRoom(options: UseRoomOptions) {

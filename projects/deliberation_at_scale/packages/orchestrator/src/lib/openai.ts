@@ -3,11 +3,11 @@ require("dotenv").config();
 import { OpenAI } from "openai";
 
 declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      OPENAI_API_KEY: string
+    namespace NodeJS {
+        interface ProcessEnv {
+            OPENAI_API_KEY: string
+        }
     }
-  }
 }
 
 // GUARD: Double-check that OPENAI_API_KEY are part of the environment

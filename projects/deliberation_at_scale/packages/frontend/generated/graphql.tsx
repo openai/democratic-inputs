@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
@@ -1768,6 +1769,7 @@ export type Participants = Node & {
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
   participation_score: Scalars['Int']['output'];
+  ready: Scalars['Boolean']['output'];
   room_id?: Maybe<Scalars['UUID']['output']>;
   rooms?: Maybe<Rooms>;
   updated_at: Scalars['Datetime']['output'];
@@ -1842,6 +1844,7 @@ export type ParticipantsFilter = {
   nick_name?: InputMaybe<StringFilter>;
   nodeId?: InputMaybe<IdFilter>;
   participation_score?: InputMaybe<IntFilter>;
+  ready?: InputMaybe<BooleanFilter>;
   room_id?: InputMaybe<UuidFilter>;
   updated_at?: InputMaybe<DatetimeFilter>;
   user_id?: InputMaybe<UuidFilter>;
@@ -1853,6 +1856,7 @@ export type ParticipantsInsertInput = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   nick_name?: InputMaybe<Scalars['String']['input']>;
   participation_score?: InputMaybe<Scalars['Int']['input']>;
+  ready?: InputMaybe<Scalars['Boolean']['input']>;
   room_id?: InputMaybe<Scalars['UUID']['input']>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
   user_id?: InputMaybe<Scalars['UUID']['input']>;
@@ -1872,6 +1876,7 @@ export type ParticipantsOrderBy = {
   id?: InputMaybe<OrderByDirection>;
   nick_name?: InputMaybe<OrderByDirection>;
   participation_score?: InputMaybe<OrderByDirection>;
+  ready?: InputMaybe<OrderByDirection>;
   room_id?: InputMaybe<OrderByDirection>;
   updated_at?: InputMaybe<OrderByDirection>;
   user_id?: InputMaybe<OrderByDirection>;
@@ -1883,6 +1888,7 @@ export type ParticipantsUpdateInput = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   nick_name?: InputMaybe<Scalars['String']['input']>;
   participation_score?: InputMaybe<Scalars['Int']['input']>;
+  ready?: InputMaybe<Scalars['Boolean']['input']>;
   room_id?: InputMaybe<Scalars['UUID']['input']>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
   user_id?: InputMaybe<Scalars['UUID']['input']>;
@@ -1894,6 +1900,21 @@ export type ParticipantsUpdateResponse = {
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
   records: Array<Participants>;
+};
+
+export enum RoomStatusType {
+  Debate = 'debate',
+  Informed = 'informed',
+  Results = 'results',
+  Safe = 'safe'
+}
+
+/** Boolean expression comparing fields on type "roomStatusType" */
+export type RoomStatusTypeFilter = {
+  eq?: InputMaybe<RoomStatusType>;
+  in?: InputMaybe<Array<RoomStatusType>>;
+  is?: InputMaybe<FilterIs>;
+  neq?: InputMaybe<RoomStatusType>;
 };
 
 export type Rooms = Node & {
@@ -1908,6 +1929,7 @@ export type Rooms = Node & {
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
   participantsCollection?: Maybe<ParticipantsConnection>;
+  room_status_type: RoomStatusType;
   starts_at: Scalars['Datetime']['output'];
   topic_id: Scalars['UUID']['output'];
   topics: Topics;
@@ -1980,6 +2002,7 @@ export type RoomsFilter = {
   external_room_id?: InputMaybe<StringFilter>;
   id?: InputMaybe<UuidFilter>;
   nodeId?: InputMaybe<IdFilter>;
+  room_status_type?: InputMaybe<RoomStatusTypeFilter>;
   starts_at?: InputMaybe<DatetimeFilter>;
   topic_id?: InputMaybe<UuidFilter>;
   updated_at?: InputMaybe<DatetimeFilter>;
@@ -1990,6 +2013,7 @@ export type RoomsInsertInput = {
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   external_room_id?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  room_status_type?: InputMaybe<RoomStatusType>;
   starts_at?: InputMaybe<Scalars['Datetime']['input']>;
   topic_id?: InputMaybe<Scalars['UUID']['input']>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -2008,6 +2032,7 @@ export type RoomsOrderBy = {
   created_at?: InputMaybe<OrderByDirection>;
   external_room_id?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
+  room_status_type?: InputMaybe<OrderByDirection>;
   starts_at?: InputMaybe<OrderByDirection>;
   topic_id?: InputMaybe<OrderByDirection>;
   updated_at?: InputMaybe<OrderByDirection>;
@@ -2018,6 +2043,7 @@ export type RoomsUpdateInput = {
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   external_room_id?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  room_status_type?: InputMaybe<RoomStatusType>;
   starts_at?: InputMaybe<Scalars['Datetime']['input']>;
   topic_id?: InputMaybe<Scalars['UUID']['input']>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;

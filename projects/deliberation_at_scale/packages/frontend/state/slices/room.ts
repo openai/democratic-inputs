@@ -22,8 +22,8 @@ export enum PermissionState {
 }
 
 export interface RoomState {
-  currentRoomId: RoomId;
-  permission: PermissionState;
+    currentRoomId: RoomId;
+    permission: PermissionState;
 }
 
 const initialState: RoomState = {
