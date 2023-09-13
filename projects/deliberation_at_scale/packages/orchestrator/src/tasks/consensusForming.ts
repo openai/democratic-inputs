@@ -15,7 +15,7 @@ let isAddingModeration = false;
 /**
  * Run this task at most every n seconds
  */
-const TASK_INTERVAL_SECONDS = 45
+const TASK_INTERVAL_SECONDS = 45;
 
 /**
  * This task retrieves all messages since its last execution and attempts to
@@ -124,7 +124,6 @@ async function writeConsensusMessage(messages: Message[]): Promise<{ content: st
           `The following shows part of a discussion between three participants on the topic:
       "${DISCUSSION_TOPIC}"?.
       Output the consensus as a statement in less than 20 words.
-      
       return a JSON object in the following format: { content: {the consensus statement}` ,
             },
             ...messages.map(
