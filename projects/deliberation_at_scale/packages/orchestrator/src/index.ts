@@ -16,13 +16,13 @@ const tasks: OrchestratorRoleTask[] = [
         name: 'listener',
         startTask: startListener,
         stopTask: stopListener,
-        roles: ['runner', 'all'],
+        roles: ['listener', 'all'],
     },
     {
         name: 'scheduler',
         startTask: startScheduler,
         stopTask: stopScheduler,
-        roles: ['runner', 'all'],
+        roles: ['scheduler', 'all'],
     },
 ];
 
