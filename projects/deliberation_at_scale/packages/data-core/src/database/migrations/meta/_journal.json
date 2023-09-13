@@ -36,6 +36,13 @@
       "when": 1694591622138,
       "tag": "0004_melted_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1694598386285,
+      "tag": "0005_typical_mac_gargan",
+      "breakpoints": true
     }
   ]
 }
