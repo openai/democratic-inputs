@@ -1,4 +1,7 @@
-import { OrchestratorRole, ProgressionTopology } from "src/types";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require("dotenv").config();
+
+import { OrchestratorRole, ProgressionTopology } from "./types";
 
 declare global {
     namespace NodeJS {
@@ -24,14 +27,14 @@ if (!("OPENAI_API_KEY" in process.env)) {
 /* Environment variables */
 export const ORCHESTRATOR_ROLE: OrchestratorRole = process?.env?.ORCHESTRATOR_ROLE ?? 'all';
 export const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-export const SUPABASE_URL = process.env.OPENAI_API_KEY;
+export const SUPABASE_URL = process.env.SUPABASE_URL;
 export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
 /* Time */
 export const ONE_SECOND_MS = 1000;
 
 /* The topology each room progresses through */
-export const TOPOLOGY: ProgressionTopology = {
+export const progressionTopology: Readonly<ProgressionTopology> = {
     layers: [
         {
             id: 'safe',

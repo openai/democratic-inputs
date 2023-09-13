@@ -566,8 +566,8 @@ export interface Database {
                     created_at: string
                     external_room_id: string | null
                     id: string
-                    room_status_type: Database["public"]["Enums"]["roomStatusType"]
                     starts_at: string
+                    status_type: Database["public"]["Enums"]["roomStatusType"]
                     topic_id: string
                     updated_at: string
                 }
@@ -576,8 +576,8 @@ export interface Database {
                     created_at?: string
                     external_room_id?: string | null
                     id?: string
-                    room_status_type?: Database["public"]["Enums"]["roomStatusType"]
                     starts_at?: string
+                    status_type?: Database["public"]["Enums"]["roomStatusType"]
                     topic_id: string
                     updated_at?: string
                 }
@@ -586,8 +586,8 @@ export interface Database {
                     created_at?: string
                     external_room_id?: string | null
                     id?: string
-                    room_status_type?: Database["public"]["Enums"]["roomStatusType"]
                     starts_at?: string
+                    status_type?: Database["public"]["Enums"]["roomStatusType"]
                     topic_id?: string
                     updated_at?: string
                 }

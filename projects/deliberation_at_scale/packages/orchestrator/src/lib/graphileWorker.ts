@@ -1,6 +1,6 @@
 import { Job, WorkerEventMap } from "graphile-worker";
-import { ONE_SECOND_MS } from "src/contants";
-import { getRunner } from "src/runner";
+import { ONE_SECOND_MS } from "../constants";
+import { getRunner } from "../runner";
 
 export interface CompletionWaitOptions {
     jobId: string;
@@ -8,14 +8,18 @@ export interface CompletionWaitOptions {
 }
 
 export interface AllCompletionsWaitOptions {
-    completions: CompletionWaitOptions[];
+    jobIds: string[];
+    timeoutMs?: number;
 }
 
 export async function waitForAllJobCompletions(options: AllCompletionsWaitOptions) {
-    const { completions } = options;
+    const { jobIds, timeoutMs } = options;
 
-    return Promise.allSettled(completions.map((completion) => {
-        return waitForSingleJobCompletion(completion);
+    return Promise.allSettled(jobIds.map((jobId) => {
+        return waitForSingleJobCompletion({
+            jobId,
+            timeoutMs,
+        });
     }));
 }
 
@@ -43,6 +47,7 @@ export async function waitForSingleJobCompletion(options: CompletionWaitOptions)
             // unregister itself
             unregisterCompletionCallback();
 
+            // job has completed without timeout
             resolve(job);
         };
         const unregisterCompletionCallback = () => {

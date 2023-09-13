@@ -1,7 +1,4 @@
 /* eslint-disable no-console */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require("dotenv").config();
-
 import { startListener, stopListener } from "./listener";
 import { startRunner, stopRunner } from "./runner";
 import { startScheduler, stopScheduler } from "./scheduler";
