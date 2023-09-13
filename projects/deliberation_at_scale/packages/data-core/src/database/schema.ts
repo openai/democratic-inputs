@@ -139,7 +139,7 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
     externalRoomId: text("external_room_id"),
-    statusType: roomStatusType("room_status_type").notNull().default("safe"),
+    statusType: roomStatusType("status_type").notNull().default("safe"),
     topicId: uuid(TOPIC_ID_FIELD_NAME)
         .notNull()
         .references(() => topics.id),
