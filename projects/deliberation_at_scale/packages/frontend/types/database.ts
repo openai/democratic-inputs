@@ -436,6 +436,7 @@ export interface Database {
             }
             outcome_sources: {
                 Row: {
+                    active: boolean
                     created_at: string
                     id: string
                     message_id: string
@@ -443,6 +444,7 @@ export interface Database {
                     updated_at: string
                 }
                 Insert: {
+                    active?: boolean
                     created_at?: string
                     id?: string
                     message_id: string
@@ -450,6 +452,7 @@ export interface Database {
                     updated_at?: string
                 }
                 Update: {
+                    active?: boolean
                     created_at?: string
                     id?: string
                     message_id?: string
