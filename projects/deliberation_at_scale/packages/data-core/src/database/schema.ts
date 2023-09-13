@@ -135,6 +135,7 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
 export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
+    ready: boolean('ready').notNull().default(false),
     roomId: uuid(ROOM_ID_FIELD_NAME)
         .references(() => rooms.id),
     userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
