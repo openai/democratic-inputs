@@ -3,8 +3,8 @@ require('dotenv').config();
 import { quickAddJob } from "graphile-worker";
 
 async function startScheduler() {
-    quickAddJob({}, "summarize", 0, {
-        jobKey: "summarize",
+    quickAddJob({}, "consensusForming", 0, {
+        jobKey: "consensusForming",
         jobKeyMode: "preserve_run_at",
     });
     // add logic for supabase triggers.
