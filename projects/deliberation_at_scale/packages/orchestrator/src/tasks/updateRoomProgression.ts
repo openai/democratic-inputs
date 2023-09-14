@@ -9,6 +9,12 @@ export interface UpdateRoomProgressionPayload {
     roomId: string;
 }
 
+/**
+ * This task determines whether a single room can progress to a new phase in the deliberation.
+ * A configurable topology of a succesful deliberation is used as a reference to determine all the steps.
+ *
+ * TODO: integrate fallback behaviour of previous phases that cause the deliberation to take a step back.
+ */
 export default async function updateRoomProgression(payload: UpdateRoomProgressionPayload, helpers: Helpers) {
     const { roomId } = payload;
     const roomData = await supabaseClient.from('rooms').select().eq('id', roomId);

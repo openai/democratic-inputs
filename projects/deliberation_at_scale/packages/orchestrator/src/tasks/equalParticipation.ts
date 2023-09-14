@@ -1,21 +1,50 @@
 
 
-import { Helpers, quickAddJob } from "graphile-worker";
+import { Helpers } from "graphile-worker";
 import supabaseClient from "../lib/supabase";
-import openaiClient from "../lib/openai";
-import { ChatCompletionMessageParam, CreateChatCompletionRequestMessage } from "openai/resources/chat";
+import openaiClient, { createVerificationFunctionCompletion } from "../lib/openai";
+import { CreateChatCompletionRequestMessage } from "openai/resources/chat";
 import { Database } from "../generated/database.types";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
 
-const TASK_INTERVAL_SECONDS = 10;
+// TODO: integrate room ID to collect the right messages
+export default async function equalParticipation() {
+    const verificationResult = await createVerificationFunctionCompletion({
+        taskInstruction: `Is the conversation mentioned below a balanced conversation where everyone has said a similar amount of said what they think?`,
+        taskContent: `
+            Topic: The Influence of Social Media on Teenagers
 
-export default async function equalize(
+            Participant 1: Alice
+            Participant 2: Bob
+            Participant 3: Carol
+
+            Alice: Greetings guys. We've been quiet about the prominence of social media in teenagers' lives lately. Any consequences you link to it?
+
+            Bob: I've noticed that teens are increasingly comparing their lives with the idealized lives of others on social media, leading to feelings of inadequacy and decreased self-esteem.
+
+            Carol: That's sadly true, Bob. I've also seen that online harassment is getting rampant. Bullying has taken a digital form, leaving teenagers anxious and depressed.
+
+            Alice: Yes, cyberbullying and peer pressure are considerable issues. It's also concerning how much private information teenagers put online, vulnerable to misuse.
+
+            Bob: This privacy issue is a big deal indeed. I also think that the blue light emitted by screens is causing physiological problems, like sleep disorders, which isn't good especially for growing teens.
+
+            Carol: Beyond health issues, I believe it's interfering with real-life social skills. Teens being virtually connected all the time are less adept at face-to-face interactions.
+
+            Alice: The focus on quantity (likes and followers) over factual quality is disappointing too. It seems to degrade the value of authentic relationships
+        `,
+    });
+
+    console.log('Balanced discussion result:');
+    console.log(verificationResult);
+}
+
+export async function equalize(
     lastRun: string | null,
     helpers: Helpers
 ) {
     // Retrieve all messages from supabase
-    let statement = supabaseClient.from("messages").select().eq("type", "chat")
+    let statement = supabaseClient.from("messages").select().eq("type", "chat");
 
     if (lastRun) {
         statement = statement.gt("created_at", lastRun);
@@ -31,7 +60,7 @@ export default async function equalize(
     // GUARD: If there are no messages, reschedule the job
     if (messages.data.length === 0) {
         helpers.logger.info("No messages found.");
-        return reschedule(lastRun);
+        return;
     }
 
     // Check whether participants have equally contributed (boolean)
@@ -39,7 +68,7 @@ export default async function equalize(
 
     // GUARD: for false or null
     if (equalContribution) {
-        return reschedule(lastRun);
+        return;
     }
 
     // TODO: calculate percentages of contribution and act accordingly.
@@ -50,8 +79,6 @@ export default async function equalize(
     //   type: "bot",
     //   content: result,
     // })
-
-    return reschedule(lastRun);
 }
 
 async function equalContributedCheck(messages: Message[]): Promise<boolean | null> {
@@ -130,19 +157,4 @@ async function equalContributionCheckPercentages(messages: Message[]) {
     const contributionResult = JSON.parse(completionResult);
 
     // return contributionResult;
-}
-
-/**
- * Reschedule this job for the next iteration
- */
-function reschedule(initialDate: string | null) {
-    // Re-schedule this job n seconds after the last invocation
-    quickAddJob({}, "equalize", new Date(), {
-        runAt: new Date(
-            (initialDate ? new Date(initialDate) : new Date()).getTime() +
-            1_000 * TASK_INTERVAL_SECONDS
-        ),
-        jobKey: "equalize",
-        jobKeyMode: "preserve_run_at",
-    });
 }

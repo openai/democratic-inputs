@@ -14,3 +14,30 @@ const supabaseClient = createClient<Database>(
 );
 
 export default supabaseClient;
+
+export type Message = Database["public"]["Tables"]["messages"]["Row"];
+export type MessageType = Database['public']['Enums']['messageType'];
+
+export interface SendMessageOptions {
+    type: MessageType;
+    roomId: string;
+    content: string;
+}
+
+export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
+    return sendMessage({
+        ...options,
+        type: 'bot',
+    });
+}
+
+export async function sendMessage(options: SendMessageOptions) {
+    const { type, roomId, content } = options;
+
+    await supabaseClient.from("messages").insert({
+        type,
+        room_id: roomId,
+        content,
+    });
+}
+
