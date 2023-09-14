@@ -19,6 +19,7 @@ export type Message = Database["public"]["Tables"]["messages"]["Row"];
 export type MessageType = Database['public']['Enums']['messageType'];
 
 export interface SendMessageOptions {
+    active?: boolean;
     type: MessageType;
     roomId: string;
     content: string;
@@ -32,9 +33,10 @@ export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) 
 }
 
 export async function sendMessage(options: SendMessageOptions) {
-    const { type, roomId, content } = options;
+    const { active = true, type, roomId, content } = options;
 
     await supabaseClient.from("messages").insert({
+        active,
         type,
         room_id: roomId,
         content,

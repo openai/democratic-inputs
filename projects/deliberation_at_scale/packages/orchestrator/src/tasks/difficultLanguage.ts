@@ -48,7 +48,10 @@ export default async function difficultLanguage(message: Message, helpers: Helpe
     await Promise.allSettled([
 
         // track that this message has been moderated
-        insertClarificationModeration(message, clarificationReason),
+        insertClarificationModeration({
+            message,
+            statement: clarificationReason,
+        }),
 
         // send a message to the room with the clarification reason
         sendBotMessage({
@@ -58,12 +61,19 @@ export default async function difficultLanguage(message: Message, helpers: Helpe
     ]);
 }
 
-async function insertClarificationModeration(message: Message, statement: string) {
+interface InsertClarificationModerationOptions {
+    message: Message;
+    statement: string;
+}
+
+async function insertClarificationModeration(options: InsertClarificationModerationOptions) {
+    const { message, statement } = options;
     await supabaseClient.from("moderations").insert({
         type: 'clarification',
         statement,
         target_type: 'message',
         message_id: message.id,
         participant_id: message.participant_id,
+        room_id: message.room_id,
     });
 }
