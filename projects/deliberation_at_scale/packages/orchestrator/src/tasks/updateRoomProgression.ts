@@ -203,6 +203,7 @@ async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
         const { active } = progressionTask;
 
         // TODO: check if whether this job is allowed to be added based on the cooldown or other rules
+        // TODO: determine whether a cooldown would fail or succeed the job?
 
         return active ?? true;
     });
@@ -211,12 +212,16 @@ async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
     const [jobsResult, moderationsInsertResult] = await Promise.allSettled([
         Promise.allSettled(filteredProgressionTasks.map((progressionTask) => {
             const { id: progressionTaskId, workerTaskId } = progressionTask;
+            const jobKey = `room-${roomId}-progression-task-${progressionTaskId}`;
 
-            helpers.logger.info(`Adding worker task ${workerTaskId} via progression task ${progressionTaskId} for room ${roomId}.`);
+            helpers.logger.info(`Adding worker task ${workerTaskId} via progression task with job key: ${jobKey}`);
 
             return helpers.addJob(workerTaskId, {
                 progressionTask,
-            } satisfies BaseProgressionWorkerTaskPayload);
+            } satisfies BaseProgressionWorkerTaskPayload, {
+                jobKey,
+                jobKeyMode: 'preserve_run_at',
+            });
         })),
 
         supabaseClient.from("moderations").insert(filteredProgressionTasks.map((progressionTask) => {
