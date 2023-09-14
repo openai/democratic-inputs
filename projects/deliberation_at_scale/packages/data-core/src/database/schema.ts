@@ -69,15 +69,6 @@ export const crossPollinationType = pgEnum("crossPollinationType", [
     "outcome",
     "topic",
 ]);
-export const moderationType = pgEnum("moderationType", [
-    "harrashment",
-    "consensus",
-    "unequal",
-    "clarification",
-    "spam",
-    "off_topic",
-    "other",
-]);
 export const completionType = pgEnum("completionType", ["gpt"]);
 export const targetType = pgEnum("targetType", [
     "user",
@@ -305,7 +296,7 @@ export const crossPollinations = pgTable(CROSS_POLLINATIONS_TABLE_NAME, {
 export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
-    type: moderationType("type").notNull(),
+    type: text("type").notNull(),
     statement: text("statement").notNull().default(""),
     ...generateTargetFields(),
     ...generateTimestampFields(),
