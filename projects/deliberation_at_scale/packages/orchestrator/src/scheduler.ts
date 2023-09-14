@@ -11,6 +11,10 @@ export async function startScheduler() {
         jobKey: "difficultLanguage",
         jobKeyMode: "preserve_run_at",
     });
+    quickAddJob({}, "equalParticipation_2", 0, {
+        jobKey: "equalParticipation_2",
+        jobKeyMode: "preserve_run_at",
+    });
 }
 
 export async function stopScheduler() {
