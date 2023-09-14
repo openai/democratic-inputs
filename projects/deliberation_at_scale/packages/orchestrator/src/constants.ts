@@ -42,7 +42,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             roomStatus: 'safe',
             verifications: [
                 {
-                    id: 'badLanguage',
+                    id: 'safe-badLanguage',
+                    workerTaskId: 'badLanguage',
                     active: false,
                     context: {
                         messages: {

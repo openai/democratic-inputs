@@ -9,6 +9,10 @@ export interface OrchestratorRoleTask {
     stopTask: () => Promise<void>;
 }
 
+export interface BaseProgressionWorkerTaskPayload {
+    progressionTask: ProgressionTask;
+}
+
 /** The root of the topology containing all the different layers where the deliberation can go through. */
 export interface ProgressionTopology {
     layers: ProgressionLayer[];
@@ -17,12 +21,14 @@ export interface ProgressionTopology {
 /** All the possible tasks that can be registered in the job system */
 export type LayerId = 'safe' | 'informed' | 'debate' | 'results';
 
+export type RoomStatus = Database['public']['Enums']['roomStatusType'];
+
 /** Single layer of the topology the deliberation can progress to */
 export interface ProgressionLayer {
     /** The unique identifier of the layer. */
     id: LayerId;
     /** The room status that should be persisted on the room when progressed to this layer. */
-    roomStatus: Database['public']['Enums']['roomStatusType'];
+    roomStatus: RoomStatus;
     /** All the required verifications to progress to the next layer, with supporting moderation.  */
     verifications: ProgressionVerificationTask[];
     /** Additional moderations that can enrich the deliberation, but don't have any influence on the progression itself. */
@@ -30,12 +36,14 @@ export interface ProgressionLayer {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type ProgressionTaskId = 'badLanguage';
+export type WorkerTaskId = 'badLanguage';
 
 /** A single task within a progression layer. */
 export interface ProgressionTask {
-    /** The task to execute for this part of the progression. */
-    id: ProgressionTaskId;
+    /** The unique identifier of the progression task. */
+    id: string;
+    /** The worker task to execute for this part of the progression. */
+    workerTaskId: WorkerTaskId;
     /** By default all tasks are active, use this to temporarily disable tasks */
     active?: boolean;
     /** The context passed to the task to know what data to pay attention to. */
