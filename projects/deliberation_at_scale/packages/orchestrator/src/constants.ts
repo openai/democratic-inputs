@@ -45,28 +45,27 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     /* Check whether each participant has introduced themselves properly */
                     id: 'introductionParticipants',
+                    workerTaskId: 'introductionParticipants',
                     active: false,
                     fallback: false,
-                    /* Execute function maximum twice */
-                    maxAtempts: 100,
-                    /* Execute function again after 20 seconds  */
-                    // coolDownSeconds: 20,
-                    /* Execute function again after every message */
-                    cooldownAmountMessages: 1,
+                    maxAtempts: 100, /* Execute function maximum twice */
+                    cooldownAmountMessages: 1, //Execute again after every message
                     /* Do check whether every participant has added something in the conversation  */
                     // inputFromAllParticipants: true,
                     context: {
                         messages: {
-                            historyAll: true,
+                            historyAllMessages: true,
+                            historySpecifiedLayers: ["introduction_participants"]
                         }
                     },
                 }
             ],
             enrichments: [
                 {
-                    id: 'promptIntroductionParticipants',
+                    /* Execute function maximum twice */
+                    id: 'enrichModeratorMessageParticipantIntroduction',
+                    workerTaskId: 'enrichModeratorMessageParticipantIntroduction',
                     active: false,
-                    /* Execute function to prompt participants after 2 minutes to introduce themselves if not all participants have introduced themselves  */
                     cooldownSeconds: 120,
                     context: {
                         messages: {
@@ -82,7 +81,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             roomStatus: 'safe',
             verifications: [
                 {
-                    id: 'badLanguage',
+                    id: 'safe-badLanguage',
+                    workerTaskId: 'badLanguage',
                     active: false,
                     fallback: true,
                     context: {
@@ -93,6 +93,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 },
                 {
                     id: 'emotionalWellbeing',
+                    workerTaskId: 'emotionalWellbeing',
                     active: false,
                     maxAtempts: 3,
                     cooldownSeconds: 30,
@@ -105,7 +106,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ],
             enrichments: [
                 {
-                    id: 'promptSafe',
+                    id: 'enrichModeratorMessageSafeBehaviour',
+                    workerTaskId: 'enrichModeratorMessageSafeBehaviour',
                     active: false,
                     /* Execute function to prompt safe environment after 1 minutes */
                     cooldownSeconds: 60,
@@ -122,19 +124,21 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             roomStatus: 'informed',
             verifications: [
                 {
+                    //TODO: toevoegen dat hij moet kijken naar de oudere berichten en 'relatief' beoordeelt of het moeilijke taal is
                     id: 'difficultLanguage',
+                    workerTaskId: 'difficultLanguage',
                     active: false,
-                    fallback: true,
                     maxAtempts: 3,
                     cooldownSeconds: 60,
                     context: {
                         messages: {
-                            historyAmountMessages: 1,
+                            historyAmountSeconds: 30,
                         }
                     },
                 },
                 {
                     id: 'offTopic',
+                    workerTaskId: 'offTopic',
                     active: false,
                     fallback: true,
                     maxAtempts: 3,
@@ -148,7 +152,16 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ],
             enrichments: [
                 {
-                    id: 'promptInformed'
+                    id: 'enrichModeratorMessageInformedBehaviour',
+                    workerTaskId: 'enrichModeratorMessageInformedBehaviour',
+                    active: false,
+                    /* Execute function to prompt informed environment after 1 minutes */
+                    cooldownSeconds: 60,
+                    context: {
+                        messages: {
+                            historyAmountSeconds: 30,
+                        }
+                    },
                 }
             ]
         },
@@ -158,16 +171,74 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             verifications: [
                 {
                     id: 'enoughContent',
+                    workerTaskId: 'enoughContent',
                     active: false,
-                    cooldownSeconds: 0,
+                    cooldownSeconds: 20,
+                    buffer: 5 * 60,
                     context: {
                         messages: {
-                            historySpecifiedLayer: 'conversate',
+                            historySpecifiedLayers: ['conversate'],
                             historyAllMessages: true,
+                        }
+                    }
+                },
+                {
+                    id: 'equalParticipation',
+                    workerTaskId: 'equalParticipation',
+                    active: false,
+                    cooldownSeconds: 60,
+                    context: {
+                        messages: {
+                            historySpecifiedLayers: ['conversate'],
+                            historyAmountSeconds: 3 * 60,
                         }
                     }
                 }
             ]
+            //Do we need enrichments in this layer?
+        },
+        {
+            id: 'results',
+            roomStatus: 'results',
+            verifications: [
+                {
+                    // possible addition of metaConsensus forming that forms a consensus upon shared values 
+                    id: 'consensusForming',
+                    workerTaskId: 'consensusForming',
+                    active: false,
+                    cooldownSeconds: 30,
+                    context: {
+                        messages: {
+                            historySpecifiedLayers: ['informed', 'conversate', 'results'],
+                            historyAllMessages: true,
+                        }
+                    }
+                }
+            ],
+            enrichments: [
+                {
+                    id: 'enrichModeratorMessageStimulateConsensus',
+                    workerTaskId: 'enrichModeratorMessageStimulateConsensus',
+                    active: false,
+                    // buffer?
+                    // maxAtempts: 3x? 
+                    cooldownSeconds: 60,
+                    context: {
+                        messages: {
+                            historySpecifiedLayers: ['conversate', 'results', 'informed'],
+                            historyAllMessages: true,
+                        }
+                    },
+                }
+            ]
+        },
+        {
+            id: 'conclude',
+            roomStatus: 'conclude',
+            verifications: [
+                //Do we need verifications here?
+            ]
+
         }
     ],
 };

@@ -72,5 +72,6 @@ async function insertClarification(message: Message, statement: string) {
         target_type: 'message',
         message_id: message.id,
         participant_id: message.participant_id,
+        room_id: message.room_id,
     });
 }

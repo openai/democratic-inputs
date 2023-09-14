@@ -1,9 +1,11 @@
 import { Helpers } from "graphile-worker";
-import { isEmpty } from "radash";
+import { isEmpty, min } from "radash";
 
 import { progressionTopology } from "../constants";
 import supabaseClient from "../lib/supabase";
 import { waitForAllJobCompletions } from "../lib/graphileWorker";
+import { BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "src/types";
+import { Database } from "src/generated/database.types";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -12,8 +14,6 @@ export interface UpdateRoomProgressionPayload {
 /**
  * This task determines whether a single room can progress to a new phase in the deliberation.
  * A configurable topology of a succesful deliberation is used as a reference to determine all the steps.
- *
- * TODO: integrate fallback behaviour of previous phases that cause the deliberation to take a step back.
  */
 export default async function updateRoomProgression(payload: UpdateRoomProgressionPayload, helpers: Helpers) {
     const { roomId } = payload;
@@ -25,7 +25,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         throw Error(`Could not update progression because the room was not found. Room ID: ${roomId}`);
     }
 
-    const currentRoomStatus = room?.status_type ?? 'safe';
+    const currentRoomStatus: RoomStatus = room?.status_type ?? 'safe';
     const currentTopologyLayerIndex = progressionTopology.layers.findIndex((topologyLayer) => {
         return topologyLayer.roomStatus === currentRoomStatus;
     }) ?? 0;
@@ -40,47 +40,75 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
     helpers.logger.info(`Running update progression task for room ${roomId} in progression layer ${currentTopologyLayerId}.`);
 
-    const activeVerifications = currentTopologyLayer.verifications.filter((verification) => verification.active ?? true);
-    const verificationJobs = await Promise.allSettled(activeVerifications.map((verification) => {
-        const { id: taskId, context } = verification;
+    const currentLayerVerifications = currentTopologyLayer.verifications.filter((verification) => verification.active ?? true);
+    const fallbackVerifications = progressionTopology.layers.slice(0, currentTopologyLayerIndex).flatMap((topologyLayer) => {
+        return topologyLayer.verifications.filter((verification) => {
+            const { active = true, fallback = false } = verification;
 
-        helpers.logger.info(`Adding verification job ${taskId} for room ${roomId}.`);
-        return helpers.addJob(taskId, {
-            progressionContext: context,
+            return active && fallback;
         });
-    }));
-    const verificationJobIds = verificationJobs.map((job) => {
-        if (job.status !== 'fulfilled') {
-            return;
-        }
-
-        return job.value.id;
-    }).filter((jobId): jobId is string => {
-        return !!jobId;
     });
+    const [currentLayerVerificationsResult, fallbackVerificationResults] = await Promise.allSettled([
+        waitForAllProgressionTasks({
+            progressionTasks: currentLayerVerifications,
+            roomId,
+            helpers,
+        }),
+        waitForAllProgressionTasks({
+            progressionTasks: fallbackVerifications,
+            roomId,
+            helpers,
+        }),
+    ]);
 
-    const completedVerificationJobs = await waitForAllJobCompletions({
-        jobIds: verificationJobIds,
-    });
-    const failedVerificationTaskIds = completedVerificationJobs.find((completedJob) => {
+    if (currentLayerVerificationsResult.status === 'rejected' || fallbackVerificationResults.status === 'rejected') {
+        helpers.logger.error(`Could not update progression because one of the verification groups failed. Room ID: ${roomId}`);
+        return;
+    }
 
-        if (completedJob.status === 'rejected') {
-            return 'unknown';
-        }
-
-        const taskId = completedJob.value?.task_identifier;
-
-        if (!isEmpty(completedJob.value?.last_error)) {
-            return taskId;
-        }
-    });
-    const hasFailedVerifications = !isEmpty(failedVerificationTaskIds);
+    const { failedProgressionTaskIds: currentFailedProgressionTaskIds } = currentLayerVerificationsResult.value;
+    const { failedProgressionTaskIds: fallbackFailedProgressionTaskIds } = fallbackVerificationResults.value;
+    const failedVerificationTaskIds = [...currentFailedProgressionTaskIds, ...fallbackFailedProgressionTaskIds];
+    const hasFailedVerifications = failedVerificationTaskIds.length > 0;
+    const hasFailedFallbackVerifications = fallbackFailedProgressionTaskIds.length > 0;
 
     // guard: if one verification has failed we cannot proceed to the next progression
     if (hasFailedVerifications) {
         helpers.logger.info(`Not all progression verifications passed for room ${roomId}: ${JSON.stringify(failedVerificationTaskIds)}.`);
 
-        // TODO: this is where we will trigger any enrichments to give participants direction in how to proceed
+        // guard: check if we need to fallback the room status
+        if (hasFailedFallbackVerifications) {
+
+            // find the minimum index of all the failed fallback verifications
+            // because we want to fallback to the lowest possible layer where an verification failed
+            const minimumFallbackLayerIndex = min(fallbackFailedProgressionTaskIds.map((failedProgressionTaskId) => {
+                return progressionTopology.layers.findIndex((topologyLayer) => {
+                    return topologyLayer.verifications.some((verification) => {
+                        return verification.id === failedProgressionTaskId;
+                    });
+                });
+            })) ?? 0;
+            const fallbackLayer = progressionTopology.layers[minimumFallbackLayerIndex];
+            const fallbackRoomStatus = fallbackLayer.roomStatus;
+
+            // progress to the new status
+            updateRoomStatus({
+                roomId,
+                roomStatus: fallbackRoomStatus,
+                helpers,
+            });
+
+            // do not proceed with any additional enrichments
+            return;
+        }
+
+        // trigger all enrichments on no progression to the next layer
+        const currentLayerEnrichments = currentTopologyLayer.enrichments ?? [];
+        addProgressionTaskJobs({
+            progressionTasks: currentLayerEnrichments,
+            roomId,
+            helpers,
+        });
         return;
     }
 
@@ -93,10 +121,151 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         return;
     }
 
-    const newRoomStatus = nextProgressionLayer.roomStatus;
+    // progress to the new status
+    updateRoomStatus({
+        roomId,
+        roomStatus: nextProgressionLayer.roomStatus,
+        helpers,
+    });
+}
+
+interface WaitForAllProgressionTasksOptions {
+    progressionTasks: ProgressionTask[];
+    roomId: string;
+    helpers: Helpers;
+}
+
+/**
+ * Helper to wait for all progressions tasks to complete and return the failed progression task IDs.
+ * This makes it easy to check which verifications did not pass.
+ */
+async function waitForAllProgressionTasks(options: WaitForAllProgressionTasksOptions) {
+    const { helpers } = options;
+    const jobs = await addProgressionTaskJobs(options);
+    const jobIds = jobs.map((job) => {
+        if (job.status !== 'fulfilled') {
+            return;
+        }
+
+        return job.value.id;
+    }).filter((jobId): jobId is string => {
+        return !!jobId;
+    });
+
+    const completedJobs = await waitForAllJobCompletions({
+        jobIds,
+    });
+    const failedJobs = completedJobs.filter((completedJob) => {
+
+        if (completedJob.status === 'rejected') {
+            return true;
+        }
+
+        if (!isEmpty(completedJob.value?.last_error)) {
+            return true;
+        }
+
+        return false;
+    });
+    const failedProgressionTaskIds = failedJobs.map((failedJob) => {
+
+        if (failedJob.status === 'rejected') {
+            helpers.logger.error(`A job failed to complete for the following reason: ${failedJob.reason}`);
+            return 'unknown';
+        }
+
+        const failedJobValue = failedJob.value;
+        const failedJobPayload = failedJobValue?.payload as BaseProgressionWorkerTaskPayload;
+        const progressionTaskId = failedJobPayload?.progressionTask?.id ?? 'unknown';
+
+        return progressionTaskId;
+    });
+
+    return {
+        completedJobs,
+        failedProgressionTaskIds,
+    };
+}
+
+interface AddProgressionTaskJobs {
+    progressionTasks: ProgressionTask[];
+    roomId: string;
+    helpers: Helpers;
+}
+
+/**
+ * Helper to add all progression tasks as jobs to the job system. Along with this it also adds a moderation to the database.
+ * This allows us to track which progression tasks are triggered in the past to filter them for cooldowns and maximum attempts.
+ */
+async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
+    const { progressionTasks, roomId, helpers } = options;
+    const filteredProgressionTasks = progressionTasks.filter((progressionTask) => {
+        const { active } = progressionTask;
+
+        // TODO: check if whether this job is allowed to be added based on the cooldown or other rules
+        // TODO: determine whether a cooldown would fail or succeed the job?
+
+        return active ?? true;
+    });
+
+    // run in parallel to optimize speed of these tasks
+    const [jobsResult, moderationsInsertResult] = await Promise.allSettled([
+        Promise.allSettled(filteredProgressionTasks.map((progressionTask) => {
+            const { id: progressionTaskId, workerTaskId } = progressionTask;
+            const jobKey = `room-${roomId}-progression-task-${progressionTaskId}`;
+
+            helpers.logger.info(`Adding worker task ${workerTaskId} via progression task with job key: ${jobKey}`);
+
+            return helpers.addJob(workerTaskId, {
+                progressionTask,
+            } satisfies BaseProgressionWorkerTaskPayload, {
+                jobKey,
+                jobKeyMode: 'preserve_run_at',
+            });
+        })),
+
+        supabaseClient.from("moderations").insert(filteredProgressionTasks.map((progressionTask) => {
+            const { id: progressionTaskId, workerTaskId } = progressionTask;
+
+            return {
+                type: progressionTaskId,
+                statement: `The room a room progression task with worker task ID ${workerTaskId}.`,
+                target_type: 'room',
+                room_id: roomId,
+            } satisfies Database['public']['Tables']['moderations']['Insert'];
+        })),
+    ]);
+
+    // guard: check if the results are valid
+    if (jobsResult.status === 'rejected') {
+        helpers.logger.error(`Could not add progression task jobs for room ${roomId}: ${jobsResult.reason}`);
+        return [];
+    }
+
+    if (moderationsInsertResult.status === 'rejected') {
+        helpers.logger.error(`Could not insert moderations when logging progression tasks for room ${roomId}: ${moderationsInsertResult.reason}`);
+        return [];
+    }
+
+    const jobs = jobsResult.value;
+
+    return jobs;
+}
+
+interface UpdateRoomStatusOptions {
+    roomId: string;
+    roomStatus: RoomStatus;
+    helpers: Helpers
+}
+
+/**
+ * Helper to update the room status in the database.
+ */
+async function updateRoomStatus(options: UpdateRoomStatusOptions) {
+    const { roomId, roomStatus, helpers } = options;
     const newRoomData = await supabaseClient.from('rooms').update({
-        status_type: newRoomStatus,
+        status_type: roomStatus,
     }).eq('id', roomId);
 
-    helpers.logger.info(`Room ${roomId} has a new room status: ${newRoomStatus} (affected: ${newRoomData.count})`);
+    helpers.logger.info(`Room ${roomId} has a new room status: ${roomStatus} (affected: ${newRoomData.count})`);
 }
