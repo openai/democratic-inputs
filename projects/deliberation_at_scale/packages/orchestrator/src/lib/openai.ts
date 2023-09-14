@@ -29,11 +29,13 @@ export async function createVerificationFunctionCompletion(options: Verification
         taskInstruction,
         taskContent,
         functionSchema: {
+            // is verified: "mag die door, ja of nee?"
             name: "is_verified",
             description: `Determine whether: ${taskInstruction}`,
             parameters: {
                 type: "object",
                 properties: {
+                    // perhaps give a certainy number
                     verified: {
                         type: "boolean",
                         description: `Result of whether this is the case: ${taskInstruction}.`,
@@ -42,20 +44,28 @@ export async function createVerificationFunctionCompletion(options: Verification
                         type: "string",
                         description: `An explanation of why the result is verified or not.`,
                     },
+                    moderated: {
+                        type: "string",
+                        description: `An explanation from the moderator towards the participants of why the result is verified or not `,
+                    }
                 },
-                required: ["verified", "reason"],
+                required: ["verified", "reason", "moderated"],
             },
         },
     });
     const parsedArguments = JSON.parse(functionCall?.arguments ?? '{}');
     const verified = !!parsedArguments?.verified;
     const reason = (parsedArguments?.reason as string) ?? 'unknown';
+    const moderated = (parsedArguments?.moderated as string) ?? 'unknown';
 
     return {
         verified,
         reason,
+        moderated
     };
 }
+
+// OPTIONAL FUNCTION FOR MORE "HUMAN" REASON AS A MODERATOR
 
 export async function createFunctionCompletion(options: FunctionCompletionOptions): Promise<FunctionCall | undefined>  {
     const {

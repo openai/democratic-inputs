@@ -16,7 +16,7 @@ export default async function difficultLanguage(message: Message, helpers: Helpe
             You are the supervisor of a discussion. You must make sure that the message below adheres to the following rules:
             - Messages may not contain words that are difficult to understand
         `,
-
+        //verified,
         // not difficult example
         // taskContent: `
         //     I hope I'm speaking clearly to you because my opinion is not only very valid, but I think you might misunderstand me.
@@ -32,10 +32,14 @@ export default async function difficultLanguage(message: Message, helpers: Helpe
     });
     const isUnderstandableLanguage = verificationResult.verified;
     const clarificationReason = verificationResult.reason;
+    const clarificationReasonToParticipants = verificationResult.moderated;
 
     // TMP: temporary logging statements
     console.log('Difficult language verification result:');
     console.log(verificationResult);
+
+    console.log('Moderator explaination:');
+    console.log(clarificationReasonToParticipants);
 
     // guard: do nothing when it is not difficult language
     if (isUnderstandableLanguage || !roomId) {
@@ -43,22 +47,25 @@ export default async function difficultLanguage(message: Message, helpers: Helpe
     }
 
     helpers.logger.info(`Sending clarification message to room ${roomId} for message ${messageId}: ${clarificationReason}`);
+    helpers.logger.info(`Sending clarification message to room ${roomId} for message ${messageId}: ${clarificationReasonToParticipants}`);
 
     // execute these in parallel to each other
     await Promise.allSettled([
 
         // track that this message has been moderated
-        insertClarificationModeration(message, clarificationReason),
+        insertClarification(message, clarificationReason),
 
-        // send a message to the room with the clarification reason
+        // send a message to the room with the moderators explaination about the verification
         sendBotMessage({
-            content: clarificationReason,
+            content: clarificationReasonToParticipants,
             roomId,
         }),
     ]);
+
+
 }
 
-async function insertClarificationModeration(message: Message, statement: string) {
+async function insertClarification(message: Message, statement: string) {
     await supabaseClient.from("moderations").insert({
         type: 'clarification',
         statement,
