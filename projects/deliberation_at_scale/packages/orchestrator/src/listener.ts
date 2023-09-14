@@ -36,6 +36,10 @@ async function startMessageListener() {
             jobKey: "difficultLanguage",
             jobKeyMode: "preserve_run_at",
         });
+        quickAddJob({}, "equalParticipation_2", newMessage, {
+            jobKey: "equalParticipation_2",
+            jobKeyMode: "preserve_run_at",
+        });
     });
 }
 
