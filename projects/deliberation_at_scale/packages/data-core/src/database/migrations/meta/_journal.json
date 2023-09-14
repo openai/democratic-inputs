@@ -71,6 +71,13 @@
       "when": 1694697082864,
       "tag": "0009_living_steel_serpent",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1694697726123,
+      "tag": "0010_black_toad",
+      "breakpoints": true
     }
   ]
 }

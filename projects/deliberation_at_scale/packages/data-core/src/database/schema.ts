@@ -176,9 +176,11 @@ export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
+        statusIndex: index("status_index").on(table.status),
         roomIdIndex: index("room_id_index").on(table.roomId),
         userIdIndex: index("user_id_index").on(table.userId),
         participationScore: index("participation_score_index").on(table.participationScore),
+        lastSeenAtIndex: index("last_seen_at_index").on(table.lastSeenAt),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
