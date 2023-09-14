@@ -13,7 +13,7 @@ fragment FullParticipant on participants {
 
 # A lobby participant is a participant who has not been ready, has no room id and is not active
 query GetLobbyParticipantFromUser($userId: UUID!) {
-    participantsCollection(filter: {user_id: {eq: $userId}, active: {eq: false}, room_id: {is:NULL}}, first: 1)  {
+    participantsCollection(filter: {user_id: {eq: $userId}, status: {eq: "queued"}, room_id: {is:NULL}}, first: 1)  {
         edges {
             node {
                 ...FullParticipant

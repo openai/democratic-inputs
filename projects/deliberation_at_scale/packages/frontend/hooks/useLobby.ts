@@ -13,47 +13,70 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 // TODO: ping every second to keep the connection alive this should probably be a different hook
 
 export default function useLobby(userId: string) {
-    const {data: participantData, refetch: refetchParticipant, loading: participantLoading} = useRealtimeQuery(useGetLobbyParticipantFromUserQuery({
+    const { data: participantData, refetch: refetchParticipant, loading: participantLoading } = useRealtimeQuery(useGetLobbyParticipantFromUserQuery({
         variables: {
             userId,
         }
     }));
 
-    console.log({userId});
-    const [createParticipant, {loading: loadingParticipantMutation, error: loadingParticipantError}] = useCreateParticipantMutation({
-        variables : {
+    console.log({ userId });
+    const [createParticipant, { loading: loadingParticipantMutation, error: loadingParticipantError }] = useCreateParticipantMutation({
+        variables: {
             userId,
         }
     });
     const currentParticipant = participantData?.participantsCollection?.edges?.[0]?.node;
     useEffect(() => {
-        if(!participantLoading && !currentParticipant) {
+        if (!participantLoading && !currentParticipant) {
             console.log("stopped loading and no new currenparticipant");
             // create new participant
-             createParticipant({variables: {
-                userId,
-            }}).then((result) => {
-                console.log({result});
+            createParticipant({
+                variables: {
+                    userId,
+                }
+            }).then((result) => {
+                console.log({ result });
             });
         }
-        console.log({participantLoading, currentParticipant});
+        console.log({ participantLoading, currentParticipant });
     }, [participantLoading, currentParticipant]);
 
     useEffect(() => {
-        refetchParticipant( {
+        refetchParticipant({
             userId,
         });
     }, [userId]);
 
 
     useCallback(() => {
-        
+
     }, [userId]);
 
     return {
         participant: currentParticipant,
         loading: participantLoading || loadingParticipantMutation,
-        error: loadingParticipantError
-    }
+        error: loadingParticipantError,
+    };
 
+}
+
+const PING_INTERVAL_DELAY_MS = 1000;
+
+export function pingParticipant(participantID?: string) {
+    const [pingInterval, setPingInterval] = useState();
+    useEffect(() => {
+        if (pingInterval) {
+            clearTimeout(pingInterval);
+        }
+        if (participantID) {
+
+            setPingInterval(
+                setInterval(() => {
+                    // use the ping hook to update the ping time
+                    const pingDate = new Date().toISOString();
+
+                }, PING_INTERVAL_DELAY_MS);
+            )
+}
+    }, [participantID]);
 }

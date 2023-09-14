@@ -24,7 +24,7 @@ export interface Database {
                     participant_id: string | null
                     prompt: string
                     room_id: string | null
-                    target_type: Database["public"]["Enums"]["targetType"]
+                    target_type: Database["public"]["Enums"]["targetType"] | null
                     topic_id: string | null
                     type: Database["public"]["Enums"]["completionType"]
                     updated_at: string
@@ -45,7 +45,7 @@ export interface Database {
                     participant_id?: string | null
                     prompt: string
                     room_id?: string | null
-                    target_type: Database["public"]["Enums"]["targetType"]
+                    target_type?: Database["public"]["Enums"]["targetType"] | null
                     topic_id?: string | null
                     type: Database["public"]["Enums"]["completionType"]
                     updated_at?: string
@@ -66,7 +66,7 @@ export interface Database {
                     participant_id?: string | null
                     prompt?: string
                     room_id?: string | null
-                    target_type?: Database["public"]["Enums"]["targetType"]
+                    target_type?: Database["public"]["Enums"]["targetType"] | null
                     topic_id?: string | null
                     type?: Database["public"]["Enums"]["completionType"]
                     updated_at?: string
@@ -287,9 +287,9 @@ export interface Database {
                     participant_id: string | null
                     room_id: string | null
                     statement: string
-                    target_type: Database["public"]["Enums"]["targetType"]
+                    target_type: Database["public"]["Enums"]["targetType"] | null
                     topic_id: string | null
-                    type: Database["public"]["Enums"]["moderationType"]
+                    type: string
                     updated_at: string
                     user_id: string | null
                 }
@@ -306,9 +306,9 @@ export interface Database {
                     participant_id?: string | null
                     room_id?: string | null
                     statement?: string
-                    target_type: Database["public"]["Enums"]["targetType"]
+                    target_type?: Database["public"]["Enums"]["targetType"] | null
                     topic_id?: string | null
-                    type: Database["public"]["Enums"]["moderationType"]
+                    type: string
                     updated_at?: string
                     user_id?: string | null
                 }
@@ -325,9 +325,9 @@ export interface Database {
                     participant_id?: string | null
                     room_id?: string | null
                     statement?: string
-                    target_type?: Database["public"]["Enums"]["targetType"]
+                    target_type?: Database["public"]["Enums"]["targetType"] | null
                     topic_id?: string | null
-                    type?: Database["public"]["Enums"]["moderationType"]
+                    type?: string
                     updated_at?: string
                     user_id?: string | null
                 }
@@ -516,10 +516,11 @@ export interface Database {
                     active: boolean
                     created_at: string
                     id: string
+                    last_seen_at: string
                     nick_name: string
                     participation_score: number
-                    ready: boolean
                     room_id: string | null
+                    status: Database["public"]["Enums"]["participantStatusType"]
                     updated_at: string
                     user_id: string | null
                 }
@@ -527,10 +528,11 @@ export interface Database {
                     active?: boolean
                     created_at?: string
                     id?: string
+                    last_seen_at?: string
                     nick_name?: string
                     participation_score?: number
-                    ready?: boolean
                     room_id?: string | null
+                    status?: Database["public"]["Enums"]["participantStatusType"]
                     updated_at?: string
                     user_id?: string | null
                 }
@@ -538,10 +540,11 @@ export interface Database {
                     active?: boolean
                     created_at?: string
                     id?: string
+                    last_seen_at?: string
                     nick_name?: string
                     participation_score?: number
-                    ready?: boolean
                     room_id?: string | null
+                    status?: Database["public"]["Enums"]["participantStatusType"]
                     updated_at?: string
                     user_id?: string | null
                 }
@@ -566,8 +569,8 @@ export interface Database {
                     created_at: string
                     external_room_id: string | null
                     id: string
-                    room_status_type: Database["public"]["Enums"]["roomStatusType"]
-                    starts_at: string
+                    starts_at: string | null
+                    status_type: Database["public"]["Enums"]["roomStatusType"]
                     topic_id: string
                     updated_at: string
                 }
@@ -576,8 +579,8 @@ export interface Database {
                     created_at?: string
                     external_room_id?: string | null
                     id?: string
-                    room_status_type?: Database["public"]["Enums"]["roomStatusType"]
-                    starts_at?: string
+                    starts_at?: string | null
+                    status_type?: Database["public"]["Enums"]["roomStatusType"]
                     topic_id: string
                     updated_at?: string
                 }
@@ -586,8 +589,8 @@ export interface Database {
                     created_at?: string
                     external_room_id?: string | null
                     id?: string
-                    room_status_type?: Database["public"]["Enums"]["roomStatusType"]
-                    starts_at?: string
+                    starts_at?: string | null
+                    status_type?: Database["public"]["Enums"]["roomStatusType"]
                     topic_id?: string
                     updated_at?: string
                 }
@@ -678,7 +681,7 @@ export interface Database {
             }
         }
         Enums: {
-            completionType: "gpt4"
+            completionType: "gpt4" | "gpt"
             crossPollinationType: "discussion" | "closing" | "afterwards"
             discussionType: "chat" | "voice" | "bot"
             messageType: "chat" | "voice" | "bot"
@@ -692,6 +695,12 @@ export interface Database {
             | "clarification"
             opinionType: "relevance_range" | "agreement_range" | "statement"
             outcomeType: "milestone" | "consensus" | "off_topic"
+            participantStatusType:
+            | "queued"
+            | "waiting_for_confirmation"
+            | "transfering_to_room"
+            | "in_room"
+            | "end_of_session"
             roomStatusType: "safe" | "informed" | "debate" | "results"
             targetType:
             | "user"

@@ -1,7 +1,7 @@
 
 import supabase from "../lib/supabase";
 import { Helpers, Logger, quickAddJob } from "graphile-worker";
-import { createRoom } from "src/lib/whereby";
+import { createRoom } from "../lib/whereby";
 
 const MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM = 4;
 
@@ -21,6 +21,10 @@ const MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM = 4;
  */
 const TASK_INTERVAL_SECONDS = 1;
 
+function UTCToISOString(input: number) {
+    return new Date(input).toISOString();
+}
+
 /**
   * @brief removes inactive participants
 **/
@@ -30,13 +34,15 @@ async function removeInactiveParticipants(logger: Logger) {
 
     const currentTimestamp = Date.now();
 
+
     // delete participants where ping failed and they are still in queu
     const pingInactiveParticipantsPromise = supabase
         .from("participants")
-        .delete()
-        .eq('active', false)
-        .eq('status', "qeue")
-        .gt('last_seen_at', currentTimestamp + inactiveTimeMilliseconds);
+        .update({ active: false })
+        .eq('status', "queued")
+        .lt('last_seen_at', UTCToISOString(currentTimestamp + inactiveTimeMilliseconds));
+
+    logger.info(`current time ${UTCToISOString(currentTimestamp)}`);
 
     // deactivate participants when they are incative for more than x minutes
     // TODO: check if this is supposed to be here. This might be better done in the roomManager
@@ -46,16 +52,16 @@ async function removeInactiveParticipants(logger: Logger) {
             status: 'end_of_session',
             active: false,
         })
-        .eq('last_seen_at', currentTimestamp + (inactiveMaxMinutes * 60 * 1000));
+        .lt('last_seen_at', UTCToISOString(currentTimestamp + (inactiveMaxMinutes * 60 * 1000)));
 
     const [pingInactiParticipants, inactiveForMinutesParticipants] =
         await Promise.all([pingInactiveParticipantsPromise, inactiveForMinutesParticipantsPromise]);
 
     if (pingInactiParticipants.error) {
-        logger.error('remove inactive participants', pingInactiParticipants.error);
+        logger.error(`remove inactive participants, ${JSON.stringify(pingInactiParticipants.error)}`);
     }
     if (inactiveForMinutesParticipants.error) {
-        logger.error('remove participants after timeout', inactiveForMinutesParticipants.error);
+        logger.error(`remove participants after timeout, ${JSON.stringify(inactiveForMinutesParticipants.error)}`);
     }
 
 }
@@ -178,6 +184,7 @@ async function assignParticipantsToRooms(logger: Logger) {
 * @brief: main task for managing the lobby
 **/
 export default async function lobbyTask(
+    payload,
     helpers: Helpers
 ) {
     const { logger } = helpers;

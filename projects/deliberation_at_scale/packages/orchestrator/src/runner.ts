@@ -11,7 +11,11 @@ async function main() {
         parsedCronItems: parseCronItems(crontab),
         noPreparedStatements: true,
     });
-    listenForNewMessages();
+    quickAddJob({}, "lobby", 0, {
+        jobKey: "lobby",
+        jobKeyMode: "preserve_run_at",
+    });
+    // listenForNewMessages();
     await runner.promise;
 }
 
@@ -43,11 +47,6 @@ async function listenForNewMessages() {
         messageInsertListener.unsubscribe();
     };
 }
-
-listenForNewMessages().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
 
 main().catch((err) => {
     console.error(err);

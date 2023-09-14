@@ -1,6 +1,7 @@
 #Used to enter a room once a timeout has occured or the particpant/user engages in an active prompt to enter a room
 mutation EnterRoom($participantID: UUID!) {
-    updateparticipantsCollection(filter: {id: {eq: $participantID} }, set: {ready: true}) {
+# FIXME: set enter room here however this is now done automatically
+    updateparticipantsCollection(filter: {id: {eq: $participantID} }, set: {}) {
         affectedCount
     }
 }
