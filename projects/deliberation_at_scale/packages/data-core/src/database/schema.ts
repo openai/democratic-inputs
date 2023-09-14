@@ -101,6 +101,13 @@ export const messageVisibilityType = pgEnum("visibilityType", [
     "public",
     "private",
 ]);
+export const participantStatusType = pgEnum("participantStatusType", [
+    "queued",
+    "waiting_for_confirmation",
+    "transfering_to_room",
+    "in_room",
+    "end_of_session",
+]);
 
 export const users = pgTable(USERS_TABLE_NAME, {
     id: generateIdField(),
@@ -159,16 +166,16 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
 export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
-    ready: boolean('ready').notNull().default(false),
+    status: participantStatusType("status").notNull().default("queued"),
     roomId: uuid(ROOM_ID_FIELD_NAME)
         .references(() => rooms.id),
     userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
     nickName: generateNickNameField(),
     participationScore: integer("participation_score").notNull().default(0),
+    lastSeenAt: timestamp("last_seen_at").notNull().defaultNow(),
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        readyIndex: index("ready_index").on(table.ready),
         roomIdIndex: index("room_id_index").on(table.roomId),
         userIdIndex: index("user_id_index").on(table.userId),
         participationScore: index("participation_score_index").on(table.participationScore),
