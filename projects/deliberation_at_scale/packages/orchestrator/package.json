@@ -7,6 +7,8 @@
     "setup": "npm install && cp -n .env.example .env",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "swc src -d dist",
+    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/generated/database.types.ts'",
+    "db:login": "supabase login",
     "start": "npm run build && node dist/runner.js",
     "lint": "eslint src --ext .ts",
     "clean": "rimraf ./node_modules"

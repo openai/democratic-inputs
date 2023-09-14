@@ -1,7 +1,7 @@
 
 import supabase from "../lib/supabase";
 import { Helpers, Logger, quickAddJob } from "graphile-worker";
-import { createRoom } from 'src/lib/whereby';
+import { createRoom } from "src/lib/whereby";
 
 const MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM = 4;
 
@@ -30,17 +30,24 @@ async function removeInactiveParticipants(logger: Logger) {
 
     const currentTimestamp = Date.now();
 
-    // delete participants where ping failed
+    // delete participants where ping failed and they are still in queu
     const pingInactiveParticipantsPromise = supabase
         .from("participants")
         .delete()
         .eq('active', false)
-        .gt('updated_at', currentTimestamp + inactiveTimeMilliseconds);
-    // delete participants when they are incative for more than x minutes
+        .eq('status', "qeue")
+        .gt('last_seen_at', currentTimestamp + inactiveTimeMilliseconds);
+
+    // deactivate participants when they are incative for more than x minutes
+    // TODO: check if this is supposed to be here. This might be better done in the roomManager
     const inactiveForMinutesParticipantsPromise = supabase
         .from('participants')
-        .delete()
-        .eq('updated_at', currentTimestamp + (inactiveMaxMinutes * 60 * 1000));
+        .update({
+            status: 'end_of_session',
+            active: false,
+        })
+        .eq('last_seen_at', currentTimestamp + (inactiveMaxMinutes * 60 * 1000));
+
     const [pingInactiParticipants, inactiveForMinutesParticipants] =
         await Promise.all([pingInactiveParticipantsPromise, inactiveForMinutesParticipantsPromise]);
 
@@ -85,6 +92,7 @@ async function createWherebyRoomAndAssignParticipants(particpantIDs: string[], t
             return supabase.from('participants').update({
                 id: participant,
                 room_id: roomId,
+                status: 'waiting_for_confirmation',
             });
         });
 
@@ -95,6 +103,25 @@ async function createWherebyRoomAndAssignParticipants(particpantIDs: string[], t
     }
 }
 
+/**
+  * @brief shuffles array (puts it in a random order) and returns a copy
+**/
+function shuffleArray<Type>(arr: Array<Type>): Type[] {
+    const newArray = arr.map((entry): Type & { _sortNumber?: number } => {
+        const sortNumber = Math.random();
+        return {
+            ...entry,
+            _sortNumber: sortNumber,
+        };
+    });
+    newArray.sort((a, b) => ((a?._sortNumber || 0) - (b?._sortNumber || 0)));
+
+    return newArray.map((entry): Type => {
+        const newObj = { ...entry };
+        delete newObj._sortNumber;
+        return newObj;
+    });
+}
 
 /**
 * @brief assigns participants in the lobby to a discussion room
@@ -104,16 +131,11 @@ async function assignParticipantsToRooms(logger: Logger) {
 
     // for now check how many participants we have. If more than 4 users assign them to a room randomly
     const participants = await supabase.from('participants').select().eq('active', false);
-    if (participants?.count || 0 < MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM) {
+    if (participants?.count || 0 < MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM || !participants?.data) {
         return;
     }
     // will sort the participants randomly for now and assign four of them per room
-    const participantsWithRandomNumber = participants?.data?.map((participant) => {
-
-        return { randomNumber: Math.random(), ...participant };
-    }) || [];
-
-    participantsWithRandomNumber.sort((a, b) => (a.randomNumber - b.randomNumber));
+    const shuffledParticipants = shuffleArray(participants.data);
 
     // get all current topics and put them in an array so the participants can be randomly assigned
     const topicsResponse = await supabase.from('topics').select().eq('active', true);
@@ -130,10 +152,10 @@ async function assignParticipantsToRooms(logger: Logger) {
 
     // assign participants to a whereby room per 4 participants
     const assignRoomPromises = [];
-    while (participantsWithRandomNumber.length >= MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM) {
+    while (shuffledParticipants.length >= MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM) {
         const currentParticipants = [];
         for (let i = 0; i < MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM; i++) {
-            const currentParticipant = participantsWithRandomNumber.pop();
+            const currentParticipant = shuffledParticipants.pop();
             if (currentParticipant?.id) {
                 currentParticipants.push(currentParticipant?.id);
             } else {
@@ -146,7 +168,7 @@ async function assignParticipantsToRooms(logger: Logger) {
         assignRoomPromises.push(createWherebyRoomAndAssignParticipants(currentParticipants, topicIds, logger));
     }
     try {
-        await Promise.all(participantsWithRandomNumber);
+        await Promise.all(shuffledParticipants);
     } catch (error) {
         logger.error(`error when assigning participants to rooms. Error: ${error}`);
     }

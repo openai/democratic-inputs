@@ -10,7 +10,7 @@ declare global {
     }
 }
 
-const WHEREBY_API_URL = 'https://api.whereby.dev/v1/'
+const WHEREBY_API_URL = 'https://api.whereby.dev/v1/';
 
 // guard: check that the whereby token is present
 if (!('WHEREBY_BEARER_TOKEN' in process.env)) {

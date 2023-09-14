@@ -1,7 +1,7 @@
 // import { Helpers } from "graphile-worker";
 import supabase from "../lib/supabase";
 import openai from "../lib/openai";
-import { Database } from "src/data/database.types";
+import { Database } from "src/generated/database.types";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
 
