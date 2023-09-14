@@ -124,15 +124,15 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             roomStatus: 'informed',
             verifications: [
                 {
+                    //TODO: toevoegen dat hij moet kijken naar de oudere berichten en 'relatief' beoordeelt of het moeilijke taal is
                     id: 'difficultLanguage',
                     workerTaskId: 'difficultLanguage',
                     active: false,
-                    fallback: true,
                     maxAtempts: 3,
                     cooldownSeconds: 60,
                     context: {
                         messages: {
-                            historyAmountMessages: 1,
+                            historyAmountSeconds: 30,
                         }
                     },
                 },
@@ -174,6 +174,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'enoughContent',
                     active: false,
                     cooldownSeconds: 20,
+                    buffer: 5 * 60,
                     context: {
                         messages: {
                             historySpecifiedLayers: ['conversate'],
@@ -201,13 +202,14 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             roomStatus: 'results',
             verifications: [
                 {
+                    // possible addition of metaConsensus forming that forms a consensus upon shared values 
                     id: 'consensusForming',
                     workerTaskId: 'consensusForming',
                     active: false,
                     cooldownSeconds: 30,
                     context: {
                         messages: {
-                            historySpecifiedLayers: ['conversate', 'results'],
+                            historySpecifiedLayers: ['informed', 'conversate', 'results'],
                             historyAllMessages: true,
                         }
                     }
@@ -218,10 +220,12 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     id: 'enrichModeratorMessageStimulateConsensus',
                     workerTaskId: 'enrichModeratorMessageStimulateConsensus',
                     active: false,
+                    // buffer?
+                    // maxAtempts: 3x? 
                     cooldownSeconds: 60,
                     context: {
                         messages: {
-                            historySpecifiedLayers: ['conversate', 'results'],
+                            historySpecifiedLayers: ['conversate', 'results', 'informed'],
                             historyAllMessages: true,
                         }
                     },

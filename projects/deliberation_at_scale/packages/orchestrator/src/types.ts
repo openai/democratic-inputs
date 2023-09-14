@@ -52,6 +52,7 @@ export interface ProgressionTask {
     cooldownSeconds?: number;
     cooldownAmountMessages?: number;
     maxAtempts?: number;
+    buffer?: number;
 }
 
 /** A single verification task which specify behaviour what to do when the verification fails. */

@@ -692,7 +692,7 @@ export interface Database {
         | "clarification"
       opinionType: "relevance_range" | "agreement_range" | "statement"
       outcomeType: "milestone" | "consensus" | "off_topic"
-      roomStatusType: "introduction_participants" | "introduction_topic" | "safe" | "informed" | "conversate" | "results"
+      roomStatusType: "introduction_participants" | "introduction_topic" | "safe" | "informed" | "conversate" | "results" | "conclude"
       targetType:
         | "user"
         | "topic"
