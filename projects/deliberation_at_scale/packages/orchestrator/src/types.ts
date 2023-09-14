@@ -19,7 +19,7 @@ export interface ProgressionTopology {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type LayerId = 'safe' | 'informed' | 'debate' | 'results';
+export type LayerId = 'introduction_participants' | 'introduction_topic' | 'safe' | 'informed' | 'conversate' | 'results';
 
 export type RoomStatus = Database['public']['Enums']['roomStatusType'];
 
@@ -36,7 +36,7 @@ export interface ProgressionLayer {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type WorkerTaskId = 'badLanguage';
+export type WorkerTaskId = 'badLanguage' | 'introductionParticipants' | 'difficultLanguage';
 
 /** A single task within a progression layer. */
 export interface ProgressionTask {
@@ -50,6 +50,8 @@ export interface ProgressionTask {
     context?: ProgressionContext;
     /** An optional minimum cooldown in terms of time before checking this task again. */
     cooldownSeconds?: number;
+    cooldownAmountMessages?: number;
+    maxAtempts?: number;
 }
 
 /** A single verification task which specify behaviour what to do when the verification fails. */
@@ -70,5 +72,11 @@ export interface ProgressionContext {
 
 export interface ProgressionHistoryContext {
     /** The amount of seconds in the history the data should be fetched. */
-    historyAmountSeconds: number;
+    historyAmountSeconds?: number;
+    historyAmountMessages?: number;
+    historyAllMessages?: boolean;
+
+    /** Check on history for specified layer. All collected message history that took place in a  specified layer */
+    historySpecifiedLayer: LayerId;
+
 }

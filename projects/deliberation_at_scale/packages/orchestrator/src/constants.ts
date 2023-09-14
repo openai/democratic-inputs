@@ -34,9 +34,49 @@ export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 /* Time */
 export const ONE_SECOND_MS = 1000;
 
+/* TODO: in the tasks folder split folder into two: 1. checking tasks and 2. assistive tasks
 /* The topology each room progresses through */
 export const progressionTopology: Readonly<ProgressionTopology> = {
     layers: [
+        {
+            id: 'introduction_participants',
+            roomStatus: 'introduction_participants',
+            verifications: [
+                {
+                    /* Check whether each participant has introduced themselves properly */
+                    id: 'introductionParticipants',
+                    active: false,
+                    fallback: false,
+                    /* Execute function maximum twice */
+                    maxAtempts: 100,
+                    /* Execute function again after 20 seconds  */
+                    // coolDownSeconds: 20,
+                    /* Execute function again after every message */
+                    cooldownAmountMessages: 1,
+                    /* Do check whether every participant has added something in the conversation  */
+                    // inputFromAllParticipants: true,
+                    context: {
+                        messages: {
+                            historyAll: true,
+                        }
+                    },
+                }
+            ],
+            enrichments: [
+                {
+                    id: 'promptIntroductionParticipants',
+                    active: false,
+                    /* Execute function to prompt participants after 2 minutes to introduce themselves if not all participants have introduced themselves  */
+                    cooldownSeconds: 120,
+                    context: {
+                        messages: {
+                            historyAllMessages: true,
+                        }
+                    },
+                }
+            ]
+
+        },
         {
             id: 'safe',
             roomStatus: 'safe',
@@ -45,19 +85,91 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     id: 'safe-badLanguage',
                     workerTaskId: 'badLanguage',
                     active: false,
+                    fallback: true,
                     context: {
                         messages: {
-                            historyAmountSeconds: 10,
+                            historyAmountMessages: 1,
                         },
                     },
                 },
+                {
+                    id: 'emotionalWellbeing',
+                    active: false,
+                    maxAtempts: 3,
+                    cooldownSeconds: 30,
+                    context: {
+                        messages: {
+                            historyAmountSeconds: 30,
+                        }
+                    }
+                }
             ],
+            enrichments: [
+                {
+                    id: 'promptSafe',
+                    active: false,
+                    /* Execute function to prompt safe environment after 1 minutes */
+                    cooldownSeconds: 60,
+                    context: {
+                        messages: {
+                            historyAmountSeconds: 30,
+                        }
+                    },
+                }
+            ]
         },
         {
             id: 'informed',
             roomStatus: 'informed',
-            verifications: [],
+            verifications: [
+                {
+                    id: 'difficultLanguage',
+                    active: false,
+                    fallback: true,
+                    maxAtempts: 3,
+                    cooldownSeconds: 60,
+                    context: {
+                        messages: {
+                            historyAmountMessages: 1,
+                        }
+                    },
+                },
+                {
+                    id: 'offTopic',
+                    active: false,
+                    fallback: true,
+                    maxAtempts: 3,
+                    cooldownSeconds: 60,
+                    context: {
+                        messages: {
+                            historyAmountMessages: 3,
+                        }
+                    },
+                }
+            ],
+            enrichments: [
+                {
+                    id: 'promptInformed'
+                }
+            ]
         },
+        {
+            id: 'conversate',
+            roomStatus: 'conversate',
+            verifications: [
+                {
+                    id: 'enoughContent',
+                    active: false,
+                    cooldownSeconds: 0,
+                    context: {
+                        messages: {
+                            historySpecifiedLayer: 'conversate',
+                            historyAllMessages: true,
+                        }
+                    }
+                }
+            ]
+        }
     ],
 };
 
