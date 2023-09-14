@@ -25,7 +25,13 @@ const config: CodegenConfig = {
                 'typescript',
                 'typescript-operations',
                 'typescript-react-apollo',
+                {
+                    add: {
+                        content: '/* eslint-disable */',
+                    }
+                }
             ],
+            
         },
     }
 };

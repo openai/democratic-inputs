@@ -9,7 +9,7 @@ interface VideoViewSelfProps {
 }
 
 type VideoViewProps = VideoViewSelfProps &
-    React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>;
+React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>;
 
 /**
  * @deprecated This component is lifted from the Whereby SDK. This is because

@@ -1,12 +1,20 @@
 {
   "name": "@deliberation-at-scale/common",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Shared utilities and constants package.",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup": "npm install",
+    "build": "tsc",
+    "clean": "rimraf ./node_modules",
+    "lint": "eslint src --ext .ts"
   },
   "keywords": [],
   "author": "Pepijn Verburg <pepijn@bmd.studio>, Lei Nelissen <lei@bmd.studio>, Jorim Theuns <jorim@dembrane.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "20.6.0",
+    "dotenv-cli": "7.3.0",
+    "rimraf": "5.0.1"
+  }
 }

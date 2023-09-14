@@ -5,9 +5,9 @@ import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 
 export interface UseMessagesOptions {
-  roomId?: RoomId;
-  participantMessageHistoryAmount?: number;
-  botMessageHistoryAmount?: number;
+    roomId?: RoomId;
+    participantMessageHistoryAmount?: number;
+    botMessageHistoryAmount?: number;
 }
 
 export default function useRoomMessages(options?: UseMessagesOptions) {

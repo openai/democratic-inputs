@@ -1,8 +1,8 @@
 import { Helpers, quickAddJob } from "graphile-worker";
-import supabase from "../lib/supabase";
-import openai from "../lib/openai";
+import supabaseClient from "../lib/supabase";
+import openaiClient from "../lib/openai";
 import { CreateChatCompletionRequestMessage } from "openai/resources/chat";
-import { Database } from "../data/database.types";
+import { Database } from "../generated/database.types";
 
 //TODO: Retrieve this from database
 const DISCUSSION_TOPIC = "Students are not allowed to use AI technology for their exams";
@@ -26,7 +26,7 @@ export default async function summarize(
     helpers: Helpers
 ) {
     // Retrieve all messages from supabase
-    let statement = supabase.from("messages").select().eq("type", "chat");
+    let statement = supabaseClient.from("messages").select().eq("type", "chat");
 
     if (lastRun) {
         statement = statement.gt("created_at", lastRun);
@@ -79,7 +79,7 @@ function reschedule(initialDate: string | null) {
 }
 
 async function checkForConsensus(messages: Message[]): Promise<{ result: boolean } | null> {
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
         temperature: 0.1,
         model: "gpt-4",
         messages: [
@@ -114,7 +114,7 @@ async function checkForConsensus(messages: Message[]): Promise<{ result: boolean
 }
 
 async function writeConsensusMessage(messages: Message[]): Promise<{ content: string } | null> {
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
         model: "gpt-4",
         temperature: 0.8,
         messages: [
@@ -124,7 +124,6 @@ async function writeConsensusMessage(messages: Message[]): Promise<{ content: st
           `The following shows part of a discussion between three participants on the topic:
       "${DISCUSSION_TOPIC}"?.
       Output the consensus as a statement in less than 20 words.
-
       return a JSON object in the following format: { content: {the consensus statement}` ,
             },
             ...messages.map(
@@ -153,7 +152,7 @@ async function addConsensusMessageToChat(moderationMessageContent: string) {
     // update the message
     isUpdatingMessage = true;
     try {
-        const result = await supabase
+        const result = await supabaseClient
             .from("messages")
             .insert({
                 content: moderationMessageContent,
@@ -175,7 +174,7 @@ async function addModerationMessage(moderationMessageContent: string) {
     // update the message
     isAddingModeration = true;
     try {
-        const result = await supabase.from("moderations").insert({
+        const result = await supabaseClient.from("moderations").insert({
             type: 'consensus',
             statement: moderationMessageContent,
             target_type: 'moderation',

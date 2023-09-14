@@ -10,7 +10,8 @@ module.exports = {
         "plugin:import/typescript",
     ],
     rules: {
-        indent: ["error", 4],
+        indent: "off",
+        "@typescript-eslint/indent": ["error", 4],
         semi: ["error", "always"],
         "no-console": "warn",
         "@typescript-eslint/no-unused-vars": "error",

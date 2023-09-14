@@ -30,6 +30,11 @@ this command in a seperate terminal
 npm run start:proxy
 ```
 
+## GraphQL VSCode extension for auto-completion
+Install the following VSCode extension: https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql
+
+`graphql.config.yml` is used by this extension to introspect the schema. If you want it to work properly it is recommended that you open VSCode with the `frontend` directory as root so the extension detects the configuration file correctly.
+
 # Deploying to production
 
 ## Vercel

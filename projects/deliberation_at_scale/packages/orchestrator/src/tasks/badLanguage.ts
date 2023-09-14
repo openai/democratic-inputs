@@ -1,8 +1,8 @@
 import { Helpers } from "graphile-worker";
-import supabase from "../lib/supabase";
-import openai from "../lib/openai";
+import supabaseClient from "../lib/supabase";
+import openaiClient from "../lib/openai";
 import { json } from "stream/consumers";
-import { Database } from "../data/database.types";
+import { Database } from "../generated/database.types";
 import { type } from "os";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
@@ -38,7 +38,7 @@ export default async function badLanguage(message: Message, helpers: Helpers) {
 
 // Use OpenAI's moderation API endpoint
 async function isFlaggedByModeration(message: Message): Promise<{result: boolean, content: string | null}> {
-    const moderationResponse = await openai.moderations.create({
+    const moderationResponse = await openaiClient.moderations.create({
         input: message.content,
     });
 
@@ -56,7 +56,7 @@ async function isFlaggedByModeration(message: Message): Promise<{result: boolean
 
 // Use custom ruleset with completions API
 async function isFlaggedByDiscussionRules(message: Message): Promise<{result: boolean, content: string | null} | null> {
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
         temperature: 0.2,
         messages: [
             { role: 'user', content: `
@@ -84,7 +84,7 @@ async function isFlaggedByDiscussionRules(message: Message): Promise<{result: bo
 }
 
 async function writeModerationResponse(reason: string): Promise<{content: string} | null> {
-    const completion = await openai.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
         temperature: 0.8,
         messages: [
             { role: 'user', content: `
@@ -114,7 +114,7 @@ async function replaceFlaggedMessage(message: Message, moderationMessageContent:
     // update the message
     isUpdatingMessage = true;
     try {
-        const result = await supabase
+        const result = await supabaseClient
             .from("messages")
             .update({
                 content: moderationMessageContent,
@@ -137,7 +137,7 @@ async function addModerationMessage(message: Message, moderationMessageContent: 
     // update the message
     isAddingModeration = true;
     try {
-        const result = await supabase.from("moderations").insert({
+        const result = await supabaseClient.from("moderations").insert({
             type: 'harrashment',
             statement: moderationMessageContent,
             target_type: 'moderation',

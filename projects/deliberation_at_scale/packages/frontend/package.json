@@ -9,11 +9,12 @@
     "build": "next build",
     "deploy": "vercel --prod",
     "start:prod": "next start -p 3200",
-    "start:proxy": "npx local-ssl-proxy --source 3201 --targer 3200",
-    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./types/database.ts'",
+    "start:proxy": "npx local-ssl-proxy --source 3201 --target 3200",
+    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./types/database.ts' && eslint --fix ./types/database.ts",
     "db:login": "supabase login",
     "codegen": "dotenv -e .env -- gql-gen --config codegen.ts --watch",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "clean": "rimraf ./node_modules"
   },
   "author": "Pepijn Verburg <pepijn@bmd.studio>, Lei Nelissen <lei@bmd.studio>, Jorim Theuns <jorim@dembrane.com>",
   "license": "MIT",
@@ -27,6 +28,7 @@
     "autoprefixer": "10.4.14",
     "classnames": "2.3.2",
     "dayjs": "1.11.9",
+    "graphql": "16.8.0",
     "next": "13.4.19",
     "object-hash": "3.0.0",
     "postcss": "8.4.24",
@@ -36,6 +38,7 @@
     "tailwindcss": "3.3.2"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "5.0.0",
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/typescript-operations": "4.0.1",
     "@graphql-codegen/typescript-react-apollo": "3.3.7",
@@ -50,6 +53,7 @@
     "es6-object-assign": "1.1.0",
     "eslint-config-next": "13.4.19",
     "radash": "11.0.0",
+    "rimraf": "5.0.1",
     "supabase": "1.83.7",
     "typescript": "5.2.2",
     "vercel": "31.2.3"

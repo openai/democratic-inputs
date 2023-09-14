@@ -1397,10 +1397,13 @@ type messagesUpdateResponse {
 }
 
 enum moderationType {
+  clarification
+  consensus
   harrashment
   off_topic
   other
   spam
+  unequal
 }
 
 """
@@ -2131,8 +2134,9 @@ type participants implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
   participation_score: Int!
-  room_id: UUID!
-  rooms: rooms!
+  ready: Boolean!
+  room_id: UUID
+  rooms: rooms
   updated_at: Datetime!
   user_id: UUID
   users: users
@@ -2163,6 +2167,7 @@ input participantsFilter {
   nick_name: StringFilter
   nodeId: IDFilter
   participation_score: IntFilter
+  ready: BooleanFilter
   room_id: UUIDFilter
   updated_at: DatetimeFilter
   user_id: UUIDFilter
@@ -2174,6 +2179,7 @@ input participantsInsertInput {
   id: UUID
   nick_name: String
   participation_score: Int
+  ready: Boolean
   room_id: UUID
   updated_at: Datetime
   user_id: UUID
@@ -2193,6 +2199,7 @@ input participantsOrderBy {
   id: OrderByDirection
   nick_name: OrderByDirection
   participation_score: OrderByDirection
+  ready: OrderByDirection
   room_id: OrderByDirection
   updated_at: OrderByDirection
   user_id: OrderByDirection
@@ -2204,6 +2211,7 @@ input participantsUpdateInput {
   id: UUID
   nick_name: String
   participation_score: Int
+  ready: Boolean
   room_id: UUID
   updated_at: Datetime
   user_id: UUID
@@ -2215,6 +2223,23 @@ type participantsUpdateResponse {
 
   """Array of records impacted by the mutation"""
   records: [participants!]!
+}
+
+enum roomStatusType {
+  debate
+  informed
+  results
+  safe
+}
+
+"""
+Boolean expression comparing fields on type "roomStatusType"
+"""
+input roomStatusTypeFilter {
+  eq: roomStatusType
+  in: [roomStatusType!]
+  is: FilterIs
+  neq: roomStatusType
 }
 
 type rooms implements Node {
@@ -2301,6 +2326,7 @@ type rooms implements Node {
     """Sort order to apply to the collection"""
     orderBy: [participantsOrderBy!]
   ): participantsConnection
+  room_status_type: roomStatusType!
   starts_at: Datetime!
   topic_id: UUID!
   topics: topics!
@@ -2331,6 +2357,7 @@ input roomsFilter {
   external_room_id: StringFilter
   id: UUIDFilter
   nodeId: IDFilter
+  room_status_type: roomStatusTypeFilter
   starts_at: DatetimeFilter
   topic_id: UUIDFilter
   updated_at: DatetimeFilter
@@ -2341,6 +2368,7 @@ input roomsInsertInput {
   created_at: Datetime
   external_room_id: String
   id: UUID
+  room_status_type: roomStatusType
   starts_at: Datetime
   topic_id: UUID
   updated_at: Datetime
@@ -2359,6 +2387,7 @@ input roomsOrderBy {
   created_at: OrderByDirection
   external_room_id: OrderByDirection
   id: OrderByDirection
+  room_status_type: OrderByDirection
   starts_at: OrderByDirection
   topic_id: OrderByDirection
   updated_at: OrderByDirection
@@ -2369,6 +2398,7 @@ input roomsUpdateInput {
   created_at: Datetime
   external_room_id: String
   id: UUID
+  room_status_type: roomStatusType
   starts_at: Datetime
   topic_id: UUID
   updated_at: Datetime

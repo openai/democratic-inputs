@@ -8,7 +8,7 @@ import ConditionalLocalMediaProvider from './LocalMedia/conditional';
 import ConditionalRoomConnectionProvider from './RoomConnection/conditional';
 
 interface Props {
-  children: React.ReactNode
+    children: React.ReactNode
 }
 
 export default function Providers({ children }: Props) {

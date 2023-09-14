@@ -20,14 +20,14 @@ export default function topology() {
                 // the following things should hold:
                 // REAL TIME:
                 // badLangauge
-    
+
                 // EVERY MINUTE:
                 // enoughContent over the whole conversation
                 // offTopic over the last minute
-    
+
                 // EVERY THREE MINUTES
                 // equalParticipation
-    
+
                 id: 'conversate',
                 tasks: ['enoughContent', 'equalParticipation', 'badLanguage', 'offTopic'],
             },
@@ -47,6 +47,6 @@ export default function topology() {
             }
         ],
     };
-    
+
 }
 

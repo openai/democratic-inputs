@@ -2,26 +2,35 @@
   "name": "@deliberation-at-scale/orchestrator",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "setup": "npm install",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "swc src -d dist",
-    "start": "npm run build && node dist/runner.js",
-    "lint": "eslint src --ext .ts"
+    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/generated/database.types.ts'",
+    "start": "npm run build && npm run start:all",
+    "start:all": "ORCHESTRATOR_ROLE=all node dist/index.js",
+    "start:runner": "ORCHESTRATOR_ROLE=runner node dist/index.js",
+    "start:scheduler": "ORCHESTRATOR_ROLE=scheduler node dist/index.js",
+    "start:listener": "ORCHESTRATOR_ROLE=listener node dist/index.js",
+    "lint": "eslint src --ext .ts",
+    "clean": "rimraf ./node_modules"
   },
   "keywords": [],
   "author": "Lei Nelissen <lei@bmd.studio>",
   "license": "MIT",
   "dependencies": {
+    "@deliberation-at-scale/common": "*",
     "@supabase/supabase-js": "^2.32.0",
     "dotenv": "^16.3.1",
     "graphile-worker": "^0.13.0",
-    "openai": "^4.0.0-beta.8"
+    "object-hash": "3.0.0",
+    "openai": "^4.0.0-beta.8",
+    "radash": "11.0.0"
   },
   "devDependencies": {
     "@swc-node/register": "^1.6.6",
     "@swc/cli": "^0.1.62",
-    "@types/node": "^20.4.9"
+    "@types/node": "^20.4.9",
+    "dotenv-cli": "7.3.0"
   }
 }

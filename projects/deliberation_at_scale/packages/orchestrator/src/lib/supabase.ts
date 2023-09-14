@@ -1,28 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
 import { createClient } from '@supabase/supabase-js';
-import { Database } from '../data/database.types';
 
-declare global {
-    namespace NodeJS {
-        interface ProcessEnv {
-            SUPABASE_URL: string;
-            SUPABASE_KEY: string;
-        }
-    }
-}
+import { Database } from '../generated/database.types';
+import { SUPABASE_URL, SUPABASE_KEY } from "../constants";
 
-// GUARD: Double-check that both SUPABASE_URL and SUPABASE_KEY are part of the environment
-if (!('SUPABASE_URL' in process.env)
-    || !('SUPABASE_KEY' in process.env)
-) {
-    console.error('Please set SUPABASE_URL and/or SUPABASE_KEY in your environment or in your .env file.');
-    process.exit(1);
-}
-
-const supabase = createClient<Database>(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY,
+const supabaseClient = createClient<Database>(
+    SUPABASE_URL,
+    SUPABASE_KEY,
     {
         auth: {
             persistSession: false,
@@ -30,4 +13,31 @@ const supabase = createClient<Database>(
     }
 );
 
-export default supabase;
+export default supabaseClient;
+
+export type Message = Database["public"]["Tables"]["messages"]["Row"];
+export type MessageType = Database['public']['Enums']['messageType'];
+
+export interface SendMessageOptions {
+    type: MessageType;
+    roomId: string;
+    content: string;
+}
+
+export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
+    return sendMessage({
+        ...options,
+        type: 'bot',
+    });
+}
+
+export async function sendMessage(options: SendMessageOptions) {
+    const { type, roomId, content } = options;
+
+    await supabaseClient.from("messages").insert({
+        type,
+        room_id: roomId,
+        content,
+    });
+}
+
