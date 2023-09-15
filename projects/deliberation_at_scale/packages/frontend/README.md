@@ -58,9 +58,7 @@ are displayed for the right language. Import the following helpers from
 ```tsx
 import { t, Trans } from '@lingui/macro';
 
-const surprise = Math.random() > 0.5
-    ? t('Heads')
-    : t('Tails');
+const someText = t`this is in English`;
 
 export default function Page() {
     return (
