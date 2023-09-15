@@ -43,19 +43,27 @@ export async function sendMessage(options: SendMessageOptions) {
     });
 }
 
+export async function getTopic(roomId: string) {
+    const topicId = supabaseClient.from("rooms").select("topic_id").eq("id", roomId);
+    const topic = supabaseClient.from("topics").select("content").eq("id", topicId);
+
+    return topic;
+}
+
 export async function selectMessages(
-    historyAmountSeconds?: number, 
-    historyAmountMessages?: number, 
-    historyAllMessages?: boolean, 
-    historySpecifiedLayers?: Array<string>
-): Promise<{ messages: Message[] } | null> {
+    historyAmountSeconds?: number | undefined, 
+    historyAmountMessages?: number | undefined, 
+    historyAllMessages?: boolean | undefined, 
+    historySpecifiedLayers?: Array<string> | undefined
+): Promise<Message[] | null> {
     // Retrieve all messages from supabase
     let statement = supabaseClient.from("messages").select().eq("type", "chat");
+
 
     //Check if all messages need to be selected
     if (historyAllMessages) {
         //Select all messages
-
+        
         //Check if we need to select a specified layer
         if (historySpecifiedLayers != null) {
             //TODO: select messages from a specific layer only
@@ -64,11 +72,17 @@ export async function selectMessages(
         }
 
     } else {
+        
 
         if (historyAmountSeconds != null) {
             //Select the messages based on time passed
-            const getHistoryTimestamp = new Date(Date.now() - 20 * 1000);
-            statement = statement.gt("created_at", getHistoryTimestamp);
+            const historyDate = new Date();
+            historyDate.setTime(historyDate.getTime() - 20*1000);
+
+            const dateForStatement = historyDate.toISOString();
+
+            console.log("HistoryTimeStamp", dateForStatement); 
+            statement = statement.gte("created_at", dateForStatement);
         }
 
         if (historyAmountMessages != null) {
@@ -84,8 +98,8 @@ export async function selectMessages(
         throw messages.error;
     }
 
-    console.log("testing messages", messages);
+    const result = messages.data;
 
-    return messages.data;
+    return result;
 }
 
