@@ -43,3 +43,49 @@ export async function sendMessage(options: SendMessageOptions) {
     });
 }
 
+export async function selectMessages(
+    historyAmountSeconds?: number, 
+    historyAmountMessages?: number, 
+    historyAllMessages?: boolean, 
+    historySpecifiedLayers?: Array<string>
+): Promise<{ messages: Message[] } | null> {
+    // Retrieve all messages from supabase
+    let statement = supabaseClient.from("messages").select().eq("type", "chat");
+
+    //Check if all messages need to be selected
+    if (historyAllMessages) {
+        //Select all messages
+
+        //Check if we need to select a specified layer
+        if (historySpecifiedLayers != null) {
+            //TODO: select messages from a specific layer only
+            //statement = statement.contains("layer_id", historySpecifiedLayers);
+            console.log("Tried to select specific layers.");
+        }
+
+    } else {
+
+        if (historyAmountSeconds != null) {
+            //Select the messages based on time passed
+            const getHistoryTimestamp = new Date(Date.now() - 20 * 1000);
+            statement = statement.gt("created_at", getHistoryTimestamp);
+        }
+
+        if (historyAmountMessages != null) {
+            //Select the messages based on time passed
+            statement = statement.order("created_at", {ascending: false}).limit(historyAmountMessages);
+        }
+    }
+
+    const messages = await statement;
+
+    // GUARD: Throw when we receive an error
+    if (messages.error) {
+        throw messages.error;
+    }
+
+    console.log("testing messages", messages);
+
+    return messages.data;
+}
+
