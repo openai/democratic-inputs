@@ -58,9 +58,11 @@ export default function RoomLayout({ children }: PropsWithChildren) {
     }
 
     return (
-        <>
-            {children}
+        <div className="flex max-h-screen h-screen w-screen flex-col">
+            <div className="flex-grow flex-shrink min-w-0 overflow-hidden">
+                {children}
+            </div>
             <RoomMenu />
-        </>
+        </div>
     );
 }

@@ -53,7 +53,12 @@ module.exports = {
                 '900': '#1a408e',
                 '950': '#152956',
             },
-        }
+        },
+        extend: {
+            fontFamily: {
+                // sans: ['var(--font-inter)'],
+            }
+        },
     },
     plugins: [],
 };
