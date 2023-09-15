@@ -10,6 +10,7 @@ export async function startRunner() {
         parsedCronItems: parseCronItems(crontab),
         noPreparedStatements: true,
     });
+
     await runner.promise;
 }
 
