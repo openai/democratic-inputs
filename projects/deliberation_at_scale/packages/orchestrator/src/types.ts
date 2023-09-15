@@ -19,7 +19,7 @@ export interface ProgressionTopology {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type LayerId = 'introduction_participants' | 'introduction_topic' | 'safe' | 'informed' | 'conversate' | 'results' | 'conclude';
+export type LayerId = 'introductionParticipants' | 'introductionTopic' | 'safe' | 'informed' | 'conversate' | 'results' | 'conclude';
 
 export type RoomStatus = Database['public']['Enums']['roomStatusType'];
 
@@ -36,7 +36,7 @@ export interface ProgressionLayer {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type WorkerTaskId = 'badLanguage' | 'introductionParticipants' | 'difficultLanguage' | 'emotionalWellbeing' | 'enrichModeratorMessageSafeBehaviour' | 'enrichModeratorMessageParticipantIntroduction' | 'offTopic' | 'enrichModeratorMessageInformedBehaviour' | 'enoughContent' | 'equalParticipation' | 'consensusForming' | 'enrichModeratorMessageStimulateConsensus';
+export type WorkerTaskId = 'verifyBadLanguage' | 'verifyIntroductionParticipants' | 'verifyDifficultLanguage' | 'verifyEmotionalWellbeing' | 'enrichModeratorMessageSafeBehaviour' | 'enrichModeratorMessageParticipantIntroduction' | 'verifyOffTopic' | 'enrichModeratorMessageInformedBehaviour' | 'verifyEnoughContent' | 'verifyEqualParticipation' | 'verifyConsensusForming' | 'enrichModeratorMessageStimulateConsensus';
 
 /** A single task within a progression layer. */
 export interface ProgressionTask {
