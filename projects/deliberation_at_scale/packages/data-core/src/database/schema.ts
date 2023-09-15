@@ -25,6 +25,7 @@ export const OPINIONS_TABLE_NAME = "opinions";
 export const CROSS_POLLINATIONS_TABLE_NAME = "cross_pollinations";
 export const COMPLETIONS_TABLE_NAME = "completions";
 export const MODERATIONS_TABLE_NAME = "moderations";
+export const JOB_RESULTS_TABLE_NAME = "job_results";
 
 // foreign key field names to make it easy to keep track when renaming tables
 // NOTE: rename the variable name here and the field key in the schema definition!
@@ -323,6 +324,22 @@ export const completions = pgTable(COMPLETIONS_TABLE_NAME, {
         typeIndex: index("type_index").on(table.type),
         ...generateActiveFieldIndex(table),
         ...generateTargetFieldIndexes(table),
+        ...generateTimestampFieldIndexes(table),
+    };
+});
+
+export const jobResults = pgTable(JOB_RESULTS_TABLE_NAME, {
+    id: generateIdField(),
+    active: generateActiveField(),
+    jobKey: text("job_key").notNull(),
+    result: json("result").notNull().default({}),
+    completionTimeMs: integer("completion_time_ms"),
+    ...generateTimestampFields(),
+}, (table) => {
+    return {
+        jobKeyIndex: index("job_key_index").on(table.jobKey),
+        completionTimeMsIndex: index("completion_time_ms").on(table.completionTimeMs),
+        ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
 });
