@@ -432,7 +432,7 @@ CREATE OR REPLACE FUNCTION add_room_status_to_message() RETURNS trigger
 LANGUAGE plpgsql
 AS $$
 BEGIN
-  IF NEW.room_status IS NULL THEN
+  IF NEW.room_status_type IS NULL THEN
     NEW.room_status_type := (SELECT status_type FROM rooms WHERE id = NEW.room_id);
   END IF;
   RETURN NEW;
