@@ -50,11 +50,6 @@ export async function sendMessage(options: SendMessageOptions) {
     });
 }
 
-<<<<<<< HEAD
-export async function selectMessages(payload: selectMessagesPayload): Promise< Array<Message>| null> {
-    // Retrieve all messages from supabase
-    const { historyAllMessages, historyAmountMessages, historyAmountSeconds, historySpecifiedLayers  } = payload;
-=======
 export async function getTopic(roomId: string) {
     const topicId = supabaseClient.from("rooms").select("topic_id").eq("id", roomId);
     const topic = supabaseClient.from("topics").select("content").eq("id", topicId);
@@ -72,7 +67,6 @@ export interface SelectMessageOptions {
 export async function selectMessages(options: SelectMessageOptions): Promise<Message[] | null> {
     const { historyAllMessages, historyAmountMessages, historyAmountSeconds, historySpecifiedLayers } = options;
     // Retrieve all messages from supabase
->>>>>>> f157314d8b71e2b1a24363123bed42b325bfb8a8
     let statement = supabaseClient.from("messages").select().eq("type", "chat");
 
 
