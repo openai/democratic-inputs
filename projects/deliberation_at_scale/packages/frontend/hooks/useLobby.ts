@@ -1,11 +1,12 @@
 
-import { useCallback, useEffect, useState } from "react";
-import { User } from "@supabase/gotrue-js";
+import { useEffect, useMemo } from "react";
 
-import { supabaseClient } from "@/state/supabase";
-import { useGetRoomsQuery, useGetUserQuery, useGetParticipantFromUserQuery, GetLobbyParticipantFromUserDocument, useGetLobbyParticipantFromUserQuery, useCreateParticipantMutation } from "@/generated/graphql";
+import {
+    useGetLobbyParticipantFromUserQuery,
+    useCreateParticipantMutation,
+    usePingParticipantMutation,
+} from "@/generated/graphql";
 import useRealtimeQuery from "./useRealtimeQuery";
-import { useLazyQuery, useQuery } from "@apollo/client";
 
 
 // TODO: get current user
@@ -19,64 +20,78 @@ export default function useLobby(userId: string) {
         }
     }));
 
-    console.log({ userId });
     const [createParticipant, { loading: loadingParticipantMutation, error: loadingParticipantError }] = useCreateParticipantMutation({
         variables: {
             userId,
         }
     });
-    const currentParticipant = participantData?.participantsCollection?.edges?.[0]?.node;
+    const currentParticipant = useMemo(() => (participantData?.participantsCollection?.edges?.[0]?.node), [participantData]);
+
     useEffect(() => {
         if (!participantLoading && !currentParticipant) {
-            console.log("stopped loading and no new currenparticipant");
             // create new participant
             createParticipant({
                 variables: {
                     userId,
                 }
             }).then((result) => {
-                console.log({ result });
+                console.log("created participant", result);
             });
         }
-        console.log({ participantLoading, currentParticipant });
-    }, [participantLoading, currentParticipant]);
+    }, [participantLoading, currentParticipant, createParticipant, userId]);
 
     useEffect(() => {
         refetchParticipant({
             userId,
         });
-    }, [userId]);
+    }, [userId, refetchParticipant]);
 
+    // pinging
+    // const pingValues = usePingParticipant(currentParticipant?.id);
+    usePingParticipant(currentParticipant?.id);
 
-    useCallback(() => {
-
-    }, [userId]);
-
+    console.log({ userId, participantID: currentParticipant?.id, currentParticipant });
     return {
         participant: currentParticipant,
         loading: participantLoading || loadingParticipantMutation,
         error: loadingParticipantError,
+        // ping: pingValues,
     };
 
 }
 
 const PING_INTERVAL_DELAY_MS = 1000;
 
-export function pingParticipant(participantID?: string) {
-    const [pingInterval, setPingInterval] = useState();
+export function usePingParticipant(participantID?: string) {
+    const [ping, { loading, error, data }] = usePingParticipantMutation();
+    // const [ping, { loading, error, data }] = useMutation(PingParticipantDocument);
     useEffect(() => {
-        if (pingInterval) {
-            clearTimeout(pingInterval);
+        // guard
+        if (!participantID) {
+            return;
         }
-        if (participantID) {
 
-            setPingInterval(
-                setInterval(() => {
-                    // use the ping hook to update the ping time
-                    const pingDate = new Date().toISOString();
+        // if has participant ID set interval
+        const timer = setInterval(() => {
+            ping({
+                variables: {
+                    participantID,
+                    updateTime: new Date().toISOString(),
+                }
+            });
+            console.log("ping", new Date().toISOString());
+        }, PING_INTERVAL_DELAY_MS);
 
-                }, PING_INTERVAL_DELAY_MS);
-            )
-}
-    }, [participantID]);
+        return (() => {
+            clearInterval(timer);
+        });
+    }, [participantID, ping]);
+    useEffect(() => {
+        if (error) {
+            console.error(error);
+        }
+    }, [error]
+    );
+
+    return { loading, error, data };
 }

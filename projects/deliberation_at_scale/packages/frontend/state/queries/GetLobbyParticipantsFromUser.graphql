@@ -1,19 +1,7 @@
 
-fragment FullParticipant on participants {
-  id
-  active
-  room_id
-  user_id
-  nick_name
-  participation_score
-  created_at
-  updated_at
-  ready
-}
-
 # A lobby participant is a participant who has not been ready, has no room id and is not active
 query GetLobbyParticipantFromUser($userId: UUID!) {
-    participantsCollection(filter: {user_id: {eq: $userId}, status: {eq: "queued"}, room_id: {is:NULL}}, first: 1)  {
+    participantsCollection(filter: {user_id: {eq: $userId}, status: {eq: queued}, room_id: {is:NULL}, active: {eq: true}}, first: 1)  {
         edges {
             node {
                 ...FullParticipant

@@ -146,6 +146,17 @@ type Mutation {
     filter: cross_pollinationsFilter
   ): cross_pollinationsDeleteResponse!
 
+  """Deletes zero or more records from the `job_results` collection"""
+  deleteFromjob_resultsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: job_resultsFilter
+  ): job_resultsDeleteResponse!
+
   """Deletes zero or more records from the `messages` collection"""
   deleteFrommessagesCollection(
     """
@@ -251,6 +262,9 @@ type Mutation {
   """Adds one or more `cross_pollinations` records to the collection"""
   insertIntocross_pollinationsCollection(objects: [cross_pollinationsInsertInput!]!): cross_pollinationsInsertResponse
 
+  """Adds one or more `job_results` records to the collection"""
+  insertIntojob_resultsCollection(objects: [job_resultsInsertInput!]!): job_resultsInsertResponse
+
   """Adds one or more `messages` records to the collection"""
   insertIntomessagesCollection(objects: [messagesInsertInput!]!): messagesInsertResponse
 
@@ -309,6 +323,22 @@ type Mutation {
     """
     set: cross_pollinationsUpdateInput!
   ): cross_pollinationsUpdateResponse!
+
+  """Updates zero or more records in the `job_results` collection"""
+  updatejob_resultsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: job_resultsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: job_resultsUpdateInput!
+  ): job_resultsUpdateResponse!
 
   """Updates zero or more records in the `messages` collection"""
   updatemessagesCollection(
@@ -536,6 +566,27 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [cross_pollinationsOrderBy!]
   ): cross_pollinationsConnection
+
+  """A pagable collection of type `job_results`"""
+  job_resultsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: job_resultsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [job_resultsOrderBy!]
+  ): job_resultsConnection
 
   """A pagable collection of type `messages`"""
   messagesCollection(
@@ -783,6 +834,7 @@ input UUIDFilter {
 }
 
 enum completionType {
+  gpt
   gpt4
 }
 
@@ -859,7 +911,7 @@ type completions implements Node {
   prompt: String!
   room_id: UUID
   rooms: rooms
-  target_type: targetType!
+  target_type: targetType
   topic_id: UUID
   topics: topics
   type: completionType!
@@ -1171,6 +1223,92 @@ input discussionTypeFilter {
   neq: discussionType
 }
 
+type job_results implements Node {
+  active: Boolean!
+  completion_time_ms: Int
+  created_at: Datetime!
+  id: UUID!
+  job_key: String!
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  result: JSON!
+  updated_at: Datetime!
+}
+
+type job_resultsConnection {
+  edges: [job_resultsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type job_resultsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [job_results!]!
+}
+
+type job_resultsEdge {
+  cursor: String!
+  node: job_results!
+}
+
+input job_resultsFilter {
+  active: BooleanFilter
+  completion_time_ms: IntFilter
+  created_at: DatetimeFilter
+  id: UUIDFilter
+  job_key: StringFilter
+  nodeId: IDFilter
+  updated_at: DatetimeFilter
+}
+
+input job_resultsInsertInput {
+  active: Boolean
+  completion_time_ms: Int
+  created_at: Datetime
+  id: UUID
+  job_key: String
+  result: JSON
+  updated_at: Datetime
+}
+
+type job_resultsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [job_results!]!
+}
+
+input job_resultsOrderBy {
+  active: OrderByDirection
+  completion_time_ms: OrderByDirection
+  created_at: OrderByDirection
+  id: OrderByDirection
+  job_key: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input job_resultsUpdateInput {
+  active: Boolean
+  completion_time_ms: Int
+  created_at: Datetime
+  id: UUID
+  job_key: String
+  result: JSON
+  updated_at: Datetime
+}
+
+type job_resultsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [job_results!]!
+}
+
 enum messageType {
   bot
   chat
@@ -1478,10 +1616,10 @@ type moderations implements Node {
   room_id: UUID
   rooms: rooms
   statement: String!
-  target_type: targetType!
+  target_type: targetType
   topic_id: UUID
   topics: topics
-  type: moderationType!
+  type: String!
   updated_at: Datetime!
   user_id: UUID
   users: users
@@ -1521,7 +1659,7 @@ input moderationsFilter {
   statement: StringFilter
   target_type: targetTypeFilter
   topic_id: UUIDFilter
-  type: moderationTypeFilter
+  type: StringFilter
   updated_at: DatetimeFilter
   user_id: UUIDFilter
 }
@@ -1541,7 +1679,7 @@ input moderationsInsertInput {
   statement: String
   target_type: targetType
   topic_id: UUID
-  type: moderationType
+  type: String
   updated_at: Datetime
   user_id: UUID
 }
@@ -1589,7 +1727,7 @@ input moderationsUpdateInput {
   statement: String
   target_type: targetType
   topic_id: UUID
-  type: moderationType
+  type: String
   updated_at: Datetime
   user_id: UUID
 }
@@ -2054,6 +2192,24 @@ type outcomesUpdateResponse {
   records: [outcomes!]!
 }
 
+enum participantStatusType {
+  end_of_session
+  in_room
+  queued
+  transfering_to_room
+  waiting_for_confirmation
+}
+
+"""
+Boolean expression comparing fields on type "participantStatusType"
+"""
+input participantStatusTypeFilter {
+  eq: participantStatusType
+  in: [participantStatusType!]
+  is: FilterIs
+  neq: participantStatusType
+}
+
 type participants implements Node {
   active: Boolean!
   completionsCollection(
@@ -2096,6 +2252,7 @@ type participants implements Node {
     orderBy: [cross_pollinationsOrderBy!]
   ): cross_pollinationsConnection
   id: UUID!
+  last_seen_at: Datetime!
   messagesCollection(
     """Query values in the collection after the provided cursor"""
     after: Cursor
@@ -2139,9 +2296,9 @@ type participants implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
   participation_score: Int!
-  ready: Boolean!
   room_id: UUID
   rooms: rooms
+  status: participantStatusType!
   updated_at: Datetime!
   user_id: UUID
   users: users
@@ -2169,11 +2326,12 @@ input participantsFilter {
   active: BooleanFilter
   created_at: DatetimeFilter
   id: UUIDFilter
+  last_seen_at: DatetimeFilter
   nick_name: StringFilter
   nodeId: IDFilter
   participation_score: IntFilter
-  ready: BooleanFilter
   room_id: UUIDFilter
+  status: participantStatusTypeFilter
   updated_at: DatetimeFilter
   user_id: UUIDFilter
 }
@@ -2182,10 +2340,11 @@ input participantsInsertInput {
   active: Boolean
   created_at: Datetime
   id: UUID
+  last_seen_at: Datetime
   nick_name: String
   participation_score: Int
-  ready: Boolean
   room_id: UUID
+  status: participantStatusType
   updated_at: Datetime
   user_id: UUID
 }
@@ -2202,10 +2361,11 @@ input participantsOrderBy {
   active: OrderByDirection
   created_at: OrderByDirection
   id: OrderByDirection
+  last_seen_at: OrderByDirection
   nick_name: OrderByDirection
   participation_score: OrderByDirection
-  ready: OrderByDirection
   room_id: OrderByDirection
+  status: OrderByDirection
   updated_at: OrderByDirection
   user_id: OrderByDirection
 }
@@ -2214,10 +2374,11 @@ input participantsUpdateInput {
   active: Boolean
   created_at: Datetime
   id: UUID
+  last_seen_at: Datetime
   nick_name: String
   participation_score: Int
-  ready: Boolean
   room_id: UUID
+  status: participantStatusType
   updated_at: Datetime
   user_id: UUID
 }
@@ -2331,8 +2492,8 @@ type rooms implements Node {
     """Sort order to apply to the collection"""
     orderBy: [participantsOrderBy!]
   ): participantsConnection
-  room_status_type: roomStatusType!
-  starts_at: Datetime!
+  starts_at: Datetime
+  status_type: roomStatusType!
   topic_id: UUID!
   topics: topics!
   updated_at: Datetime!
@@ -2362,8 +2523,8 @@ input roomsFilter {
   external_room_id: StringFilter
   id: UUIDFilter
   nodeId: IDFilter
-  room_status_type: roomStatusTypeFilter
   starts_at: DatetimeFilter
+  status_type: roomStatusTypeFilter
   topic_id: UUIDFilter
   updated_at: DatetimeFilter
 }
@@ -2373,8 +2534,8 @@ input roomsInsertInput {
   created_at: Datetime
   external_room_id: String
   id: UUID
-  room_status_type: roomStatusType
   starts_at: Datetime
+  status_type: roomStatusType
   topic_id: UUID
   updated_at: Datetime
 }
@@ -2392,8 +2553,8 @@ input roomsOrderBy {
   created_at: OrderByDirection
   external_room_id: OrderByDirection
   id: OrderByDirection
-  room_status_type: OrderByDirection
   starts_at: OrderByDirection
+  status_type: OrderByDirection
   topic_id: OrderByDirection
   updated_at: OrderByDirection
 }
@@ -2403,8 +2564,8 @@ input roomsUpdateInput {
   created_at: Datetime
   external_room_id: String
   id: UUID
-  room_status_type: roomStatusType
   starts_at: Datetime
+  status_type: roomStatusType
   topic_id: UUID
   updated_at: Datetime
 }

@@ -1,14 +1,3 @@
-fragment FullParticipant on participants {
-  id
-  active
-  room_id
-  user_id
-  nick_name
-  participation_score
-  created_at
-  updated_at
-  ready
-}
 
 query GetParticipantsFromUser($authUserId: UUID!) {
     usersCollection(filter: { auth_user_id: { eq: $authUserId } }) {

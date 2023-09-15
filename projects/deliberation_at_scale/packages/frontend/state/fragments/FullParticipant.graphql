@@ -1,0 +1,14 @@
+
+
+fragment FullParticipant on participants {
+  id
+  active
+  room_id
+  user_id
+  nick_name
+  participation_score
+  created_at
+  updated_at
+  status
+  last_seen_at
+}

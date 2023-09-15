@@ -13,9 +13,7 @@ const MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM = 4;
 // this should be linked to the other groups effort which have the Python script for assigning good groups
 
 
-// TODO: create a hook for pinging in the lobby
 // this task should run every so often. This task will also be responsible for removing inactive participants
-
 /**
  * Run this task at most every n seconds
  */
@@ -40,7 +38,7 @@ async function removeInactiveParticipants(logger: Logger) {
         .from("participants")
         .update({ active: false })
         .eq('status', "queued")
-        .lt('last_seen_at', UTCToISOString(currentTimestamp + inactiveTimeMilliseconds));
+        .lt('last_seen_at', UTCToISOString(currentTimestamp - inactiveTimeMilliseconds));
 
     logger.info(`current time ${UTCToISOString(currentTimestamp)}`);
 
@@ -52,7 +50,7 @@ async function removeInactiveParticipants(logger: Logger) {
             status: 'end_of_session',
             active: false,
         })
-        .lt('last_seen_at', UTCToISOString(currentTimestamp + (inactiveMaxMinutes * 60 * 1000)));
+        .lt('last_seen_at', UTCToISOString(currentTimestamp - (inactiveMaxMinutes * 60 * 1000)));
 
     const [pingInactiParticipants, inactiveForMinutesParticipants] =
         await Promise.all([pingInactiveParticipantsPromise, inactiveForMinutesParticipantsPromise]);
