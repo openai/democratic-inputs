@@ -701,7 +701,7 @@ export interface Database {
             | "transfering_to_room"
             | "in_room"
             | "end_of_session"
-            roomStatusType: "safe" | "informed" | "debate" | "results"
+            roomStatusType: "safe" | "informed" | "conversate" | "results" | "conclude" | "introduction_participants"
             targetType:
             | "user"
             | "topic"
