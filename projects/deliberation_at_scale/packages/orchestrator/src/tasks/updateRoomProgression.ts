@@ -1,11 +1,11 @@
 import { Helpers } from "graphile-worker";
-import { isEmpty, min } from "radash";
+import { isObject, min } from "radash";
 
 import { progressionTopology } from "../constants";
-import supabaseClient from "../lib/supabase";
-import { waitForAllJobCompletions } from "../lib/graphileWorker";
-import { BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "src/types";
-import { Database } from "src/generated/database.types";
+import { supabaseClient, Moderation } from "../lib/supabase";
+import { generateProgressionJobKey, waitForAllModerationCompletions } from "../lib/graphileWorker";
+import { BaseProgressionWorkerResponse, BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "src/types";
+import { Database } from "src/generated/database-public.types";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -62,8 +62,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
     ]);
 
     if (currentLayerVerificationsResult.status === 'rejected' || fallbackVerificationResults.status === 'rejected') {
-        helpers.logger.error(`Could not update progression because one of the verification groups failed. Room ID: ${roomId}`);
-        return;
+        throw Error(`Could not update progression because one of the verification groups failed. Room ID: ${roomId}`);
     }
 
     const { failedProgressionTaskIds: currentFailedProgressionTaskIds } = currentLayerVerificationsResult.value;
@@ -152,39 +151,51 @@ async function waitForAllProgressionTasks(options: WaitForAllProgressionTasksOpt
         return !!jobId;
     });
 
-    const completedJobs = await waitForAllJobCompletions({
+    const completedModerationTuples = await waitForAllModerationCompletions({
         jobIds,
     });
-    const failedJobs = completedJobs.filter((completedJob) => {
+    const failedModerationTuples = completedModerationTuples.filter((completedModerationTuple) => {
 
-        if (completedJob.status === 'rejected') {
+        if (completedModerationTuple.status === 'rejected') {
             return true;
         }
 
-        if (!isEmpty(completedJob.value?.last_error)) {
-            return true;
-        }
+        const { moderation } = completedModerationTuple.value;
+        const isFailed = isFailedModeration(moderation);
 
-        return false;
+        return isFailed;
     });
-    const failedProgressionTaskIds = failedJobs.map((failedJob) => {
+    const failedProgressionTaskIds = failedModerationTuples.map((failedModerationTuple) => {
 
-        if (failedJob.status === 'rejected') {
-            helpers.logger.error(`A job failed to complete for the following reason: ${failedJob.reason}`);
+        if (failedModerationTuple.status === 'rejected') {
+            helpers.logger.error(`A job failed to complete for the following reason: ${failedModerationTuple.reason}`);
             return 'unknown';
         }
 
-        const failedJobValue = failedJob.value;
-        const failedJobPayload = failedJobValue?.payload as BaseProgressionWorkerTaskPayload;
+        const { job: failedJob } = failedModerationTuple.value;
+        const failedJobPayload = failedJob?.payload as BaseProgressionWorkerTaskPayload;
         const progressionTaskId = failedJobPayload?.progressionTask?.id ?? 'unknown';
 
         return progressionTaskId;
     });
 
     return {
-        completedJobs,
+        completedModerationTuples,
         failedProgressionTaskIds,
     };
+}
+
+function isFailedModeration(moderation: Moderation) {
+    const result = moderation?.result as unknown as BaseProgressionWorkerResponse;
+
+    if (!isObject(result)) {
+        return true;
+    }
+
+    const hasResult = result ?? false;
+    const isVerified = result?.verified ?? true;
+
+    return !hasResult || !isVerified;
 }
 
 interface AddProgressionTaskJobs {
@@ -200,7 +211,7 @@ interface AddProgressionTaskJobs {
 async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
     const { progressionTasks, roomId, helpers } = options;
     const filteredProgressionTasks = progressionTasks.filter((progressionTask) => {
-        const { active } = progressionTask;
+        const { active, cooldown } = progressionTask;
 
         // TODO: check if whether this job is allowed to be added based on the cooldown or other rules
         // TODO: determine whether a cooldown would fail or succeed the job?
@@ -212,12 +223,13 @@ async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
     const [jobsResult, moderationsInsertResult] = await Promise.allSettled([
         Promise.allSettled(filteredProgressionTasks.map((progressionTask) => {
             const { id: progressionTaskId, workerTaskId } = progressionTask;
-            const jobKey = `room-${roomId}-progression-task-${progressionTaskId}`;
+            const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
 
             helpers.logger.info(`Adding worker task ${workerTaskId} via progression task with job key: ${jobKey}`);
 
             return helpers.addJob(workerTaskId, {
                 progressionTask,
+                jobKey,
             } satisfies BaseProgressionWorkerTaskPayload, {
                 jobKey,
                 jobKeyMode: 'preserve_run_at',
@@ -226,10 +238,12 @@ async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
 
         supabaseClient.from("moderations").insert(filteredProgressionTasks.map((progressionTask) => {
             const { id: progressionTaskId, workerTaskId } = progressionTask;
+            const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
 
             return {
                 type: progressionTaskId,
-                statement: `The room a room progression task with worker task ID ${workerTaskId}.`,
+                job_key: jobKey,
+                statement: `A room received a progression task with worker task ID: ${workerTaskId}.`,
                 target_type: 'room',
                 room_id: roomId,
             } satisfies Database['public']['Tables']['moderations']['Insert'];
