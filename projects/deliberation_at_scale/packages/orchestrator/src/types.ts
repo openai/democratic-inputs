@@ -1,4 +1,4 @@
-import { Database } from "./generated/database.types";
+import { Database } from "./generated/database-public.types";
 
 export type OrchestratorRole = 'all' | 'runner' | 'listener' | 'scheduler';
 
@@ -11,6 +11,13 @@ export interface OrchestratorRoleTask {
 
 export interface BaseProgressionWorkerTaskPayload {
     progressionTask: ProgressionTask;
+    jobKey: string;
+}
+
+export interface BaseProgressionWorkerResponse {
+    verified: boolean;
+    reason: string;
+    moderated: string;
 }
 
 /** The root of the topology containing all the different layers where the deliberation can go through. */
@@ -49,10 +56,15 @@ export interface ProgressionTask {
     /** The context passed to the task to know what data to pay attention to. */
     context?: ProgressionContext;
     /** An optional minimum cooldown in terms of time before checking this task again. */
-    cooldownSeconds?: number;
-    cooldownAmountMessages?: number;
-    maxAtempts?: number;
-    buffer?: number;
+    cooldown?: ProgressionTaskCooldown;
+    maxAttempts?: number;
+}
+
+export interface ProgressionTaskCooldown {
+    /** The amount of seconds required to wait before this task can become valid. */
+    ms?: number;
+    /** The amount of new messages required before this task can become valid. */
+    messageAmount?: number;
 }
 
 /** A single verification task which specify behaviour what to do when the verification fails. */
@@ -63,21 +75,21 @@ export interface ProgressionVerificationTask extends ProgressionTask {
 
 /** A single enrichtment task with specific behaviour how to perform the enrichtment. */
 export interface ProgressionEnrichmentTask extends ProgressionTask {
-
+    // empty
 }
 
 export interface ProgressionContext {
     /** Context for the messages data fetching. */
-    messages: ProgressionHistoryContext;
+    messages: ProgressionHistoryMessageContext;
+}
+
+export interface ProgressionHistoryMessageContext extends ProgressionHistoryContext {
+    /** Filter the history on the room statuses when the message was received */
+    roomStatuses?: Array<RoomStatus>;
 }
 
 export interface ProgressionHistoryContext {
     /** The amount of seconds in the history the data should be fetched. */
-    historyAmountSeconds?: number;
-    historyAmountMessages?: number;
-    historyAllMessages?: boolean;
-
-    /** Check on history for specified layer. All collected message history that took place in a  specified layer */
-    historySpecifiedLayers?: Array<LayerId>;
-
+    ms?: number;
+    amount?: number;
 }

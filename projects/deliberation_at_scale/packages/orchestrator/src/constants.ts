@@ -11,6 +11,7 @@ declare global {
             OPENAI_API_KEY: string;
             SUPABASE_URL: string;
             SUPABASE_KEY: string;
+            SENTRY_DSN: string;
         }
     }
 }
@@ -25,11 +26,16 @@ if (!("OPENAI_API_KEY" in process.env)) {
     throw new Error("Missing OPENAI_API_KEY environment variable. Please add it to your environment or .env file");
 }
 
+if (!("SENTRY_DSN" in process.env)) {
+    throw new Error("Missing SENTRY_DSN environment variable. Please add it to your environment or .env file");
+}
+
 /* Environment variables */
 export const ORCHESTRATOR_ROLE: OrchestratorRole = process?.env?.ORCHESTRATOR_ROLE ?? 'all';
 export const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 export const SUPABASE_URL = process.env.SUPABASE_URL;
 export const SUPABASE_KEY = process.env.SUPABASE_KEY;
+export const SENTRY_DSN = process.env.SENTRY_DSN;
 
 /* Time */
 export const ONE_SECOND_MS = 1000;
@@ -202,7 +208,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             roomStatus: 'results',
             verifications: [
                 {
-                    // possible addition of metaConsensus forming that forms a consensus upon shared values 
+                    // possible addition of metaConsensus forming that forms a consensus upon shared values
                     id: 'consensusForming',
                     workerTaskId: 'consensusForming',
                     active: false,
@@ -221,7 +227,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'enrichModeratorMessageStimulateConsensus',
                     active: false,
                     // buffer?
-                    // maxAtempts: 3x? 
+                    // maxAtempts: 3x?
                     cooldownSeconds: 60,
                     context: {
                         messages: {

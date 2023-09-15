@@ -1,6 +1,6 @@
 import { Helpers } from "graphile-worker";
 
-import supabaseClient, { Message, sendBotMessage } from "../lib/supabase";
+import supabaseClient, { Message, sendBotMessage, storeModerationResult } from "../lib/supabase";
 import { createVerificationFunctionCompletion } from "../lib/openai";
 
 /**
@@ -62,7 +62,10 @@ export default async function difficultLanguage(message: Message, helpers: Helpe
         }),
     ]);
 
-
+    await storeModerationResult({
+        jobKey,
+        result: verificationResult,
+    });
 }
 
 async function insertClarification(message: Message, statement: string) {
