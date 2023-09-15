@@ -4,6 +4,9 @@ import { NavLink } from "@/components/NavLink";
 import { i18n } from '@lingui/core';
 import { Trans } from '@lingui/macro';
 
+import Flow from "@/components/Flow";
+import joinFlow from "@/flows/join";
+
 export default function Index() {
     return (
         <div className="w-full flex flex-col items-center text-foreground">
@@ -12,6 +15,8 @@ export default function Index() {
 
             <NavLink href="/tests/rooms">Go to Room Tester</NavLink>
             <NavLink href="/tests/messages">Go to Message Tester</NavLink>
+
+            <Flow flow={joinFlow}/>
         </div>
     );
 }
