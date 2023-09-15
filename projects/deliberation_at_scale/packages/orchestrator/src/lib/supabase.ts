@@ -62,12 +62,15 @@ export async function getTopic(roomId: string) {
     return topic;
 }
 
-export async function selectMessages(
-    historyAmountSeconds?: number | undefined, 
-    historyAmountMessages?: number | undefined, 
-    historyAllMessages?: boolean | undefined, 
-    historySpecifiedLayers?: Array<string> | undefined
-): Promise<Message[] | null> {
+export interface SelectMessageOptions {
+    historyAmountSeconds?: number;
+    historyAmountMessages?: number; 
+    historyAllMessages?: boolean;
+    historySpecifiedLayers?: Array<string>;
+}
+
+export async function selectMessages(options: SelectMessageOptions): Promise<Message[] | null> {
+    const { historyAllMessages, historyAmountMessages, historyAmountSeconds, historySpecifiedLayers } = options;
     // Retrieve all messages from supabase
 >>>>>>> f157314d8b71e2b1a24363123bed42b325bfb8a8
     let statement = supabaseClient.from("messages").select().eq("type", "chat");
@@ -105,7 +108,7 @@ export async function selectMessages(
     }
 
     const messages = await statement;
-    
+
     // GUARD: Throw when we receive an error
     if (messages.error) {
         throw messages.error;
