@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-
 import { Database } from '../generated/database.types';
 import { SUPABASE_URL, SUPABASE_KEY } from "../constants";
 
@@ -23,6 +22,14 @@ export interface SendMessageOptions {
     type: MessageType;
     roomId: string;
     content: string;
+}
+
+export interface selectMessagesPayload {
+    message: Message;
+    historyAmountSeconds?: number,
+    historyAmountMessages?: number,
+    historyAllMessages?: boolean,
+    historySpecifiedLayers?: Array<string>
 }
 
 export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
@@ -92,7 +99,7 @@ export async function selectMessages(
     }
 
     const messages = await statement;
-
+    
     // GUARD: Throw when we receive an error
     if (messages.error) {
         throw messages.error;
