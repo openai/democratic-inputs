@@ -36,7 +36,18 @@ export interface ProgressionLayer {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type WorkerTaskId = 'verifyBadLanguage' | 'verifyIntroductionParticipants' | 'verifyDifficultLanguage' | 'verifyEmotionalWellbeing' | 'enrichModeratorMessageSafeBehaviour' | 'enrichModeratorMessageParticipantIntroduction' | 'verifyOffTopic' | 'enrichModeratorMessageInformedBehaviour' | 'verifyEnoughContent' | 'verifyEqualParticipation' | 'verifyConsensusForming' | 'enrichModeratorMessageStimulateConsensus';
+export type WorkerTaskId =
+    'verifyBadLanguage' |
+    'verifyIntroductionParticipants' |
+    'verifyDifficultLanguage' |
+    'verifyEmotionalWellbeing' |
+    'enrichModeratorMessageSafeBehaviour' |
+    'enrichModeratorMessageParticipantIntroduction' |
+    'verifyOffTopic' | 'enrichModeratorMessageInformedBehaviour' |
+    'verifyEnoughContent' |
+    'verifyEqualParticipation' |
+    'verifyConsensusForming' |
+    'enrichModeratorMessageStimulateConsensus';
 
 /** A single task within a progression layer. */
 export interface ProgressionTask {
@@ -50,8 +61,13 @@ export interface ProgressionTask {
     context?: ProgressionContext;
     /** An optional minimum cooldown in terms of time before checking this task again. */
     cooldownSeconds?: number;
+    /** An optional minimum cooldown in terms of amount of messages before checking this task again. */
     cooldownAmountMessages?: number;
-    maxAtempts?: number;
+    /** An optional amount of maximum atempt in a specific layer (This could be more in total, e.g.: when it switches back to the layer because of X) */
+    maxAtemptsInLayer?: number;
+    /** An optional amount of maximum atempt in total (Even when switching between layers, the value wont be reset) */
+    maxAtemptsInTotal?: number;
+    /** An optional buffer in amount of time before the task is allowed to run */
     buffer?: number;
 }
 
