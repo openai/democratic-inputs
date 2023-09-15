@@ -1,6 +1,9 @@
+import useAuth from '@/hooks/useAuth';
 import Participants from '../participants';
 
-export default function AI() {
+export default async function AI() {
+    await useAuth();
+
     return (
         <div>
             <Participants />
