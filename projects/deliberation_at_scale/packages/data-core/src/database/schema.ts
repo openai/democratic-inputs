@@ -300,6 +300,7 @@ export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
     type: text("type").notNull(),
+    jobKey: text("job_key"),
     result: json("result").notNull().default({}),
     completedAt: timestamp("completed_at"),
     ...generateTargetFields(),
@@ -307,6 +308,7 @@ export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
 }, (table) => {
     return {
         typeIndex: index("type_index").on(table.type),
+        jobKeyIndex: index("job_key_index").on(table.jobKey),
         completedAtIndex: index("completed_at_index").on(table.completedAt),
         ...generateTargetFieldIndexes(table),
         ...generateTimestampFieldIndexes(table),
