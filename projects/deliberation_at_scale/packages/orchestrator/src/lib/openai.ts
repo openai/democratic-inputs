@@ -2,7 +2,7 @@ import { OpenAI } from "openai";
 import { OPENAI_API_KEY } from "../constants";
 import { ChatCompletionCreateParams } from "openai/resources/chat";
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions";
-import supabaseClient from "./supabase";
+import { supabaseClient } from "./supabase";
 
 const openaiClient = new OpenAI({
     apiKey: OPENAI_API_KEY,
@@ -64,8 +64,6 @@ export async function createVerificationFunctionCompletion(options: Verification
         moderated
     };
 }
-
-// OPTIONAL FUNCTION FOR MORE "HUMAN" REASON AS A MODERATOR
 
 export async function createFunctionCompletion(options: FunctionCompletionOptions): Promise<FunctionCall | undefined>  {
     const {
