@@ -56,6 +56,7 @@ export const UPDATED_AT_FIELD_NAME = "updated_at";
 export const topicType = pgEnum("topicType", ["original", "remixed"]);
 export const messageType = pgEnum("messageType", ["chat", "voice", "bot"]);
 export const roomStatusType = pgEnum("roomStatusType", ["safe", "informed", "debate", "results"]);
+export const startRoomStatusType = roomStatusType.enumValues[0];
 export const outcomeType = pgEnum("outcomeType", [
     "milestone",
     "consensus",
@@ -138,7 +139,7 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
     externalRoomId: text("external_room_id"),
-    statusType: roomStatusType("status_type").notNull().default("safe"),
+    statusType: roomStatusType("status_type").notNull().default(startRoomStatusType),
     topicId: uuid(TOPIC_ID_FIELD_NAME)
         .notNull()
         .references(() => topics.id),
@@ -191,6 +192,7 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
         () => participants.id
     ), // can be null to track bot messages
     roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id), // can be null to send messages to specific participants outside of room
+    roomStatusType: roomStatusType("room_status_type"),
     content: text("content").notNull().default(""),
     embeddings: json("embeddings").notNull().default({}),
     ...generateTimestampFields(),
@@ -298,12 +300,14 @@ export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
     type: text("type").notNull(),
-    statement: text("statement").notNull().default(""),
+    result: json("result").notNull().default({}),
+    completedAt: timestamp("completed_at"),
     ...generateTargetFields(),
     ...generateTimestampFields(),
 }, (table) => {
     return {
         typeIndex: index("type_index").on(table.type),
+        completedAtIndex: index("completed_at_index").on(table.completedAt),
         ...generateTargetFieldIndexes(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -324,22 +328,6 @@ export const completions = pgTable(COMPLETIONS_TABLE_NAME, {
         typeIndex: index("type_index").on(table.type),
         ...generateActiveFieldIndex(table),
         ...generateTargetFieldIndexes(table),
-        ...generateTimestampFieldIndexes(table),
-    };
-});
-
-export const jobResults = pgTable(JOB_RESULTS_TABLE_NAME, {
-    id: generateIdField(),
-    active: generateActiveField(),
-    jobKey: text("job_key").notNull(),
-    result: json("result").notNull().default({}),
-    completionTimeMs: integer("completion_time_ms"),
-    ...generateTimestampFields(),
-}, (table) => {
-    return {
-        jobKeyIndex: index("job_key_index").on(table.jobKey),
-        completionTimeMsIndex: index("completion_time_ms").on(table.completionTimeMs),
-        ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
 });

@@ -92,6 +92,13 @@
       "when": 1694765929610,
       "tag": "0012_slow_famine",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1694779100606,
+      "tag": "0013_bumpy_magus",
+      "breakpoints": true
     }
   ]
 }

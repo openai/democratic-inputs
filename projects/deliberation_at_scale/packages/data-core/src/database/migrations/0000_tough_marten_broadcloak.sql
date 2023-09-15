@@ -427,3 +427,20 @@ $$ SECURITY DEFINER;
 
 CREATE OR REPLACE TRIGGER listen_insert_auth_user BEFORE INSERT ON auth.users
 FOR EACH ROW EXECUTE FUNCTION listen_insert_auth_user();
+
+CREATE OR REPLACE FUNCTION add_room_status_to_message() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF NEW.room_status IS NULL THEN
+    NEW.room_status_type := (SELECT status_type FROM rooms WHERE id = NEW.room_id);
+  END IF;
+  RETURN NEW;
+END;
+$$ SECURITY DEFINER;
+
+
+CREATE OR REPLACE TRIGGER message_insert_trigger
+BEFORE INSERT ON messages
+FOR EACH ROW
+EXECUTE PROCEDURE add_room_status_to_message();
