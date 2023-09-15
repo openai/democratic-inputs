@@ -50,15 +50,33 @@ export async function sendMessage(options: SendMessageOptions) {
     });
 }
 
+<<<<<<< HEAD
 export async function selectMessages(payload: selectMessagesPayload): Promise< Array<Message>| null> {
     // Retrieve all messages from supabase
     const { historyAllMessages, historyAmountMessages, historyAmountSeconds, historySpecifiedLayers  } = payload;
+=======
+export async function getTopic(roomId: string) {
+    const topicId = supabaseClient.from("rooms").select("topic_id").eq("id", roomId);
+    const topic = supabaseClient.from("topics").select("content").eq("id", topicId);
+
+    return topic;
+}
+
+export async function selectMessages(
+    historyAmountSeconds?: number | undefined, 
+    historyAmountMessages?: number | undefined, 
+    historyAllMessages?: boolean | undefined, 
+    historySpecifiedLayers?: Array<string> | undefined
+): Promise<Message[] | null> {
+    // Retrieve all messages from supabase
+>>>>>>> f157314d8b71e2b1a24363123bed42b325bfb8a8
     let statement = supabaseClient.from("messages").select().eq("type", "chat");
+
 
     //Check if all messages need to be selected
     if (historyAllMessages) {
         //Select all messages
-
+        
         //Check if we need to select a specified layer
         if (historySpecifiedLayers != null) {
             //TODO: select messages from a specific layer only
@@ -67,11 +85,17 @@ export async function selectMessages(payload: selectMessagesPayload): Promise< A
         }
 
     } else {
+        
 
         if (historyAmountSeconds != null) {
             //Select the messages based on time passed
-            const getHistoryTimestamp = new Date(Date.now() - 20 * 1000);
-            statement = statement.gt("created_at", getHistoryTimestamp);
+            const historyDate = new Date();
+            historyDate.setTime(historyDate.getTime() - 20*1000);
+
+            const dateForStatement = historyDate.toISOString();
+
+            console.log("HistoryTimeStamp", dateForStatement); 
+            statement = statement.gte("created_at", dateForStatement);
         }
 
         if (historyAmountMessages != null) {
@@ -81,16 +105,14 @@ export async function selectMessages(payload: selectMessagesPayload): Promise< A
     }
 
     const messages = await statement;
-
-    const messagesResult = messages.data;
-
+    
     // GUARD: Throw when we receive an error
     if (messages.error) {
         throw messages.error;
     }
 
-    console.log("testing messages", messages);
+    const result = messages.data;
 
-    return messagesResult;
+    return result;
 }
 

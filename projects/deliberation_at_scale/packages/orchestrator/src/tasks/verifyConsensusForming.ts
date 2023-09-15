@@ -1,64 +1,110 @@
 import { Helpers, quickAddJob } from "graphile-worker";
-import supabaseClient from "../lib/supabase";
-import openaiClient from "../lib/openai";
+import supabaseClient, { getTopic, selectMessages } from "../lib/supabase";
+import openaiClient, { createVerificationFunctionCompletion } from "../lib/openai";
 import { CreateChatCompletionRequestMessage } from "openai/resources/chat";
 import { Database } from "../generated/database.types";
 
-//TODO: Retrieve this from database
-const DISCUSSION_TOPIC = "Students are not allowed to use AI technology for their exams";
-
 type Message = Database["public"]["Tables"]["messages"]["Row"]
-
-let isUpdatingMessage = false;
-let isAddingModeration = false;
 
 /**
  * Run this task at most every n seconds
  */
-const TASK_INTERVAL_SECONDS = 45;
+const TASK_INTERVAL_SECONDS = 10;
+const historyAmountMessages = 3;
 
 /**
  * This task retrieves all messages since its last execution and attempts to
  * summarize them using GPT.
  */
-export default async function summarize(
+export default async function verifyConsensusForming(
     lastRun: string | null,
     helpers: Helpers
-) {
+) {  
+
     // Retrieve all messages from supabase
-    let statement = supabaseClient.from("messages").select().eq("type", "chat");
-
-    if (lastRun) {
-        statement = statement.gt("created_at", lastRun);
-    }
-
-    const messages = await statement;
-
-    // GUARD: Throw when we receive an error
-    if (messages.error) {
-        throw messages.error;
-    }
+    const messages = await selectMessages(undefined, historyAmountMessages, undefined, undefined);
 
     // GUARD: If there are no messages, reschedule the job
-    if (messages.data.length === 0) {
+
+    if (messages === null) {
+        helpers.logger.info("Mesassages undefined.");
+        return reschedule(lastRun);
+    }
+
+    if (messages.length === 0) {
         helpers.logger.info("No messages found.");
         return reschedule(lastRun);
     }
 
-    // Request GPT to summarize the set of messages
-    const consensusCheckResult = await checkForConsensus(messages.data);
+    const { id: messageId, content, room_id: roomId, } = messages[0] ?? {};
+   
+    //Enable as soon as topic_id is enabled in database
+    //const topic = getTopic(roomId);
 
-    if (consensusCheckResult?.result) {
-        const moderatorOutput = await writeConsensusMessage(messages.data);
+    //Temporary
+    const topic = "Students are not allowed to use AI technology for their exams";
 
-        if (!moderatorOutput) {
-            //Send consensus message to chat
-            return null;
-        }
+    const verificationResult = await createVerificationFunctionCompletion({
+        taskInstruction: `
+        You are a moderator of a discussion between three participants on the topic: 
+        "${topic}"?
 
-        addConsensusMessageToChat(moderatorOutput.content);
-        addModerationMessage(moderatorOutput.content);
+        You have to evaluate whether they have found a consensus on the topic.
+        `,
+        //verified,
+        // not difficult example
+        taskContent:    
+        
+        JSON.stringify(
+            messages.map(
+                (message) =>
+                    ({
+                        participant: message.participant_id,
+                        content: message.content,
+                    })
+            )
+        )
+
+        // difficult example
+        // taskContent: `
+        //     I hate discussing with you guys!
+        // `,
+
+        // actual message content
+        // taskContent: content,
+    });
+    const isConsensus = verificationResult.verified;
+    const consensusReason = verificationResult.reason;
+    const consensusToParticipants = verificationResult.moderated;
+
+    // TMP: temporary logging statements
+    // console.log('Consensus verification result:');
+    // console.log(isConsensus);
+
+    // console.log('Moderator explaination:');
+    // console.log(consensusToParticipants);
+
+    // guard: do nothing when it is not difficult language
+    if (isConsensus || !roomId) {
+        return;
     }
+
+    helpers.logger.info(`Sending clarification message to room ${roomId} for message ${messageId}: ${consensusReason}`);
+    helpers.logger.info(`Sending clarification message to room ${roomId} for message ${messageId}: ${consensusToParticipants}`);
+
+    // execute these in parallel to each other
+    await Promise.allSettled([
+
+        // track that this message has been moderated
+        insertModeration(messages, consensusReason),
+
+        // send a message to the room with the moderators explaination about the verification
+        // sendBotMessage({
+        //     content: unappropiateReasonToParticipants,
+        //     roomId,
+        // }),
+    ]);
+
 
     return reschedule(lastRun);
 }
@@ -68,126 +114,23 @@ export default async function summarize(
  */
 function reschedule(initialDate: string | null) {
     // Re-schedule this job n seconds after the last invocation
-    quickAddJob({}, "summarize", new Date(), {
+    quickAddJob({}, "verifyConsensusForming", new Date(), {
         runAt: new Date(
             (initialDate ? new Date(initialDate) : new Date()).getTime() +
       1_000 * TASK_INTERVAL_SECONDS
         ),
-        jobKey: "summarize",
+        jobKey: "verifyConsensusForming",
         jobKeyMode: "preserve_run_at",
     });
 }
 
-async function checkForConsensus(messages: Message[]): Promise<{ result: boolean } | null> {
-    const completion = await openaiClient.chat.completions.create({
-        temperature: 0.1,
-        model: "gpt-4",
-        messages: [
-            {
-                role: "system",
-                content:
-          `The following shows part of a discussion at this point in the discussion do the three participants have a consensus on the topic: "Students are not allowed to use AI technology for their exams"?
-
-        return a JSON object in the following format: { result: {boolean, true if there is a consensus, false if no consensus can be formulated} }
-        `,
-            },
-            ...messages.map(
-                (message) =>
-                    ({
-                        role: "user",
-                        content: message.content,
-                    } as CreateChatCompletionRequestMessage)
-            ),
-        ],
+async function insertModeration(message: Message, statement: string) {
+    await supabaseClient.from("moderations").insert({
+        type: 'consensus',
+        statement,
+        target_type: 'message',
+        message_id: message.id,
+        participant_id: message.participant_id,
+        room_id: message.room_id,
     });
-
-    const completionResult = completion.choices[0].message.content;
-    console.log(completionResult);
-
-    if (completionResult == null) {
-        return null;
-    }
-
-    const result = JSON.parse(completionResult);
-
-    return result;
-}
-
-async function writeConsensusMessage(messages: Message[]): Promise<{ content: string } | null> {
-    const completion = await openaiClient.chat.completions.create({
-        model: "gpt-4",
-        temperature: 0.8,
-        messages: [
-            {
-                role: "system",
-                content:
-          `The following shows part of a discussion between three participants on the topic:
-      "${DISCUSSION_TOPIC}"?.
-      Output the consensus as a statement in less than 20 words.
-      return a JSON object in the following format: { content: {the consensus statement}` ,
-            },
-            ...messages.map(
-                (message) =>
-                    ({
-                        role: "user",
-                        content: message.content,
-                    } as CreateChatCompletionRequestMessage)
-            ),
-        ],
-    });
-
-    const completionResult = completion.choices[0].message.content;
-
-    if (!completionResult) {
-        return null;
-    }
-
-    const result = JSON.parse(completionResult);
-
-    return result;
-
-}
-
-async function addConsensusMessageToChat(moderationMessageContent: string) {
-    // update the message
-    isUpdatingMessage = true;
-    try {
-        const result = await supabaseClient
-            .from("messages")
-            .insert({
-                content: moderationMessageContent,
-                type: "bot",
-            });
-        const hasError = !!result.error;
-
-        if (hasError) {
-            throw new Error(result.error.message);
-        }
-    } catch (error) {
-    // TODO: handle errors
-    }
-
-    isUpdatingMessage = false;
-}
-
-async function addModerationMessage(moderationMessageContent: string) {
-    // update the message
-    isAddingModeration = true;
-    try {
-        const result = await supabaseClient.from("moderations").insert({
-            type: 'consensus',
-            statement: moderationMessageContent,
-            target_type: 'moderation',
-        });
-
-        const hasError = !!result.error;
-
-        if (hasError) {
-            throw new Error(result.error.message);
-        }
-    } catch (error) {
-    // TODO: handle errors
-    }
-
-    isAddingModeration = false;
 }
