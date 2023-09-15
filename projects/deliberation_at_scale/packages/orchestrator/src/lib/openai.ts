@@ -23,6 +23,11 @@ export interface VerificationFunctionCompletionOptions {
     taskContent: string;
 }
 
+export interface EnrichFunctionCompletionOptions {
+    taskInstruction: string;
+    taskContent: string;
+}
+
 export async function createVerificationFunctionCompletion(options: VerificationFunctionCompletionOptions) {
     const { taskInstruction, taskContent } = options;
     const functionCall = await createFunctionCompletion({
@@ -62,6 +67,35 @@ export async function createVerificationFunctionCompletion(options: Verification
         verified,
         reason,
         moderated
+    };
+}
+
+export async function createEnrichFunctionCompletion(options: EnrichFunctionCompletionOptions) {
+    const { taskInstruction, taskContent } = options;
+    const functionCall = await createFunctionCompletion({
+        taskInstruction,
+        taskContent,
+        functionSchema: {
+            // is verified: "mag die door, ja of nee?"
+            name: "enrichment",
+            description: `${taskInstruction}`,
+            parameters: {
+                type: "object",
+                properties: {
+                    enriched: {
+                        type: "string",
+                        description: `Communication of the moderator towards the participants during a discussion `,
+                    }
+                },
+                required: ["enriched"],
+            },
+        },
+    });
+    const parsedArguments = JSON.parse(functionCall?.arguments ?? '{}');
+    const enriched = (parsedArguments?.moderated as string) ?? 'unknown';
+
+    return {
+        enriched
     };
 }
 
