@@ -8,8 +8,6 @@ import { useLocalMedia } from '@/hooks/useLocalMedia';
 import { NEXT_PUBLIC_WHEREBY_SUBDOMAIN } from '@/utilities/constants';
 import { useGetRoomsQuery } from '@/generated/graphql';
 
-const DEFAULT_TEST_EXTERNAL_ROOM_ID = '';
-
 /**
  * This provider will instantiate the Whereby `useLocalMedia` hook and make its
  * output available via the RoomConnection context.
@@ -23,7 +21,7 @@ export default function RoomConnectionProvider({ children }: PropsWithChildren) 
         },
     });
     const room = roomData?.roomsCollection?.edges?.[0];
-    const externalRoomId = room?.node.external_room_id ?? DEFAULT_TEST_EXTERNAL_ROOM_ID;
+    const externalRoomId = room?.node.external_room_id;
 
     // Construct the room URL
     const roomUrl = useMemo(() => (
@@ -34,8 +32,8 @@ export default function RoomConnectionProvider({ children }: PropsWithChildren) 
     const localMedia = useLocalMedia();
 
     // Then, start the room connection
-    const connection = useRoomConnection(roomUrl, { localMedia });
-
+    const connection = useRoomConnection(roomUrl, { localMedia, localMediaConstraints: { audio: true, video: true }, logger: console });
+    
     return (
         <RoomConnectionContext.Provider value={connection}>
             {children}
