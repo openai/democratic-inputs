@@ -209,6 +209,36 @@ export interface Database {
                     }
                 ]
             }
+            job_results: {
+                Row: {
+                    active: boolean
+                    completion_time_ms: number | null
+                    created_at: string
+                    id: string
+                    job_key: string
+                    result: Json
+                    updated_at: string
+                }
+                Insert: {
+                    active?: boolean
+                    completion_time_ms?: number | null
+                    created_at?: string
+                    id?: string
+                    job_key: string
+                    result?: Json
+                    updated_at?: string
+                }
+                Update: {
+                    active?: boolean
+                    completion_time_ms?: number | null
+                    created_at?: string
+                    id?: string
+                    job_key?: string
+                    result?: Json
+                    updated_at?: string
+                }
+                Relationships: []
+            }
             messages: {
                 Row: {
                     active: boolean
