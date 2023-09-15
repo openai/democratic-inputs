@@ -25,7 +25,7 @@ export interface SendMessageOptions {
 }
 
 export interface selectMessagesPayload {
-    message: Message;
+    //message: Message;
     historyAmountSeconds?: number,
     historyAmountMessages?: number,
     historyAllMessages?: boolean,
@@ -53,8 +53,6 @@ export async function sendMessage(options: SendMessageOptions) {
 export async function selectMessages(payload: selectMessagesPayload): Promise< Array<Message>| null> {
     // Retrieve all messages from supabase
     const { historyAllMessages, historyAmountMessages, historyAmountSeconds, historySpecifiedLayers  } = payload;
-
-
     let statement = supabaseClient.from("messages").select().eq("type", "chat");
 
     //Check if all messages need to be selected

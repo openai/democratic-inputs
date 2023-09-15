@@ -1,10 +1,13 @@
-import { Helpers } from "graphile-worker";
-import supabaseClient, { Message, sendBotMessage } from "../lib/supabase";
+import { Helpers, quickAddJob } from "graphile-worker";
+import supabaseClient, { Message, sendBotMessage, selectMessages } from "../lib/supabase";
 import openaiClient from "../lib/openai";
 
+const historyAmountSeconds = 30;
 
 export interface enrichModeratorMessageStimulateConsensusPayload {
     message: Message;
+    lastRun: string | null,
+    helpers: Helpers
     // roomId: string;
     // messageId: string;
 
@@ -15,8 +18,19 @@ export interface enrichModeratorMessageStimulateConsensusPayload {
  */
 
 export default async function enrichModeratorMessageStimulateConsensus(payload: enrichModeratorMessageStimulateConsensusPayload, helpers: Helpers) {
-    const { message } = payload;
+    const { message, lastRun } = payload;
 
+    console.log("ik ben hier");
+    // Retrieve messages from supabase
+    const messages = await selectMessages(historyAmountSeconds);
+
+    // GUARD: If there are no messages, reschedule the job
+    if (messages != null) {
+        if (messages.length === 0 ) {
+            helpers.logger.info("No messages found.");
+            return reschedule(lastRun);
+        }
+    }
 
     // TODO: replace the task content with the one of the actual message
     const enrichment = await openaiClient.completions.create({
@@ -30,6 +44,13 @@ export default async function enrichModeratorMessageStimulateConsensus(payload: 
                 Formulate a message of max. 20 words to guide the discussion towards a consensus
                 Message: ${message.content}
             `},
+            ...messages.map(
+                (message) =>
+                    ({
+                        role: "user",
+                        content: message.content,
+                    } as CreateChatCompletionRequestMessage)
+            ),
         ],
         model: 'gpt-4',
     });
@@ -44,4 +65,18 @@ export default async function enrichModeratorMessageStimulateConsensus(payload: 
     }
 
     return enrichtmentResult;
+}
+
+const TASK_INTERVAL_SECONDS = 30;
+
+function reschedule(initialDate: string | null) {
+    // Re-schedule this job n seconds after the last invocation
+    quickAddJob({}, "enoughContent", new Date(), {
+        runAt: new Date(
+            (initialDate ? new Date(initialDate) : new Date()).getTime() +
+      1_000 * TASK_INTERVAL_SECONDS
+        ),
+        jobKey: "enoughContent",
+        jobKeyMode: "preserve_run_at",
+    });
 }
