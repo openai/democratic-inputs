@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-
 import { Database } from '../generated/database.types';
 import { SUPABASE_URL, SUPABASE_KEY } from "../constants";
 
@@ -25,6 +24,14 @@ export interface SendMessageOptions {
     content: string;
 }
 
+export interface selectMessagesPayload {
+    message: Message;
+    historyAmountSeconds?: number,
+    historyAmountMessages?: number,
+    historyAllMessages?: boolean,
+    historySpecifiedLayers?: Array<string>
+}
+
 export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
     return sendMessage({
         ...options,
@@ -43,13 +50,11 @@ export async function sendMessage(options: SendMessageOptions) {
     });
 }
 
-export async function selectMessages(
-    historyAmountSeconds?: number, 
-    historyAmountMessages?: number, 
-    historyAllMessages?: boolean, 
-    historySpecifiedLayers?: Array<string>
-): Promise<{ messages: Message[] } | null> {
+export async function selectMessages(payload: selectMessagesPayload): Promise< Array<Message>| null> {
     // Retrieve all messages from supabase
+    const { historyAllMessages, historyAmountMessages, historyAmountSeconds, historySpecifiedLayers  } = payload;
+
+
     let statement = supabaseClient.from("messages").select().eq("type", "chat");
 
     //Check if all messages need to be selected
@@ -79,6 +84,8 @@ export async function selectMessages(
 
     const messages = await statement;
 
+    const messagesResult = messages.data;
+
     // GUARD: Throw when we receive an error
     if (messages.error) {
         throw messages.error;
@@ -86,6 +93,6 @@ export async function selectMessages(
 
     console.log("testing messages", messages);
 
-    return messages.data;
+    return messagesResult;
 }
 
