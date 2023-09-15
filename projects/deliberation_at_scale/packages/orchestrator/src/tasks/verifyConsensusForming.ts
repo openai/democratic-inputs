@@ -22,7 +22,9 @@ export default async function verifyConsensusForming(
 ) {  
 
     // Retrieve all messages from supabase
-    const messages = await selectMessages(undefined, historyAmountMessages, undefined, undefined);
+    const messages = await selectMessages({
+        historyAmountMessages,
+    });
 
     // GUARD: If there are no messages, reschedule the job
 
@@ -64,14 +66,6 @@ export default async function verifyConsensusForming(
                     })
             )
         )
-
-        // difficult example
-        // taskContent: `
-        //     I hate discussing with you guys!
-        // `,
-
-        // actual message content
-        // taskContent: content,
     });
     const isConsensus = verificationResult.verified;
     const consensusReason = verificationResult.reason;
