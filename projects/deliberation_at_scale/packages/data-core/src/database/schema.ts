@@ -301,6 +301,7 @@ export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
     active: generateActiveField(),
     type: text("type").notNull(),
     jobKey: text("job_key"),
+    statement: text("statement"),
     result: json("result").notNull().default({}),
     completedAt: timestamp("completed_at"),
     ...generateTargetFields(),

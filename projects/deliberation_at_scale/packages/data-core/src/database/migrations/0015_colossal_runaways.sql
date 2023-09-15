@@ -1,0 +1,1 @@
+ALTER TABLE "moderations" ADD COLUMN "statement" text;
