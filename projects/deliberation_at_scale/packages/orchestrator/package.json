@@ -6,7 +6,10 @@
   "scripts": {
     "setup": "npm install",
     "build": "swc src -d dist",
-    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/generated/database.types.ts'",
+    "db:generate-types": "npm run db:generate-types:public && npm run db:generate-types:worker",
+    "db:generate-types:public": "SCHEMA_NAME=public npm run db:generate-types-schema",
+    "db:generate-types:worker": "SCHEMA_NAME=graphile_worker npm run db:generate-types-schema",
+    "db:generate-types-schema": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema \"$SCHEMA_NAME\" > ./src/generated/database-$SCHEMA_NAME.types.ts'",
     "start": "npm run build && npm run start:all",
     "start:all": "ORCHESTRATOR_ROLE=all node dist/index.js",
     "start:runner": "ORCHESTRATOR_ROLE=runner node dist/index.js",
@@ -20,7 +23,10 @@
   "license": "MIT",
   "dependencies": {
     "@deliberation-at-scale/common": "*",
+    "@sentry/node": "7.69.0",
+    "@sentry/profiling-node": "1.2.1",
     "@supabase/supabase-js": "^2.32.0",
+    "dayjs": "1.11.9",
     "dotenv": "^16.3.1",
     "graphile-worker": "^0.13.0",
     "object-hash": "3.0.0",

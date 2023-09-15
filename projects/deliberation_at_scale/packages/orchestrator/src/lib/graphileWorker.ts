@@ -1,6 +1,10 @@
 import { Job, WorkerEventMap } from "graphile-worker";
-import { ONE_SECOND_MS } from "../constants";
+import { createClient } from '@supabase/supabase-js';
+
+import { SUPABASE_URL, SUPABASE_KEY, ONE_SECOND_MS } from "../constants";
+import { Database } from 'src/generated/database-graphile_worker.types';
 import { getRunner } from "../runner";
+import { Moderation, supabaseClient } from "./supabase";
 
 export interface CompletionWaitOptions {
     jobId: string;
@@ -10,6 +14,85 @@ export interface CompletionWaitOptions {
 export interface AllCompletionsWaitOptions {
     jobIds: string[];
     timeoutMs?: number;
+}
+
+export const graphileWorkerClient = createClient<Database>(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+        db: {
+            schema: 'graphile_worker',
+        },
+        auth: {
+            persistSession: false,
+        }
+    }
+);
+
+export async function getJobByKey(jobKey: string) {
+    const jobResult = await graphileWorkerClient.from('jobs').select().eq('job_key', jobKey).single();
+    const job = jobResult?.data;
+
+    return job;
+}
+
+export function generateProgressionJobKey(roomId: string, progressionTaskId: string) {
+    const jobKey = `room-${roomId}-progression-task-${progressionTaskId}`;
+    return jobKey;
+}
+
+export type ModerationCompletionTuple = {
+    job: Job;
+    moderation: Moderation;
+}
+
+export async function waitForAllModerationCompletions(options: AllCompletionsWaitOptions) {
+    const { jobIds, timeoutMs } = options;
+
+    return Promise.allSettled(jobIds.map((jobId) => {
+        return new Promise<ModerationCompletionTuple>((resolve, reject) => {
+            waitForSingleJobCompletion({
+                jobId,
+                timeoutMs,
+            }).then((job) => {
+                const { key: jobKey, run_at: jobRunnedAt } = job ?? {};
+
+                if (!job || !jobKey || !jobRunnedAt) {
+                    reject(`No job key or run at found for job ${jobId}`);
+                    return;
+                }
+
+                supabaseClient.from("moderations")
+                    .select()
+                    .eq("job_key", jobKey)
+                    .gt("completed_at", jobRunnedAt)
+                    .single()
+                    .then((result) => {
+                        const { data: moderation, error } = result;
+                        const isValidModeration = !!moderation;
+
+                        // guard: check for error
+                        if (error) {
+                            reject(error);
+                            return;
+                        }
+
+                        // guard: check if a moderation was found
+                        if (!isValidModeration) {
+                            reject(`No completed moderation found for job key ${jobKey}`);
+                            return;
+                        }
+
+                        resolve({
+                            job,
+                            moderation,
+                        });
+                    });
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    }));
 }
 
 export async function waitForAllJobCompletions(options: AllCompletionsWaitOptions) {
