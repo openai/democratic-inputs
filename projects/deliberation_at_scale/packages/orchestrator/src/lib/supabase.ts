@@ -57,14 +57,20 @@ export async function sendMessage(options: SendMessageOptions) {
 export interface StoreModerationResultOptions {
     jobKey: string;
     result: Json;
+    messageId?: string | null;
+    roomId?: string | null;
+    participantId?: string | null;
 }
 
 export async function storeModerationResult(options: StoreModerationResultOptions) {
-    const { jobKey, result } = options;
+    const { jobKey, result, messageId, roomId, participantId } = options;
 
     await supabaseClient.from("moderations").update({
         result,
         completedAt: dayjs().toISOString(),
+        message_id: messageId,
+        room_id: roomId,
+        participant_id: participantId,
     }).eq("job_key", jobKey).is("result", null);
 }
 export async function getTopic(roomId: string) {
@@ -95,7 +101,6 @@ export async function selectMessages(options: SelectMessageOptions): Promise<Mes
         if (historySpecifiedLayers != null) {
             //TODO: select messages from a specific layer only
             //statement = statement.contains("layer_id", historySpecifiedLayers);
-            console.log("Tried to select specific layers.");
         }
 
     } else {
@@ -107,8 +112,6 @@ export async function selectMessages(options: SelectMessageOptions): Promise<Mes
             historyDate.setTime(historyDate.getTime() - 20*1000);
 
             const dateForStatement = historyDate.toISOString();
-
-            console.log("HistoryTimeStamp", dateForStatement);
             statement = statement.gte("created_at", dateForStatement);
         }
 

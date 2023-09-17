@@ -4,7 +4,7 @@ import { isObject, min } from "radash";
 import { progressionTopology } from "../constants";
 import { supabaseClient, Moderation } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
-import { BaseProgressionWorkerResponse, BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "src/types";
+import { BaseVerificationWorkerResponse, BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "src/types";
 import { Database } from "src/generated/database-public.types";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -189,7 +189,7 @@ async function waitForAllProgressionTasks(options: WaitForAllProgressionTasksOpt
 }
 
 function isFailedModeration(moderation: Moderation) {
-    const result = moderation?.result as unknown as BaseProgressionWorkerResponse;
+    const result = moderation?.result as unknown as BaseVerificationWorkerResponse;
 
     if (!isObject(result)) {
         return true;

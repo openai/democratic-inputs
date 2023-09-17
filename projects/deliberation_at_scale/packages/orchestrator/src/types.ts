@@ -1,4 +1,5 @@
 import { Database } from "./generated/database-public.types";
+import { Message } from "./lib/supabase";
 
 export type OrchestratorRole = 'all' | 'runner' | 'listener' | 'scheduler';
 
@@ -9,15 +10,24 @@ export interface OrchestratorRoleTask {
     stopTask: () => Promise<void>;
 }
 
-export interface BaseProgressionWorkerTaskPayload {
-    progressionTask: ProgressionTask;
+export interface BaseWorkerTaskPayload {
     jobKey: string;
 }
 
-export interface BaseProgressionWorkerResponse {
-    verified: boolean;
-    reason: string;
-    moderated: string;
+export interface BaseRoomWorkerTaskPayload extends BaseWorkerTaskPayload {
+    roomId: string;
+}
+
+export interface BaseMessageWorkerTaskPayload extends BaseRoomWorkerTaskPayload {
+    message: Message;
+}
+
+export interface BaseProgressionWorkerTaskPayload extends BaseRoomWorkerTaskPayload {
+    progressionTask: ProgressionTask;
+}
+
+export interface BaseEnrichtmentWorkerResponse {
+    enrichtment: string;
 }
 
 /** The root of the topology containing all the different layers where the deliberation can go through. */

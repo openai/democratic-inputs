@@ -1,7 +1,6 @@
 import { Helpers, quickAddJob } from "graphile-worker";
 import supabaseClient, { getTopic, selectMessages } from "../lib/supabase";
 import openaiClient, { createVerificationFunctionCompletion } from "../lib/openai";
-import { CreateChatCompletionRequestMessage } from "openai/resources/chat";
 import { Database } from "../generated/database.types";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
@@ -19,7 +18,7 @@ const historyAmountMessages = 3;
 export default async function verifyConsensusForming(
     lastRun: string | null,
     helpers: Helpers
-) {  
+) {
 
     // Retrieve all messages from supabase
     const messages = await selectMessages({
@@ -39,7 +38,7 @@ export default async function verifyConsensusForming(
     }
 
     const { id: messageId, content, room_id: roomId, } = messages[0] ?? {};
-   
+
     //Enable as soon as topic_id is enabled in database
     //const topic = getTopic(roomId);
 
@@ -48,15 +47,15 @@ export default async function verifyConsensusForming(
 
     const verificationResult = await createVerificationFunctionCompletion({
         taskInstruction: `
-        You are a moderator of a discussion between three participants on the topic: 
+        You are a moderator of a discussion between three participants on the topic:
         "${topic}"?
 
         You have to evaluate whether they have found a consensus on the topic.
         `,
         //verified,
         // not difficult example
-        taskContent:    
-        
+        taskContent:
+
         JSON.stringify(
             messages.map(
                 (message) =>
@@ -101,30 +100,4 @@ export default async function verifyConsensusForming(
 
 
     return reschedule(lastRun);
-}
-
-/**
- * Reschedule this job for the next iteration
- */
-function reschedule(initialDate: string | null) {
-    // Re-schedule this job n seconds after the last invocation
-    quickAddJob({}, "verifyConsensusForming", new Date(), {
-        runAt: new Date(
-            (initialDate ? new Date(initialDate) : new Date()).getTime() +
-      1_000 * TASK_INTERVAL_SECONDS
-        ),
-        jobKey: "verifyConsensusForming",
-        jobKeyMode: "preserve_run_at",
-    });
-}
-
-async function insertModeration(message: Message, statement: string) {
-    await supabaseClient.from("moderations").insert({
-        type: 'consensus',
-        statement,
-        target_type: 'message',
-        message_id: message.id,
-        participant_id: message.participant_id,
-        room_id: message.room_id,
-    });
 }

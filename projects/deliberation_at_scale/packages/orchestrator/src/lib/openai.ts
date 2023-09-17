@@ -23,12 +23,22 @@ export interface VerificationFunctionCompletionOptions {
     taskContent: string;
 }
 
+export interface VerificationFunctionCompletionResult {
+    verified: boolean;
+    systemReason: string;
+    moderatedReason: string;
+}
+
+export interface EnrichFunctionCompletionResult {
+    enrichtment: string;
+}
+
 export interface EnrichFunctionCompletionOptions {
     taskInstruction: string;
     taskContent: string;
 }
 
-export async function createVerificationFunctionCompletion(options: VerificationFunctionCompletionOptions) {
+export async function createVerificationFunctionCompletion(options: VerificationFunctionCompletionOptions): Promise<VerificationFunctionCompletionResult> {
     const { taskInstruction, taskContent } = options;
     const functionCall = await createFunctionCompletion({
         taskInstruction,
@@ -43,11 +53,11 @@ export async function createVerificationFunctionCompletion(options: Verification
                         type: "boolean",
                         description: `Result of whether this is the case: ${taskInstruction}.`,
                     },
-                    reason: {
+                    systemReason: {
                         type: "string",
                         description: `An explanation of why the result is verified or not.`,
                     },
-                    moderated: {
+                    moderatedReason: {
                         type: "string",
                         description: `An explanation from the moderator towards the participants of why the result is verified or not.`,
                     }
@@ -58,17 +68,17 @@ export async function createVerificationFunctionCompletion(options: Verification
     });
     const parsedArguments = JSON.parse(functionCall?.arguments ?? '{}');
     const verified = !!parsedArguments?.verified;
-    const reason = (parsedArguments?.reason as string) ?? 'unknown';
-    const moderated = (parsedArguments?.moderated as string) ?? 'unknown';
+    const systemReason = (parsedArguments?.systemReason as string) ?? '';
+    const moderatedReason = (parsedArguments?.moderatedReason as string) ?? '';
 
     return {
         verified,
-        reason,
-        moderated
+        systemReason,
+        moderatedReason
     };
 }
 
-export async function createEnrichFunctionCompletion(options: EnrichFunctionCompletionOptions) {
+export async function createEnrichFunctionCompletion(options: EnrichFunctionCompletionOptions): Promise<EnrichFunctionCompletionResult> {
     const { taskInstruction, taskContent } = options;
     const functionCall = await createFunctionCompletion({
         taskInstruction,
@@ -89,10 +99,10 @@ export async function createEnrichFunctionCompletion(options: EnrichFunctionComp
         },
     });
     const parsedArguments = JSON.parse(functionCall?.arguments ?? '{}');
-    const enriched = (parsedArguments?.enrichtment as string) ?? 'unknown';
+    const enrichtment = (parsedArguments?.enrichtment as string) ?? '';
 
     return {
-        enriched
+        enrichtment,
     };
 }
 

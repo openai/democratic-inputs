@@ -6,7 +6,7 @@ import { createEnrichFunctionCompletion } from "../lib/openai";
  * This task determines whether a single message is using very difficult language.
  * If so, this message is flagged and an informal message from the moderator is sent out.
  */
-export default async function difficultLanguage(message: Message, helpers: Helpers) {
+export default async function difficultLanguage(message: BaseProgressionWorkerTaskPayload, helpers: Helpers) {
     const { id: messageId, content, room_id: roomId } = message ?? {};
 
     // TODO: replace the task content with the one of the actual message

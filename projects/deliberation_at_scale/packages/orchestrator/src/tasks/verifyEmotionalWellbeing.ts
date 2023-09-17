@@ -1,7 +1,6 @@
 import { Helpers, quickAddJob } from "graphile-worker";
 import supabaseClient, { getTopic, selectMessages } from "../lib/supabase";
 import openaiClient, { createVerificationFunctionCompletion } from "../lib/openai";
-import { CreateChatCompletionRequestMessage } from "openai/resources/chat";
 import { Database } from "../generated/database.types";
 
 type Message = Database["public"]["Tables"]["messages"]["Row"]
@@ -19,7 +18,7 @@ const historyAmountMessages = 10;
 export default async function verifyEmotionalWellbeing(
     lastRun: string | null,
     helpers: Helpers
-) {  
+) {
 
     // Retrieve all messages from supabase
     const messages = await selectMessages({
@@ -50,8 +49,8 @@ export default async function verifyEmotionalWellbeing(
         `,
         //verified,
         // not difficult example
-        taskContent:    
-        
+        taskContent:
+
         JSON.stringify(
             messages.map(
                 (message) =>
@@ -94,30 +93,4 @@ export default async function verifyEmotionalWellbeing(
 
 
     return reschedule(lastRun);
-}
-
-/**
- * Reschedule this job for the next iteration
- */
-function reschedule(initialDate: string | null) {
-    // Re-schedule this job n seconds after the last invocation
-    quickAddJob({}, "verifyEmotionalWellbeing", new Date(), {
-        runAt: new Date(
-            (initialDate ? new Date(initialDate) : new Date()).getTime() +
-      1_000 * TASK_INTERVAL_SECONDS
-        ),
-        jobKey: "verifyEmotionalWellbeing",
-        jobKeyMode: "preserve_run_at",
-    });
-}
-
-async function insertModeration(message: Message, statement: string) {
-    await supabaseClient.from("moderations").insert({
-        type: 'emotionalWellbeing',
-        statement,
-        target_type: 'message',
-        message_id: message.id,
-        participant_id: message.participant_id,
-        room_id: message.room_id,
-    });
 }
