@@ -34,13 +34,11 @@ export async function createVerificationFunctionCompletion(options: Verification
         taskInstruction,
         taskContent,
         functionSchema: {
-            // is verified: "mag die door, ja of nee?"
             name: "is_verified",
             description: `Determine whether: ${taskInstruction}`,
             parameters: {
                 type: "object",
                 properties: {
-                    // perhaps give a certainy number
                     verified: {
                         type: "boolean",
                         description: `Result of whether this is the case: ${taskInstruction}.`,
@@ -51,7 +49,7 @@ export async function createVerificationFunctionCompletion(options: Verification
                     },
                     moderated: {
                         type: "string",
-                        description: `An explanation from the moderator towards the participants of why the result is verified or not `,
+                        description: `An explanation from the moderator towards the participants of why the result is verified or not.`,
                     }
                 },
                 required: ["verified", "reason", "moderated"],
@@ -76,23 +74,22 @@ export async function createEnrichFunctionCompletion(options: EnrichFunctionComp
         taskInstruction,
         taskContent,
         functionSchema: {
-            // is verified: "mag die door, ja of nee?"
             name: "enrichment",
             description: `${taskInstruction}`,
             parameters: {
                 type: "object",
                 properties: {
-                    enriched: {
+                    enrichtment: {
                         type: "string",
-                        description: `Communication of the moderator towards the participants during a discussion `,
+                        description: `Communication of the moderator towards the participants during a discussion.`,
                     }
                 },
-                required: ["enriched"],
+                required: ["enrichtment"],
             },
         },
     });
     const parsedArguments = JSON.parse(functionCall?.arguments ?? '{}');
-    const enriched = (parsedArguments?.moderated as string) ?? 'unknown';
+    const enriched = (parsedArguments?.enrichtment as string) ?? 'unknown';
 
     return {
         enriched
