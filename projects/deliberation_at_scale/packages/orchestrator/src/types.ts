@@ -50,7 +50,8 @@ export type WorkerTaskId =
     'verifyEmotionalWellbeing' |
     'enrichModeratorMessageSafeBehaviour' |
     'enrichModeratorMessageParticipantIntroduction' |
-    'verifyOffTopic' | 'enrichModeratorMessageInformedBehaviour' |
+    'verifyOffTopic' |
+    'enrichModeratorMessageInformedBehaviour' |
     'verifyEnoughContent' |
     'verifyEqualParticipation' |
     'verifyConsensusForming' |
@@ -107,7 +108,8 @@ export interface ProgressionHistoryMessageContext extends ProgressionHistoryCont
 }
 
 export interface ProgressionHistoryContext {
-    /** The amount of seconds in the history the data should be fetched. */
-    ms?: number;
+    /** The amount of milliseconds in the past the rows should be fetched */
+    durationMs?: number;
+    /** The amount of rows should be fetched in the past */
     amount?: number;
 }

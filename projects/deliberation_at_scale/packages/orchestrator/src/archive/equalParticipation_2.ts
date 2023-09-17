@@ -25,7 +25,7 @@ export default async function equalize(
     helpers: Helpers
 ) {
     // Retrieve all messages from supabase
-    let statement = supabase.from("messages").select().eq("type", "chat")
+    let statement = supabase.from("messages").select().eq("type", "chat");
 
     if (lastRun) {
         statement = statement.gt("created_at", lastRun);
@@ -106,7 +106,6 @@ async function equalContributedCheck(): Promise<boolean | null> {
         return null;
     }
 
-    console.log('Response message from Equal Participation: ', responseMessage);
     // if (responseMessage.function_call) {
     //     // Step 3: call the function
     //     // Note: the JSON response may not always be valid; be sure to handle errors

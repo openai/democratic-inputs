@@ -1,5 +1,5 @@
 import { Helpers } from "graphile-worker";
-import supabaseClient, { Message, sendBotMessage } from "../lib/supabase";
+import { Message, sendBotMessage } from "../lib/supabase";
 import { createEnrichFunctionCompletion } from "../lib/openai";
 
 /**
@@ -55,16 +55,4 @@ export default async function difficultLanguage(message: Message, helpers: Helpe
             roomId,
         }),
     ]);
-
 }
-
-// async function insertClarification(message: Message, statement: string) {
-//     await supabaseClient.from("moderations").insert({
-//         type: 'clarification',
-//         statement,
-//         target_type: 'message',
-//         message_id: message.id,
-//         participant_id: message.participant_id,
-//         room_id: message.room_id,
-//     });
-// }

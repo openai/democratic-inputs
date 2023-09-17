@@ -59,8 +59,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     cooldownAmountMessages: 1,
                     context: {
                         messages: {
-                            historyAllMessages: true,
-                            historySpecifiedLayers: ["introductionParticipants"]
+                            roomStatuses: ["introductionParticipants"]
                         }
                     },
                 }
@@ -75,8 +74,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     buffer: 60,
                     context: {
                         messages: {
-                            historyAllMessages: true,
-                            historySpecifiedLayers: ["introductionParticipants"]
+                            roomStatuses: ["introductionParticipants"]
                         }
                     },
                 },
@@ -101,8 +99,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     buffer: 60,
                     context: {
                         messages: {
-                            historyAllMessages: true,
-                            historySpecifiedLayers: ["introductionParticipants"]
+                            roomStatuses: ["introductionParticipants"]
                         }
                     },
                 },
@@ -129,7 +126,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     fallback: true,
                     context: {
                         messages: {
-                            historyAmountMessages: 1,
+                            amount: 1,
                         },
                     },
                 },
@@ -141,7 +138,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     cooldownSeconds: 30,
                     context: {
                         messages: {
-                            historyAmountSeconds: 30,
+                            durationMs: 30 * ONE_SECOND_MS,
                         }
                     }
                 }
@@ -155,7 +152,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     cooldownSeconds: 60,
                     context: {
                         messages: {
-                            historyAmountSeconds: 30,
+                            durationMs: 30 * ONE_SECOND_MS,
                         }
                     },
                 }
@@ -174,7 +171,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     cooldownSeconds: 60,
                     context: {
                         messages: {
-                            historyAmountSeconds: 30,
+                            durationMs: 30 * ONE_SECOND_MS,
                         }
                     },
                 },
@@ -187,7 +184,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     cooldownSeconds: 60,
                     context: {
                         messages: {
-                            historyAmountMessages: 3,
+                            amount: 3,
                         }
                     },
                 }
