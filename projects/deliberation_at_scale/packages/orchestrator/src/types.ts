@@ -26,7 +26,7 @@ export interface ProgressionTopology {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type LayerId = 'introduction_participants' | 'introduction_topic' | 'safe' | 'informed' | 'conversate' | 'results' | 'conclude';
+export type LayerId = 'introductionParticipants' | 'introductionTopic' | 'safe' | 'informed' | 'conversate' | 'results' | 'conclude';
 
 export type RoomStatus = Database['public']['Enums']['roomStatusType'];
 
@@ -43,7 +43,18 @@ export interface ProgressionLayer {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type WorkerTaskId = 'badLanguage' | 'introductionParticipants' | 'difficultLanguage' | 'emotionalWellbeing' | 'enrichModeratorMessageSafeBehaviour' | 'enrichModeratorMessageParticipantIntroduction' | 'offTopic' | 'enrichModeratorMessageInformedBehaviour' | 'enoughContent' | 'equalParticipation' | 'consensusForming' | 'enrichModeratorMessageStimulateConsensus';
+export type WorkerTaskId =
+    'verifyBadLanguage' |
+    'verifyIntroductionParticipants' |
+    'verifyDifficultLanguage' |
+    'verifyEmotionalWellbeing' |
+    'enrichModeratorMessageSafeBehaviour' |
+    'enrichModeratorMessageParticipantIntroduction' |
+    'verifyOffTopic' | 'enrichModeratorMessageInformedBehaviour' |
+    'verifyEnoughContent' |
+    'verifyEqualParticipation' |
+    'verifyConsensusForming' |
+    'enrichModeratorMessageStimulateConsensus';
 
 /** A single task within a progression layer. */
 export interface ProgressionTask {
@@ -64,10 +75,14 @@ export interface ProgressionTask {
 export interface ProgressionTaskCooldown {
     /** Flag to determine whether the progression is also blocked when cooling down. */
     blockProgression?: boolean;
-    /** The amount of seconds required to wait before this task can become valid. */
-    ms?: number;
+    /** The amount of seconds required to wait before this task can run again. */
+    durationMs?: number;
     /** The amount of new messages required before this task can become valid. */
     messageAmount?: number;
+    /** An optional amount of maximum atempt in a specific layer (This could be more in total, e.g.: when it switches back to the layer because of X) */
+    maxAtemptsInLayer?: number;
+    /** An optional amount of maximum atempt in total (Even when switching between layers, the value wont be reset) */
+    maxAtemptsInTotal?: number;
 }
 
 /** A single verification task which specify behaviour what to do when the verification fails. */

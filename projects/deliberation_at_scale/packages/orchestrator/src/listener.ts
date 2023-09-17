@@ -28,18 +28,18 @@ async function startMessageListener() {
 
         // add logic for supabase triggers.
         // for every message from supabase, quickAdd job the moderation task with the message as payload
-        quickAddJob({}, "badLanguage", newMessage, {
-            jobKey: "badLanguage",
-            jobKeyMode: "preserve_run_at",
-        });
-        quickAddJob({}, "difficultLanguage", newMessage, {
-            jobKey: "difficultLanguage",
-            jobKeyMode: "preserve_run_at",
-        });
-        quickAddJob({}, "equalParticipation_2", newMessage, {
-            jobKey: "equalParticipation_2",
-            jobKeyMode: "preserve_run_at",
-        });
+        // quickAddJob({}, "badLanguage", newMessage, {
+        //     jobKey: "badLanguage",
+        //     jobKeyMode: "preserve_run_at",
+        // });
+        // quickAddJob({}, "difficultLanguage", newMessage, {
+        //     jobKey: "difficultLanguage",
+        //     jobKeyMode: "preserve_run_at",
+        // });
+        // quickAddJob({}, "equalParticipation_2", newMessage, {
+        //     jobKey: "equalParticipation_2",
+        //     jobKeyMode: "preserve_run_at",
+        // });
     });
 }
 

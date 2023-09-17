@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
 
-import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions";
 import { OrchestratorRole, ProgressionTopology } from "./types";
 
 declare global {
@@ -45,23 +44,23 @@ export const ONE_SECOND_MS = 1000;
 export const progressionTopology: Readonly<ProgressionTopology> = {
     layers: [
         {
-            id: 'introduction_participants',
+            id: 'introductionParticipants',
             roomStatus: 'introduction_participants',
             verifications: [
                 {
-                    /* Check whether each participant has introduced themselves properly */
-                    id: 'introductionParticipants',
-                    workerTaskId: 'introductionParticipants',
+                    /* In this layer, the AI moderator will
+                    - Verify whether has introduced themselves properly
+                    - If no, execute a enrichment prompt participant(s) X nevertheless introduce themselves */
+                    id: 'introductionParticipants-introductionParticipants',
+                    workerTaskId: 'verifyIntroductionParticipants',
                     active: false,
                     fallback: false,
-                    maxAtempts: 100, /* Execute function maximum twice */
-                    cooldownAmountMessages: 1, //Execute again after every message
-                    /* Do check whether every participant has added something in the conversation  */
-                    // inputFromAllParticipants: true,
+                    maxAtemptsInTotal: 20,
+                    cooldownAmountMessages: 1,
                     context: {
                         messages: {
                             historyAllMessages: true,
-                            historySpecifiedLayers: ["introduction_participants"]
+                            historySpecifiedLayers: ["introductionParticipants"]
                         }
                     },
                 }
@@ -69,18 +68,55 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             enrichments: [
                 {
                     /* Execute function maximum twice */
-                    id: 'enrichModeratorMessageParticipantIntroduction',
+                    id: 'introductionParticipants-moderatorMessageParticipantIntroduction',
                     workerTaskId: 'enrichModeratorMessageParticipantIntroduction',
                     active: false,
-                    cooldownSeconds: 120,
+                    cooldownSeconds: 60,
+                    buffer: 60,
                     context: {
                         messages: {
                             historyAllMessages: true,
+                            historySpecifiedLayers: ["introductionParticipants"]
                         }
                     },
-                }
+                },
             ]
-
+        },
+        {
+            /* In this layer, the AI moderator will exectue the following
+                - Execute an enrichment prompt that for a  a new topic
+                - Execute an enrichment prompt that mixes an existing topic
+                - Execute an enrichment prompt that crosspolinates a topic?
+            - After this, the participant will go to the introduction_topic layer and it all starts over again
+            TODO: check whether this is the right place to execute these prompts and write these in the topology */
+            id: 'introductionTopic',
+            roomStatus: 'introduction_topic',
+            enrichments: [
+                {
+                    /* Execute function maximum twice */
+                    id: 'introductionTopic-moderatorMessageTopicIntroduction',
+                    workerTaskId: 'enrichModeratorMessageTopicIntroduction',
+                    active: false,
+                    maxAtemptsInLayer: 1,
+                    buffer: 60,
+                    context: {
+                        messages: {
+                            historyAllMessages: true,
+                            historySpecifiedLayers: ["introductionParticipants"]
+                        }
+                    },
+                },
+                {
+                    id: 'introductionTopic-moderatorMessageTopicMixedIntroduction',
+                    workerTaskId: 'enrichModeratorMessageTopicMixedIntroduction',
+                    active: false,
+                },
+                {
+                    id: 'introductionTopic-moderatorMessageTopicCrosspolinatedIntroduction',
+                    workerTaskId: 'enrichProposalConsensusFormingIntroduction',
+                    active: false,
+                },
+            ]
         },
         {
             id: 'safe',
@@ -88,7 +124,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             verifications: [
                 {
                     id: 'safe-badLanguage',
-                    workerTaskId: 'badLanguage',
+                    workerTaskId: 'verifyBadLanguage',
                     active: false,
                     fallback: true,
                     context: {
@@ -98,10 +134,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     },
                 },
                 {
-                    id: 'emotionalWellbeing',
-                    workerTaskId: 'emotionalWellbeing',
+                    id: 'safe-emotionalWellbeing',
+                    workerTaskId: 'verifyEmotionalWellbeing',
                     active: false,
-                    maxAtempts: 3,
+                    maxAtemptsInLayer: 3,
                     cooldownSeconds: 30,
                     context: {
                         messages: {
@@ -112,7 +148,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ],
             enrichments: [
                 {
-                    id: 'enrichModeratorMessageSafeBehaviour',
+                    id: 'safe-moderatorMessageSafeBehaviour',
                     workerTaskId: 'enrichModeratorMessageSafeBehaviour',
                     active: false,
                     /* Execute function to prompt safe environment after 1 minutes */
@@ -131,10 +167,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             verifications: [
                 {
                     //TODO: toevoegen dat hij moet kijken naar de oudere berichten en 'relatief' beoordeelt of het moeilijke taal is
-                    id: 'difficultLanguage',
-                    workerTaskId: 'difficultLanguage',
+                    id: 'informed-difficultLanguage',
+                    workerTaskId: 'verifyDifficultLanguage',
                     active: false,
-                    maxAtempts: 3,
+                    maxAtemptsInTotal: 3,
                     cooldownSeconds: 60,
                     context: {
                         messages: {
@@ -143,11 +179,11 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     },
                 },
                 {
-                    id: 'offTopic',
-                    workerTaskId: 'offTopic',
+                    id: 'informed-offTopic',
+                    workerTaskId: 'verifyOffTopic',
                     active: false,
                     fallback: true,
-                    maxAtempts: 3,
+                    maxAtemptsInTotal: 3,
                     cooldownSeconds: 60,
                     context: {
                         messages: {
@@ -158,10 +194,9 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ],
             enrichments: [
                 {
-                    id: 'enrichModeratorMessageInformedBehaviour',
+                    id: 'informed-moderatorMessageInformedBehaviour',
                     workerTaskId: 'enrichModeratorMessageInformedBehaviour',
                     active: false,
-                    /* Execute function to prompt informed environment after 1 minutes */
                     cooldownSeconds: 60,
                     context: {
                         messages: {
@@ -172,15 +207,19 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ]
         },
         {
+            /* In this layer, the AI moderator will
+            - Verify whether its is enough content to form a consensus ==> TODO: this is quite similar to verify consensus forming
+            - Verify whether there is equal participation among the participants and if no, will send a message explaining to have more equal participation
+            - If there is no equal participation, it is alo possible to execute a enrichment prompt that points out a specific person to share their views */
             id: 'conversate',
             roomStatus: 'conversate',
             verifications: [
                 {
-                    id: 'enoughContent',
-                    workerTaskId: 'enoughContent',
+                    id: 'conversate-enoughContent',
+                    workerTaskId: 'verifyEnoughContent',
                     active: false,
                     cooldownSeconds: 20,
-                    buffer: 5 * 60,
+                    buffer: 10 * 60,
                     context: {
                         messages: {
                             historySpecifiedLayers: ['conversate'],
@@ -189,9 +228,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     }
                 },
                 {
-                    id: 'equalParticipation',
-                    workerTaskId: 'equalParticipation',
+                    id: 'conversate-equalParticipation',
+                    workerTaskId: 'verifyEqualParticipation',
                     active: false,
+                    buffer: 5 * 60,
                     cooldownSeconds: 60,
                     context: {
                         messages: {
@@ -200,17 +240,37 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                         }
                     }
                 }
+            ],
+            enrichments: [
+                {
+                    id: 'conversate-equalParticipation',
+                    workerTaskId: 'enrichEqualParticipation',
+                    active: false,
+                    buffer: 5 * 60,
+                    maxAtemptsInLayer: 1,
+                    cooldownSeconds: 60,
+                    context: {
+                        messages: {
+                            historySpecifiedLayers: ['conversate'],
+                            historyAmountSeconds: 5 * 60,
+                        }
+                    }
+                }
             ]
             //Do we need enrichments in this layer?
         },
         {
+            /* In this layer, the AI moderator will
+            - Verify whether its is able to create a consensus
+            - If yes, execute a enrichment prompt that creates a proposal for a consensus
+            - Meanwhile execute a enrichment prompt for stimulating participants to come together */
             id: 'results',
             roomStatus: 'results',
             verifications: [
                 {
                     // possible addition of metaConsensus forming that forms a consensus upon shared values
-                    id: 'consensusForming',
-                    workerTaskId: 'consensusForming',
+                    id: 'results-consensusForming',
+                    workerTaskId: 'verifyConsensusForming',
                     active: false,
                     cooldownSeconds: 30,
                     context: {
@@ -223,11 +283,25 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ],
             enrichments: [
                 {
-                    id: 'enrichModeratorMessageStimulateConsensus',
+                    id: 'results-enrichProposalConsensusForming',
+                    workerTaskId: 'enrichProposalConsensusForming',
+                    active: false,
+                    maxAtemptsInLayer: 1,
+                    maxAtemptsInTotal: 3,
+                    context: {
+                        messages: {
+                            historySpecifiedLayers: ['informed', 'conversate', 'results'],
+                            historyAllMessages: true,
+                        }
+                    }
+
+                },
+                {
+
+                    id: 'results-moderatorMessageStimulateConsensus',
                     workerTaskId: 'enrichModeratorMessageStimulateConsensus',
                     active: false,
-                    // buffer?
-                    // maxAtempts: 3x?
+                    maxAtemptsInLayer: 1,
                     cooldownSeconds: 60,
                     context: {
                         messages: {
@@ -238,14 +312,6 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 }
             ]
         },
-        {
-            id: 'conclude',
-            roomStatus: 'conclude',
-            verifications: [
-                //Do we need verifications here?
-            ]
-
-        }
     ],
 };
 
