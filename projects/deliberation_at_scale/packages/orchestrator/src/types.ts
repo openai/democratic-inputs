@@ -57,10 +57,13 @@ export interface ProgressionTask {
     context?: ProgressionContext;
     /** An optional minimum cooldown in terms of time before checking this task again. */
     cooldown?: ProgressionTaskCooldown;
+    /** The maximum amount of attempts this verification should be done */
     maxAttempts?: number;
 }
 
 export interface ProgressionTaskCooldown {
+    /** Flag to determine whether the progression is also blocked when cooling down. */
+    blockProgression?: boolean;
     /** The amount of seconds required to wait before this task can become valid. */
     ms?: number;
     /** The amount of new messages required before this task can become valid. */

@@ -1,11 +1,12 @@
 import { Helpers } from "graphile-worker";
-import { isObject, min } from "radash";
+import { isObject, min, set } from "radash";
 
 import { progressionTopology } from "../constants";
 import { supabaseClient, Moderation } from "../lib/supabase";
-import { generateProgressionJobKey, waitForAllModerationCompletions } from "../lib/graphileWorker";
+import { waitForAllModerationCompletions } from "../lib/graphileWorker";
 import { BaseProgressionWorkerResponse, BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "src/types";
 import { Database } from "src/generated/database-public.types";
+import dayjs, { Dayjs } from "dayjs";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -102,6 +103,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         }
 
         // trigger all enrichments on no progression to the next layer
+        // NOTE: this can be done asynchronously
         const currentLayerEnrichments = currentTopologyLayer.enrichments ?? [];
         addProgressionTaskJobs({
             progressionTasks: currentLayerEnrichments,
@@ -121,6 +123,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
     }
 
     // progress to the new status
+    // NOTE: this can be done asynchronously
     updateRoomStatus({
         roomId,
         roomStatus: nextProgressionLayer.roomStatus,
@@ -198,7 +201,7 @@ function isFailedModeration(moderation: Moderation) {
     return !hasResult || !isVerified;
 }
 
-interface AddProgressionTaskJobs {
+interface ProgressionTasksContextOptions {
     progressionTasks: ProgressionTask[];
     roomId: string;
     helpers: Helpers;
@@ -208,20 +211,17 @@ interface AddProgressionTaskJobs {
  * Helper to add all progression tasks as jobs to the job system. Along with this it also adds a moderation to the database.
  * This allows us to track which progression tasks are triggered in the past to filter them for cooldowns and maximum attempts.
  */
-async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
-    const { progressionTasks, roomId, helpers } = options;
-    const filteredProgressionTasks = progressionTasks.filter((progressionTask) => {
-        const { active, cooldown } = progressionTask;
+async function addProgressionTaskJobs(options: ProgressionTasksContextOptions) {
+    const { roomId, helpers } = options;
+    const { hasErroredProgressionTasks, validProgressionTasks } = await filterProgressionTasks(options);
 
-        // TODO: check if whether this job is allowed to be added based on the cooldown or other rules
-        // TODO: determine whether a cooldown would fail or succeed the job?
-
-        return active ?? true;
-    });
+    if (hasErroredProgressionTasks) {
+        throw Error(`Could not add progression task jobs for room ${roomId} because one of the verifications failed before executing the jobs. This is likely due to a cooldown which is set to blocking.`);
+    }
 
     // run in parallel to optimize speed of these tasks
     const [jobsResult, moderationsInsertResult] = await Promise.allSettled([
-        Promise.allSettled(filteredProgressionTasks.map((progressionTask) => {
+        Promise.allSettled(validProgressionTasks.map((progressionTask) => {
             const { id: progressionTaskId, workerTaskId } = progressionTask;
             const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
 
@@ -236,7 +236,7 @@ async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
             });
         })),
 
-        supabaseClient.from("moderations").insert(filteredProgressionTasks.map((progressionTask) => {
+        supabaseClient.from("moderations").insert(validProgressionTasks.map((progressionTask) => {
             const { id: progressionTaskId, workerTaskId } = progressionTask;
             const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
 
@@ -266,6 +266,77 @@ async function addProgressionTaskJobs(options: AddProgressionTaskJobs) {
     return jobs;
 }
 
+async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
+    const { progressionTasks, roomId } = options;
+
+    // resolved = should be handled
+    // rejected = cooldown or something else is not verified
+    // undefined = should be skipped
+    const settledProgressionTasks = await Promise.allSettled(progressionTasks.map(async (progressionTask) => {
+        const { id: progressionTaskId, active, cooldown, maxAttempts } = progressionTask;
+        const { blockProgression = true, messageAmount, ms: cooldownMs } = cooldown ?? {};
+        const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
+
+        if (!active) {
+            return;
+        }
+
+        // check if we need to verify the amount of messages before adding the job
+        if (messageAmount) {
+            const newMessages = await getMessagesAfter(roomId, dayjs());
+            const newMessageAmount = newMessages.length;
+
+            // guard: check if we have enough messages
+            if (newMessageAmount < messageAmount) {
+                if (blockProgression) {
+                    throw Error(`Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
+                } else {
+                    return;
+                }
+            }
+        }
+
+        // check if we need to verify the cooldown before adding the job
+        if (cooldownMs) {
+            const moderations = await getModerationsByJobKey(jobKey, 1);
+            const lastModeration = moderations[0];
+            const lastModerationDate = dayjs(lastModeration?.created_at);
+            const isCoolingDown = lastModerationDate.add(cooldownMs, 'ms').isAfter(dayjs());
+
+            // guard: check if the cooldown is valid
+            if (isCoolingDown) {
+                if (blockProgression) {
+                    throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`);
+                } else {
+                    return;
+                }
+            }
+        }
+
+        // TODO: check maxAttempts
+
+        return progressionTask;
+    }));
+    const erroredProgressionTasks = settledProgressionTasks.filter((settledProgressionTask) => {
+        return settledProgressionTask.status === 'rejected';
+    });
+    const hasErroredProgressionTasks = erroredProgressionTasks.length > 0;
+    const fulfilledProgressionTasks = settledProgressionTasks.filter((settledProgressionTask) => {
+        return settledProgressionTask.status === 'fulfilled';
+    });
+    const settledValidProgressionTasks = fulfilledProgressionTasks.filter((fulfilledProgressionTask) => {
+        return fulfilledProgressionTask.status === 'fulfilled' && fulfilledProgressionTask.value !== undefined;
+    }) as PromiseFulfilledResult<ProgressionTask>[];
+    const validProgressionTasks = settledValidProgressionTasks.map((settledValidProgressionTask) => {
+        return settledValidProgressionTask.value;
+    });
+
+    return {
+        hasErroredProgressionTasks,
+        validProgressionTasks,
+    };
+}
+
 interface UpdateRoomStatusOptions {
     roomId: string;
     roomStatus: RoomStatus;
@@ -282,4 +353,38 @@ async function updateRoomStatus(options: UpdateRoomStatusOptions) {
     }).eq('id', roomId);
 
     helpers.logger.info(`Room ${roomId} has a new room status: ${roomStatus} (affected: ${newRoomData.count})`);
+}
+
+/**
+ * Get x amount of moderations for a specific job key.
+ */
+async function getModerationsByJobKey(jobKey: string, limit = 100) {
+    const moderationsData = await supabaseClient
+        .from('moderations')
+        .select()
+        .eq('job_key', jobKey)
+        .limit(limit);
+    const moderations = moderationsData?.data ?? [];
+
+    return moderations;
+}
+
+/**
+ * Get all the messages that are created after a certain time.
+ */
+async function getMessagesAfter(roomId: string, fromDate: Dayjs, limit = 100) {
+    const messagesData = await supabaseClient
+        .from('messages')
+        .select()
+        .eq('room_id', roomId)
+        .gte('created_at', fromDate.toISOString())
+        .limit(limit);
+    const messages = messagesData?.data ?? [];
+
+    return messages;
+}
+
+function generateProgressionJobKey(roomId: string, progressionTaskId: string) {
+    const jobKey = `room-${roomId}-progression-task-${progressionTaskId}`;
+    return jobKey;
 }

@@ -36,11 +36,6 @@ export async function getJobByKey(jobKey: string) {
     return job;
 }
 
-export function generateProgressionJobKey(roomId: string, progressionTaskId: string) {
-    const jobKey = `room-${roomId}-progression-task-${progressionTaskId}`;
-    return jobKey;
-}
-
 export type ModerationCompletionTuple = {
     job: Job;
     moderation: Moderation;
