@@ -9,9 +9,9 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
             You would like to introduce the topic mentioned below to the participants in a nifty way.
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: async (payload) => {
         const { roomId } = payload;
-        const topicContent = getTopicContentByRoomId(roomId);
+        const topicContent = await getTopicContentByRoomId(roomId);
 
         return topicContent;
     },

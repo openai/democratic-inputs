@@ -8,6 +8,7 @@ declare global {
         interface ProcessEnv {
             ORCHESTRATOR_ROLE: OrchestratorRole;
             OPENAI_API_KEY: string;
+            DATABASE_URL: string;
             SUPABASE_URL: string;
             SUPABASE_KEY: string;
             SENTRY_DSN: string;
@@ -15,24 +16,26 @@ declare global {
     }
 }
 
-if (!('SUPABASE_URL' in process.env)
-    || !('SUPABASE_KEY' in process.env)
-) {
-    throw new Error('Please set SUPABASE_URL and/or SUPABASE_KEY in your environment or in your .env file.');
-}
+const requiredEnvVars = [
+    'DATABASE_URL',
+    'SUPABASE_URL',
+    'SUPABASE_KEY',
+    'OPENAI_API_KEY',
+    'SENTRY_DSN',
+];
 
-if (!("OPENAI_API_KEY" in process.env)) {
-    throw new Error("Missing OPENAI_API_KEY environment variable. Please add it to your environment or .env file");
-}
-
-if (!("SENTRY_DSN" in process.env)) {
-    throw new Error("Missing SENTRY_DSN environment variable. Please add it to your environment or .env file");
+// Check for missing environment variables
+for (const requiredEnvVar of requiredEnvVars) {
+    if (!(requiredEnvVar in process.env)) {
+        throw new Error(`Missing ${requiredEnvVar} environment variable. Please add it to your environment or .env file`);
+    }
 }
 
 /* Environment variables */
 export const ORCHESTRATOR_ROLE: OrchestratorRole = process?.env?.ORCHESTRATOR_ROLE ?? 'all';
 export const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 export const SUPABASE_URL = process.env.SUPABASE_URL;
+export const DATABASE_URL = process.env.DATABASE_URL;
 export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 export const SENTRY_DSN = process.env.SENTRY_DSN;
 

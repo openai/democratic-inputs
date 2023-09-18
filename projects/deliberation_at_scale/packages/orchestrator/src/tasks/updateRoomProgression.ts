@@ -1,4 +1,4 @@
-import { Helpers } from "graphile-worker";
+import { Helpers, Job } from "graphile-worker";
 import { isObject, min } from "radash";
 
 import { progressionTopology } from "../config/toplogy";
@@ -112,6 +112,8 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
                 return;
             }
 
+            helpers.logger.info(`Falling back to room status ${fallbackRoomStatus} for room ${roomId} because of failed verifications: ${JSON.stringify(fallbackFailedProgressionTaskIds)}.`);
+
             // progress to the new status
             updateRoomStatus({
                 roomId,
@@ -143,6 +145,8 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         return;
     }
 
+    helpers.logger.info(`The next progression layer is ${nextProgressionLayer?.id} for room ${roomId}.`);
+
     // progress to the new status
     // NOTE: this can be done asynchronously
     if (ENABLE_ROOM_PROGRESSION) {
@@ -167,18 +171,19 @@ interface WaitForAllProgressionTasksOptions {
  */
 async function waitForAllProgressionTasks(options: WaitForAllProgressionTasksOptions) {
     const { helpers } = options;
-    const jobs = await addProgressionTaskJobs(options);
-    const jobIds = jobs.map((job) => {
+    const settledJobs = await addProgressionTaskJobs(options);
+    const jobs = settledJobs.map((job) => {
         if (job.status !== 'fulfilled') {
             return;
         }
 
-        return job.value.id;
-    }).filter((jobId): jobId is string => {
-        return !!jobId;
+        return job.value;
+    }).filter((job): job is Job => {
+        return !!job;
     });
+
     const completedModerationTuples = await waitForAllModerationCompletions({
-        jobIds,
+        jobs,
     });
     const failedModerationTuples = completedModerationTuples.filter((completedModerationTuple) => {
 

@@ -65,40 +65,44 @@ export interface StoreModerationResultOptions {
 export async function storeModerationResult(options: StoreModerationResultOptions) {
     const { jobKey, result, messageId, roomId, participantId } = options;
 
-    await supabaseClient.from("moderations").update({
+    const { error } = await supabaseClient.from("moderations").update({
         result,
-        completedAt: dayjs().toISOString(),
+        completed_at: dayjs().toISOString(),
         message_id: messageId,
         room_id: roomId,
         participant_id: participantId,
-    }).eq("job_key", jobKey).is("result", null);
+    }).eq("job_key", jobKey);
+
+    if (error) {
+        throw Error(`Could not store moderation result due to error: ${JSON.stringify(error)}`);
+    }
 }
 
 export async function getPopulatedRoom(roomId: string) {
-    const populatedRoomResult = await supabaseClient
-        .from("rooms")
-        .select(`
-            id,
-            active,
-            status_type,
-            topic_id,
-            external_room_id,
-            updated_at,
-            created_at,
-            topics (
-                id
-                active,
-                content,
-                original_topic_id,
-                updated_at,
-                created_at
-            )
-        `)
-        .eq("id", roomId)
-        .single();
-    const populatedRoom = populatedRoomResult.data;
+    // const populatedRoomResult = await supabaseClient
+    //     .from("rooms")
+    //     .select(`
+    //         id,
+    //         active,
+    //         status_type,
+    //         topic_id,
+    //         external_room_id,
+    //         updated_at,
+    //         created_at,
+    //         topics (
+    //             id
+    //             active,
+    //             content,
+    //             original_topic_id,
+    //             updated_at,
+    //             created_at
+    //         )
+    //     `)
+    //     .eq("id", roomId)
+    //     .maybeSingle();
+    // const populatedRoom = populatedRoomResult.data;
 
-    return populatedRoom;
+    // return populatedRoom;
 }
 
 export interface SelectMessageOptions {

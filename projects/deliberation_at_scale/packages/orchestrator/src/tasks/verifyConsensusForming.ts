@@ -9,7 +9,7 @@ import { PARTICIPANTS_PER_ROOM } from "../config/constants";
 export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async (payload) => {
         const { roomId } = payload;
-        const topicContent = getTopicContentByRoomId(roomId);
+        const topicContent = await getTopicContentByRoomId(roomId);
 
         return `
             You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants on the topic:
