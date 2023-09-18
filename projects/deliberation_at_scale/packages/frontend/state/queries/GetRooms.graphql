@@ -5,6 +5,7 @@ fragment SimpleRoom on rooms {
     ...SimpleRoomTopic
   }
   external_room_id
+  status_type
   updated_at
   created_at
 }

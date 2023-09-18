@@ -11,7 +11,7 @@ import { useAppSelector } from "@/state/store";
 export default function Index() {
     const currentRoomId = useAppSelector((state) => state.room.currentRoomId);
     const { user, authUser } = useProfile();
-    const room = useRoom({
+    const { room } = useRoom({
         roomId: currentRoomId,
     });
     const isLoggedIn = !!user && !!authUser;
@@ -26,7 +26,7 @@ export default function Index() {
                         {isLoggedIn && (
                             <div className="flex items-center gap-4">
                                 Hey, {user?.nick_name} ({authUser?.email})
-                                {room ? <p>Current room: {room.id}</p> : ''}
+                                {room ? <p>Current room: {room.id} ({room.status_type})</p> : ''}
                                 <button onClick={() => { push('/tests/rooms'); }} className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
                                     Switch Room
                                 </button>
