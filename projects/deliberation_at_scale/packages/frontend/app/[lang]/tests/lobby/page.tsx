@@ -1,17 +1,12 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { useGetTopicsQuery, useStartRoomMutation } from "@/generated/graphql";
 import useProfile from "@/hooks/useProfile";
-import { useAppDispatch } from "@/state/store";
-import { joinRoom } from "@/state/slices/room";
 import useLobby from "@/hooks/useLobby";
+import { ParticipantStatusType } from "@/generated/graphql";
 
 
 export default function Index() {
-    const { user, rooms } = useProfile();
-    const {participant, loading: participantLoading} = useLobby(user?.id);
+    const { user } = useProfile();
+    const { participant, loading: participantLoading, transferToRoom } = useLobby(user?.id);
 
     return (
         <div className="w-full flex flex-col items-center">
@@ -21,8 +16,19 @@ export default function Index() {
                 <br></br>
                 <h2>Waiting to join discussion</h2>
                 {
-                    participantLoading ? (<p>LOADING</p>) : 
-                    <p>{JSON.stringify(participant,null,4)}</p>
+                    participantLoading ? (<p>LOADING</p>) :
+                        <p>{JSON.stringify(participant, null, 4)}</p>
+                }
+                {
+                    participant?.status == ParticipantStatusType.WaitingForConfirmation ?
+                        <button onClick={async () => {
+                            // transfer to room
+                            await transferToRoom();
+                        }}>
+                            Join room
+                        </button>
+                        :
+                        null
                 }
             </div>
         </div >

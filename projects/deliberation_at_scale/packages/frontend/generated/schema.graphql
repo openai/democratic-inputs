@@ -146,17 +146,6 @@ type Mutation {
     filter: cross_pollinationsFilter
   ): cross_pollinationsDeleteResponse!
 
-  """Deletes zero or more records from the `job_results` collection"""
-  deleteFromjob_resultsCollection(
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: job_resultsFilter
-  ): job_resultsDeleteResponse!
-
   """Deletes zero or more records from the `messages` collection"""
   deleteFrommessagesCollection(
     """
@@ -262,9 +251,6 @@ type Mutation {
   """Adds one or more `cross_pollinations` records to the collection"""
   insertIntocross_pollinationsCollection(objects: [cross_pollinationsInsertInput!]!): cross_pollinationsInsertResponse
 
-  """Adds one or more `job_results` records to the collection"""
-  insertIntojob_resultsCollection(objects: [job_resultsInsertInput!]!): job_resultsInsertResponse
-
   """Adds one or more `messages` records to the collection"""
   insertIntomessagesCollection(objects: [messagesInsertInput!]!): messagesInsertResponse
 
@@ -323,22 +309,6 @@ type Mutation {
     """
     set: cross_pollinationsUpdateInput!
   ): cross_pollinationsUpdateResponse!
-
-  """Updates zero or more records in the `job_results` collection"""
-  updatejob_resultsCollection(
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: job_resultsFilter
-
-    """
-    Fields that are set will be updated for all records matching the `filter`
-    """
-    set: job_resultsUpdateInput!
-  ): job_resultsUpdateResponse!
 
   """Updates zero or more records in the `messages` collection"""
   updatemessagesCollection(
@@ -566,27 +536,6 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [cross_pollinationsOrderBy!]
   ): cross_pollinationsConnection
-
-  """A pagable collection of type `job_results`"""
-  job_resultsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: job_resultsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [job_resultsOrderBy!]
-  ): job_resultsConnection
 
   """A pagable collection of type `messages`"""
   messagesCollection(
@@ -1223,92 +1172,6 @@ input discussionTypeFilter {
   neq: discussionType
 }
 
-type job_results implements Node {
-  active: Boolean!
-  completion_time_ms: Int
-  created_at: Datetime!
-  id: UUID!
-  job_key: String!
-
-  """Globally Unique Record Identifier"""
-  nodeId: ID!
-  result: JSON!
-  updated_at: Datetime!
-}
-
-type job_resultsConnection {
-  edges: [job_resultsEdge!]!
-  pageInfo: PageInfo!
-}
-
-type job_resultsDeleteResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [job_results!]!
-}
-
-type job_resultsEdge {
-  cursor: String!
-  node: job_results!
-}
-
-input job_resultsFilter {
-  active: BooleanFilter
-  completion_time_ms: IntFilter
-  created_at: DatetimeFilter
-  id: UUIDFilter
-  job_key: StringFilter
-  nodeId: IDFilter
-  updated_at: DatetimeFilter
-}
-
-input job_resultsInsertInput {
-  active: Boolean
-  completion_time_ms: Int
-  created_at: Datetime
-  id: UUID
-  job_key: String
-  result: JSON
-  updated_at: Datetime
-}
-
-type job_resultsInsertResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [job_results!]!
-}
-
-input job_resultsOrderBy {
-  active: OrderByDirection
-  completion_time_ms: OrderByDirection
-  created_at: OrderByDirection
-  id: OrderByDirection
-  job_key: OrderByDirection
-  updated_at: OrderByDirection
-}
-
-input job_resultsUpdateInput {
-  active: Boolean
-  completion_time_ms: Int
-  created_at: Datetime
-  id: UUID
-  job_key: String
-  result: JSON
-  updated_at: Datetime
-}
-
-type job_resultsUpdateResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [job_results!]!
-}
-
 enum messageType {
   bot
   chat
@@ -1434,6 +1297,7 @@ type messages implements Node {
   participant_id: UUID
   participants: participants
   room_id: UUID
+  room_status_type: roomStatusType
   rooms: rooms
   timing_type: timingType!
   type: messageType!
@@ -1468,6 +1332,7 @@ input messagesFilter {
   original_message_id: UUIDFilter
   participant_id: UUIDFilter
   room_id: UUIDFilter
+  room_status_type: roomStatusTypeFilter
   timing_type: timingTypeFilter
   type: messageTypeFilter
   updated_at: DatetimeFilter
@@ -1483,6 +1348,7 @@ input messagesInsertInput {
   original_message_id: UUID
   participant_id: UUID
   room_id: UUID
+  room_status_type: roomStatusType
   timing_type: timingType
   type: messageType
   updated_at: Datetime
@@ -1505,6 +1371,7 @@ input messagesOrderBy {
   original_message_id: OrderByDirection
   participant_id: OrderByDirection
   room_id: OrderByDirection
+  room_status_type: OrderByDirection
   timing_type: OrderByDirection
   type: OrderByDirection
   updated_at: OrderByDirection
@@ -1520,6 +1387,7 @@ input messagesUpdateInput {
   original_message_id: UUID
   participant_id: UUID
   room_id: UUID
+  room_status_type: roomStatusType
   timing_type: timingType
   type: messageType
   updated_at: Datetime
@@ -1556,6 +1424,7 @@ input moderationTypeFilter {
 
 type moderations implements Node {
   active: Boolean!
+  completed_at: Datetime
   completion_id: UUID
   completions: completions
   completionsCollection(
@@ -1581,6 +1450,7 @@ type moderations implements Node {
   cross_pollination_id: UUID
   cross_pollinations: cross_pollinations
   id: UUID!
+  job_key: String
   message_id: UUID
   messages: messages
   moderation_id: UUID
@@ -1613,9 +1483,10 @@ type moderations implements Node {
   outcomes: outcomes
   participant_id: UUID
   participants: participants
+  result: JSON!
   room_id: UUID
   rooms: rooms
-  statement: String!
+  statement: String
   target_type: targetType
   topic_id: UUID
   topics: topics
@@ -1645,10 +1516,12 @@ type moderationsEdge {
 
 input moderationsFilter {
   active: BooleanFilter
+  completed_at: DatetimeFilter
   completion_id: UUIDFilter
   created_at: DatetimeFilter
   cross_pollination_id: UUIDFilter
   id: UUIDFilter
+  job_key: StringFilter
   message_id: UUIDFilter
   moderation_id: UUIDFilter
   nodeId: IDFilter
@@ -1666,15 +1539,18 @@ input moderationsFilter {
 
 input moderationsInsertInput {
   active: Boolean
+  completed_at: Datetime
   completion_id: UUID
   created_at: Datetime
   cross_pollination_id: UUID
   id: UUID
+  job_key: String
   message_id: UUID
   moderation_id: UUID
   opinion_id: UUID
   outcome_id: UUID
   participant_id: UUID
+  result: JSON
   room_id: UUID
   statement: String
   target_type: targetType
@@ -1694,10 +1570,12 @@ type moderationsInsertResponse {
 
 input moderationsOrderBy {
   active: OrderByDirection
+  completed_at: OrderByDirection
   completion_id: OrderByDirection
   created_at: OrderByDirection
   cross_pollination_id: OrderByDirection
   id: OrderByDirection
+  job_key: OrderByDirection
   message_id: OrderByDirection
   moderation_id: OrderByDirection
   opinion_id: OrderByDirection
@@ -1714,15 +1592,18 @@ input moderationsOrderBy {
 
 input moderationsUpdateInput {
   active: Boolean
+  completed_at: Datetime
   completion_id: UUID
   created_at: Datetime
   cross_pollination_id: UUID
   id: UUID
+  job_key: String
   message_id: UUID
   moderation_id: UUID
   opinion_id: UUID
   outcome_id: UUID
   participant_id: UUID
+  result: JSON
   room_id: UUID
   statement: String
   target_type: targetType
@@ -2392,10 +2273,13 @@ type participantsUpdateResponse {
 }
 
 enum roomStatusType {
+  close
   debate
+  group_intro
   informed
   results
   safe
+  topic_intro
 }
 
 """

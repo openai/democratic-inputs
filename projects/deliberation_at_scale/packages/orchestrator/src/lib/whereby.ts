@@ -1,6 +1,8 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
+import fetch from 'cross-fetch';
+
 
 declare global {
     namespace NodeJS {
@@ -14,6 +16,7 @@ const WHEREBY_API_URL = 'https://api.whereby.dev/v1/';
 
 // guard: check that the whereby token is present
 if (!('WHEREBY_BEARER_TOKEN' in process.env)) {
+    // eslint-disable-next-line no-console
     console.error('Please set WHEREBY_BEARER_TOKEN in your environment or in your .env file.');
     process.exit(1);
 }
@@ -33,18 +36,24 @@ interface CreateRoomResponse {
 **/
 export async function createRoom(endDate?: Date): Promise<CreateRoomResponse> {
     const meetingEnd = endDate?.toISOString() || new Date().toISOString();
-    const creationResult = await fetch(`${WHEREBY_API_URL}meetings`, {
+
+    const createRoomUrl = `${WHEREBY_API_URL}meetings`;
+    const headers = {
+        Authorization: `Bearer ${process.env.WHEREBY_BEARER_TOKEN}`,
+        "Content-Type": "application/json"
+    };
+    const body = {
+        endDate: meetingEnd,
+        fields: ['hostRoomUrl']
+    };
+
+    const creationResult = await fetch(createRoomUrl, {
         method: 'POST',
-        headers: {
-            Authorization: `Bearer ${process.env.WHEREBY_BEARER_TOKEN}`,
-            "Content-Type": 'application/json'
-        },
-        body: JSON.stringify({
-            endDate: meetingEnd,
-            fields: ['hostRoomUrl']
-        }),
+        headers,
+        body: JSON.stringify(body),
     });
-    return creationResult.res.json();
+
+    return creationResult.json();
 }
 
 const whereby = {

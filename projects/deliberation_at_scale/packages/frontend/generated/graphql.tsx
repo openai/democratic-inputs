@@ -122,8 +122,6 @@ export type Mutation = {
   deleteFromcompletionsCollection: CompletionsDeleteResponse;
   /** Deletes zero or more records from the `cross_pollinations` collection */
   deleteFromcross_pollinationsCollection: Cross_PollinationsDeleteResponse;
-  /** Deletes zero or more records from the `job_results` collection */
-  deleteFromjob_resultsCollection: Job_ResultsDeleteResponse;
   /** Deletes zero or more records from the `messages` collection */
   deleteFrommessagesCollection: MessagesDeleteResponse;
   /** Deletes zero or more records from the `moderations` collection */
@@ -146,8 +144,6 @@ export type Mutation = {
   insertIntocompletionsCollection?: Maybe<CompletionsInsertResponse>;
   /** Adds one or more `cross_pollinations` records to the collection */
   insertIntocross_pollinationsCollection?: Maybe<Cross_PollinationsInsertResponse>;
-  /** Adds one or more `job_results` records to the collection */
-  insertIntojob_resultsCollection?: Maybe<Job_ResultsInsertResponse>;
   /** Adds one or more `messages` records to the collection */
   insertIntomessagesCollection?: Maybe<MessagesInsertResponse>;
   /** Adds one or more `moderations` records to the collection */
@@ -170,8 +166,6 @@ export type Mutation = {
   updatecompletionsCollection: CompletionsUpdateResponse;
   /** Updates zero or more records in the `cross_pollinations` collection */
   updatecross_pollinationsCollection: Cross_PollinationsUpdateResponse;
-  /** Updates zero or more records in the `job_results` collection */
-  updatejob_resultsCollection: Job_ResultsUpdateResponse;
   /** Updates zero or more records in the `messages` collection */
   updatemessagesCollection: MessagesUpdateResponse;
   /** Updates zero or more records in the `moderations` collection */
@@ -204,13 +198,6 @@ export type MutationDeleteFromcompletionsCollectionArgs = {
 export type MutationDeleteFromcross_PollinationsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
   filter?: InputMaybe<Cross_PollinationsFilter>;
-};
-
-
-/** The root type for creating and mutating data */
-export type MutationDeleteFromjob_ResultsCollectionArgs = {
-  atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<Job_ResultsFilter>;
 };
 
 
@@ -290,12 +277,6 @@ export type MutationInsertIntocross_PollinationsCollectionArgs = {
 
 
 /** The root type for creating and mutating data */
-export type MutationInsertIntojob_ResultsCollectionArgs = {
-  objects: Array<Job_ResultsInsertInput>;
-};
-
-
-/** The root type for creating and mutating data */
 export type MutationInsertIntomessagesCollectionArgs = {
   objects: Array<MessagesInsertInput>;
 };
@@ -362,14 +343,6 @@ export type MutationUpdatecross_PollinationsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
   filter?: InputMaybe<Cross_PollinationsFilter>;
   set: Cross_PollinationsUpdateInput;
-};
-
-
-/** The root type for creating and mutating data */
-export type MutationUpdatejob_ResultsCollectionArgs = {
-  atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<Job_ResultsFilter>;
-  set: Job_ResultsUpdateInput;
 };
 
 
@@ -482,8 +455,6 @@ export type Query = {
   completionsCollection?: Maybe<CompletionsConnection>;
   /** A pagable collection of type `cross_pollinations` */
   cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
-  /** A pagable collection of type `job_results` */
-  job_resultsCollection?: Maybe<Job_ResultsConnection>;
   /** A pagable collection of type `messages` */
   messagesCollection?: Maybe<MessagesConnection>;
   /** A pagable collection of type `moderations` */
@@ -526,17 +497,6 @@ export type QueryCross_PollinationsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
-};
-
-
-/** The root type for querying data */
-export type QueryJob_ResultsCollectionArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<Job_ResultsFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<Job_ResultsOrderBy>>;
 };
 
 
@@ -1037,94 +997,6 @@ export type DiscussionTypeFilter = {
   neq?: InputMaybe<DiscussionType>;
 };
 
-export type Job_Results = Node & {
-  __typename?: 'job_results';
-  active: Scalars['Boolean']['output'];
-  completion_time_ms?: Maybe<Scalars['Int']['output']>;
-  created_at: Scalars['Datetime']['output'];
-  id: Scalars['UUID']['output'];
-  job_key: Scalars['String']['output'];
-  /** Globally Unique Record Identifier */
-  nodeId: Scalars['ID']['output'];
-  result: Scalars['JSON']['output'];
-  updated_at: Scalars['Datetime']['output'];
-};
-
-export type Job_ResultsConnection = {
-  __typename?: 'job_resultsConnection';
-  edges: Array<Job_ResultsEdge>;
-  pageInfo: PageInfo;
-};
-
-export type Job_ResultsDeleteResponse = {
-  __typename?: 'job_resultsDeleteResponse';
-  /** Count of the records impacted by the mutation */
-  affectedCount: Scalars['Int']['output'];
-  /** Array of records impacted by the mutation */
-  records: Array<Job_Results>;
-};
-
-export type Job_ResultsEdge = {
-  __typename?: 'job_resultsEdge';
-  cursor: Scalars['String']['output'];
-  node: Job_Results;
-};
-
-export type Job_ResultsFilter = {
-  active?: InputMaybe<BooleanFilter>;
-  completion_time_ms?: InputMaybe<IntFilter>;
-  created_at?: InputMaybe<DatetimeFilter>;
-  id?: InputMaybe<UuidFilter>;
-  job_key?: InputMaybe<StringFilter>;
-  nodeId?: InputMaybe<IdFilter>;
-  updated_at?: InputMaybe<DatetimeFilter>;
-};
-
-export type Job_ResultsInsertInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  completion_time_ms?: InputMaybe<Scalars['Int']['input']>;
-  created_at?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['UUID']['input']>;
-  job_key?: InputMaybe<Scalars['String']['input']>;
-  result?: InputMaybe<Scalars['JSON']['input']>;
-  updated_at?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-export type Job_ResultsInsertResponse = {
-  __typename?: 'job_resultsInsertResponse';
-  /** Count of the records impacted by the mutation */
-  affectedCount: Scalars['Int']['output'];
-  /** Array of records impacted by the mutation */
-  records: Array<Job_Results>;
-};
-
-export type Job_ResultsOrderBy = {
-  active?: InputMaybe<OrderByDirection>;
-  completion_time_ms?: InputMaybe<OrderByDirection>;
-  created_at?: InputMaybe<OrderByDirection>;
-  id?: InputMaybe<OrderByDirection>;
-  job_key?: InputMaybe<OrderByDirection>;
-  updated_at?: InputMaybe<OrderByDirection>;
-};
-
-export type Job_ResultsUpdateInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  completion_time_ms?: InputMaybe<Scalars['Int']['input']>;
-  created_at?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['UUID']['input']>;
-  job_key?: InputMaybe<Scalars['String']['input']>;
-  result?: InputMaybe<Scalars['JSON']['input']>;
-  updated_at?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-export type Job_ResultsUpdateResponse = {
-  __typename?: 'job_resultsUpdateResponse';
-  /** Count of the records impacted by the mutation */
-  affectedCount: Scalars['Int']['output'];
-  /** Array of records impacted by the mutation */
-  records: Array<Job_Results>;
-};
-
 export enum MessageType {
   Bot = 'bot',
   Chat = 'chat',
@@ -1158,6 +1030,7 @@ export type Messages = Node & {
   participant_id?: Maybe<Scalars['UUID']['output']>;
   participants?: Maybe<Participants>;
   room_id?: Maybe<Scalars['UUID']['output']>;
+  room_status_type?: Maybe<RoomStatusType>;
   rooms?: Maybe<Rooms>;
   timing_type: TimingType;
   type: MessageType;
@@ -1244,6 +1117,7 @@ export type MessagesFilter = {
   original_message_id?: InputMaybe<UuidFilter>;
   participant_id?: InputMaybe<UuidFilter>;
   room_id?: InputMaybe<UuidFilter>;
+  room_status_type?: InputMaybe<RoomStatusTypeFilter>;
   timing_type?: InputMaybe<TimingTypeFilter>;
   type?: InputMaybe<MessageTypeFilter>;
   updated_at?: InputMaybe<DatetimeFilter>;
@@ -1259,6 +1133,7 @@ export type MessagesInsertInput = {
   original_message_id?: InputMaybe<Scalars['UUID']['input']>;
   participant_id?: InputMaybe<Scalars['UUID']['input']>;
   room_id?: InputMaybe<Scalars['UUID']['input']>;
+  room_status_type?: InputMaybe<RoomStatusType>;
   timing_type?: InputMaybe<TimingType>;
   type?: InputMaybe<MessageType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1281,6 +1156,7 @@ export type MessagesOrderBy = {
   original_message_id?: InputMaybe<OrderByDirection>;
   participant_id?: InputMaybe<OrderByDirection>;
   room_id?: InputMaybe<OrderByDirection>;
+  room_status_type?: InputMaybe<OrderByDirection>;
   timing_type?: InputMaybe<OrderByDirection>;
   type?: InputMaybe<OrderByDirection>;
   updated_at?: InputMaybe<OrderByDirection>;
@@ -1296,6 +1172,7 @@ export type MessagesUpdateInput = {
   original_message_id?: InputMaybe<Scalars['UUID']['input']>;
   participant_id?: InputMaybe<Scalars['UUID']['input']>;
   room_id?: InputMaybe<Scalars['UUID']['input']>;
+  room_status_type?: InputMaybe<RoomStatusType>;
   timing_type?: InputMaybe<TimingType>;
   type?: InputMaybe<MessageType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1331,6 +1208,7 @@ export type ModerationTypeFilter = {
 export type Moderations = Node & {
   __typename?: 'moderations';
   active: Scalars['Boolean']['output'];
+  completed_at?: Maybe<Scalars['Datetime']['output']>;
   completion_id?: Maybe<Scalars['UUID']['output']>;
   completions?: Maybe<Completions>;
   completionsCollection?: Maybe<CompletionsConnection>;
@@ -1338,6 +1216,7 @@ export type Moderations = Node & {
   cross_pollination_id?: Maybe<Scalars['UUID']['output']>;
   cross_pollinations?: Maybe<Cross_Pollinations>;
   id: Scalars['UUID']['output'];
+  job_key?: Maybe<Scalars['String']['output']>;
   message_id?: Maybe<Scalars['UUID']['output']>;
   messages?: Maybe<Messages>;
   moderation_id?: Maybe<Scalars['UUID']['output']>;
@@ -1351,9 +1230,10 @@ export type Moderations = Node & {
   outcomes?: Maybe<Outcomes>;
   participant_id?: Maybe<Scalars['UUID']['output']>;
   participants?: Maybe<Participants>;
+  result: Scalars['JSON']['output'];
   room_id?: Maybe<Scalars['UUID']['output']>;
   rooms?: Maybe<Rooms>;
-  statement: Scalars['String']['output'];
+  statement?: Maybe<Scalars['String']['output']>;
   target_type?: Maybe<TargetType>;
   topic_id?: Maybe<Scalars['UUID']['output']>;
   topics?: Maybe<Topics>;
@@ -1405,10 +1285,12 @@ export type ModerationsEdge = {
 
 export type ModerationsFilter = {
   active?: InputMaybe<BooleanFilter>;
+  completed_at?: InputMaybe<DatetimeFilter>;
   completion_id?: InputMaybe<UuidFilter>;
   created_at?: InputMaybe<DatetimeFilter>;
   cross_pollination_id?: InputMaybe<UuidFilter>;
   id?: InputMaybe<UuidFilter>;
+  job_key?: InputMaybe<StringFilter>;
   message_id?: InputMaybe<UuidFilter>;
   moderation_id?: InputMaybe<UuidFilter>;
   nodeId?: InputMaybe<IdFilter>;
@@ -1426,15 +1308,18 @@ export type ModerationsFilter = {
 
 export type ModerationsInsertInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  completed_at?: InputMaybe<Scalars['Datetime']['input']>;
   completion_id?: InputMaybe<Scalars['UUID']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   cross_pollination_id?: InputMaybe<Scalars['UUID']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  job_key?: InputMaybe<Scalars['String']['input']>;
   message_id?: InputMaybe<Scalars['UUID']['input']>;
   moderation_id?: InputMaybe<Scalars['UUID']['input']>;
   opinion_id?: InputMaybe<Scalars['UUID']['input']>;
   outcome_id?: InputMaybe<Scalars['UUID']['input']>;
   participant_id?: InputMaybe<Scalars['UUID']['input']>;
+  result?: InputMaybe<Scalars['JSON']['input']>;
   room_id?: InputMaybe<Scalars['UUID']['input']>;
   statement?: InputMaybe<Scalars['String']['input']>;
   target_type?: InputMaybe<TargetType>;
@@ -1454,10 +1339,12 @@ export type ModerationsInsertResponse = {
 
 export type ModerationsOrderBy = {
   active?: InputMaybe<OrderByDirection>;
+  completed_at?: InputMaybe<OrderByDirection>;
   completion_id?: InputMaybe<OrderByDirection>;
   created_at?: InputMaybe<OrderByDirection>;
   cross_pollination_id?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
+  job_key?: InputMaybe<OrderByDirection>;
   message_id?: InputMaybe<OrderByDirection>;
   moderation_id?: InputMaybe<OrderByDirection>;
   opinion_id?: InputMaybe<OrderByDirection>;
@@ -1474,15 +1361,18 @@ export type ModerationsOrderBy = {
 
 export type ModerationsUpdateInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  completed_at?: InputMaybe<Scalars['Datetime']['input']>;
   completion_id?: InputMaybe<Scalars['UUID']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   cross_pollination_id?: InputMaybe<Scalars['UUID']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  job_key?: InputMaybe<Scalars['String']['input']>;
   message_id?: InputMaybe<Scalars['UUID']['input']>;
   moderation_id?: InputMaybe<Scalars['UUID']['input']>;
   opinion_id?: InputMaybe<Scalars['UUID']['input']>;
   outcome_id?: InputMaybe<Scalars['UUID']['input']>;
   participant_id?: InputMaybe<Scalars['UUID']['input']>;
+  result?: InputMaybe<Scalars['JSON']['input']>;
   room_id?: InputMaybe<Scalars['UUID']['input']>;
   statement?: InputMaybe<Scalars['String']['input']>;
   target_type?: InputMaybe<TargetType>;
@@ -2058,10 +1948,13 @@ export type ParticipantsUpdateResponse = {
 };
 
 export enum RoomStatusType {
+  Close = 'close',
   Debate = 'debate',
+  GroupIntro = 'group_intro',
   Informed = 'informed',
   Results = 'results',
-  Safe = 'safe'
+  Safe = 'safe',
+  TopicIntro = 'topic_intro'
 }
 
 /** Boolean expression comparing fields on type "roomStatusType" */
@@ -2784,7 +2677,10 @@ export type CreateParticipantMutationResult = Apollo.MutationResult<CreatePartic
 export type CreateParticipantMutationOptions = Apollo.BaseMutationOptions<CreateParticipantMutation, CreateParticipantMutationVariables>;
 export const EnterRoomDocument = gql`
     mutation EnterRoom($participantID: UUID!) {
-  updateparticipantsCollection(filter: {id: {eq: $participantID}}, set: {}) {
+  updateparticipantsCollection(
+    filter: {id: {eq: $participantID}}
+    set: {status: transfering_to_room}
+  ) {
     affectedCount
   }
 }
@@ -2818,7 +2714,7 @@ export type EnterRoomMutationOptions = Apollo.BaseMutationOptions<EnterRoomMutat
 export const GetLobbyParticipantFromUserDocument = gql`
     query GetLobbyParticipantFromUser($userId: UUID!) {
   participantsCollection(
-    filter: {user_id: {eq: $userId}, status: {eq: queued}, room_id: {is: NULL}, active: {eq: true}}
+    filter: {user_id: {eq: $userId}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
     first: 1
   ) {
     edges {

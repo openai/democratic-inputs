@@ -3,13 +3,16 @@ import supabase from "../lib/supabase";
 import { Helpers, Logger, quickAddJob } from "graphile-worker";
 import { createRoom } from "../lib/whereby";
 
-const MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM = 1;
+// TODO: import this from the constants
+const PARTICIPANTS_PER_ROOM = 3;
+const MAXIMUM_MEETING_LENGTH_MINUTES = 60;
+
 
 // if somebody enters the lobby a participant should be created for a user
 // if somebody leaves the lobby the participant should be removed from the user
 // to check if somebody is in the lobby and active the user sends a ping every second to signal that the participant is still in the lobby
 // after a certain period the user will be seen as inactive, the participant will be removed.
-// if more  than 4 participants are in the lobby some sort of algorithm needs to be used to assign people
+// if more than N participants are in the lobby some sort of algorithm needs to be used to assign people
 // this should be linked to the other groups effort which have the Python script for assigning good groups
 
 
@@ -39,8 +42,6 @@ async function removeInactiveParticipants(logger: Logger) {
         .update({ active: false })
         .eq('status', "queued")
         .lt('last_seen_at', UTCToISOString(currentTimestamp - inactiveTimeMilliseconds));
-
-    logger.info(`current time ${UTCToISOString(currentTimestamp)}`);
 
     // deactivate participants when they are incative for more than x minutes
     // TODO: check if this is supposed to be here. This might be better done in the roomManager
@@ -72,38 +73,38 @@ function randomlySelectFromArray<Type>(arr: Array<Type>): Type {
 async function createWherebyRoomAndAssignParticipants(particpantIDs: string[], topic_ids: string[], logger: Logger) {
     // creates a room with a random topic and updates the participants
     try {
-        // assume the room will last for an hour. If the room needs to be maintained longer, please provide an end date to the create room function
-        const newRoom = await createRoom();
+        const roomEndtime = new Date(
+            Date.now() + MAXIMUM_MEETING_LENGTH_MINUTES * 60 * 1000
+        );
+        const newRoom = await createRoom(roomEndtime);
 
         // create a new room in the database
         const insertRoomResult = await supabase.from('rooms').upsert({
             active: true,
             topic_id: randomlySelectFromArray(topic_ids),
             starts_at: new Date().toISOString(),
-            created_at: new Date().toISOString(),
-            update_at: new Date().toISOString(),
             external_room_id: newRoom.roomURL,
         }).select();
+
 
         if (insertRoomResult.error || !insertRoomResult.data[0].id) {
             throw new Error('creation of room failed');
         }
         const roomId = insertRoomResult.data[0].id;
 
-        logger.log(`created room with room ID: ${roomId}`);
+        logger.info(`created room with room ID: ${roomId}`);
+
         // now assign the room to the participants
         const updateParticipantsPromises = particpantIDs.map((participant) => {
             return supabase.from('participants').update({
-                id: participant,
                 room_id: roomId,
                 status: 'waiting_for_confirmation',
-            });
+            }).eq('id', participant);
         });
 
         await Promise.all(updateParticipantsPromises);
-
     } catch (error) {
-        logger.error(`Failed in creating a Whereby room. Got the following error: ${error}`);
+        logger.error(`Failed in creating a Whereby room. Got the following error: ${JSON.stringify(error, null, 2)}`);
     }
 }
 
@@ -135,13 +136,13 @@ async function assignParticipantsToRooms(logger: Logger) {
 
     // for now check how many participants we have. If more than a certain amount of users assign them to a room randomly
     const participants = await supabase
-    .from('participants')
-    .select()
-    .eq('active', true)
-    .eq('status', 'queued');
+        .from('participants')
+        .select()
+        .eq('active', true)
+        .eq('status', 'queued');
 
-    logger.log(`current participant count: ${participants?.data?.length} ${JSON.stringify(participants)}`);
-    if (((participants?.data?.length || 0) < MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM) || !participants?.data) {
+    logger.info(`current participant count: ${participants?.data?.length} ${JSON.stringify(participants)}`);
+    if (((participants?.data?.length || 0) < PARTICIPANTS_PER_ROOM) || !participants?.data) {
         return;
     }
     // will sort the participants randomly for now and assign four of them per room
@@ -163,9 +164,9 @@ async function assignParticipantsToRooms(logger: Logger) {
 
     // assign participants to a whereby room per 4 participants
     const assignRoomPromises = [];
-    while (shuffledParticipants.length >= MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM) {
+    while (shuffledParticipants.length >= PARTICIPANTS_PER_ROOM) {
         const currentParticipants = [];
-        for (let i = 0; i < MINIMUM_NUMBER_OF_PARTICIPANTS_FOR_ASSIGNMENT_TO_ROOM; i++) {
+        for (let i = 0; i < PARTICIPANTS_PER_ROOM; i++) {
             const currentParticipant = shuffledParticipants.pop();
             if (currentParticipant?.id) {
                 currentParticipants.push(currentParticipant?.id);
@@ -194,7 +195,7 @@ export default async function lobbyTask(
 ) {
     const { logger } = helpers;
     try {
-        // await removeInactiveParticipants(logger);
+        await removeInactiveParticipants(logger);
         await assignParticipantsToRooms(logger);
     } catch (error) {
         logger.error(`Error in lobby task. Error: ${error}`);

@@ -3,10 +3,10 @@ require('dotenv').config();
 import { quickAddJob } from "graphile-worker";
 
 async function main() {
-    // quickAddJob({}, "summarize", 0, {
-        // jobKey: "summarize",
-        // jobKeyMode: "preserve_run_at",
-    // });
+    quickAddJob({}, "summarize", 0, {
+        jobKey: "summarize",
+        jobKeyMode: "preserve_run_at",
+    });
     quickAddJob({}, "lobby", 0, {
         jobKey: "lobby",
         jobKeyMode: "preserve_run_at",
