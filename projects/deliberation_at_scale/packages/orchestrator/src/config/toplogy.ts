@@ -26,6 +26,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'groupIntro-enrichGroupIntroduction',
                     workerTaskId: 'enrichGroupIntroduction',
+                    maxAttempts: 3,
                     cooldown: {
                         durationMs: 60 * ONE_SECOND_MS,
                     },

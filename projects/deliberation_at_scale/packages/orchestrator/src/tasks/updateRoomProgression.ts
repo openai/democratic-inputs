@@ -1,14 +1,15 @@
 import { Helpers, Job } from "graphile-worker";
 import { isObject, min } from "radash";
+import dayjs from "dayjs";
 
 import { progressionTopology } from "../config/toplogy";
 import { supabaseClient, Moderation } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
 import { BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "../types";
 import { Database } from "../generated/database-public.types";
-import dayjs, { Dayjs } from "dayjs";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
 import { ENABLE_ROOM_PROGRESSION } from "../config/constants";
+import { getRoomById, updateRoomStatus, getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey, getMessagesAfter } from "../utilities/moderatorTasks";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -320,6 +321,7 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
 
             // guard: check if we have failed moderations
             if (moderationAmount >= maxAttempts) {
+                helpers.logger.info(`The maximum amount of attempts has been reached for job ${jobKey}. Attempts: ${moderationAmount}, max attempts: ${maxAttempts}.`);
                 return;
             }
         }
@@ -342,6 +344,7 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
                     if (blockProgression) {
                         throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`);
                     } else {
+                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down, but should NOT block progress. Cooldown: ${cooldownMs}ms.`);
                         return;
                     }
                 }
@@ -363,6 +366,7 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
                     if (blockProgression) {
                         throw Error(`Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
                     } else {
+                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} does not have enough new messages, but should NOT block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
                         return;
                     }
                 }
@@ -390,94 +394,6 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
         erroredProgressionTasks,
         validProgressionTasks,
     };
-}
-
-interface UpdateRoomStatusOptions {
-    roomId: string;
-    roomStatus: RoomStatus;
-    helpers: Helpers
-}
-
-/**
- * Update the room status in the database.
- */
-async function updateRoomStatus(options: UpdateRoomStatusOptions) {
-    const { roomId, roomStatus, helpers } = options;
-    const newRoomData = await supabaseClient.from('rooms').update({
-        status_type: roomStatus,
-    }).eq('id', roomId);
-
-    helpers.logger.info(`Room ${roomId} has a new room status: ${roomStatus} (affected: ${newRoomData.count})`);
-}
-
-/**
- * Get x amount of moderations for a specific job key.
- */
-async function getCompletedModerationsByJobKey(jobKey: string, limit = 100) {
-    const moderationsData = await supabaseClient
-        .from('moderations')
-        .select()
-        .eq('active', true)
-        .eq('job_key', jobKey)
-        .not('completed_at', 'is', null)
-        .order('created_at', { ascending: false })
-        .limit(limit);
-    const moderations = moderationsData?.data ?? [];
-
-    return moderations;
-}
-
-/**
- * Get the last moderation for a certain job key.
- */
-async function getLastCompletedModerationByJobKey(jobKey: string) {
-    const moderations = await getCompletedModerationsByJobKey(jobKey, 1);
-    const lastModeration = moderations?.[0];
-
-    return lastModeration;
-}
-
-interface GetMessagesAfterOptions {
-    roomId: string;
-    fromDate?: Dayjs;
-    limit?: number;
-}
-
-/**
- * Get all the messages that are created after a certain time.
- */
-async function getMessagesAfter(options: GetMessagesAfterOptions) {
-    const { roomId, fromDate, limit = 100 } = options;
-    let messageStatement = supabaseClient
-        .from('messages')
-        .select()
-        .eq('active', true)
-        .eq('room_id', roomId)
-        .order('created_at', { ascending: false })
-        .limit(limit);
-
-    if (fromDate) {
-        messageStatement = messageStatement.gte('created_at', fromDate.toISOString());
-    }
-
-    const messagesData = await messageStatement;
-    const messages = messagesData?.data ?? [];
-
-    return messages;
-}
-
-/**
- * Get the room by ID
- */
-async function getRoomById(roomId: string) {
-    const roomData = await supabaseClient
-        .from('rooms')
-        .select()
-        .eq('active', true)
-        .eq('id', roomId)
-        .limit(1);
-
-    return roomData.data?.[0];
 }
 
 /**

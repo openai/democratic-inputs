@@ -1,10 +1,11 @@
 import { Helpers } from "graphile-worker";
 import { isEmpty } from "radash";
+import dayjs, { Dayjs } from "dayjs";
 
 import { Json } from "../generated/database-public.types";
 import { EnrichFunctionCompletionResult, VerificationFunctionCompletionResult, createEnrichFunctionCompletion, createVerificationFunctionCompletion } from "../lib/openai";
-import { storeModerationResult, sendBotMessage, Message } from "../lib/supabase";
-import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload, ProgressionHistoryMessageContext } from "../types";
+import { supabaseClient, MessageType } from "../lib/supabase";
+import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload, ProgressionHistoryMessageContext, RoomStatus } from "../types";
 
 export interface CreateModeratorTaskOptions<PayloadType, ResultType> {
     getTaskInstruction: (payload: PayloadType) => Promise<string> | string;
@@ -110,7 +111,8 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
             throw Error(`The bot message content is invalid for the moderator task with key ${jobKey}, result: ${JSON.stringify(taskResult)}`);
         }
 
-        helpers.logger.info(`The moderator task with key ${jobKey} has been completed with the following result: ${JSON.stringify(taskResult)}`);
+        helpers.logger.info(`The moderator task with key ${jobKey} has been completed with the following result:`);
+        helpers.logger.info(JSON.stringify(taskResult, null, 2));
 
         // execute these in parallel to each other
         await Promise.allSettled([
@@ -134,26 +136,236 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
 }
 
 export async function getMessageContentForProgressionWorker(payload: BaseProgressionWorkerTaskPayload) {
-    const { roomId, progressionTask } = payload;
+    const { roomId, jobKey, progressionTask } = payload;
     const messageContext = progressionTask.context?.messages;
-    const messages = await getMessagesByContext(roomId, messageContext);
+    const [messagesResult, participantsResult] = await Promise.allSettled([
+        getMessagesByContext(roomId, messageContext),
+        getParticipantsByRoomId(roomId),
+    ]);
+
+    if (messagesResult.status === 'rejected' || participantsResult.status === 'rejected') {
+        throw Error(`Could not get the messages or participants for the progression task with job key ${jobKey}.`);
+    }
+
+    const messages = messagesResult?.value ?? [];
+    const participants = participantsResult?.value ?? [];
+    const getParticipantName = (participantId: string | null) => {
+        const participant = participants.find((participant) => participant.id === participantId);
+        const { nick_name: name } = participant ?? {};
+        return name ?? participantId ?? 'unknown';
+    };
+
     const content = messages.map((message) => {
         const { content, participant_id: participantId } = message;
+        const participantName = getParticipantName(participantId);
 
-        return `Participant ${participantId}: ${content}`;
+        return `Participant ${participantName}: ${content}`;
     }).join('\n');
 
     return content;
 }
 
 export async function getMessagesByContext(roomId: string, context?: ProgressionHistoryMessageContext) {
+    const { amount, durationMs, roomStatuses } = context ?? {};
+    let statement = supabaseClient
+        .from("messages")
+        .select()
+        .in("type", ["chat", "voice"])
+        .eq("room_id", roomId)
+        .order("created_at", { ascending: true });
 
-    // TODO: get the messages from the database
-    return [] as Message[];
+    if (durationMs) {
+        const fromDate = dayjs().subtract(durationMs, 'ms').toISOString();
+        statement = statement.gte("created_at", fromDate);
+    }
+
+    if (amount) {
+        statement = statement.limit(amount);
+    }
+
+    if (roomStatuses) {
+        statement = statement.in("room_status_type", roomStatuses);
+    }
+
+    const messagesData = await statement;
+    const messages = messagesData?.data ?? [];
+
+    return messages;
 }
 
 export async function getTopicContentByRoomId(roomId: string) {
+    const room = await getRoomById(roomId);
+    const topicId = room?.topic_id;
 
-    // TODO: get topic from the database
-    return `Students are not allowed to use AI technology for their exams.`;
+    if (!topicId) {
+        throw Error(`Could not get valid topic content for room ${roomId} because there is no topic ID.`);
+    }
+
+    const topic = await getTopicById(topicId);
+    const { content } = topic ?? {};
+
+    if (!content) {
+        throw Error(`Could not get valid topic content for topic ${topicId}.`);
+    }
+
+    return content;
+}
+
+async function getParticipantsByRoomId(roomId: string) {
+    const participantsData = await supabaseClient
+        .from("participants")
+        .select()
+        .eq("room_id", roomId);
+
+    const participants = participantsData?.data ?? [];
+
+    return participants;
+}
+
+interface SendMessageOptions {
+    active?: boolean;
+    type: MessageType;
+    roomId: string;
+    content: string;
+}
+
+async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
+    return sendMessage({
+        ...options,
+        type: 'bot',
+    });
+}
+
+async function sendMessage(options: SendMessageOptions) {
+    const { active = true, type, roomId, content } = options;
+
+    await supabaseClient.from("messages").insert({
+        active,
+        type,
+        room_id: roomId,
+        content,
+    });
+}
+
+export interface StoreModerationResultOptions {
+    jobKey: string;
+    result: Json;
+    messageId?: string | null;
+    roomId?: string | null;
+    participantId?: string | null;
+}
+
+export async function storeModerationResult(options: StoreModerationResultOptions) {
+    const { jobKey, result, messageId, roomId, participantId } = options;
+
+    const { error } = await supabaseClient.from("moderations").update({
+        result,
+        completed_at: dayjs().toISOString(),
+        message_id: messageId,
+        room_id: roomId,
+        participant_id: participantId,
+    }).eq("job_key", jobKey);
+
+    if (error) {
+        throw Error(`Could not store moderation result due to error: ${JSON.stringify(error)}`);
+    }
+}
+
+export interface UpdateRoomStatusOptions {
+    roomId: string;
+    roomStatus: RoomStatus;
+    helpers: Helpers
+}
+
+/**
+ * Update the room status in the database.
+ */
+export async function updateRoomStatus(options: UpdateRoomStatusOptions) {
+    const { roomId, roomStatus, helpers } = options;
+    const newRoomData = await supabaseClient.from('rooms').update({
+        status_type: roomStatus,
+    }).eq('id', roomId);
+
+    helpers.logger.info(`Room ${roomId} has a new room status: ${roomStatus} (affected: ${newRoomData.count})`);
+}
+
+/**
+ * Get x amount of moderations for a specific job key.
+ */
+export async function getCompletedModerationsByJobKey(jobKey: string, limit = 100) {
+    const moderationsData = await supabaseClient
+        .from('moderations')
+        .select()
+        .eq('active', true)
+        .eq('job_key', jobKey)
+        .not('completed_at', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+    const moderations = moderationsData?.data ?? [];
+
+    return moderations;
+}
+
+/**
+ * Get the last moderation for a certain job key.
+ */
+export async function getLastCompletedModerationByJobKey(jobKey: string) {
+    const moderations = await getCompletedModerationsByJobKey(jobKey, 1);
+    const lastModeration = moderations?.[0];
+
+    return lastModeration;
+}
+
+export interface GetMessagesAfterOptions {
+    roomId: string;
+    fromDate?: Dayjs;
+    limit?: number;
+}
+
+/**
+ * Get all the messages that are created after a certain time.
+ */
+export async function getMessagesAfter(options: GetMessagesAfterOptions) {
+    const { roomId, fromDate, limit = 100 } = options;
+    let messageStatement = supabaseClient
+        .from('messages')
+        .select()
+        .eq('active', true)
+        .eq('room_id', roomId)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+    if (fromDate) {
+        messageStatement = messageStatement.gte('created_at', fromDate.toISOString());
+    }
+
+    const messagesData = await messageStatement;
+    const messages = messagesData?.data ?? [];
+
+    return messages;
+}
+
+/**
+ * Get the room by ID
+ */
+export async function getRoomById(roomId: string) {
+    const roomData = await supabaseClient
+        .from('rooms')
+        .select()
+        .eq('active', true)
+        .eq('id', roomId)
+        .limit(1);
+
+    return roomData.data?.[0];
+}
+
+export async function getTopicById(topicId: string) {
+    const topicData = await supabaseClient
+        .from('topics')
+        .select()
+        .eq('active', true)
+        .eq('id', topicId)
+        .limit(1);
+
+    return topicData.data?.[0];
 }
