@@ -1,0 +1,1 @@
+ALTER TABLE "rooms" ALTER COLUMN "status_type" SET DEFAULT 'group_intro';
