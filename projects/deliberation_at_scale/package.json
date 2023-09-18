@@ -8,6 +8,7 @@
     "test": "nx run-many -t test",
     "start": "nx run-many --targets=start",
     "clean": "nx run-many -t clean && rimraf ./node_modules",
+    "codegen": "nx run-many -t codegen && nx run-many -t db:generate-types",
     "lint": "nx run-many -t lint",
     "build": "nx run-many -t build"
   },
