@@ -13,6 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: app/[lang]/page.tsx:9
+#: app/[lang]/page.tsx:13
 msgid "Landing page"
 msgstr "Landing page"
+
+#: components/UserInput/index.tsx:30
+msgid "Submit"
+msgstr "Submit"
+
+#: components/UserInput/index.tsx:26
+msgid "Tap to type"
+msgstr "Tap to type"

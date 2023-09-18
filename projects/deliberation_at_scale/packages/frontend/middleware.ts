@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
     const res = NextResponse.next();
 
     // Check if the pathname is missing a locale
-    const pathname = req.nextUrl.pathname;
+    const { pathname, search } = req.nextUrl;
     const pathnameIsMissingLocale = locales.every((l) => (
         !pathname.startsWith(`/${l}/`) && pathname !== `/${l}`
     ));
@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
         const locale = match(languages, locales, defaultLocale);
 
         return NextResponse.redirect(
-            new URL(`/${locale}/${pathname}`, req.url)
+            new URL(`/${locale}/${pathname}${search}`, req.url)
         );
     }
 
