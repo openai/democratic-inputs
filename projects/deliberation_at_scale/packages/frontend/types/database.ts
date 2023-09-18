@@ -24,7 +24,7 @@ export interface Database {
                     participant_id: string | null
                     prompt: string
                     room_id: string | null
-                    target_type: Database["public"]["Enums"]["targetType"]
+                    target_type: Database["public"]["Enums"]["targetType"] | null
                     topic_id: string | null
                     type: Database["public"]["Enums"]["completionType"]
                     updated_at: string
@@ -45,7 +45,7 @@ export interface Database {
                     participant_id?: string | null
                     prompt: string
                     room_id?: string | null
-                    target_type: Database["public"]["Enums"]["targetType"]
+                    target_type?: Database["public"]["Enums"]["targetType"] | null
                     topic_id?: string | null
                     type: Database["public"]["Enums"]["completionType"]
                     updated_at?: string
@@ -66,7 +66,7 @@ export interface Database {
                     participant_id?: string | null
                     prompt?: string
                     room_id?: string | null
-                    target_type?: Database["public"]["Enums"]["targetType"]
+                    target_type?: Database["public"]["Enums"]["targetType"] | null
                     topic_id?: string | null
                     type?: Database["public"]["Enums"]["completionType"]
                     updated_at?: string
@@ -219,6 +219,7 @@ export interface Database {
                     original_message_id: string | null
                     participant_id: string | null
                     room_id: string | null
+                    room_status_type: Database["public"]["Enums"]["roomStatusType"] | null
                     timing_type: Database["public"]["Enums"]["timingType"]
                     type: Database["public"]["Enums"]["messageType"]
                     updated_at: string
@@ -233,6 +234,9 @@ export interface Database {
                     original_message_id?: string | null
                     participant_id?: string | null
                     room_id?: string | null
+                    room_status_type?:
+                    | Database["public"]["Enums"]["roomStatusType"]
+                    | null
                     timing_type?: Database["public"]["Enums"]["timingType"]
                     type?: Database["public"]["Enums"]["messageType"]
                     updated_at?: string
@@ -247,6 +251,9 @@ export interface Database {
                     original_message_id?: string | null
                     participant_id?: string | null
                     room_id?: string | null
+                    room_status_type?:
+                    | Database["public"]["Enums"]["roomStatusType"]
+                    | null
                     timing_type?: Database["public"]["Enums"]["timingType"]
                     type?: Database["public"]["Enums"]["messageType"]
                     updated_at?: string
@@ -276,58 +283,67 @@ export interface Database {
             moderations: {
                 Row: {
                     active: boolean
+                    completed_at: string | null
                     completion_id: string | null
                     created_at: string
                     cross_pollination_id: string | null
                     id: string
+                    job_key: string | null
                     message_id: string | null
                     moderation_id: string | null
                     opinion_id: string | null
                     outcome_id: string | null
                     participant_id: string | null
+                    result: Json
                     room_id: string | null
-                    statement: string
-                    target_type: Database["public"]["Enums"]["targetType"]
+                    statement: string | null
+                    target_type: Database["public"]["Enums"]["targetType"] | null
                     topic_id: string | null
-                    type: Database["public"]["Enums"]["moderationType"]
+                    type: string
                     updated_at: string
                     user_id: string | null
                 }
                 Insert: {
                     active?: boolean
+                    completed_at?: string | null
                     completion_id?: string | null
                     created_at?: string
                     cross_pollination_id?: string | null
                     id?: string
+                    job_key?: string | null
                     message_id?: string | null
                     moderation_id?: string | null
                     opinion_id?: string | null
                     outcome_id?: string | null
                     participant_id?: string | null
+                    result?: Json
                     room_id?: string | null
-                    statement?: string
-                    target_type: Database["public"]["Enums"]["targetType"]
+                    statement?: string | null
+                    target_type?: Database["public"]["Enums"]["targetType"] | null
                     topic_id?: string | null
-                    type: Database["public"]["Enums"]["moderationType"]
+                    type: string
                     updated_at?: string
                     user_id?: string | null
                 }
                 Update: {
                     active?: boolean
+                    completed_at?: string | null
                     completion_id?: string | null
                     created_at?: string
                     cross_pollination_id?: string | null
                     id?: string
+                    job_key?: string | null
                     message_id?: string | null
                     moderation_id?: string | null
                     opinion_id?: string | null
                     outcome_id?: string | null
                     participant_id?: string | null
+                    result?: Json
                     room_id?: string | null
-                    statement?: string
-                    target_type?: Database["public"]["Enums"]["targetType"]
+                    statement?: string | null
+                    target_type?: Database["public"]["Enums"]["targetType"] | null
                     topic_id?: string | null
-                    type?: Database["public"]["Enums"]["moderationType"]
+                    type?: string
                     updated_at?: string
                     user_id?: string | null
                 }
@@ -436,6 +452,7 @@ export interface Database {
             }
             outcome_sources: {
                 Row: {
+                    active: boolean
                     created_at: string
                     id: string
                     message_id: string
@@ -443,6 +460,7 @@ export interface Database {
                     updated_at: string
                 }
                 Insert: {
+                    active?: boolean
                     created_at?: string
                     id?: string
                     message_id: string
@@ -450,6 +468,7 @@ export interface Database {
                     updated_at?: string
                 }
                 Update: {
+                    active?: boolean
                     created_at?: string
                     id?: string
                     message_id?: string
@@ -513,10 +532,11 @@ export interface Database {
                     active: boolean
                     created_at: string
                     id: string
+                    last_seen_at: string
                     nick_name: string
                     participation_score: number
-                    ready: boolean
                     room_id: string | null
+                    status: Database["public"]["Enums"]["participantStatusType"]
                     updated_at: string
                     user_id: string | null
                 }
@@ -524,10 +544,11 @@ export interface Database {
                     active?: boolean
                     created_at?: string
                     id?: string
+                    last_seen_at?: string
                     nick_name?: string
                     participation_score?: number
-                    ready?: boolean
                     room_id?: string | null
+                    status?: Database["public"]["Enums"]["participantStatusType"]
                     updated_at?: string
                     user_id?: string | null
                 }
@@ -535,10 +556,11 @@ export interface Database {
                     active?: boolean
                     created_at?: string
                     id?: string
+                    last_seen_at?: string
                     nick_name?: string
                     participation_score?: number
-                    ready?: boolean
                     room_id?: string | null
+                    status?: Database["public"]["Enums"]["participantStatusType"]
                     updated_at?: string
                     user_id?: string | null
                 }
@@ -563,8 +585,8 @@ export interface Database {
                     created_at: string
                     external_room_id: string | null
                     id: string
-                    room_status_type: Database["public"]["Enums"]["roomStatusType"]
-                    starts_at: string
+                    starts_at: string | null
+                    status_type: Database["public"]["Enums"]["roomStatusType"]
                     topic_id: string
                     updated_at: string
                 }
@@ -573,8 +595,8 @@ export interface Database {
                     created_at?: string
                     external_room_id?: string | null
                     id?: string
-                    room_status_type?: Database["public"]["Enums"]["roomStatusType"]
-                    starts_at?: string
+                    starts_at?: string | null
+                    status_type?: Database["public"]["Enums"]["roomStatusType"]
                     topic_id: string
                     updated_at?: string
                 }
@@ -583,8 +605,8 @@ export interface Database {
                     created_at?: string
                     external_room_id?: string | null
                     id?: string
-                    room_status_type?: Database["public"]["Enums"]["roomStatusType"]
-                    starts_at?: string
+                    starts_at?: string | null
+                    status_type?: Database["public"]["Enums"]["roomStatusType"]
                     topic_id?: string
                     updated_at?: string
                 }
@@ -675,7 +697,7 @@ export interface Database {
             }
         }
         Enums: {
-            completionType: "gpt4"
+            completionType: "gpt4" | "gpt"
             crossPollinationType: "discussion" | "closing" | "afterwards"
             discussionType: "chat" | "voice" | "bot"
             messageType: "chat" | "voice" | "bot"
@@ -689,7 +711,20 @@ export interface Database {
             | "clarification"
             opinionType: "relevance_range" | "agreement_range" | "statement"
             outcomeType: "milestone" | "consensus" | "off_topic"
-            roomStatusType: "safe" | "informed" | "debate" | "results"
+            participantStatusType:
+            | "queued"
+            | "waiting_for_confirmation"
+            | "transfering_to_room"
+            | "in_room"
+            | "end_of_session"
+            roomStatusType:
+            | "safe"
+            | "informed"
+            | "debate"
+            | "results"
+            | "group_intro"
+            | "topic_intro"
+            | "close"
             targetType:
             | "user"
             | "topic"
@@ -709,40 +744,4 @@ export interface Database {
             [_ in never]: never
         }
     }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      current_user_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-    }
-    Enums: {
-      completionType: "gpt4"
-      crossPollinationType: "discussion" | "closing" | "afterwards"
-      discussionType: "chat" | "voice" | "bot"
-      messageType: "chat" | "voice" | "bot"
-      moderationType: "harrashment" | "consensus" | "spam" | "off_topic" | "other" | "clarification"
-      opinionType: "relevance_range" | "agreement_range" | "statement"
-      outcomeType: "milestone" | "consensus" | "off_topic"
-      targetType:
-        | "user"
-        | "topic"
-        | "room"
-        | "participant"
-        | "message"
-        | "outcome"
-        | "opinion"
-        | "cross_pollination"
-        | "completion"
-        | "moderation"
-      timingType: "before_room" | "during_room" | "after_room" | "standalone"
-      topicType: "original" | "remixed"
-      visibilityType: "public" | "private"
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
 }

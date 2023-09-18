@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
-import dayjs from 'dayjs';
 
 import { SUPABASE_URL, SUPABASE_KEY } from "../config/constants";
-import { Database, Json } from 'src/generated/database-public.types';
+import { Database } from 'src/generated/database-public.types';
 
 export const supabaseClient = createClient<Database>(
     SUPABASE_URL,
