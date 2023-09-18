@@ -1,7 +1,8 @@
 import { quickAddJob } from "graphile-worker";
+import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, RealtimeChannel, RealtimePostgresChangesFilter, RealtimePostgresChangesPayload } from "@supabase/supabase-js";
+
 import { supabaseClient, Message } from "./lib/supabase";
 import objectHash from "object-hash";
-import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, RealtimeChannel, RealtimePostgresChangesFilter, RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { BaseMessageWorkerTaskPayload, WorkerTaskId } from "./types";
 
 const listeners: RealtimeChannel[] = [];

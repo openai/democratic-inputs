@@ -20,8 +20,7 @@ export interface UpdateRoomProgressionPayload {
  */
 export default async function updateRoomProgression(payload: UpdateRoomProgressionPayload, helpers: Helpers) {
     const { roomId } = payload;
-    const roomData = await supabaseClient.from('rooms').select().eq('id', roomId);
-    const room = roomData?.data?.[0];
+    const room = await getRoomById(roomId);
 
     // guard: check if the room is valid
     if (!roomId || !room) {
@@ -69,8 +68,12 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         }),
     ]);
 
-    if (currentLayerVerificationsResult.status === 'rejected' || fallbackVerificationResults.status === 'rejected') {
-        throw Error(`Could not update progression because one of the verification groups failed. Room ID: ${roomId}`);
+    if (currentLayerVerificationsResult.status === 'rejected') {
+        throw Error(`Could not update progression, because the current layer verifications failed. Room ID: ${roomId}, Reason: ${currentLayerVerificationsResult.reason}`);
+    }
+
+    if (fallbackVerificationResults.status === 'rejected') {
+        throw Error(`Could not update progression, because the fallback layer verifications failed. Room ID: ${roomId}, Reason: ${fallbackVerificationResults.reason}`);
     }
 
     const { failedProgressionTaskIds: currentFailedProgressionTaskIds } = currentLayerVerificationsResult.value;
@@ -241,10 +244,10 @@ interface ProgressionTasksContextOptions {
  */
 async function addProgressionTaskJobs(options: ProgressionTasksContextOptions) {
     const { roomId, helpers } = options;
-    const { hasErroredProgressionTasks, validProgressionTasks } = await filterProgressionTasks(options);
+    const { hasErroredProgressionTasks, validProgressionTasks, erroredProgressionTasks } = await filterProgressionTasks(options);
 
     if (hasErroredProgressionTasks) {
-        throw Error(`Could not add progression task jobs for room ${roomId} because one of the verifications failed before executing the jobs. This is likely due to a cooldown which is set to blocking.`);
+        throw Error(`Could not add progression task jobs for room ${roomId} because one of the verifications failed before executing the jobs. Failed verifications: ${JSON.stringify(erroredProgressionTasks)}`);
     }
 
     // run in parallel to optimize speed of these tasks
@@ -296,7 +299,7 @@ async function addProgressionTaskJobs(options: ProgressionTasksContextOptions) {
 }
 
 async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
-    const { progressionTasks, roomId } = options;
+    const { progressionTasks, roomId, helpers } = options;
 
     // resolved = should be handled
     // rejected = cooldown or something else is not verified
@@ -310,51 +313,61 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
             return;
         }
 
-        // // check if we need to verify the cooldown or new message amount before adding the job
-        // if (messageAmount || cooldownMs) {
-        //     const lastModeration = await getLastModerationByJobKey(jobKey);
-        //     const lastModerationDate = dayjs(lastModeration?.created_at);
+        // skip this task if we have reached the maximum amount of attempts
+        if (maxAttempts) {
+            const moderations = await getCompletedModerationsByJobKey(jobKey, maxAttempts);
+            const moderationAmount = moderations?.length ?? 0;
 
-        //     // check if we need to verify the amount of messages before adding the job
-        //     if (messageAmount) {
-        //         const newMessages = await getMessagesAfter(roomId, lastModerationDate);
-        //         const newMessageAmount = newMessages.length;
+            // guard: check if we have failed moderations
+            if (moderationAmount >= maxAttempts) {
+                return;
+            }
+        }
 
-        //         // guard: check if we have enough messages
-        //         if (newMessageAmount < messageAmount) {
-        //             if (blockProgression) {
-        //                 throw Error(`Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
-        //             } else {
-        //                 return;
-        //             }
-        //         }
-        //     }
+        // check if we need to verify the cooldown or new message amount before adding the job
+        if (messageAmount || cooldownMs) {
+            const lastModeration = await getLastCompletedModerationByJobKey(jobKey);
+            const lastModerationDate = dayjs(lastModeration?.created_at);
 
-        //     // check if we need to verify the cooldown before adding the job
-        //     if (cooldownMs) {
-        //         const isCoolingDown = lastModerationDate.add(cooldownMs, 'ms').isAfter(dayjs());
+            // check if we need to verify the cooldown before adding the job
+            // NOTE: first check this, because no fetching of messages is required
+            if (cooldownMs && lastModeration) {
+                const cooldownRemainder = lastModerationDate.add(cooldownMs, 'ms').diff(dayjs(), 'ms');
+                const isCoolingDown = cooldownRemainder > 0;
 
-        //         // guard: check if the cooldown is valid
-        //         if (isCoolingDown) {
-        //             if (blockProgression) {
-        //                 throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`);
-        //             } else {
-        //                 return;
-        //             }
-        //         }
-        //     }
-        // }
+                // guard: check if the cooldown is valid
+                if (isCoolingDown) {
+                    helpers.logger.info(`The cooldown is still active for job ${jobKey}. Cooldown remaining: ${cooldownRemainder}ms.`);
 
-        // // skip this task if we have reached the maximum amount of attempts
-        // if (maxAttempts) {
-        //     const moderations = await getModerationsByJobKey(jobKey, maxAttempts);
-        //     const moderationAmount = moderations.length;
+                    if (blockProgression) {
+                        throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`);
+                    } else {
+                        return;
+                    }
+                }
+            }
 
-        //     // guard: check if we have failed moderations
-        //     if (moderationAmount >= maxAttempts) {
-        //         return;
-        //     }
-        // }
+            // check if we need to verify the amount of messages before adding the job
+            if (messageAmount && lastModeration) {
+                const fromDate = (lastModeration ? lastModerationDate : undefined);
+                const newMessages = await getMessagesAfter({
+                    roomId,
+                    fromDate,
+                });
+                const newMessageAmount = newMessages.length;
+
+                // guard: check if we have enough messages
+                if (newMessageAmount < messageAmount) {
+                    helpers.logger.info(`The new amount of messages after ${lastModerationDate} is not enough for job ${jobKey}. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
+
+                    if (blockProgression) {
+                        throw Error(`Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
+                    } else {
+                        return;
+                    }
+                }
+            }
+        }
 
         return progressionTask;
     }));
@@ -374,6 +387,7 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
 
     return {
         hasErroredProgressionTasks,
+        erroredProgressionTasks,
         validProgressionTasks,
     };
 }
@@ -385,7 +399,7 @@ interface UpdateRoomStatusOptions {
 }
 
 /**
- * Helper to update the room status in the database.
+ * Update the room status in the database.
  */
 async function updateRoomStatus(options: UpdateRoomStatusOptions) {
     const { roomId, roomStatus, helpers } = options;
@@ -399,11 +413,13 @@ async function updateRoomStatus(options: UpdateRoomStatusOptions) {
 /**
  * Get x amount of moderations for a specific job key.
  */
-async function getModerationsByJobKey(jobKey: string, limit = 100) {
+async function getCompletedModerationsByJobKey(jobKey: string, limit = 100) {
     const moderationsData = await supabaseClient
         .from('moderations')
         .select()
+        .eq('active', true)
         .eq('job_key', jobKey)
+        .not('completed_at', 'is', null)
         .order('created_at', { ascending: false })
         .limit(limit);
     const moderations = moderationsData?.data ?? [];
@@ -414,29 +430,59 @@ async function getModerationsByJobKey(jobKey: string, limit = 100) {
 /**
  * Get the last moderation for a certain job key.
  */
-export async function getLastModerationByJobKey(jobKey: string) {
-    const moderations = await getModerationsByJobKey(jobKey, 1);
+async function getLastCompletedModerationByJobKey(jobKey: string) {
+    const moderations = await getCompletedModerationsByJobKey(jobKey, 1);
     const lastModeration = moderations?.[0];
 
     return lastModeration;
 }
 
+interface GetMessagesAfterOptions {
+    roomId: string;
+    fromDate?: Dayjs;
+    limit?: number;
+}
+
 /**
  * Get all the messages that are created after a certain time.
  */
-async function getMessagesAfter(roomId: string, fromDate: Dayjs, limit = 100) {
-    const messagesData = await supabaseClient
+async function getMessagesAfter(options: GetMessagesAfterOptions) {
+    const { roomId, fromDate, limit = 100 } = options;
+    let messageStatement = supabaseClient
         .from('messages')
         .select()
+        .eq('active', true)
         .eq('room_id', roomId)
-        .gte('created_at', fromDate.toISOString())
         .order('created_at', { ascending: false })
         .limit(limit);
+
+    if (fromDate) {
+        messageStatement = messageStatement.gte('created_at', fromDate.toISOString());
+    }
+
+    const messagesData = await messageStatement;
     const messages = messagesData?.data ?? [];
 
     return messages;
 }
 
+/**
+ * Get the room by ID
+ */
+async function getRoomById(roomId: string) {
+    const roomData = await supabaseClient
+        .from('rooms')
+        .select()
+        .eq('active', true)
+        .eq('id', roomId)
+        .limit(1);
+
+    return roomData.data?.[0];
+}
+
+/**
+ * Generate a job key for a progression task to be unique for each room.
+ */
 function generateProgressionJobKey(roomId: string, progressionTaskId: string) {
     const jobKey = `room-${roomId}-progression-task-${progressionTaskId}`;
     return jobKey;

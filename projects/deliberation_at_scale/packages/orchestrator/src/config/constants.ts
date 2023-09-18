@@ -41,8 +41,8 @@ export const SENTRY_DSN = process.env.SENTRY_DSN;
 
 /* Progression */
 export const ENABLE_ROOM_TESTING = true;
-export const TEST_ROOM_ID_ALLOWLIST = ['50361572-6e7d-4390-bc1b-55725846056a'];
-export const ENABLE_ROOM_PROGRESSION = !ENABLE_ROOM_TESTING || false;
+export const TEST_ROOM_ID_ALLOWLIST = ['f9aeae5f-e5bc-476a-9f31-9482eaadd28d'];
+export const ENABLE_ROOM_PROGRESSION = false || !ENABLE_ROOM_TESTING;
 
 /* Deliberation */
 export const PARTICIPANTS_PER_ROOM = 3;

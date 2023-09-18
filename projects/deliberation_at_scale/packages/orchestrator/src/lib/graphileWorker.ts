@@ -67,6 +67,7 @@ export async function waitForAllModerationCompletions(options: AllCompletionsWai
 
                 supabaseClient.from("moderations")
                     .select()
+                    .eq('active', true)
                     .eq("job_key", jobKey)
                     .gt("completed_at", jobRunnedAt)
                     .order("created_at", { ascending: false })

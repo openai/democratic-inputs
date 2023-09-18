@@ -13,7 +13,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     maxAttempts: 3,
                     cooldown: {
                         messageAmount: 1,
-                        durationMs: 10 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
