@@ -26,17 +26,13 @@ export interface BaseProgressionWorkerTaskPayload extends BaseRoomWorkerTaskPayl
     progressionTask: ProgressionTask;
 }
 
-export interface BaseEnrichtmentWorkerResponse {
-    enrichtment: string;
-}
-
 /** The root of the topology containing all the different layers where the deliberation can go through. */
 export interface ProgressionTopology {
     layers: ProgressionLayer[];
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type LayerId = 'introductionParticipants' | 'introductionTopic' | 'safe' | 'informed' | 'conversate' | 'results' | 'conclude';
+export type LayerId = 'groupIntro' | 'topicIntro' | 'safe' | 'informed' | 'debate' | 'results' | 'close';
 
 export type RoomStatus = Database['public']['Enums']['roomStatusType'];
 
@@ -47,25 +43,34 @@ export interface ProgressionLayer {
     /** The room status that should be persisted on the room when progressed to this layer. */
     roomStatus: RoomStatus;
     /** All the required verifications to progress to the next layer, with supporting moderation.  */
-    verifications: ProgressionVerificationTask[];
+    verifications?: ProgressionVerificationTask[];
     /** Additional moderations that can enrich the deliberation, but don't have any influence on the progression itself. */
     enrichments?: ProgressionEnrichmentTask[];
 }
 
 /** All the possible tasks that can be registered in the job system */
 export type WorkerTaskId =
-    'verifyBadLanguage' |
-    'verifyIntroductionParticipants' |
-    'verifyDifficultLanguage' |
+    'enrichClosure' |
+    'enrichConsensusProposal' |
+    'enrichConsensusStimulation' |
+    'enrichEqualParticipation' |
+    'enrichGroupIntroduction' |
+    'enrichInformedBehaviour' |
+    'enrichSafeBehaviour' |
+    'enrichTopicIntroduction' |
+    'triggerRoomProgressionUpdates' |
+    'updateRoomProgression' |
+    'verifyConsensusForming' |
+    'verifyEasyLanguage' |
+    'verifyEasyMessage' |
     'verifyEmotionalWellbeing' |
-    'enrichModeratorMessageSafeBehaviour' |
-    'enrichModeratorMessageParticipantIntroduction' |
-    'verifyOffTopic' |
-    'enrichModeratorMessageInformedBehaviour' |
     'verifyEnoughContent' |
     'verifyEqualParticipation' |
-    'verifyConsensusForming' |
-    'enrichModeratorMessageStimulateConsensus';
+    'verifyGroupIntroduction' |
+    'verifyOffTopic' |
+    'verifySafeLanguage' |
+    'verifySafeMessage'
+;
 
 /** A single task within a progression layer. */
 export interface ProgressionTask {

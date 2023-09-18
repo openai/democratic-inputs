@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ORCHESTRATOR_ROLE } from "./constants";
+import { ORCHESTRATOR_ROLE } from "./config/constants";
 import { startListener, stopListener } from "./listener";
 import { startRunner, stopRunner } from "./runner";
 import { startScheduler, stopScheduler } from "./scheduler";

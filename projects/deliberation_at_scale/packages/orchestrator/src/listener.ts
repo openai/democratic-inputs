@@ -1,7 +1,8 @@
 import { quickAddJob } from "graphile-worker";
-import supabaseClient from "./lib/supabase";
+import { supabaseClient, Message } from "./lib/supabase";
 import objectHash from "object-hash";
 import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, RealtimeChannel, RealtimePostgresChangesFilter, RealtimePostgresChangesPayload } from "@supabase/supabase-js";
+import { BaseMessageWorkerTaskPayload, WorkerTaskId } from "./types";
 
 const listeners: RealtimeChannel[] = [];
 
@@ -24,22 +25,34 @@ async function startMessageListener() {
         table: "messages",
         filter: "type=in.(chat, voice)",
     }, (payload) => {
-        const newMessage = payload.new;
+        const newMessage = payload.new as Message;
+        const { id, room_id: roomId } = newMessage;
+        const jobKeyPostfix = `message-${id}`;
+        const workerTasks: Array<{ taskId: WorkerTaskId, maxAttempts: number }> = [
+            { taskId: 'verifySafeMessage', maxAttempts: 25 },
+            { taskId: 'verifyEasyMessage', maxAttempts: 1 },
+        ];
 
-        // add logic for supabase triggers.
-        // for every message from supabase, quickAdd job the moderation task with the message as payload
-        // quickAddJob({}, "badLanguage", newMessage, {
-        //     jobKey: "badLanguage",
-        //     jobKeyMode: "preserve_run_at",
-        // });
-        // quickAddJob({}, "difficultLanguage", newMessage, {
-        //     jobKey: "difficultLanguage",
-        //     jobKeyMode: "preserve_run_at",
-        // });
-        // quickAddJob({}, "equalParticipation_2", newMessage, {
-        //     jobKey: "equalParticipation_2",
-        //     jobKeyMode: "preserve_run_at",
-        // });
+        // guard: skip invalid message
+        if (!roomId) {
+            return;
+        }
+
+        workerTasks.map((workerTask) => {
+            const { taskId: workerTaskId, maxAttempts } = workerTask;
+            const jobKey = `${workerTaskId}-${jobKeyPostfix}`;
+            const jobPayload: BaseMessageWorkerTaskPayload = {
+                message: newMessage,
+                roomId,
+                jobKey,
+            };
+
+            quickAddJob({}, workerTaskId, jobPayload, {
+                jobKey,
+                jobKeyMode: "preserve_run_at",
+                maxAttempts,
+            });
+        });
     });
 }
 

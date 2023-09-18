@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 
-import { SUPABASE_URL, SUPABASE_KEY } from "../constants";
+import { SUPABASE_URL, SUPABASE_KEY } from "../config/constants";
 import { Database, Json } from 'src/generated/database-public.types';
 
 export const supabaseClient = createClient<Database>(
@@ -73,11 +73,32 @@ export async function storeModerationResult(options: StoreModerationResultOption
         participant_id: participantId,
     }).eq("job_key", jobKey).is("result", null);
 }
-export async function getTopic(roomId: string) {
-    const topicId = supabaseClient.from("rooms").select("topic_id").eq("id", roomId);
-    const topic = supabaseClient.from("topics").select("content").eq("id", topicId);
 
-    return topic;
+export async function getPopulatedRoom(roomId: string) {
+    const populatedRoomResult = await supabaseClient
+        .from("rooms")
+        .select(`
+            id,
+            active,
+            status_type,
+            topic_id,
+            external_room_id,
+            updated_at,
+            created_at,
+            topics (
+                id
+                active,
+                content,
+                original_topic_id,
+                updated_at,
+                created_at
+            )
+        `)
+        .eq("id", roomId)
+        .single();
+    const populatedRoom = populatedRoomResult.data;
+
+    return populatedRoom;
 }
 
 export interface SelectMessageOptions {

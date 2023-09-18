@@ -1,11 +1,16 @@
 import type { CronItem } from 'graphile-worker';
 
-const crontab: CronItem[] = [
+interface ToggleableCronItem extends CronItem {
+    active: boolean;
+}
+
+const crontab: ToggleableCronItem[] = [
     {
+        active: true,
         pattern: '* * * * *',
         task: 'scheduleRoomProgressionUpdates',
         identifier: 'scheduleRoomProgressionUpdates',
     },
 ];
 
-export default crontab;
+export default crontab.filter((cronItem) => cronItem.active);

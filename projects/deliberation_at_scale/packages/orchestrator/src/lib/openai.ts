@@ -1,5 +1,5 @@
 import { OpenAI } from "openai";
-import { OPENAI_API_KEY } from "../constants";
+import { OPENAI_API_KEY } from "../config/constants";
 import { ChatCompletionCreateParams } from "openai/resources/chat";
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions";
 import { supabaseClient } from "./supabase";
@@ -25,7 +25,6 @@ export interface VerificationFunctionCompletionOptions {
 
 export interface VerificationFunctionCompletionResult {
     verified: boolean;
-    systemReason: string;
     moderatedReason: string;
 }
 
@@ -45,7 +44,12 @@ export async function createVerificationFunctionCompletion(options: Verification
         taskContent,
         functionSchema: {
             name: "is_verified",
-            description: `Determine whether: ${taskInstruction}`,
+            description: `
+                Determine whether the content is verified or not while including a reason for moderation.
+
+                Follow these instructions:
+                ${taskInstruction}
+            `,
             parameters: {
                 type: "object",
                 properties: {
@@ -53,28 +57,22 @@ export async function createVerificationFunctionCompletion(options: Verification
                         type: "boolean",
                         description: `Result of whether this is the case: ${taskInstruction}.`,
                     },
-                    systemReason: {
-                        type: "string",
-                        description: `An explanation of why the result is verified or not.`,
-                    },
                     moderatedReason: {
                         type: "string",
-                        description: `An explanation from the moderator towards the participants of why the result is verified or not.`,
-                    }
+                        description: `A short and easy to read explanation towards the participants of a discussion of why the result is verified or not.`,
+                    },
                 },
-                required: ["verified", "reason", "moderated"],
+                required: ["verified", "moderatedReason"],
             },
         },
     });
     const parsedArguments = JSON.parse(functionCall?.arguments ?? '{}');
     const verified = !!parsedArguments?.verified;
-    const systemReason = (parsedArguments?.systemReason as string) ?? '';
     const moderatedReason = (parsedArguments?.moderatedReason as string) ?? '';
 
     return {
         verified,
-        systemReason,
-        moderatedReason
+        moderatedReason,
     };
 }
 
@@ -92,7 +90,7 @@ export async function createEnrichFunctionCompletion(options: EnrichFunctionComp
                     enrichtment: {
                         type: "string",
                         description: `Communication of the moderator towards the participants during a discussion.`,
-                    }
+                    },
                 },
                 required: ["enrichtment"],
             },
@@ -120,7 +118,7 @@ export async function createFunctionCompletion(options: FunctionCompletionOption
         openaiClient.chat.completions.create({
             model,
             messages : [{
-                role: 'system',
+                role: 'user',
                 content: taskInstruction,
             }, {
                 role: 'user',
@@ -143,8 +141,13 @@ export async function createFunctionCompletion(options: FunctionCompletionOption
         }),
     ]);
 
-    // guard: check statuses of promises
-    if (completionResult.status !== 'fulfilled' || completionLogResult.status !== 'fulfilled') {
+    if (completionResult.status !== 'fulfilled') {
+        console.error(`Failed to get a valid function completion: ${completionResult.reason}`);
+        return;
+    }
+
+    if (completionLogResult.status !== 'fulfilled') {
+        console.error(`Failed to log the function completion: ${completionLogResult.reason}`);
         return;
     }
 

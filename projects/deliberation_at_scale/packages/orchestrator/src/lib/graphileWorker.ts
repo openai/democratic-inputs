@@ -1,7 +1,7 @@
 import { Job, WorkerEventMap } from "graphile-worker";
 import { createClient } from '@supabase/supabase-js';
 
-import { SUPABASE_URL, SUPABASE_KEY, ONE_SECOND_MS } from "../constants";
+import { SUPABASE_URL, SUPABASE_KEY, ONE_SECOND_MS } from "../config/constants";
 import { Database } from 'src/generated/database-graphile_worker.types';
 import { getRunner } from "../runner";
 import { Moderation, supabaseClient } from "./supabase";

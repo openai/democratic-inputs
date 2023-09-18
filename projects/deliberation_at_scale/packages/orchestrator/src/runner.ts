@@ -1,5 +1,5 @@
 import { Runner, parseCronItems, run } from "graphile-worker";
-import crontab from "./crontab";
+import crontab from "./config/crontab";
 
 let runner: Runner;
 
