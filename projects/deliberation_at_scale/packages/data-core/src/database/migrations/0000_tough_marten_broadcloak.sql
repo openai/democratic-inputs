@@ -17,7 +17,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "moderationType" AS ENUM('harrashment', 'spam', 'off_topic', 'other');
+ CREATE TYPE "moderationType" AS ENUM('harrashment', 'consensus', 'spam', 'off_topic', 'other');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -415,3 +415,32 @@ BEGIN
     END LOOP;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION listen_insert_auth_user() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO public.users (auth_user_id) VALUES(NEW.id);
+    RETURN NEW;
+END;
+$$ SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER listen_insert_auth_user BEFORE INSERT ON auth.users
+FOR EACH ROW EXECUTE FUNCTION listen_insert_auth_user();
+
+CREATE OR REPLACE FUNCTION add_room_status_to_message() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF NEW.room_status_type IS NULL THEN
+    NEW.room_status_type := (SELECT status_type FROM rooms WHERE id = NEW.room_id);
+  END IF;
+  RETURN NEW;
+END;
+$$ SECURITY DEFINER;
+
+
+CREATE OR REPLACE TRIGGER message_insert_trigger
+BEFORE INSERT ON messages
+FOR EACH ROW
+EXECUTE PROCEDURE add_room_status_to_message();

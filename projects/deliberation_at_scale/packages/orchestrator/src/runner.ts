@@ -1,54 +1,48 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
-import { parseCronItems, run, quickAddJob } from "graphile-worker";
-import crontab from "./crontab";
-import supabase from "./lib/supabase";
+/* eslint-disable @typescript-eslint/no-var-requires */
+import { Runner, RunnerOptions, WorkerUtils, makeWorkerUtils, parseCronItems, run } from "graphile-worker";
+import crontab from "./config/crontab";
+import { DATABASE_URL, ENABLE_TASK_TESTING } from "./config/constants";
 
-async function main() {
-    const runner = await run({
-        concurrency: 5,
+let runner: Runner;
+let runnerUtils: WorkerUtils;
+
+export async function startRunner() {
+    const runnerOptions: RunnerOptions = {
+        concurrency: 10,
         taskDirectory: `${__dirname}/tasks`,
         parsedCronItems: parseCronItems(crontab),
         noPreparedStatements: true,
+    };
+
+    if (ENABLE_TASK_TESTING) {
+        runnerOptions.taskDirectory = undefined;
+        runnerOptions.taskList = {
+            triggerRoomProgressionUpdates: require('./tasks/triggerRoomProgressionUpdates').default,
+            updateRoomProgression: require('./tasks/updateRoomProgression').default,
+            verifyConsensusForming: require('./tasks/verifyConsensusForming').default,
+            verifySafeLanguage: require('./tasks/verifySafeLanguage').default,
+            verifyOffTopic: require('./tasks/verifyOffTopic').default,
+            verifyEasyLanguage: require('./tasks/verifyEasyLanguage').default,
+            verifyGroupIntroduction: require('./tasks/verifyGroupIntroduction').default,
+            enrichGroupIntroduction: require('./tasks/enrichGroupIntroduction').default,
+        };
+    }
+
+    runner = await run(runnerOptions);
+    runnerUtils = await makeWorkerUtils({
+        connectionString: DATABASE_URL,
     });
-    quickAddJob({}, "lobby", 0, {
-        jobKey: "lobby",
-        jobKeyMode: "preserve_run_at",
-    });
-    // listenForNewMessages();
     await runner.promise;
 }
 
-async function listenForNewMessages() {
-    const messageInsertListener = supabase
-        .channel("supabase_realtime")
-        .on(
-            "postgres_changes",
-            {
-                event: "INSERT",
-                schema: "public",
-                table: "messages",
-                filter: "type=eq.chat",
-            },
-            (payload) => {
-                const newMessage = payload.new;
-                console.log(newMessage);
-                // add logic for supabase triggers.
-                // for every message from supabase, quickAdd job the moderation task with the message as payload
-                quickAddJob({}, "moderate", newMessage, {
-                    jobKey: "moderate",
-                    jobKeyMode: "preserve_run_at",
-                });
-            }
-        )
-        .subscribe();
-
-    return () => {
-        messageInsertListener.unsubscribe();
-    };
+export function getRunner() {
+    return runner;
 }
 
-main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+export function getRunnerUtils() {
+    return runnerUtils;
+}
+
+export async function stopRunner() {
+    await runner?.stop();
+}

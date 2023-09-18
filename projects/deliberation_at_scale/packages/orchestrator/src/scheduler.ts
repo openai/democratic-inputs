@@ -1,10 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
 import { quickAddJob } from "graphile-worker";
 
-async function main() {
-    quickAddJob({}, "summarize", 0, {
-        jobKey: "summarize",
+export async function startScheduler() {
+    quickAddJob({}, "triggerRoomProgressionUpdates", {}, {
+        jobKey: "triggerRoomProgressionUpdates",
         jobKeyMode: "preserve_run_at",
     });
     quickAddJob({}, "lobby", 0, {
@@ -13,9 +11,14 @@ async function main() {
     });
     // add logic for supabase triggers.
     // for every message from supabase, quickAdd job the moderation task with the message as payload
+
+    // TMP: for testing
+    // quickAddJob({}, "verifyEasyLanguage", 0, {
+    //     jobKey: "difficultLanguage",
+    //     jobKeyMode: "preserve_run_at",
+    // });
 }
 
-main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+export async function stopScheduler() {
+
+}

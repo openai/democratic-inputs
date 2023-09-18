@@ -2,14 +2,19 @@
   "name": "@deliberation-at-scale/orchestrator",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "setup": "npm install && cp -n .env.example .env",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "npm install",
     "build": "swc src -d dist",
-    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/generated/database.types.ts'",
-    "db:login": "supabase login",
-    "start": "npm run build && node dist/runner.js",
+    "db:generate-types": "npm run db:generate-types:public && npm run db:generate-types:worker",
+    "db:generate-types:public": "SCHEMA_NAME=public npm run db:generate-types-schema",
+    "db:generate-types:worker": "SCHEMA_NAME=graphile_worker npm run db:generate-types-schema",
+    "db:generate-types-schema": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema \"$SCHEMA_NAME\" > ./src/generated/database-$SCHEMA_NAME.types.ts'",
+    "start": "npm run build && npm run start:dev",
+    "start:dev": "NODE_ENV=development ORCHESTRATOR_ROLE=all node dist/index.js",
+    "start:runner": "ORCHESTRATOR_ROLE=runner node dist/index.js",
+    "start:scheduler": "ORCHESTRATOR_ROLE=scheduler node dist/index.js",
+    "start:listener": "ORCHESTRATOR_ROLE=listener node dist/index.js",
     "lint": "eslint src --ext .ts",
     "clean": "rimraf ./node_modules"
   },
@@ -17,17 +22,21 @@
   "author": "Lei Nelissen <lei@bmd.studio>",
   "license": "MIT",
   "dependencies": {
+    "@deliberation-at-scale/common": "*",
+    "@sentry/node": "7.69.0",
+    "@sentry/profiling-node": "1.2.1",
     "@supabase/supabase-js": "^2.32.0",
-    "cross-fetch": "4.0.0",
+    "dayjs": "1.11.9",
     "dotenv": "^16.3.1",
     "graphile-worker": "^0.13.0",
-    "openai": "^4.0.0-beta.8"
+    "object-hash": "3.0.0",
+    "openai": "^4.0.0-beta.8",
+    "radash": "11.0.0"
   },
   "devDependencies": {
     "@swc-node/register": "^1.6.6",
-    "@swc/cli": "0.1.62",
-    "@swc/core": "1.3.84",
+    "@swc/cli": "^0.1.62",
     "@types/node": "^20.4.9",
-    "rimraf": "5.0.1"
+    "dotenv-cli": "7.3.0"
   }
 }

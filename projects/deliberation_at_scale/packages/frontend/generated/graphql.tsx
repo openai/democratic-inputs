@@ -2501,7 +2501,7 @@ export type GetRoomParticipantsQueryVariables = Exact<{
 
 export type GetRoomParticipantsQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, nick_name: string, updated_at: any, created_at: any } }> } | null };
 
-export type SimpleRoomFragment = { __typename?: 'rooms', id: any, active: boolean, external_room_id?: string | null, updated_at: any, created_at: any, topics: { __typename?: 'topics', id: any, active: boolean, content: string, updated_at: any, created_at: any } };
+export type SimpleRoomFragment = { __typename?: 'rooms', id: any, active: boolean, external_room_id?: string | null, status_type: RoomStatusType, updated_at: any, created_at: any, topics: { __typename?: 'topics', id: any, active: boolean, content: string, updated_at: any, created_at: any } };
 
 export type SimpleRoomTopicFragment = { __typename?: 'topics', id: any, active: boolean, content: string, updated_at: any, created_at: any };
 
@@ -2510,7 +2510,7 @@ export type GetRoomsQueryVariables = Exact<{
 }>;
 
 
-export type GetRoomsQuery = { __typename?: 'Query', roomsCollection?: { __typename?: 'roomsConnection', edges: Array<{ __typename?: 'roomsEdge', node: { __typename?: 'rooms', id: any, active: boolean, external_room_id?: string | null, updated_at: any, created_at: any, topics: { __typename?: 'topics', id: any, active: boolean, content: string, updated_at: any, created_at: any } } }> } | null };
+export type GetRoomsQuery = { __typename?: 'Query', roomsCollection?: { __typename?: 'roomsConnection', edges: Array<{ __typename?: 'roomsEdge', node: { __typename?: 'rooms', id: any, active: boolean, external_room_id?: string | null, status_type: RoomStatusType, updated_at: any, created_at: any, topics: { __typename?: 'topics', id: any, active: boolean, content: string, updated_at: any, created_at: any } } }> } | null };
 
 export type FullTopicFragment = { __typename?: 'topics', id: any, active: boolean, type: TopicType, content: string, original_topic_id?: any | null, updated_at: any, created_at: any };
 
@@ -2610,6 +2610,7 @@ export const SimpleRoomFragmentDoc = gql`
     ...SimpleRoomTopic
   }
   external_room_id
+  status_type
   updated_at
   created_at
 }

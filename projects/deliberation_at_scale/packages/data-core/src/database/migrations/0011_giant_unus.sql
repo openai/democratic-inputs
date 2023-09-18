@@ -1,0 +1,1 @@
+ALTER TABLE "moderations" ALTER COLUMN "type" SET DATA TYPE text;

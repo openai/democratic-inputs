@@ -6,8 +6,6 @@
         "removeComments": true,
         "resolveJsonModule": true,
         "declaration": true,
-        "declarationMap": true,
-        "emitDeclarationOnly": true,
         "typeRoots": ["./node_modules/@types"],
         "sourceMap": true,
         "outDir": "dist",

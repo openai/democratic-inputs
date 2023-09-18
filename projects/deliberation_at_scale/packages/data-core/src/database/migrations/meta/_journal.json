@@ -15,6 +15,125 @@
       "when": 1694161503128,
       "tag": "0001_quick_scourge",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1694433453815,
+      "tag": "0002_talented_crusher_hogan",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1694438124970,
+      "tag": "0003_wet_tana_nile",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1694591622138,
+      "tag": "0004_melted_sprite",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1694598386285,
+      "tag": "0005_typical_mac_gargan",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1694613726544,
+      "tag": "0006_cynical_alex_wilder",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1694618100976,
+      "tag": "0007_lean_mantis",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1694620861741,
+      "tag": "0008_sloppy_the_order",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1694697082864,
+      "tag": "0009_living_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1694697726123,
+      "tag": "0010_black_toad",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1694703770063,
+      "tag": "0011_giant_unus",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1694765929610,
+      "tag": "0012_slow_famine",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1694779100606,
+      "tag": "0013_bumpy_magus",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1694779853051,
+      "tag": "0014_tired_whiplash",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "5",
+      "when": 1694780014172,
+      "tag": "0015_colossal_runaways",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "5",
+      "when": 1694983911092,
+      "tag": "0016_short_bill_hollister",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1694983918778,
+      "tag": "0017_useful_doctor_faustus",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1695043575821,
+      "tag": "0018_smiling_havok",
+      "breakpoints": true
     }
   ]
 }

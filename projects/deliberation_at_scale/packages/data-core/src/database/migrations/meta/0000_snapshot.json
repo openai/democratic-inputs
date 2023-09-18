@@ -1287,6 +1287,7 @@
       "name": "moderationType",
       "values": {
         "harrashment": "harrashment",
+        "consensus": "consensus",
         "spam": "spam",
         "off_topic": "off_topic",
         "other": "other"
