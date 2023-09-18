@@ -1,3 +1,4 @@
+# TODO: this should change or be removed in the future as the room assignment will be done on the back-end
 mutation JoinRoom($roomId: UUID!, $userId: UUID!) {
   insertIntoparticipantsCollection(objects: {
     room_id: $roomId

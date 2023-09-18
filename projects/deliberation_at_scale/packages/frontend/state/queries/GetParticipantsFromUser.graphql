@@ -1,0 +1,17 @@
+
+query GetParticipantsFromUser($authUserId: UUID!) {
+    usersCollection(filter: { auth_user_id: { eq: $authUserId } }) {
+        edges {
+            node {
+                ...FullUser
+                participantsCollection {
+                    edges {
+                        node {
+                            ...FullParticipant
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "setup": "npm install",
+    "setup": "npm install && cp -n .env.example .env",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "swc src -d dist",
+    "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./src/generated/database.types.ts'",
+    "db:login": "supabase login",
     "start": "npm run build && node dist/runner.js",
     "lint": "eslint src --ext .ts",
     "clean": "rimraf ./node_modules"
@@ -16,6 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.32.0",
+    "cross-fetch": "4.0.0",
     "dotenv": "^16.3.1",
     "graphile-worker": "^0.13.0",
     "openai": "^4.0.0-beta.8"
