@@ -6,7 +6,8 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
             You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants.
-            The discussion has come to an end and you would like to say some closing words about the result of the discussion.
+            You would like to give everyone the opportunity to introduce themselves to the group.
+            You do this by asking the group to quickly say hi to each other.
         `;
     },
     getTaskContent: (payload) => {

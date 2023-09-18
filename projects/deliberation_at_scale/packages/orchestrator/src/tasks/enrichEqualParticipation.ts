@@ -6,7 +6,7 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
             You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants.
-            The discussion has come to an end and you would like to say some closing words about the result of the discussion.
+            You want to make sure that the participants are equally involved in the discussion.
         `;
     },
     getTaskContent: (payload) => {

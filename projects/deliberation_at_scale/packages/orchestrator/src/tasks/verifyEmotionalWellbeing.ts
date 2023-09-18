@@ -1,96 +1,24 @@
-import { Helpers, quickAddJob } from "graphile-worker";
-import supabaseClient, { getTopic, selectMessages } from "../lib/supabase";
-import openaiClient, { createVerificationFunctionCompletion } from "../lib/openai";
-import { Database } from "../generated/database.types";
-
-type Message = Database["public"]["Tables"]["messages"]["Row"]
+import { PARTICIPANTS_PER_ROOM } from "../config/constants";
+import { BaseProgressionWorkerTaskPayload } from "../types";
+import { createModeratedVerifyTask, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
 
 /**
- * Run this task at most every n seconds
+ * This task verifies whether the conversation is still about the topic for the past x amount of messages.
+ * The amount of message history is provided via the payload.
  */
-const TASK_INTERVAL_SECONDS = 10;
-const historyAmountMessages = 10;
+export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
+    getTaskInstruction: async () => {
+        return `
+            You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants.
 
-/**
- * This task retrieves all messages since its last execution and attempts to
- * summarize them using GPT.
- */
-export default async function verifyEmotionalWellbeing(
-    lastRun: string | null,
-    helpers: Helpers
-) {
+            You have to evaluate the evaluate the emotional wellbeing of the participants according to the following rules:
+            - Every participant should be able to express their opinion
+        `;
+    },
+    getTaskContent: (payload) => {
+        const content = getMessageContentForProgressionWorker(payload);
 
-    // Retrieve all messages from supabase
-    const messages = await selectMessages({
-        historyAmountMessages,
-    });
-
-    // GUARD: If there are no messages, reschedule the job
-
-    if (messages === null) {
-        helpers.logger.info("Mesassages undefined.");
-        return reschedule(lastRun);
-    }
-
-    if (messages.length === 0) {
-        helpers.logger.info("No messages found.");
-        return reschedule(lastRun);
-    }
-
-    const { id: messageId, content, room_id: roomId, } = messages[0] ?? {};
-
-    const verificationResult = await createVerificationFunctionCompletion({
-        taskInstruction: `
-        You are a moderator of a discussion between three participants.
-
-        You have to evaluate the evaluate the emotional wellbeing of the participants according to the following rules:
-        - Every participant should be able to express their opinion
-
-        `,
-        //verified,
-        // not difficult example
-        taskContent:
-
-        JSON.stringify(
-            messages.map(
-                (message) =>
-                    ({
-                        participant: message.participant_id,
-                        content: message.content,
-                    })
-            )
-        )
-    });
-    const isEmotionalWellbeing = verificationResult.verified;
-    const emotionalWellbeingReason = verificationResult.reason;
-
-    // TMP: temporary logging statements
-    console.log('Consensus verification result:');
-    console.log(isEmotionalWellbeing);
-
-    console.log('Reason:');
-    console.log(emotionalWellbeingReason);
-
-    // guard: do nothing when it is not difficult language
-    if (isEmotionalWellbeing || !roomId) {
-        return;
-    }
-
-    helpers.logger.info(`Sending clarification message to room ${roomId} for message ${messageId}: ${emotionalWellbeingReason}`);
-
-    // execute these in parallel to each other
-    await Promise.allSettled([
-
-        // track that this message has been moderated
-        insertModeration(messages, emotionalWellbeingReason),
-
-        // send a message to the room with the moderators explaination about the verification
-        // sendBotMessage({
-        //     content: unappropiateReasonToParticipants,
-        //     roomId,
-        // }),
-    ]);
-
-
-    return reschedule(lastRun);
-}
+        return content;
+    },
+    getShouldSendBotMessage: () => false,
+});

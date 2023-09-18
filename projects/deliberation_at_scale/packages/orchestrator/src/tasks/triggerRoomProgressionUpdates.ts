@@ -2,6 +2,7 @@ import { Helpers } from "graphile-worker";
 
 import { supabaseClient } from "../lib/supabase";
 import { UpdateRoomProgressionPayload } from "./updateRoomProgression";
+import { ENABLE_ROOM_TESTING, TEST_ROOM_ID_ALLOWLIST } from "../config/constants";
 
 export interface ScheduleRoomProgressionUpdatesPayload {
 }
@@ -21,14 +22,21 @@ export default async function scheduleRoomProgressionUpdates(payload: ScheduleRo
 
     helpers.logger.info(`Scheduling progression updates for all ${activeRoomsAmount} active rooms...`);
 
-    // TMP: disabled for now
-    // activeRooms.map((activeRoom) => {
-    //     const { id: roomId } = activeRoom;
-    //     const newJobPayload: UpdateRoomProgressionPayload = {
-    //         roomId,
-    //     };
+    activeRooms.map((activeRoom) => {
+        const { id: roomId } = activeRoom;
+        const newJobPayload: UpdateRoomProgressionPayload = {
+            roomId,
+        };
+        const jobKey = `updateRoomProgression-${roomId}`;
 
-    //     helpers.logger.info(`Scheduling progression update for room ${roomId}...`);
-    //     helpers.addJob("updateRoomProgression", newJobPayload);
-    // });
+        // guard: skip when in testing mode and room is not in allowlist
+        if (ENABLE_ROOM_TESTING && !TEST_ROOM_ID_ALLOWLIST.includes(roomId)) {
+            return;
+        }
+
+        helpers.logger.info(`Scheduling progression update for room ${roomId}...`);
+        helpers.addJob("updateRoomProgression", newJobPayload, {
+            jobKey,
+        });
+    });
 }

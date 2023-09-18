@@ -6,7 +6,9 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
             You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants.
-            The discussion has come to an end and you would like to say some closing words about the result of the discussion.
+            In the discussion, no consensus between the participants has been found yet, because of the following reasons:
+            No consensus has been found because
+            Formulate a message of max. 20 words to guide the discussion towards a consensus
         `;
     },
     getTaskContent: (payload) => {

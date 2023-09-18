@@ -1,12 +1,14 @@
 import { Helpers } from "graphile-worker";
 import { isObject, min } from "radash";
 
-import { progressionTopology } from "../constants";
+import { progressionTopology } from "../config/toplogy";
 import { supabaseClient, Moderation } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
-import { BaseVerificationWorkerResponse, BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "src/types";
-import { Database } from "src/generated/database-public.types";
+import { BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "../types";
+import { Database } from "../generated/database-public.types";
 import dayjs, { Dayjs } from "dayjs";
+import { VerificationFunctionCompletionResult } from "../lib/openai";
+import { ENABLE_ROOM_PROGRESSION } from "../config/constants";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -41,17 +43,22 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
     helpers.logger.info(`Running update progression task for room ${roomId} in progression layer ${currentTopologyLayerId}.`);
 
-    const currentLayerVerifications = currentTopologyLayer.verifications.filter((verification) => verification.active ?? true);
+    const currentLayerVerifications = currentTopologyLayer?.verifications ?? [];
+    const activeVerifications = currentLayerVerifications.filter((verification) => verification.active ?? true);
     const fallbackVerifications = progressionTopology.layers.slice(0, currentTopologyLayerIndex).flatMap((topologyLayer) => {
-        return topologyLayer.verifications.filter((verification) => {
+        const verifications = topologyLayer?.verifications ?? [];
+        return verifications.filter((verification) => {
             const { active = true, fallback = false } = verification;
 
             return active && fallback;
         });
     });
+
+    helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${fallbackVerifications.length} fallback verifications for room ${roomId} in progression layer ${currentTopologyLayerId}.`);
+
     const [currentLayerVerificationsResult, fallbackVerificationResults] = await Promise.allSettled([
         waitForAllProgressionTasks({
-            progressionTasks: currentLayerVerifications,
+            progressionTasks: activeVerifications,
             roomId,
             helpers,
         }),
@@ -82,14 +89,28 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
             // find the minimum index of all the failed fallback verifications
             // because we want to fallback to the lowest possible layer where an verification failed
             const minimumFallbackLayerIndex = min(fallbackFailedProgressionTaskIds.map((failedProgressionTaskId) => {
-                return progressionTopology.layers.findIndex((topologyLayer) => {
-                    return topologyLayer.verifications.some((verification) => {
+                const index = progressionTopology.layers.findIndex((topologyLayer) => {
+                    const verifications = topologyLayer?.verifications ?? [];
+                    return verifications.some((verification) => {
                         return verification.id === failedProgressionTaskId;
                     });
                 });
+
+                // guard: skip when the index is not found
+                if (index < 0) {
+                    return currentTopologyLayerIndex;
+                }
+
+                return index;
             })) ?? 0;
             const fallbackLayer = progressionTopology.layers[minimumFallbackLayerIndex];
             const fallbackRoomStatus = fallbackLayer.roomStatus;
+
+            // guard: skip when the fallback status is the same as the current status
+            if (currentRoomStatus === fallbackRoomStatus) {
+                helpers.logger.info(`The room status is already on the fallback status ${fallbackRoomStatus} for room ${roomId}.`);
+                return;
+            }
 
             // progress to the new status
             updateRoomStatus({
@@ -124,11 +145,14 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
     // progress to the new status
     // NOTE: this can be done asynchronously
-    updateRoomStatus({
-        roomId,
-        roomStatus: nextProgressionLayer.roomStatus,
-        helpers,
-    });
+    if (ENABLE_ROOM_PROGRESSION) {
+        updateRoomStatus({
+            roomId,
+            roomStatus: nextProgressionLayer.roomStatus,
+            helpers,
+        });
+    }
+
 }
 
 interface WaitForAllProgressionTasksOptions {
@@ -153,7 +177,6 @@ async function waitForAllProgressionTasks(options: WaitForAllProgressionTasksOpt
     }).filter((jobId): jobId is string => {
         return !!jobId;
     });
-
     const completedModerationTuples = await waitForAllModerationCompletions({
         jobIds,
     });
@@ -171,7 +194,7 @@ async function waitForAllProgressionTasks(options: WaitForAllProgressionTasksOpt
     const failedProgressionTaskIds = failedModerationTuples.map((failedModerationTuple) => {
 
         if (failedModerationTuple.status === 'rejected') {
-            helpers.logger.error(`A job failed to complete for the following reason: ${failedModerationTuple.reason}`);
+            helpers.logger.error(`A job failed to complete for the following reason: ${JSON.stringify(failedModerationTuple.reason)}`);
             return 'unknown';
         }
 
@@ -189,7 +212,7 @@ async function waitForAllProgressionTasks(options: WaitForAllProgressionTasksOpt
 }
 
 function isFailedModeration(moderation: Moderation) {
-    const result = moderation?.result as unknown as BaseVerificationWorkerResponse;
+    const result = moderation?.result as unknown as VerificationFunctionCompletionResult;
 
     if (!isObject(result)) {
         return true;
@@ -230,6 +253,7 @@ async function addProgressionTaskJobs(options: ProgressionTasksContextOptions) {
             return helpers.addJob(workerTaskId, {
                 progressionTask,
                 jobKey,
+                roomId,
             } satisfies BaseProgressionWorkerTaskPayload, {
                 jobKey,
                 jobKeyMode: 'preserve_run_at',
@@ -273,47 +297,59 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
     // rejected = cooldown or something else is not verified
     // undefined = should be skipped
     const settledProgressionTasks = await Promise.allSettled(progressionTasks.map(async (progressionTask) => {
-        const { id: progressionTaskId, active, cooldown, maxAttempts } = progressionTask;
-        const { blockProgression = true, messageAmount, ms: cooldownMs } = cooldown ?? {};
+        const { id: progressionTaskId, active = true, cooldown, maxAttempts } = progressionTask;
+        const { blockProgression = true, messageAmount, durationMs: cooldownMs } = cooldown ?? {};
         const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
 
         if (!active) {
             return;
         }
 
-        // check if we need to verify the amount of messages before adding the job
-        if (messageAmount) {
-            const newMessages = await getMessagesAfter(roomId, dayjs());
-            const newMessageAmount = newMessages.length;
+        // // check if we need to verify the cooldown or new message amount before adding the job
+        // if (messageAmount || cooldownMs) {
+        //     const lastModeration = await getLastModerationByJobKey(jobKey);
+        //     const lastModerationDate = dayjs(lastModeration?.created_at);
 
-            // guard: check if we have enough messages
-            if (newMessageAmount < messageAmount) {
-                if (blockProgression) {
-                    throw Error(`Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
-                } else {
-                    return;
-                }
-            }
-        }
+        //     // check if we need to verify the amount of messages before adding the job
+        //     if (messageAmount) {
+        //         const newMessages = await getMessagesAfter(roomId, lastModerationDate);
+        //         const newMessageAmount = newMessages.length;
 
-        // check if we need to verify the cooldown before adding the job
-        if (cooldownMs) {
-            const moderations = await getModerationsByJobKey(jobKey, 1);
-            const lastModeration = moderations[0];
-            const lastModerationDate = dayjs(lastModeration?.created_at);
-            const isCoolingDown = lastModerationDate.add(cooldownMs, 'ms').isAfter(dayjs());
+        //         // guard: check if we have enough messages
+        //         if (newMessageAmount < messageAmount) {
+        //             if (blockProgression) {
+        //                 throw Error(`Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
+        //             } else {
+        //                 return;
+        //             }
+        //         }
+        //     }
 
-            // guard: check if the cooldown is valid
-            if (isCoolingDown) {
-                if (blockProgression) {
-                    throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`);
-                } else {
-                    return;
-                }
-            }
-        }
+        //     // check if we need to verify the cooldown before adding the job
+        //     if (cooldownMs) {
+        //         const isCoolingDown = lastModerationDate.add(cooldownMs, 'ms').isAfter(dayjs());
 
-        // TODO: check maxAttempts
+        //         // guard: check if the cooldown is valid
+        //         if (isCoolingDown) {
+        //             if (blockProgression) {
+        //                 throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`);
+        //             } else {
+        //                 return;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // // skip this task if we have reached the maximum amount of attempts
+        // if (maxAttempts) {
+        //     const moderations = await getModerationsByJobKey(jobKey, maxAttempts);
+        //     const moderationAmount = moderations.length;
+
+        //     // guard: check if we have failed moderations
+        //     if (moderationAmount >= maxAttempts) {
+        //         return;
+        //     }
+        // }
 
         return progressionTask;
     }));
@@ -363,10 +399,21 @@ async function getModerationsByJobKey(jobKey: string, limit = 100) {
         .from('moderations')
         .select()
         .eq('job_key', jobKey)
+        .order('created_at', { ascending: false })
         .limit(limit);
     const moderations = moderationsData?.data ?? [];
 
     return moderations;
+}
+
+/**
+ * Get the last moderation for a certain job key.
+ */
+export async function getLastModerationByJobKey(jobKey: string) {
+    const moderations = await getModerationsByJobKey(jobKey, 1);
+    const lastModeration = moderations?.[0];
+
+    return lastModeration;
 }
 
 /**
@@ -378,6 +425,7 @@ async function getMessagesAfter(roomId: string, fromDate: Dayjs, limit = 100) {
         .select()
         .eq('room_id', roomId)
         .gte('created_at', fromDate.toISOString())
+        .order('created_at', { ascending: false })
         .limit(limit);
     const messages = messagesData?.data ?? [];
 
