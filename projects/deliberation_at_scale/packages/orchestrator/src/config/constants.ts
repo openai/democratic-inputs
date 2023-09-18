@@ -40,7 +40,10 @@ export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 export const SENTRY_DSN = process.env.SENTRY_DSN;
 
 /* Progression */
-export const ENABLE_ROOM_TESTING = true;
+export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
+export const ENABLE_TASK_TESTING = true && IS_DEVELOPMENT;
+export const ENABLE_ROOM_TESTING = true && IS_DEVELOPMENT;
 export const TEST_ROOM_ID_ALLOWLIST = ['f9aeae5f-e5bc-476a-9f31-9482eaadd28d'];
 export const ENABLE_ROOM_PROGRESSION = false || !ENABLE_ROOM_TESTING;
 
