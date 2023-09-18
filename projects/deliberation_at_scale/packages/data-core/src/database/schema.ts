@@ -143,7 +143,7 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
     topicId: uuid(TOPIC_ID_FIELD_NAME)
         .notNull()
         .references(() => topics.id),
-    startsAt: timestamp("starts_at"),
+    startsAt: timestamp("starts_at", { withTimezone: true }),
     ...generateTimestampFields(),
 }, (table) => {
     return {
@@ -165,7 +165,7 @@ export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
     nickName: generateNickNameField(),
     participationScore: integer("participation_score").notNull().default(0),
-    lastSeenAt: timestamp("last_seen_at").notNull().defaultNow(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
     ...generateTimestampFields(),
 }, (table) => {
     return {
@@ -303,7 +303,7 @@ export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
     jobKey: text("job_key"),
     statement: text("statement"),
     result: json("result").notNull().default({}),
-    completedAt: timestamp("completed_at"),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
     ...generateTargetFields(),
     ...generateTimestampFields(),
 }, (table) => {
@@ -349,8 +349,8 @@ function generateNickNameField() {
 
 function generateTimestampFields() {
     return {
-        createdAt: timestamp(CREATED_AT_FIELD_NAME).notNull().defaultNow(),
-        updatedAt: timestamp(UPDATED_AT_FIELD_NAME).notNull().defaultNow(),
+        createdAt: timestamp(CREATED_AT_FIELD_NAME, { withTimezone: true }).notNull().defaultNow(),
+        updatedAt: timestamp(UPDATED_AT_FIELD_NAME, { withTimezone: true }).notNull().defaultNow(),
     };
 }
 
