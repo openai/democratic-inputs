@@ -133,20 +133,6 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     },
                 }
             ],
-            enrichments: [
-                {
-                    id: 'informed-enrichInformedBehaviour',
-                    workerTaskId: 'enrichInformedBehaviour',
-                    cooldown: {
-                        durationMs: 60 * ONE_SECOND_MS,
-                    },
-                    context: {
-                        messages: {
-                            durationMs: 60 * ONE_SECOND_MS,
-                        }
-                    },
-                }
-            ]
         },
         {
             id: 'debate',

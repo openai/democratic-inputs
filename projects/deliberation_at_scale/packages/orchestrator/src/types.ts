@@ -55,7 +55,6 @@ export type WorkerTaskId =
     'enrichConsensusStimulation' |
     'enrichEqualParticipation' |
     'enrichGroupIntroduction' |
-    'enrichInformedBehaviour' |
     'enrichSafeBehaviour' |
     'enrichTopicIntroduction' |
     'triggerRoomProgressionUpdates' |
