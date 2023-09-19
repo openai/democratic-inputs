@@ -5,8 +5,8 @@ import { PARTICIPANTS_PER_ROOM } from "../config/constants";
 export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
-            You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants.
-            You would like people to remind each other of the rules of the discussion and the fact that they should be polite to each other.
+            You are a moderator of a conversation between ${PARTICIPANTS_PER_ROOM} participants.
+            You will give a final reminder to the participants to be respectful and helpful in the conversation in 3 short bullet point points in a verly lightly nifty way.
         `;
     },
     getTaskContent: (payload) => {

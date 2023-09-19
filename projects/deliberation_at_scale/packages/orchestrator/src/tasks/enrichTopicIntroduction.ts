@@ -5,8 +5,9 @@ import { PARTICIPANTS_PER_ROOM } from "../config/constants";
 export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
-            You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants.
-            You would like to introduce the topic mentioned below to the participants in a nifty way.
+            You are a moderator of a conversation between ${PARTICIPANTS_PER_ROOM} participants. You as a moderator and the participants have already introduced themselves, so no additional greeting is necessary.
+            You are at a point to kickstart the conversation by introducing the topic mentioned below to the participants in a short and sweet way.
+            After the topic is presented you'll ask if there is anyone who wants to share their first thoughts on the topic.
         `;
     },
     getTaskContent: async (payload) => {
