@@ -60,12 +60,9 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'topicIntro-enrichTopicIntroduction',
                     workerTaskId: 'enrichTopicIntroduction',
-                    maxAttempts: 3,
-                    // context: {
-                    //     messages: {
-                    //         roomStatuses: ["topic_intro"]
-                    //     }
-                    // },
+                    maxAttempts: 1,
+                    executionType: 'alwaysBeforeVerification',
+                    waitFor: true,
                 },
             ]
         },
@@ -80,7 +77,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     maxAttempts: 3,
                     cooldown: {
                         messageAmount: 5,
-                        durationMs: 10 * ONE_SECOND_MS,
+                        durationMs: 30 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -93,6 +90,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEmotionalWellbeing',
                     maxAttempts: 3,
                     cooldown: {
+                        messageAmount: 5,
                         durationMs: 30 * ONE_SECOND_MS,
                     },
                     context: {
@@ -107,7 +105,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     id: 'safe-enrichSafeBehaviour',
                     workerTaskId: 'enrichSafeBehaviour',
                     maxAttempts: 3,
+                    executionType: 'onNotVerified',
                     cooldown: {
+                        startDelayMs: 60 * ONE_SECOND_MS,
+                        messageAmount: 10,
                         durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
@@ -131,7 +132,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     },
                     context: {
                         messages: {
-                            durationMs: 30 * ONE_SECOND_MS,
+                            amount: 10,
                         }
                     },
                 },
@@ -145,11 +146,32 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     },
                     context: {
                         messages: {
-                            amount: 5,
+                            amount: 10,
                         }
                     },
                 }
             ],
+            enrichments: [
+                {
+                    id: 'informed-enrichOffTopic',
+                    workerTaskId: 'enrichOffTopic',
+                    maxAttempts: 3,
+                    executionType: 'onNotVerified',
+                    conditions: {
+                        isVerified: false,
+                        progressionTaskId: 'informed-OffTopic',
+                    },
+                    cooldown: {
+                        startDelayMs: 60 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
+                    },
+                    context: {
+                        messages: {
+                            amount: 10,
+                        }
+                    }
+                }
+            ]
         },
         {
             id: 'debate',
@@ -160,7 +182,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEnoughContent',
                     maxAttempts: 5,
                     cooldown: {
-                        durationMs: 20 * ONE_SECOND_MS,
+                        startDelayMs: 60 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -173,6 +196,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEqualParticipation',
                     maxAttempts: 5,
                     cooldown: {
+                        startDelayMs: 60 * ONE_SECOND_MS,
                         durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
@@ -188,13 +212,19 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     id: 'conversate-enrichEqualParticipation',
                     workerTaskId: 'enrichEqualParticipation',
                     maxAttempts: 1,
+                    executionType: 'onNotVerified', //Maar dan alleen als verifyEqualParticipation not verified is
+                    conditions: {
+                        isVerified: false,
+                        progressionTaskId: 'verifyEqualParticipation',
+                    },
                     cooldown: {
+                        startDelayMs: 60 * ONE_SECOND_MS,
                         durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
                             roomStatuses: ['debate'],
-                            durationMs: 5 * 60 * ONE_SECOND_MS,
+                            durationMs: 3 * 60 * ONE_SECOND_MS,
                         }
                     }
                 }
@@ -223,7 +253,9 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     id: 'results-enrichConsensusStimulation',
                     workerTaskId: 'enrichConsensusStimulation',
                     maxAttempts: 1,
+                    executionType: 'onNotVerified',
                     cooldown: {
+                        startDelayMs: 60 * ONE_SECOND_MS,
                         durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
@@ -243,6 +275,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     id: 'close-enrichConsensusProposal',
                     workerTaskId: 'enrichConsensusProposal',
                     maxAttempts: 3,
+                    executionType: 'alwaysBeforeVerification',
                     context: {
                         messages: {
                             roomStatuses: ['informed', 'debate', 'results'],

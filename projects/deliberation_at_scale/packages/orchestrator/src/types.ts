@@ -58,6 +58,7 @@ export type WorkerTaskId =
     'enrichModeratorIntroduction' |
     'enrichSafeBehaviour' |
     'enrichTopicIntroduction' |
+    'enrichOffTopic' |
     'triggerRoomProgressionUpdates' |
     'updateRoomProgression' |
     'verifyConsensusForming' |
@@ -111,12 +112,21 @@ export interface ProgressionVerificationTask extends ProgressionTask {
 
 export type EnrichtmentExecutionType = 'onNotVerified' | 'onVerified' | 'alwaysBeforeVerification' | 'alwaysAfterVerification'; 
 
+interface VerificationCondition {
+    /** Which verification task should be checked to see if the enrichment should be triggered  */
+    progressionTaskId: string;
+    isVerified: boolean;
+}
+
 /** A single enrichtment task with specific behaviour how to perform the enrichment. */
 export interface ProgressionEnrichmentTask extends ProgressionTask {
     priority?: number;
+    /** To specifiy when the enrichment should be triggered. */
     executionType?: EnrichtmentExecutionType;
+    /** Whether the updateRoomProgression function should wait to continue as long as the enrichment task is not finished */
     waitFor?: boolean;
-
+    /** Conditions to specifiy whether the enrichment should trigger on specific verifications*/
+    conditions?: VerificationCondition;
 }
 
 export interface ProgressionContext {
