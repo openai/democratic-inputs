@@ -26,8 +26,10 @@ export default async function Layout({
                 <section>
                     <ColouredHeader />
                 </section>
-                <section className="max-w-[768px] w-full mx-auto p-4">
-                    {children}
+                <section className="overflow-y-scroll flex-auto flex flex-col justify-end">
+                    <section className="max-w-[768px] w-full h-full mx-auto p-4 flex flex-col justify-end">
+                        {children}
+                    </section>
                 </section>
             </article>
         </Language>

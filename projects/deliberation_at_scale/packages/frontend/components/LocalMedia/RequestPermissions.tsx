@@ -6,7 +6,7 @@ export default function RequestPermissions() {
     const { state, actions } = useLocalMedia({ request: true, redirect: false });
 
     return (
-        <div className='max-w-[500px] w-full mx-auto absolute top-0 left-0 right-0 my-8 p-4 bg-white shadow-lg rounded-lg'>
+        <div className='max-w-[500px] w-full mx-auto absolute top-0 left-0 right-0 my-8 p-4 bg-white shadow-lg rounded-lg z-20'>
             <div className="relative aspect-video w-full bg-gray-100 rounded overflow-hidden">
                 {state?.localStream && <VideoView muted stream={state?.localStream} className="w-full h-full object-cover" />}
                 <div className="absolute left-0 right-0 bottom-0 backdrop-blur-lg p-2 flex justify-center gap-4 bg-gray-800/90 text-white">

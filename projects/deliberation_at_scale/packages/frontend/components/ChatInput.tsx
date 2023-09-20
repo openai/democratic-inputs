@@ -60,7 +60,7 @@ export default function ChatInput(props: ChatInputProps) {
         >
             <input
                 ref={inputRef}
-                className="rounded-md py-3 px-4 shadow-3xl w-full"
+                className="rounded-md py-3 px-4 shadow-3xl w-full bg-white"
                 placeholder={placeholder}
                 value={input}
                 onChange={handleChange}

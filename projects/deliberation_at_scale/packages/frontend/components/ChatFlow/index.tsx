@@ -235,50 +235,53 @@ export default function ChatFlow(props: Props) {
     return (
         <div className="flex flex-col gap-2">
             <ChatMessageList messages={flowMessages} />
-            <AnimatePresence>
-                {!isEmpty(quickReplies) && (
-                    <motion.div
-                        key="quickReplies"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                    >
-                        {quickReplies.map((quickReply) => {
-                            const { id, onClick, content, icon } = quickReply;
-                            const key = `${id}-${content}`;
+            <div className="sticky bottom-2 pt-4 flex flex-col gap-3">
+                <AnimatePresence>
+                    {!isEmpty(quickReplies) && (
+                        <motion.div
+                            key="quickReplies"
+                            className="flex flex-col gap-3"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                        >
+                            {quickReplies.map((quickReply) => {
+                                const { id, onClick, content, icon } = quickReply;
+                                const key = `${id}-${content}`;
 
-                            return (
-                                <Button
-                                    key={key}
-                                    disabled={inputDisabled}
-                                    onClick={async () => {
-                                        setInputDisabled(true);
-                                        try {
-                                            await onClick(onInputHelpers);
-                                        } catch (error) {
-                                            postBotMessages([["Something went wrong! Please try again."]]);
-                                            console.error(error);
-                                        }
-                                        setInputDisabled(false);
-                                    }}
-                                >
-                                    {icon && (
-                                        <FontAwesomeIcon icon={icon} />
-                                    )}
-                                    <span>{content}</span>
-                                </Button>
-                            );
-                        })}
-                    </motion.div>
-                )}
-                {!hideInput && (
-                    <ChatInput
-                        key="chatInput"
-                        onSubmit={handleInput}
-                        disabled={isTextInputDisabled}
-                        placeholder={inputPlaceholder}
-                    />
-                )}
-            </AnimatePresence>
+                                return (
+                                    <Button
+                                        key={key}
+                                        disabled={inputDisabled}
+                                        onClick={async () => {
+                                            setInputDisabled(true);
+                                            try {
+                                                await onClick(onInputHelpers);
+                                            } catch (error) {
+                                                postBotMessages([["Something went wrong! Please try again."]]);
+                                                console.error(error);
+                                            }
+                                            setInputDisabled(false);
+                                        }}
+                                    >
+                                        {icon && (
+                                            <FontAwesomeIcon icon={icon} />
+                                        )}
+                                        <span>{content}</span>
+                                    </Button>
+                                );
+                            })}
+                        </motion.div>
+                    )}
+                    {!hideInput && (
+                        <ChatInput
+                            key="chatInput"
+                            onSubmit={handleInput}
+                            disabled={isTextInputDisabled}
+                            placeholder={inputPlaceholder}
+                        />
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     );
 }

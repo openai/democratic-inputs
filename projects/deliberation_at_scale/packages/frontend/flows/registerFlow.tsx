@@ -23,7 +23,6 @@ const registerFlow: ChatFlowConfig = {
         {
             name: "thank_you",
             messageOptions: [["Thank you! An email has been sent with a link to register with!"]],
-            hideInput: true,
             quickReplies: [resetQuickReply],
         }
     ]
