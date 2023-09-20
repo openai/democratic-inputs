@@ -29,7 +29,7 @@ export interface VerificationFunctionCompletionResult {
 }
 
 export interface EnrichFunctionCompletionResult {
-    enrichtment: string;
+    enrichment: string;
 }
 
 export interface EnrichFunctionCompletionOptions {
@@ -87,20 +87,20 @@ export async function createEnrichFunctionCompletion(options: EnrichFunctionComp
             parameters: {
                 type: "object",
                 properties: {
-                    enrichtment: {
+                    enrichment: {
                         type: "string",
                         description: `Communication of the moderator towards the participants during a discussion.`,
                     },
                 },
-                required: ["enrichtment"],
+                required: ["enrichment"],
             },
         },
     });
     const parsedArguments = JSON.parse(functionCall?.arguments ?? '{}');
-    const enrichtment = (parsedArguments?.enrichtment as string) ?? '';
+    const enrichment = (parsedArguments?.enrichment as string) ?? '';
 
     return {
-        enrichtment,
+        enrichment,
     };
 }
 
