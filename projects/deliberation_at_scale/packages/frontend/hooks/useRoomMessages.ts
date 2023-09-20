@@ -5,7 +5,7 @@ import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 
 export interface UseMessagesOptions {
-    roomId?: RoomId;
+    roomId: RoomId;
     participantMessageHistoryAmount?: number;
     botMessageHistoryAmount?: number;
 }
@@ -16,7 +16,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         participantMessageHistoryAmount = 1,
         botMessageHistoryAmount = 1,
     } = options ?? {};
-    const insertFilter = (roomId ? `room_id=eq.${roomId}` : undefined);
+    const insertFilter = `room_id=eq.${roomId}`;
     const { data: messagesData } = useRealtimeQuery(useGetRoomMessagesQuery({ variables: { roomId } }), {
         tableEventsLookup: {
             messages: {

@@ -1,48 +1,64 @@
-import { ReactNode } from "react";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { Dayjs } from "dayjs";
 
-export interface Flow{
-    name: string;
+import { FlowId, FlowStateEntries } from "@/state/slices/flow";
+import { RootState } from "@/state/store";
+
+export interface ChatFlowConfig {
+    id: FlowId;
     steps: FlowStep[];
+    userMessageTemplate?: MessageTemplate;
+    botMessageTemplate?: MessageTemplate;
 }
 
-export interface FlowStepBase{
+export type MessagesOptions = string[][];
+
+export interface FlowStep {
     name: string;
-    messages: Message | Message[];
+    messageOptions: MessagesOptions;
+    quickReplies?: QuickReply[];
     skip?: (helpers: OnInputHelpers) => Promise<boolean> | boolean;
-    quickReply?: QuickReply[];
+    onInput?: (input: UserInput, helpers: OnInputHelpers) => Promise<void>;
+    timeoutMs?: number;
+    onTimeout?: (helpers: OnInputHelpers) => Promise<void>;
+    hideInput?: boolean;
 }
 
-export interface OnInputHelpers{
+export type PostMessages = (messageOptions: MessagesOptions) => void;
+
+export interface OnInputHelpers {
+    goToPage: (path: string) => void;
+    goToPrevious: () => void;
     goToNext: () => void;
-    goToName: (destination: string) => void; //navigates to a sub-flow
-    postMessage: (message: Message | Message[]) => void;
-    // navigation: (flow: string) => void;    //navigates to another page (and thus another flow)
-    // chatGPT: (message: Message) => void;   //additional parameters: model, prompt -- pre-moderate?
-    // supaBase: typeof supabaseClient;       //mainly to indicate this is an option
-    // reduxStore: typeof store;
+    goToName: (destination: string) => void;
+    postUserMessages: PostMessages;
+    postBotMessages: PostMessages;
+    waitFor: (timeoutMs: number) => Promise<void>;
+    setFlowStateEntry: (key: string, value: any) => void;
+    flowStateEntries: FlowStateEntries;
+    storeState: RootState;
+    reset: () => void;
 }
 
-export interface OnInput {
-    onInput: (input: UserInput, helpers: OnInputHelpers) => Promise<void>;
-    timeout?: never;
-}
-
-export interface TimeOut {
-    /** time in ms */
-    timeout: number;
-    onInput?: never;
-}
-
-type FlowStep = (FlowStepBase & OnInput) | (FlowStepBase & TimeOut);
-
-export interface QuickReply{
+export interface QuickReply {
     id: string;
-    icon: string;
-    message: string;
+    icon?: IconProp;
+    content: string;
+    onClick: (helpers: OnInputHelpers) => void;
 }
 
-export type Message = string | ReactNode;
-export interface UserInput{
+export type MessageTemplate = Omit<Message, 'content'>;
+
+export interface Message {
+    id?: string;
+    content: string;
+    name?: string;
+    nameIcon?: IconProp;
+    date?: string | Date | Dayjs;
+    highlighted?: boolean;
+}
+
+export interface UserInput {
     id?: string,
     content: string
 }

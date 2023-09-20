@@ -1,10 +1,7 @@
-import useAuth from '@/hooks/useAuth';
-import LoginForm from './form';
+import LoginChatFlow from '@/components/ChatFlow/LoginChatFlow';
 
 export default async function Login() {
-    await useAuth('unauthenticated', '/');
-
     return (
-        <LoginForm />
+        <LoginChatFlow />
     );
 }

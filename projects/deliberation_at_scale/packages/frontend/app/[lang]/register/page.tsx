@@ -1,11 +1,7 @@
-import useAuth from '@/hooks/useAuth';
+import RegisterChatFlow from '@/components/ChatFlow/RegisterChatFlow';
 
-export default async function Register() {
-    await useAuth();
-
+export default async function Join() {
     return (
-        <div className="flex v-screen h-screen items-center justify-center">
-            <h1>Register flow</h1>
-        </div>
+        <RegisterChatFlow />
     );
 }

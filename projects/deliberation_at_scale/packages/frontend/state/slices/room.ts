@@ -2,16 +2,6 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type RoomId = string | undefined;
 
-export enum RoomStatus {
-    SETUP,
-    LOBBY,
-    GROUP_INTRODUCTION,
-    TOPIC_INTRODUCTION,
-    DELIBERATION,
-    CONSENSUS,
-    REFLECTION,
-}
-
 export enum PermissionState {
     /** We're currently checking whether permissions have already been given */
     INITIALIZING = 'INITIALIZING',

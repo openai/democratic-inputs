@@ -1,22 +1,32 @@
 "use client";
+import { useCallback } from "react";
+import { faUser as profileIcon, faPenToSquare as registerIcon, faRightToBracket as loginIcon } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
-import { NavLink } from "@/components/NavLink";
-import { i18n } from '@lingui/core';
-import { Trans } from '@lingui/macro';
-
-import Flow from "@/components/Flow";
-import joinFlow from "@/flows/join";
+import Button from "@/components/Button";
+import useProfile from "@/hooks/useProfile";
 
 export default function Index() {
-    return (
-        <div className="w-full flex flex-col items-center text-foreground">
-            <Trans>Landing page</Trans>
-            <h2>{i18n.locale}</h2>
+    const { push } = useRouter();
+    const { authUser } = useProfile();
+    const isLoggedIn = !!authUser;
+    const goToLogin = useCallback(() => push('/login'), [push]);
+    const goToProfile = useCallback(() => push('/profile'), [push]);
 
-            <NavLink href="/tests/rooms">Go to Room Tester</NavLink>
-            <NavLink href="/tests/messages">Go to Message Tester</NavLink>
-            <NavLink href="/tests/lobby">Go to lobby Tester</NavLink>
-            <Flow flow={joinFlow}/>
-        </div>
+    return (
+        <section className="m-4 flex flex-col justify-center gap-3">
+            <motion.div layout>
+                <h1>Welcome,</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel ipsum nec odio vestibulum varius. Fusce efficitur, dui id laoreet eleifend, sapien tortor venenatis quam, vel tincidunt metus sapien eget elit. Integer </p>
+            </motion.div>
+            <motion.div className="flex flex-col gap-3">
+                <Button icon={registerIcon} onClick={goToLogin}>Register</Button>
+                <Button icon={loginIcon} onClick={goToLogin}>Login</Button>
+                {isLoggedIn && (
+                    <Button icon={profileIcon} onClick={goToProfile}>Go to profile</Button>
+                )}
+            </motion.div>
+        </section>
     );
 }
