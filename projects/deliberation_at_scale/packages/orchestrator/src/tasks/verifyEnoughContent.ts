@@ -17,6 +17,7 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
 
             You have to evaluate if their is enough content in the discussion according to the following rules:
             - Every participants should have provided multiple arguments about their perspective
+            - It does not matter if there were some flagged messages
         `;
     },
     getTaskContent: (payload) => {

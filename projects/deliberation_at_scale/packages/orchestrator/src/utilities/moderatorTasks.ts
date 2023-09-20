@@ -52,12 +52,12 @@ export function createModeratedEnrichTask<PayloadType extends BaseRoomWorkerTask
             return enrichmentResult;
         },
         getShouldSendBotMessage: async (enrichmentResult: EnrichFunctionCompletionResult) => {
-            const { enrichtment } = enrichmentResult;
-            return !!enrichtment;
+            const { enrichment } = enrichmentResult;
+            return !!enrichment;
         },
         getBotMessageContent: async (enrichmentResult: EnrichFunctionCompletionResult) => {
-            const { enrichtment } = enrichmentResult;
-            return enrichtment;
+            const { enrichment } = enrichmentResult;
+            return enrichment;
         },
         ...options,
     });
@@ -222,21 +222,21 @@ async function getParticipantsByRoomId(roomId: string) {
     return participants;
 }
 
-interface SendMessageOptions {
+export interface SendMessageOptions {
     active?: boolean;
     type: MessageType;
     roomId: string;
     content: string;
 }
 
-async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
+export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
     return sendMessage({
         ...options,
         type: 'bot',
     });
 }
 
-async function sendMessage(options: SendMessageOptions) {
+export async function sendMessage(options: SendMessageOptions) {
     const { active = true, type, roomId, content } = options;
 
     await supabaseClient.from("messages").insert({

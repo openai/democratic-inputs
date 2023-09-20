@@ -10,10 +10,11 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'groupIntro-verifyGroupIntroduction',
                     workerTaskId: 'verifyGroupIntroduction',
-                    maxAttempts: 3,
+                    maxAttempts: 12,
                     cooldown: {
                         messageAmount: 1,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        durationMs: 15 * ONE_SECOND_MS,
+                        startDelayMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -24,10 +25,24 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ],
             enrichments: [
                 {
+                    id: 'groupIntro-enrichModeratorIntroduction',
+                    workerTaskId: 'enrichModeratorIntroduction',
+                    maxAttempts: 1,
+                    executionType: 'alwaysBeforeVerification',
+                    waitFor: true,
+                    context: {
+                        messages: {
+                            roomStatuses: ["group_intro"]
+                        },
+                    },
+                },
+                {
                     id: 'groupIntro-enrichGroupIntroduction',
                     workerTaskId: 'enrichGroupIntroduction',
-                    maxAttempts: 3,
+                    maxAttempts: 3, //Max attempts should not be necessary for enrichments?
+                    executionType: 'onNotVerified',
                     cooldown: {
+                        startDelayMs: 30 * ONE_SECOND_MS,
                         durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
@@ -45,12 +60,12 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'topicIntro-enrichTopicIntroduction',
                     workerTaskId: 'enrichTopicIntroduction',
-                    maxAttempts: 1,
-                    context: {
-                        messages: {
-                            roomStatuses: ["topic_intro"]
-                        }
-                    },
+                    maxAttempts: 3,
+                    // context: {
+                    //     messages: {
+                    //         roomStatuses: ["topic_intro"]
+                    //     }
+                    // },
                 },
             ]
         },
@@ -62,6 +77,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     id: 'safe-verifySafeLanguage',
                     workerTaskId: 'verifySafeLanguage',
                     fallback: true,
+                    maxAttempts: 3,
                     cooldown: {
                         messageAmount: 5,
                         durationMs: 10 * ONE_SECOND_MS,
@@ -90,6 +106,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'safe-enrichSafeBehaviour',
                     workerTaskId: 'enrichSafeBehaviour',
+                    maxAttempts: 3,
                     cooldown: {
                         durationMs: 60 * ONE_SECOND_MS,
                     },
@@ -141,6 +158,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'conversate-verifyEnoughContent',
                     workerTaskId: 'verifyEnoughContent',
+                    maxAttempts: 5,
                     cooldown: {
                         durationMs: 20 * ONE_SECOND_MS,
                     },
@@ -153,6 +171,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'conversate-verifyEqualParticipation',
                     workerTaskId: 'verifyEqualParticipation',
+                    maxAttempts: 5,
                     cooldown: {
                         durationMs: 60 * ONE_SECOND_MS,
                     },

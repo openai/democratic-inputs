@@ -55,6 +55,7 @@ export type WorkerTaskId =
     'enrichConsensusStimulation' |
     'enrichEqualParticipation' |
     'enrichGroupIntroduction' |
+    'enrichModeratorIntroduction' |
     'enrichSafeBehaviour' |
     'enrichTopicIntroduction' |
     'triggerRoomProgressionUpdates' |
@@ -90,6 +91,8 @@ export interface ProgressionTask {
 export interface ProgressionTaskCooldown {
     /** Flag to determine whether the progression is also blocked when cooling down. */
     blockProgression?: boolean;
+    /** The amount of seconds required before the first execution of this task. */
+    startDelayMs?: number;
     /** The amount of seconds required to wait before this task can run again. */
     durationMs?: number;
     /** The amount of new messages required before this task can become valid. */
@@ -106,9 +109,14 @@ export interface ProgressionVerificationTask extends ProgressionTask {
     fallback?: boolean;
 }
 
-/** A single enrichtment task with specific behaviour how to perform the enrichtment. */
+export type EnrichtmentExecutionType = 'onNotVerified' | 'onVerified' | 'alwaysBeforeVerification' | 'alwaysAfterVerification'; 
+
+/** A single enrichtment task with specific behaviour how to perform the enrichment. */
 export interface ProgressionEnrichmentTask extends ProgressionTask {
-    // empty
+    priority?: number;
+    executionType?: EnrichtmentExecutionType;
+    waitFor?: boolean;
+
 }
 
 export interface ProgressionContext {
