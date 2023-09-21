@@ -15,7 +15,8 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
             - Every participant should be able to express their opinion
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;

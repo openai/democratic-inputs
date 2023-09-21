@@ -11,7 +11,8 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
             You answer should be max 3 sentences.
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;

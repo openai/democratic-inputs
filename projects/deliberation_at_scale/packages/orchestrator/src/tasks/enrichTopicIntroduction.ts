@@ -12,7 +12,8 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
             Limit your answer to three sentences.
         `;
     },
-    getTaskContent: async (payload) => {
+    getTaskContent: async (helpers) => {
+        const { payload } = helpers;
         const { roomId } = payload;
         const topicContent = await getTopicContentByRoomId(roomId);
         return topicContent;

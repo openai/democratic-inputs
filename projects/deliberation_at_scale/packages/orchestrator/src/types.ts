@@ -24,6 +24,7 @@ export interface BaseMessageWorkerTaskPayload extends BaseRoomWorkerTaskPayload 
 
 export interface BaseProgressionWorkerTaskPayload extends BaseRoomWorkerTaskPayload {
     progressionTask: ProgressionTask;
+    progressionLayerId: ProgressionLayerId;
 }
 
 /** The root of the topology containing all the different layers where the deliberation can go through. */
@@ -32,14 +33,14 @@ export interface ProgressionTopology {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type LayerId = 'groupIntro' | 'topicIntro' | 'safe' | 'informed' | 'debate' | 'results' | 'close';
+export type ProgressionLayerId = 'groupIntro' | 'topicIntro' | 'safe' | 'informed' | 'debate' | 'results' | 'close';
 
 export type RoomStatus = Database['public']['Enums']['roomStatusType'];
 
 /** Single layer of the topology the deliberation can progress to */
 export interface ProgressionLayer {
     /** The unique identifier of the layer. */
-    id: LayerId;
+    id: ProgressionLayerId;
     /** The room status that should be persisted on the room when progressed to this layer. */
     roomStatus: RoomStatus;
     /** All the required verifications to progress to the next layer, with supporting moderation.  */
@@ -106,23 +107,23 @@ export interface ProgressionTaskCooldown {
 
 /** A single verification task which specify behaviour what to do when the verification fails. */
 export interface ProgressionVerificationTask extends ProgressionTask {
-    /** True when this verification task causes a fallback to the previous layer when not verified. */
-    fallback?: boolean;
+    /** True when this verification should be run on every next layer */
+    persistent?: boolean;
 }
 
-export type EnrichtmentExecutionType = 'onNotVerified' | 'onVerified' | 'alwaysBeforeVerification' | 'alwaysAfterVerification'; 
+export type EnrichmentExecutionType = 'onNotVerified' | 'onVerified' | 'alwaysBeforeVerification' | 'alwaysAfterVerification';
 
-interface VerificationCondition {
+export interface VerificationCondition {
     /** Which verification task should be checked to see if the enrichment should be triggered  */
     progressionTaskId: string;
     isVerified: boolean;
 }
 
-/** A single enrichtment task with specific behaviour how to perform the enrichment. */
+/** A single enrichment task with specific behaviour how to perform the enrichment. */
 export interface ProgressionEnrichmentTask extends ProgressionTask {
     priority?: number;
     /** To specifiy when the enrichment should be triggered. */
-    executionType?: EnrichtmentExecutionType;
+    executionType?: EnrichmentExecutionType;
     /** Whether the updateRoomProgression function should wait to continue as long as the enrichment task is not finished */
     waitFor?: boolean;
     /** Conditions to specifiy whether the enrichment should trigger on specific verifications*/

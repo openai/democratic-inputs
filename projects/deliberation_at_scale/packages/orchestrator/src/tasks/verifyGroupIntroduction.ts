@@ -8,7 +8,8 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
         Have all participants finished introducing themselves?
         `;
     },
-    getTaskContent: async (payload) => {
+    getTaskContent: async (helpers) => {
+        const { payload } = helpers;
         const content = await getMessageContentForProgressionWorker(payload);
         return content;
     },

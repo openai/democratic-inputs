@@ -11,7 +11,8 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
             Only use max 20 words.
         `;
     },
-    getTaskContent: async (payload) => {
+    getTaskContent: async (helpers) => {
+        const { payload } = helpers;
         const content = await getMessageContentForProgressionWorker(payload);
 
         return content;

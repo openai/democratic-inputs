@@ -11,7 +11,8 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
             Guide the discussion by formulating a message of max. 20 words. Do this in a stimulating way.
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;

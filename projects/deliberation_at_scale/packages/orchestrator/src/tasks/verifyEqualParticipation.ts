@@ -8,7 +8,8 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
             Is the conversation mentioned below a balanced conversation whre everyone has said a similar amount of said what they think?
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;

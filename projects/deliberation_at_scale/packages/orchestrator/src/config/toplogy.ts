@@ -73,7 +73,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'safe-verifySafeLanguage',
                     workerTaskId: 'verifySafeLanguage',
-                    fallback: true,
+                    persistent: true,
                     maxAttempts: 3,
                     cooldown: {
                         messageAmount: 5,
@@ -139,7 +139,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'informed-verifyOffTopic',
                     workerTaskId: 'verifyOffTopic',
-                    fallback: true,
+                    persistent: true,
                     maxAttempts: 3,
                     cooldown: {
                         durationMs: 60 * ONE_SECOND_MS,
@@ -159,7 +159,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     executionType: 'onNotVerified',
                     conditions: {
                         isVerified: false,
-                        progressionTaskId: 'informed-OffTopic',
+                        progressionTaskId: 'informed-verifyOffTopic',
                     },
                     cooldown: {
                         startDelayMs: 60 * ONE_SECOND_MS,
@@ -178,7 +178,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             roomStatus: 'debate',
             verifications: [
                 {
-                    id: 'conversate-verifyEnoughContent',
+                    id: 'debate-verifyEnoughContent',
                     workerTaskId: 'verifyEnoughContent',
                     maxAttempts: 5,
                     cooldown: {
@@ -192,7 +192,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     }
                 },
                 {
-                    id: 'conversate-verifyEqualParticipation',
+                    id: 'debate-verifyEqualParticipation',
                     workerTaskId: 'verifyEqualParticipation',
                     maxAttempts: 5,
                     cooldown: {
@@ -209,13 +209,13 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ],
             enrichments: [
                 {
-                    id: 'conversate-enrichEqualParticipation',
+                    id: 'debate-enrichEqualParticipation',
                     workerTaskId: 'enrichEqualParticipation',
                     maxAttempts: 1,
                     executionType: 'onNotVerified', //Maar dan alleen als verifyEqualParticipation not verified is
                     conditions: {
                         isVerified: false,
-                        progressionTaskId: 'verifyEqualParticipation',
+                        progressionTaskId: 'debate-verifyEqualParticipation',
                     },
                     cooldown: {
                         startDelayMs: 60 * ONE_SECOND_MS,

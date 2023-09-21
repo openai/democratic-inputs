@@ -7,7 +7,8 @@ import { createModeratedVerifyTask, getMessageContentForProgressionWorker, getTo
  * The amount of message history is provided via the payload.
  */
 export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
-    getTaskInstruction: async (payload) => {
+    getTaskInstruction: async (helpers) => {
+        const { payload } = helpers;
         const { roomId } = payload;
         const topicContent = await getTopicContentByRoomId(roomId);
 
@@ -20,7 +21,8 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
             - It does not matter if there were some flagged messages
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;

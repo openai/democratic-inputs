@@ -14,13 +14,15 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
             - Messages may not describe physical attributes of humans
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         return payload.message.content;
     },
-    onTaskCompleted: async (payload, taskResult) => {
+    onTaskCompleted: async (helpers) => {
+        const { payload, result } = helpers;
         const { message } = payload;
         const { id: messageId } = message;
-        const { verified } = taskResult;
+        const { verified } = result;
 
         // guard: only update the message when it is not verified
         if (verified) {

@@ -1,11 +1,11 @@
 import { Helpers, Job } from "graphile-worker";
-import { isObject, min } from "radash";
+import { isEmpty, isObject, min } from "radash";
 import dayjs from "dayjs";
 
 import { progressionTopology } from "../config/toplogy";
 import { supabaseClient, Moderation } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
-import { BaseProgressionWorkerTaskPayload, ProgressionTask, RoomStatus } from "../types";
+import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionEnrichmentTask, ProgressionLayerId, ProgressionTask, RoomStatus } from "../types";
 import { Database } from "../generated/database-public.types";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
 import { ENABLE_ROOM_PROGRESSION } from "../config/constants";
@@ -29,43 +29,54 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
     }
 
     const currentRoomStatus: RoomStatus = room?.status_type ?? 'safe';
-    const currentTopologyLayerIndex = progressionTopology.layers.findIndex((topologyLayer) => {
+    const currentLayerIndex = progressionTopology.layers.findIndex((topologyLayer) => {
         return topologyLayer.roomStatus === currentRoomStatus;
     }) ?? 0;
-    const currentTopologyLayer = progressionTopology?.layers?.[currentTopologyLayerIndex];
+    const currentLayer = progressionTopology?.layers?.[currentLayerIndex];
 
     // guard: make sure the layer is valid
-    if (!currentTopologyLayer) {
+    if (!currentLayer) {
         throw Error(`Could not update progression topology layer could not be found. Room ID: ${roomId}, room status: ${currentRoomStatus}.`);
     }
 
-    const currentTopologyLayerId = currentTopologyLayer.id;
+    const currentLayerId = currentLayer.id;
+    const currentEnrichments = currentLayer?.enrichments ?? [];
+    const progressionTaskBaseContext: ProgressionTasksBaseContext = {
+        progressionLayerId: currentLayerId,
+        roomId,
+        helpers,
+    };
 
-    helpers.logger.info(`Running update progression task for room ${roomId} in progression layer ${currentTopologyLayerId}.`);
+    helpers.logger.info(`Running update progression task for room ${roomId} in progression layer ${currentLayerId}.`);
 
-    const currentLayerVerifications = currentTopologyLayer?.verifications ?? [];
+    const currentLayerVerifications = currentLayer?.verifications ?? [];
     const activeVerifications = currentLayerVerifications.filter((verification) => verification.active ?? true);
-    const fallbackVerifications = progressionTopology.layers.slice(0, currentTopologyLayerIndex).flatMap((topologyLayer) => {
+    const persistentVerifications = progressionTopology.layers.slice(0, currentLayerIndex).flatMap((topologyLayer) => {
         const verifications = topologyLayer?.verifications ?? [];
         return verifications.filter((verification) => {
-            const { active = true, fallback = false } = verification;
+            const { active = true, persistent = false } = verification;
 
-            return active && fallback;
+            return active && persistent;
         });
     });
 
-    helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${fallbackVerifications.length} fallback verifications for room ${roomId} in progression layer ${currentTopologyLayerId}.`);
+    helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${persistentVerifications.length} fallback verifications for room ${roomId} in progression layer ${currentLayerId}.`);
+
+    // trigger the enrichments that should be triggered before verification
+    await triggerEnrichments({
+        enrichments: currentEnrichments,
+        progressionTaskBaseContext,
+        executionTypes: ['alwaysBeforeVerification'],
+    });
 
     const [currentLayerVerificationsResult, fallbackVerificationResults] = await Promise.allSettled([
         waitForAllProgressionTasks({
             progressionTasks: activeVerifications,
-            roomId,
-            helpers,
+            ...progressionTaskBaseContext,
         }),
         waitForAllProgressionTasks({
-            progressionTasks: fallbackVerifications,
-            roomId,
-            helpers,
+            progressionTasks: persistentVerifications,
+            ...progressionTaskBaseContext,
         }),
     ]);
 
@@ -102,7 +113,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
                 // guard: skip when the index is not found
                 if (index < 0) {
-                    return currentTopologyLayerIndex;
+                    return currentLayerIndex;
                 }
 
                 return index;
@@ -125,24 +136,31 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
                 helpers,
             });
 
-            // do not proceed with any additional enrichments
+            // do not proceed with any additional enrichments when we have fallen back
             return;
         }
 
-        // trigger all enrichments on no progression to the next layer
-        // NOTE: this can be done asynchronously
-        const currentLayerEnrichments = currentTopologyLayer.enrichments ?? [];
-        addProgressionTaskJobs({
-            progressionTasks: currentLayerEnrichments,
-            roomId,
-            helpers,
+        // trigger the enrichments that should be triggered when verification failed
+        await triggerEnrichments({
+            enrichments: currentEnrichments,
+            progressionTaskBaseContext,
+            executionTypes: ['onNotVerified', 'alwaysAfterVerification'],
         });
         return;
     }
 
-    helpers.logger.info(`All verifications passed for ${roomId} in progression layer ${currentTopologyLayerId}!`);
+    helpers.logger.info(`All verifications passed for ${roomId} in progression layer ${currentLayerId}!`);
 
-    const nextProgressionLayer = progressionTopology.layers?.[currentTopologyLayerIndex + 1];
+    const nextProgressionLayer = progressionTopology.layers?.[currentLayerIndex + 1];
+
+    // trigger the enrichments that should be triggered when verification passed
+    // NOTE: this is done before a room update progression, because changing the status
+    // impacts the execution and filtering of the enrichments
+    await triggerEnrichments({
+        enrichments: currentEnrichments,
+        progressionTaskBaseContext,
+        executionTypes: ['onVerified', 'alwaysAfterVerification'],
+    });
 
     // guard: check if there is a next layer
     if (!nextProgressionLayer) {
@@ -163,8 +181,51 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
 }
 
+interface TriggerEnrichmentsOptions {
+    enrichments: ProgressionEnrichmentTask[] | undefined;
+    progressionTaskBaseContext: ProgressionTasksBaseContext;
+    executionTypes: EnrichmentExecutionType[];
+}
+
+/**
+ * Trigger a set of enrichments that can be either blocking or non-blocking and filter them on a certain execution type
+ */
+async function triggerEnrichments(options: TriggerEnrichmentsOptions) {
+    const { enrichments, progressionTaskBaseContext, executionTypes } = options;
+
+    // guard: check if the enrichments are valid
+    if (!enrichments || isEmpty(enrichments)) {
+        return;
+    }
+
+    const filteredEnrichments = enrichments.filter((enrichment) => {
+        const { active = true, executionType = 'onNotVerified' } = enrichment;
+        return active && executionTypes.includes(executionType);
+    });
+    // TODO: implement conditions
+    // const settledEnrichments = await Promise.allSettled(filteredEnrichments.map(async (enrichment) => {
+    //     const { conditions } = enrichment;
+    // }));
+    const nonBlockingEnrichments = filteredEnrichments.filter((enrichment) => {
+        return !enrichment.waitFor;
+    });
+    const blockingEnrichments = filteredEnrichments.filter((enrichment) => {
+        return enrichment.waitFor;
+    });
+
+    addProgressionTaskJobs({
+        progressionTasks: nonBlockingEnrichments,
+        ...progressionTaskBaseContext,
+    });
+    await addProgressionTaskJobs({
+        progressionTasks: blockingEnrichments,
+        ...progressionTaskBaseContext,
+    });
+}
+
 interface WaitForAllProgressionTasksOptions {
     progressionTasks: ProgressionTask[];
+    progressionLayerId: ProgressionLayerId;
     roomId: string;
     helpers: Helpers;
 }
@@ -233,18 +294,21 @@ function isFailedModeration(moderation: Moderation) {
     return !hasResult || !isVerified;
 }
 
-interface ProgressionTasksContextOptions {
+interface ProgressionTasksContext {
     progressionTasks: ProgressionTask[];
+    progressionLayerId: ProgressionLayerId;
     roomId: string;
     helpers: Helpers;
 }
+
+type ProgressionTasksBaseContext = Omit<ProgressionTasksContext, 'progressionTasks'>;
 
 /**
  * Helper to add all progression tasks as jobs to the job system. Along with this it also adds a moderation to the database.
  * This allows us to track which progression tasks are triggered in the past to filter them for cooldowns and maximum attempts.
  */
-async function addProgressionTaskJobs(options: ProgressionTasksContextOptions) {
-    const { roomId, helpers } = options;
+async function addProgressionTaskJobs(options: ProgressionTasksContext) {
+    const { roomId, helpers, progressionLayerId } = options;
     const { hasErroredProgressionTasks, validProgressionTasks, erroredProgressionTasks } = await filterProgressionTasks(options);
 
     if (hasErroredProgressionTasks) {
@@ -261,6 +325,7 @@ async function addProgressionTaskJobs(options: ProgressionTasksContextOptions) {
 
             return helpers.addJob(workerTaskId, {
                 progressionTask,
+                progressionLayerId,
                 jobKey,
                 roomId,
             } satisfies BaseProgressionWorkerTaskPayload, {
@@ -299,7 +364,7 @@ async function addProgressionTaskJobs(options: ProgressionTasksContextOptions) {
     return jobs;
 }
 
-async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
+async function filterProgressionTasks(options: ProgressionTasksContext) {
     const { progressionTasks, roomId, helpers } = options;
 
     // resolved = should be handled
@@ -307,7 +372,7 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
     // undefined = should be skipped
     const settledProgressionTasks = await Promise.allSettled(progressionTasks.map(async (progressionTask) => {
         const { id: progressionTaskId, active = true, cooldown, maxAttempts } = progressionTask;
-        const { blockProgression = true, messageAmount, durationMs: cooldownMs } = cooldown ?? {};
+        const { blockProgression = true, messageAmount, durationMs: cooldownMs, startDelayMs } = cooldown ?? {};
         const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
 
         if (!active) {
@@ -327,9 +392,30 @@ async function filterProgressionTasks(options: ProgressionTasksContextOptions) {
         }
 
         // check if we need to verify the cooldown or new message amount before adding the job
-        if (messageAmount || cooldownMs) {
+        // TODO: refactor these checks into a single function, because a lot of the logic is the same
+        // we will do this once we have discovered more of these checks
+        if (messageAmount || cooldownMs || startDelayMs) {
             const lastModeration = await getLastCompletedModerationByJobKey(jobKey);
             const lastModerationDate = dayjs(lastModeration?.created_at);
+
+            // check if we need to delay the first time this moderation ever runs
+            // NOTE: first check this, because no fetching of messages is required
+            if (startDelayMs && !lastModeration) {
+                const delayRemainder = dayjs().add(startDelayMs, 'ms').diff(dayjs(), 'ms');
+                const isDelaying = delayRemainder > 0;
+
+                // guard: check if the delay is valid
+                if (isDelaying) {
+                    helpers.logger.info(`The start delay is still active for job ${jobKey}. Delay remaining: ${delayRemainder}ms.`);
+
+                    if (blockProgression) {
+                        throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still delaying and should block progress. Delay: ${startDelayMs}ms.`);
+                    } else {
+                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} is still delaying, but should NOT block progress. Delay: ${startDelayMs}ms.`);
+                        return;
+                    }
+                }
+            }
 
             // check if we need to verify the cooldown before adding the job
             // NOTE: first check this, because no fetching of messages is required

@@ -13,7 +13,8 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
             - Messages may not describe physical attributes of humans
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;

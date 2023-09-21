@@ -13,7 +13,8 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
             - Use easy to understand language
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;

@@ -10,7 +10,8 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
             Always make sure you give the proper reasons of why it is verified or not.
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         return payload.message.content;
     },
 });
