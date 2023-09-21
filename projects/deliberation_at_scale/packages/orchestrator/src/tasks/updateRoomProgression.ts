@@ -13,6 +13,7 @@ import { getRoomById, updateRoomStatus, getCompletedModerationsByJobKey, getLast
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
+    jobKey: string;
 }
 
 /**
@@ -20,7 +21,7 @@ export interface UpdateRoomProgressionPayload {
  * A configurable topology of a succesful deliberation is used as a reference to determine all the steps.
  */
 export default async function updateRoomProgression(payload: UpdateRoomProgressionPayload, helpers: Helpers) {
-    const { roomId } = payload;
+    const { roomId, jobKey } = payload;
     const room = await getRoomById(roomId);
 
     // guard: check if the room is valid
@@ -130,14 +131,14 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
             helpers.logger.info(`Falling back to room status ${fallbackRoomStatus} for room ${roomId} because of failed verifications: ${JSON.stringify(fallbackFailedProgressionTaskIds)}.`);
 
             // progress to the new status
-            updateRoomStatus({
-                roomId,
-                roomStatus: fallbackRoomStatus,
-                helpers,
-            });
+            // updateRoomStatus({
+            //     roomId,
+            //     roomStatus: fallbackRoomStatus,
+            //     helpers,
+            // });
 
             // do not proceed with any additional enrichments when we have fallen back
-            return;
+            // return;
         }
 
         // trigger the enrichments that should be triggered when verification failed
@@ -176,6 +177,9 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
             roomId,
             roomStatus: nextProgressionLayer.roomStatus,
             helpers,
+        });
+        helpers.addJob("updateRoomProgression", payload, {
+            jobKey,
         });
     }
 

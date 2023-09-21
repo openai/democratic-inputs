@@ -24,10 +24,11 @@ export default async function scheduleRoomProgressionUpdates(payload: ScheduleRo
 
     activeRooms.map((activeRoom) => {
         const { id: roomId } = activeRoom;
+        const jobKey = `updateRoomProgression-${roomId}`;
         const newJobPayload: UpdateRoomProgressionPayload = {
             roomId,
+            jobKey,
         };
-        const jobKey = `updateRoomProgression-${roomId}`;
 
         // guard: skip when in testing mode and room is not in allowlist
         if (ENABLE_ROOM_TESTING && !TEST_ROOM_ID_ALLOWLIST.includes(roomId)) {
