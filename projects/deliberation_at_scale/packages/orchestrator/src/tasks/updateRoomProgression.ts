@@ -109,7 +109,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
     helpers.logger.info(`All verifications passed for ${roomId} in progression layer ${currentLayerId}!`);
 
-    const nextProgressionLayer = progressionTopology.layers?.[currentLayerIndex + 1];
+    const nextLayer = progressionTopology.layers?.[currentLayerIndex + 1];
 
     // trigger the enrichments that should be triggered when verification passed
     // NOTE: this is done before a room update progression, because changing the status
@@ -121,25 +121,43 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
     });
 
     // guard: check if there is a next layer
-    if (!nextProgressionLayer) {
+    if (!nextLayer) {
         return;
     }
 
-    helpers.logger.info(`The next progression layer is ${nextProgressionLayer?.id} for room ${roomId}.`);
+    const nextLayerId = nextLayer.id;
+    helpers.logger.info(`The next progression layer is ${nextLayerId} for room ${roomId}.`);
 
     // progress to the new status
-    // NOTE: this can be done asynchronously
     if (ENABLE_ROOM_PROGRESSION) {
-        updateRoomStatus({
-            roomId,
-            roomStatus: nextProgressionLayer.roomStatus,
-            helpers,
-        });
-        helpers.addJob("updateRoomProgression", payload, {
-            jobKey,
-        });
+        const roomProgressionJobKey = getModerationJobKeyForRoomProgression(roomId, nextLayerId);
+        await Promise.allSettled([
+            supabaseClient.from("moderations").insert({
+                type: 'updateRoomProgression',
+                job_key: roomProgressionJobKey,
+                statement: `The room progressed from ${currentLayerId} to the next layer ${nextLayerId}`,
+                target_type: 'room',
+                room_id: roomId,
+                result: JSON.stringify({
+                    currentLayerId,
+                    nextLayerId,
+                }),
+                completed_at: dayjs().toISOString(),
+            }),
+            updateRoomStatus({
+                roomId,
+                roomStatus: nextLayer.roomStatus,
+                helpers,
+            }),
+            helpers.addJob("updateRoomProgression", payload, {
+                jobKey,
+            })
+        ]);
     }
+}
 
+function getModerationJobKeyForRoomProgression(roomId: string, layerId: ProgressionLayerId) {
+    return `updateRoomProgression-room-${roomId}-layer-${layerId}`;
 }
 
 interface TriggerEnrichmentsOptions {
@@ -326,7 +344,7 @@ async function addProgressionTaskJobs(options: ProgressionTasksContext) {
 }
 
 async function filterProgressionTasks(options: ProgressionTasksContext) {
-    const { progressionTasks, roomId, helpers } = options;
+    const { progressionTasks, roomId, helpers, progressionLayerId } = options;
 
     // resolved = should be handled
     // rejected = cooldown or something else is not verified
@@ -352,17 +370,22 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
             }
         }
 
-        // check for a couple of properties that need the last moderation to be fetched
-        // TODO: refactor these checks into a single function, because a lot of the logic is the same
-        // we will do this once we have discovered more of these checks
-        if (messageAmount || cooldownMs || startDelayMs) {
-            const lastModeration = await getLastCompletedModerationByJobKey(jobKey);
-            const lastModerationDate = dayjs(lastModeration?.created_at);
+        if (startDelayMs) {
+            const roomProgressionJobKey = getModerationJobKeyForRoomProgression(roomId, progressionLayerId);
+            const roomProgressionModeration = await getLastCompletedModerationByJobKey(roomProgressionJobKey);
+            let startDelayReferenceDate = dayjs(roomProgressionModeration?.created_at);
+
+            // when there is no moderation yet we will use the room creation date as a reference
+            // this if for example needed when we're still in the first layer of the progression
+            if (!roomProgressionModeration) {
+                const room = await getRoomById(roomId);
+                startDelayReferenceDate = dayjs(room?.created_at);
+            }
 
             // check if we need to delay the first time this moderation ever runs
             // NOTE: first check this, because no fetching of messages is required
-            if (startDelayMs && !lastModeration) {
-                const delayRemainder = dayjs().add(startDelayMs, 'ms').diff(dayjs(), 'ms');
+            if (startDelayMs && !roomProgressionModeration) {
+                const delayRemainder = dayjs().add(startDelayMs, 'ms').diff(startDelayReferenceDate, 'ms');
                 const isDelaying = delayRemainder > 0;
 
                 // guard: check if the delay is valid
@@ -377,6 +400,14 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                     }
                 }
             }
+        }
+
+        // check for a couple of properties that need the last moderation to be fetched
+        // TODO: refactor these checks into a single function, because a lot of the logic is the same
+        // we will do this once we have discovered more of these checks
+        if (messageAmount || cooldownMs) {
+            const lastModeration = await getLastCompletedModerationByJobKey(jobKey);
+            const lastModerationDate = dayjs(lastModeration?.created_at);
 
             // check if we need to verify the cooldown before adding the job
             // NOTE: first check this, because no fetching of messages is required
