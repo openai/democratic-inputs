@@ -1,5 +1,5 @@
 import { Helpers, Job } from "graphile-worker";
-import { isEmpty, isObject, min } from "radash";
+import { isEmpty, isObject } from "radash";
 import dayjs from "dayjs";
 
 import { progressionTopology } from "../config/toplogy";
