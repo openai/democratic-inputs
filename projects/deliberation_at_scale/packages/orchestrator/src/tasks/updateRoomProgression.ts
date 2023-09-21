@@ -68,6 +68,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         enrichments: currentEnrichments,
         progressionTaskBaseContext,
         executionTypes: ['alwaysBeforeVerification'],
+        helpers,
     });
 
     const [currentLayerVerificationsResult, persistentVerificationResults] = await Promise.allSettled([
@@ -103,6 +104,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
             enrichments: currentEnrichments,
             progressionTaskBaseContext,
             executionTypes: ['onNotVerified', 'alwaysAfterVerification'],
+            helpers,
         });
         return;
     }
@@ -118,6 +120,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         enrichments: currentEnrichments,
         progressionTaskBaseContext,
         executionTypes: ['onVerified', 'alwaysAfterVerification'],
+        helpers,
     });
 
     // guard: check if there is a next layer
@@ -164,13 +167,15 @@ interface TriggerEnrichmentsOptions {
     enrichments: ProgressionEnrichmentTask[] | undefined;
     progressionTaskBaseContext: ProgressionTasksBaseContext;
     executionTypes: EnrichmentExecutionType[];
+    helpers: Helpers;
 }
 
 /**
  * Trigger a set of enrichments that can be either blocking or non-blocking and filter them on a certain execution type
  */
 async function triggerEnrichments(options: TriggerEnrichmentsOptions) {
-    const { enrichments, progressionTaskBaseContext, executionTypes } = options;
+    const { enrichments, progressionTaskBaseContext, executionTypes, helpers } = options;
+    const { roomId, progressionLayerId } = progressionTaskBaseContext;
 
     // guard: check if the enrichments are valid
     if (!enrichments || isEmpty(enrichments)) {
@@ -192,14 +197,18 @@ async function triggerEnrichments(options: TriggerEnrichmentsOptions) {
         return enrichment.waitFor;
     });
 
-    addProgressionTaskJobs({
-        progressionTasks: nonBlockingEnrichments,
-        ...progressionTaskBaseContext,
-    });
-    await addProgressionTaskJobs({
-        progressionTasks: blockingEnrichments,
-        ...progressionTaskBaseContext,
-    });
+    try {
+        addProgressionTaskJobs({
+            progressionTasks: nonBlockingEnrichments,
+            ...progressionTaskBaseContext,
+        });
+        await addProgressionTaskJobs({
+            progressionTasks: blockingEnrichments,
+            ...progressionTaskBaseContext,
+        });
+    } catch (error) {
+        helpers.logger.error(`Could not trigger enrichments for room ${roomId} in layer ${progressionLayerId}: ${error}`);
+    }
 }
 
 interface WaitForAllProgressionTasksOptions {
@@ -291,7 +300,7 @@ async function addProgressionTaskJobs(options: ProgressionTasksContext) {
     const { hasErroredProgressionTasks, validProgressionTasks, erroredProgressionTasks } = await filterProgressionTasks(options);
 
     if (hasErroredProgressionTasks) {
-        throw Error(`Could not add progression task jobs for room ${roomId} because one of the verifications failed before executing the jobs. Failed verifications: ${JSON.stringify(erroredProgressionTasks)}`);
+        throw new Error(`Could not add progression task jobs for room ${roomId} because one of the verifications failed before executing the jobs. Failed verifications: ${JSON.stringify(erroredProgressionTasks)}`);
     }
 
     // run in parallel to optimize speed of these tasks
@@ -329,13 +338,11 @@ async function addProgressionTaskJobs(options: ProgressionTasksContext) {
 
     // guard: check if the results are valid
     if (jobsResult.status === 'rejected') {
-        helpers.logger.error(`Could not add progression task jobs for room ${roomId}: ${jobsResult.reason}`);
-        return [];
+        throw new Error(`Could not add progression task jobs for room ${roomId}: ${jobsResult.reason}`);
     }
 
     if (moderationsInsertResult.status === 'rejected') {
-        helpers.logger.error(`Could not insert moderations when logging progression tasks for room ${roomId}: ${moderationsInsertResult.reason}`);
-        return [];
+        throw new Error(`Could not insert moderations when logging progression tasks for room ${roomId}: ${moderationsInsertResult.reason}`);
     }
 
     const jobs = jobsResult.value;
@@ -385,15 +392,17 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
             // check if we need to delay the first time this moderation ever runs
             // NOTE: first check this, because no fetching of messages is required
             if (startDelayMs && !roomProgressionModeration) {
-                const delayRemainder = dayjs().add(startDelayMs, 'ms').diff(startDelayReferenceDate, 'ms');
-                const isDelaying = delayRemainder > 0;
+                const delayRemainder = dayjs().diff(startDelayReferenceDate, 'ms');
+                const isDelaying = delayRemainder < startDelayMs;
 
                 // guard: check if the delay is valid
                 if (isDelaying) {
                     helpers.logger.info(`The start delay is still active for job ${jobKey}. Delay remaining: ${delayRemainder}ms.`);
 
                     if (blockProgression) {
-                        throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still delaying and should block progress. Delay: ${startDelayMs}ms.`);
+                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} is still delaying and should block progress. Delay: ${startDelayMs}ms.`;
+                        helpers.logger.error(errorMessage);
+                        throw Error(errorMessage);
                     } else {
                         helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} is still delaying, but should NOT block progress. Delay: ${startDelayMs}ms.`);
                         return;
@@ -420,7 +429,9 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                     helpers.logger.info(`The cooldown is still active for job ${jobKey}. Cooldown remaining: ${cooldownRemainder}ms.`);
 
                     if (blockProgression) {
-                        throw Error(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`);
+                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`;
+                        helpers.logger.error(errorMessage);
+                        throw Error(errorMessage);
                     } else {
                         helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down, but should NOT block progress. Cooldown: ${cooldownMs}ms.`);
                         return;
@@ -442,7 +453,9 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                     helpers.logger.info(`The new amount of messages after ${lastModerationDate} is not enough for job ${jobKey}. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
 
                     if (blockProgression) {
-                        throw Error(`Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
+                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`;
+                        helpers.logger.error(errorMessage);
+                        throw Error(errorMessage);
                     } else {
                         helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} does not have enough new messages, but should NOT block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
                         return;
