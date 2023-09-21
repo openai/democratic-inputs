@@ -61,7 +61,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         });
     });
 
-    helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${persistentVerifications.length} fallback verifications for room ${roomId} in progression layer ${currentLayerId}.`);
+    helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${persistentVerifications.length} persistent verifications for room ${roomId} in progression layer ${currentLayerId}.`);
 
     // trigger the enrichments that should be triggered before verification
     await triggerEnrichments({
@@ -70,7 +70,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         executionTypes: ['alwaysBeforeVerification'],
     });
 
-    const [currentLayerVerificationsResult, fallbackVerificationResults] = await Promise.allSettled([
+    const [currentLayerVerificationsResult, persistentVerificationResults] = await Promise.allSettled([
         waitForAllProgressionTasks({
             progressionTasks: activeVerifications,
             ...progressionTaskBaseContext,
@@ -85,61 +85,18 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         throw Error(`Could not update progression, because the current layer verifications failed. Room ID: ${roomId}, Reason: ${currentLayerVerificationsResult.reason}`);
     }
 
-    if (fallbackVerificationResults.status === 'rejected') {
-        throw Error(`Could not update progression, because the fallback layer verifications failed. Room ID: ${roomId}, Reason: ${fallbackVerificationResults.reason}`);
+    if (persistentVerificationResults.status === 'rejected') {
+        throw Error(`Could not update progression, because the persistent layer verifications failed. Room ID: ${roomId}, Reason: ${persistentVerificationResults.reason}`);
     }
 
     const { failedProgressionTaskIds: currentFailedProgressionTaskIds } = currentLayerVerificationsResult.value;
-    const { failedProgressionTaskIds: fallbackFailedProgressionTaskIds } = fallbackVerificationResults.value;
-    const failedVerificationTaskIds = [...currentFailedProgressionTaskIds, ...fallbackFailedProgressionTaskIds];
+    const { failedProgressionTaskIds: persistentFailedProgressionTaskIds } = persistentVerificationResults.value;
+    const failedVerificationTaskIds = [...currentFailedProgressionTaskIds, ...persistentFailedProgressionTaskIds];
     const hasFailedVerifications = failedVerificationTaskIds.length > 0;
-    const hasFailedFallbackVerifications = fallbackFailedProgressionTaskIds.length > 0;
 
     // guard: if one verification has failed we cannot proceed to the next progression
     if (hasFailedVerifications) {
         helpers.logger.info(`Not all progression verifications passed for room ${roomId}: ${JSON.stringify(failedVerificationTaskIds)}.`);
-
-        // guard: check if we need to fallback the room status
-        if (hasFailedFallbackVerifications) {
-
-            // find the minimum index of all the failed fallback verifications
-            // because we want to fallback to the lowest possible layer where an verification failed
-            const minimumFallbackLayerIndex = min(fallbackFailedProgressionTaskIds.map((failedProgressionTaskId) => {
-                const index = progressionTopology.layers.findIndex((topologyLayer) => {
-                    const verifications = topologyLayer?.verifications ?? [];
-                    return verifications.some((verification) => {
-                        return verification.id === failedProgressionTaskId;
-                    });
-                });
-
-                // guard: skip when the index is not found
-                if (index < 0) {
-                    return currentLayerIndex;
-                }
-
-                return index;
-            })) ?? 0;
-            const fallbackLayer = progressionTopology.layers[minimumFallbackLayerIndex];
-            const fallbackRoomStatus = fallbackLayer.roomStatus;
-
-            // guard: skip when the fallback status is the same as the current status
-            if (currentRoomStatus === fallbackRoomStatus) {
-                helpers.logger.info(`The room status is already on the fallback status ${fallbackRoomStatus} for room ${roomId}.`);
-                return;
-            }
-
-            helpers.logger.info(`Falling back to room status ${fallbackRoomStatus} for room ${roomId} because of failed verifications: ${JSON.stringify(fallbackFailedProgressionTaskIds)}.`);
-
-            // progress to the new status
-            // updateRoomStatus({
-            //     roomId,
-            //     roomStatus: fallbackRoomStatus,
-            //     helpers,
-            // });
-
-            // do not proceed with any additional enrichments when we have fallen back
-            // return;
-        }
 
         // trigger the enrichments that should be triggered when verification failed
         await triggerEnrichments({
