@@ -101,17 +101,6 @@ export async function waitForAllModerationCompletions(options: AllCompletionsWai
     }));
 }
 
-export async function waitForAllJobCompletions(options: AllCompletionsWaitOptions) {
-    const { jobs, timeoutMs } = options;
-
-    return Promise.allSettled(jobs.map((job) => {
-        return waitForSingleJobCompletion({
-            job,
-            timeoutMs,
-        });
-    }));
-}
-
 export async function waitForSingleJobCompletion(options: CompletionWaitOptions): Promise<Job | null> {
     const { job, timeoutMs = 2 * 60 * ONE_SECOND_MS } = options;
     const { id: jobId, key: jobKey } = job ?? {};
@@ -156,7 +145,7 @@ export async function waitForSingleJobCompletion(options: CompletionWaitOptions)
             reject(`The job ${jobKey} (ID: ${jobId}) waiting time has reached the maximum timeout of ${timeoutMs}`);
         }, timeoutMs);
         const waitingMessageInterval = setInterval(() => {
-            runnerUtils.logger.info(`Still waiting on job ${jobKey} to complete...`);
+            runnerUtils.logger.info(`Still waiting on job ${jobKey} (ID: ${jobId}) to complete...`);
         }, ONE_SECOND_MS * 3);
 
         // register the event
