@@ -2,8 +2,17 @@
 import VideoView from '@/components/VideoView';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
 
-export default function RequestPermissions() {
-    const { state, actions } = useLocalMedia({ request: true, redirect: false });
+interface Props {
+    request: boolean;
+}
+
+export default function RequestPermissions(props: Props) {
+    const { request } = props;
+    const { state, actions } = useLocalMedia({ request, redirect: false });
+
+    if (!request) {
+        return null;
+    }
 
     return (
         <div className='max-w-[500px] w-full mx-auto absolute top-0 left-0 right-0 my-8 p-4 bg-white shadow-lg rounded-lg z-20'>

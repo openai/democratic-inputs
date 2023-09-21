@@ -17,7 +17,7 @@ function Loader() {
 }
 
 const DynamicLocalMediaProvider = dynamic(
-    () => import('./provider'), 
+    () => import('./provider'),
     { ssr: false, loading: Loader },
 );
 

@@ -2,7 +2,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { Dayjs } from "dayjs";
 
 import { FlowId, FlowStateEntries } from "@/state/slices/flow";
-import { RootState } from "@/state/store";
+import { RoomState } from "@/state/slices/room";
 
 export interface ChatFlowConfig {
     id: FlowId;
@@ -36,7 +36,7 @@ export interface OnInputHelpers {
     waitFor: (timeoutMs: number) => Promise<void>;
     setFlowStateEntry: (key: string, value: any) => void;
     flowStateEntries: FlowStateEntries;
-    storeState: RootState;
+    roomState: RoomState;
     reset: () => void;
 }
 
@@ -45,6 +45,7 @@ export interface QuickReply {
     icon?: IconProp;
     content: string;
     onClick: (helpers: OnInputHelpers) => void;
+    enabled?: (helpers: OnInputHelpers) => boolean;
 }
 
 export type MessageTemplate = Omit<Message, 'content'>;

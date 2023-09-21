@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { draw, isEmpty } from "radash";
 import { AnimatePresence, motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
+import dayjs from "dayjs";
 
 import { ChatFlowConfig as FlowType, Message, UserInput, MessagesOptions, MessageTemplate, OnInputHelpers, FlowStep } from "../../flows/types";
 import sleep from "@/utilities/sleep";
@@ -13,8 +14,8 @@ import ChatMessageList from "../ChatMessageList";
 import Button from "../Button";
 import { aiSolid } from "../EntityIcons";
 import { useAppDispatch, useAppSelector } from "@/state/store";
-import { setFlowStateEntry as setFlowStateEntryAction } from "@/state/slices/flow";
-import dayjs from "dayjs";
+import { addFlowMessages, resetFlowMessages, setFlowStateEntry as setFlowStateEntryAction } from "@/state/slices/flow";
+import useChatFlowMessages from "@/hooks/useChatFlowMessages";
 
 interface Props {
     flow: FlowType;
@@ -37,14 +38,16 @@ export default function ChatFlow(props: Props) {
         botMessageTemplate = defaultBotMessageTemplate,
     } = flow;
     const { push } = useRouter();
-    const storeState = useAppSelector((state) => state);
-    const flowStateLookup = storeState.flow.flowStateLookup;
+    const flowStateLookup = useAppSelector((state) => state.flow.flowStateLookup);
+    const roomState = useAppSelector((state) => state.room);
     const dispatch = useAppDispatch();
     const flowStateEntries = useMemo(() => {
         return flowStateLookup[flowId] ?? {};
     }, [flowId, flowStateLookup]);
     const [positionIndex, setPositionIndex] = useState(0);
-    const [flowMessages, setFlowMessages] = useState<Message[]>([]);
+    const { flowMessages } = useChatFlowMessages({
+        flowId,
+    });
     const [inputDisabled, setInputDisabled] = useState(false);
     const currentStep = steps?.[positionIndex] as (FlowStep | undefined);
     const { hideInput = false, quickReplies = [], onTimeout } = currentStep ?? {};
@@ -64,11 +67,13 @@ export default function ChatFlow(props: Props) {
     /** State helpers */
     const reset = useCallback(() => {
         setPositionIndex(0);
-        setFlowMessages([]);
-    }, [setPositionIndex, setFlowMessages]);
+        dispatch(resetFlowMessages({
+            flowId,
+        }));
+    }, [setPositionIndex, dispatch, flowId]);
     const setFlowStateEntry = useCallback((key: string, value: any) => {
         dispatch(setFlowStateEntryAction({
-            id: flowId,
+            flowId,
             key,
             value,
         }));
@@ -111,10 +116,11 @@ export default function ChatFlow(props: Props) {
     const postMessages = useCallback((messages: Message[]) => {
 
         // Append the messages to the array
-        setFlowMessages((currentMessages) => {
-            return currentMessages.concat(messages);
-        });
-    }, []);
+        dispatch(addFlowMessages({
+            flowId,
+            messages,
+        }));
+    }, [dispatch, flowId]);
     const getMessageFromTemplate = useCallback((messagesOptions: MessagesOptions, messageTemplate: MessageTemplate) => {
         const selectedMessages = draw(messagesOptions) ?? [];
         const messages = selectedMessages.map((message) => {
@@ -148,7 +154,7 @@ export default function ChatFlow(props: Props) {
             postUserMessages,
             setFlowStateEntry,
             flowStateEntries,
-            storeState,
+            roomState,
             reset,
             waitFor: async (timeoutMs: number) => {
                 return new Promise((resolve) => {
@@ -158,7 +164,7 @@ export default function ChatFlow(props: Props) {
                 });
             }
         } satisfies OnInputHelpers;
-    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, storeState, reset]);
+    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset]);
 
     useEffect(()=>{
         // use an AbortController to prevent acting on timeout if user input resolves it
@@ -233,7 +239,7 @@ export default function ChatFlow(props: Props) {
     }, [currentStep, onInputHelpers, postBotMessages]);
 
     return (
-        <div className="flex flex-col gap-2">
+        <motion.div layoutId={`chat-flow-${flowId}`} className="flex flex-col gap-2">
             <ChatMessageList messages={flowMessages} />
             <div className="sticky bottom-2 pt-4 flex flex-col gap-3">
                 <AnimatePresence>
@@ -282,7 +288,7 @@ export default function ChatFlow(props: Props) {
                     )}
                 </AnimatePresence>
             </div>
-        </div>
+        </motion.div>
     );
 }
 

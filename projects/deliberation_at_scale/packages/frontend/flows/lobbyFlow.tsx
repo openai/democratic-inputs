@@ -40,7 +40,7 @@ const lobbyFlow: ChatFlowConfig = {
             name: "permission_verify_working",
             messageOptions: [["Everything seems to be working fine. Let's get started!"]],
             skip: (helpers) => {
-                const hasGivenPermission = helpers.storeState.room.permission === PermissionState.REQUESTED;
+                const hasGivenPermission = helpers.roomState.permission === PermissionState.REQUESTED;
 
                 if (!hasGivenPermission) {
                     helpers.goToName("permission_not_working");

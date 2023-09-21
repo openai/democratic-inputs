@@ -18,9 +18,7 @@ export default function LobbyChatFlow() {
 
     return (
         <>
-            {allowAskPermission && (
-                <RequestPermissions />
-            )}
+            <RequestPermissions request={allowAskPermission} />
             {waitingForRoom && (
                 <WaitingForRoom />
             )}

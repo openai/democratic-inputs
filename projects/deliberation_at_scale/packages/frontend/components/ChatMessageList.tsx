@@ -5,7 +5,7 @@ import { Message } from '@/flows/types';
 import ChatMessage from './ChatMessage';
 
 interface Props {
-    messages: Message[];
+    messages: Message[] | undefined;
 }
 
 export default function ChatMessageList(props: Props) {
@@ -25,6 +25,11 @@ export default function ChatMessageList(props: Props) {
             },
         },
     };
+
+    // guard: skip when messages are invalid
+    if (!messages) {
+        return null;
+    }
 
     return (
         <motion.div
