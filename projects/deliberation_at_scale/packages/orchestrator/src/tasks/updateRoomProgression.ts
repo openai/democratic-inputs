@@ -352,7 +352,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
             }
         }
 
-        // check if we need to verify the cooldown or new message amount before adding the job
+        // check for a couple of properties that need the last moderation to be fetched
         // TODO: refactor these checks into a single function, because a lot of the logic is the same
         // we will do this once we have discovered more of these checks
         if (messageAmount || cooldownMs || startDelayMs) {

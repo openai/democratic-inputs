@@ -2,10 +2,11 @@ import { sendBotMessage } from "../utilities/moderatorTasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { Helpers } from "graphile-worker";
 import { draw } from "radash";
+import { supabaseClient } from "src/lib/supabase";
 
 export default async function enrichModeratorIntroduction(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers) {
-    const { roomId } = payload;
-   
+    const { roomId, jobKey } = payload;
+
     const contentOptions = [
         `
         Hello everyone!
@@ -46,8 +47,21 @@ export default async function enrichModeratorIntroduction(payload: BaseProgressi
         return;
     }
 
-    sendBotMessage({
-        content: selectedContent,
-        roomId,
-    });
+    // run inserting the moderations and sending the bot message in parallel
+    await Promise.allSettled([
+        supabaseClient.from("moderations").insert({
+            type: 'enrichModeratorIntroduction',
+            job_key: jobKey,
+            statement: `A moderator introduction was selected.`,
+            result: JSON.stringify({
+                selectedContent,
+            }),
+            target_type: 'room',
+            room_id: roomId,
+        }),
+        sendBotMessage({
+            content: selectedContent,
+            roomId,
+        }),
+    ]);
 }
