@@ -1,4 +1,4 @@
-import { LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY } from "@/utilities/constants";
+import { DEFAULT_BOT_MESSAGE_SPEED_MS, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY } from "@/utilities/constants";
 import { ChatFlowConfig, FlowStep, QuickReply } from "./types";
 import { PermissionState } from "@/state/slices/room";
 

@@ -1,5 +1,6 @@
 import { Message } from "@/flows/types";
 import { createSlice } from "@reduxjs/toolkit";
+import { unique } from "radash";
 
 type PartialRecord<K extends keyof any, T> =  Partial<Record<K, T>>;
 export type FlowId = "register" | "login" | "profile" | "lobby" | "permission" | "evaluate";
@@ -84,18 +85,13 @@ const slice = createSlice({
             delete state.flowPositionLookup[flowId];
         },
         addFlowMessages: (state, action: AddFlowMessagesAction) => {
-            const { flowId, messages } = action.payload;
-            const flowMessages = state.flowMessagesLookup?.[flowId];
+            const { flowId, messages: incomingFlowMessages } = action.payload;
+            const currentFlowMessages = state.flowMessagesLookup?.[flowId] ?? [];
+            const newFlowMessages = unique([...currentFlowMessages, ...incomingFlowMessages], (message) => {
+                return message.id;
+            });
 
-            if (!flowMessages) {
-                state.flowMessagesLookup[flowId] = messages;
-                return;
-            }
-
-            state.flowMessagesLookup[flowId] = [
-                ...flowMessages,
-                ...messages,
-            ];
+            state.flowMessagesLookup[flowId] = newFlowMessages;
         },
         resetFlowMessages: (state, action: ResetFlowMessagesAction) => {
             const { flowId } = action.payload;

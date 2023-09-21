@@ -49,10 +49,10 @@ export interface QuickReply {
     hidden?: (helpers: OnInputHelpers) => boolean;
 }
 
-export type MessageTemplate = Omit<Message, 'content'>;
+export type MessageTemplate = Omit<Message, 'content' | 'id'>;
 
 export interface Message {
-    id?: string;
+    id: string;
     content: string;
     name?: string;
     nameIcon?: IconProp;

@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { draw, isEmpty } from "radash";
@@ -40,8 +40,6 @@ export default function ChatFlow(props: Props) {
     const { push } = useRouter();
     const flowStateEntries = useAppSelector((state) => state.flow.flowStateLookup[flowId]);
     const positionIndex = useAppSelector((state) => state.flow.flowPositionLookup[flowId] ?? 0);
-    const previousHandledPositionIndex = useRef(positionIndex);
-    console.log("positionIndex2", positionIndex, previousHandledPositionIndex.current);
     const roomState = useAppSelector((state) => state.room);
     const dispatch = useAppDispatch();
     const { flowMessages } = useChatFlowMessages({
@@ -120,8 +118,10 @@ export default function ChatFlow(props: Props) {
     const getMessageFromTemplate = useCallback((messagesOptions: MessagesOptions, messageTemplate: MessageTemplate) => {
         const selectedMessages = draw(messagesOptions) ?? [];
         const messages = selectedMessages.map((message) => {
+            const messageId = `${message}-${currentStep?.name ?? uuid()}}`;
+
             return {
-                id: uuid(),
+                id: messageId,
                 ...messageTemplate,
                 content: message,
                 date: dayjs().toISOString(),
@@ -129,7 +129,7 @@ export default function ChatFlow(props: Props) {
         });
 
         return messages;
-    }, []);
+    }, [currentStep]);
     const postBotMessages = useCallback((messagesOptions: MessagesOptions) => {
         const messages = getMessageFromTemplate(messagesOptions, botMessageTemplate);
 
@@ -207,10 +207,7 @@ export default function ChatFlow(props: Props) {
             await timeoutHandler();
         }
 
-        if (previousHandledPositionIndex.current !== positionIndex || isEmpty(flowMessages)) {
-            previousHandledPositionIndex.current = positionIndex;
-            handler();
-        }
+        handler();
 
         // clean up on unmount
         return () => {
@@ -218,7 +215,7 @@ export default function ChatFlow(props: Props) {
             // we throw an abort signal so we don't trigger any resolving promises.
             controller.abort(); // abort timer functionality
         };
-    }, [currentStep, goToName, goToNext, onInputHelpers, onTimeout, postBotMessages, setInputDisabled, flowMessages, positionIndex, flowId]);
+    }, [currentStep, goToName, goToNext, onInputHelpers, onTimeout, postBotMessages, setInputDisabled, positionIndex, flowId]);
 
     /* Handler for any user input */
     const handleInput = useCallback(async (input: UserInput) => {
@@ -236,7 +233,12 @@ export default function ChatFlow(props: Props) {
     }, [currentStep, onInputHelpers, postBotMessages]);
 
     return (
-        <motion.div layoutId={`chat-flow-${flowId}`} className="flex flex-col gap-2">
+        <motion.div
+            layoutId={`chat-flow-${flowId}`}
+            className="flex flex-col gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+        >
             <ChatMessageList messages={flowMessages} />
             <div className="sticky bottom-2 pt-4 flex flex-col gap-3">
                 <AnimatePresence>
