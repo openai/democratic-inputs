@@ -1,5 +1,5 @@
 import { Helpers } from "graphile-worker";
-import { isEmpty } from "radash";
+import { isEmpty, draw } from "radash";
 import dayjs, { Dayjs } from "dayjs";
 
 import { Json } from "../generated/database-public.types";
@@ -168,6 +168,59 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
     };
 }
 
+interface GetContentForHardCodedEnrichMessageOptions {
+    contentOptions: string[];
+    helpers: Helpers,
+}
+
+export async function getContentForHardCodedEnrichMessage(payload: GetContentForHardCodedEnrichMessageOptions) {
+    const { contentOptions, helpers } = payload;
+
+    const selectedContent = draw(contentOptions);
+
+    if (!selectedContent) {
+        helpers.logger.error(``);
+        return;
+    }
+
+    return selectedContent;
+}
+
+interface SendHardCodedEnrichMessage extends BaseProgressionWorkerTaskPayload {
+    contentOptions: string[],
+    helpers: Helpers
+}
+
+export async function sendHardCodedEnrichMessage(options: SendHardCodedEnrichMessage) {
+    const { roomId, jobKey, progressionTask, contentOptions, helpers } = options;
+    const { id: progressionTaskId, workerTaskId } = progressionTask;
+    const selectedContent = draw(contentOptions);
+
+    if (!selectedContent) {
+        helpers.logger.error(``);
+        return;
+    }
+    
+    // run inserting the moderations and sending the bot message in parallel
+    await Promise.allSettled([
+        supabaseClient.from("moderations").insert({
+            type: progressionTaskId,
+            job_key: jobKey,
+            statement: `A room received a hard coded enrich message with worker task ID: ${workerTaskId}.`,
+            completed_at: dayjs().toISOString(),
+            result: JSON.stringify({
+                selectedContent,
+            }),
+            target_type: 'room',
+            room_id: roomId,
+        }),
+        sendBotMessage({
+            content: selectedContent,
+            roomId,
+        }),
+    ]);
+}
+
 export async function getMessageContentForProgressionWorker(payload: BaseProgressionWorkerTaskPayload) {
     const { roomId, jobKey, progressionTask } = payload;
     const messageContext = progressionTask.context?.messages;
@@ -326,6 +379,7 @@ export async function updateRoomStatus(options: UpdateRoomStatusOptions) {
  * Get x amount of moderations for a specific job key.
  */
 export async function getCompletedModerationsByJobKey(jobKey: string, limit = 100) {
+
     const moderationsData = await supabaseClient
         .from('moderations')
         .select()
