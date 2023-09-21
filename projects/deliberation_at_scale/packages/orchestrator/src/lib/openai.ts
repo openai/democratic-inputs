@@ -1,8 +1,10 @@
 import { OpenAI } from "openai";
-import { OPENAI_API_KEY } from "../config/constants";
+import { ONE_SECOND_MS, OPENAI_API_KEY } from "../config/constants";
 import { ChatCompletionCreateParams } from "openai/resources/chat";
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions";
 import { supabaseClient } from "./supabase";
+import dayjs from "dayjs";
+import { CompletionCreateParamsBase } from "openai/resources/completions";
 
 const openaiClient = new OpenAI({
     apiKey: OPENAI_API_KEY,
@@ -17,6 +19,11 @@ export interface FunctionCompletionOptions {
     functionSchema: ChatCompletionCreateParams.Function;
     model?: ChatCompletionCreateParamsBase['model'];
 }
+export interface PromptCompletionOptions {
+    taskInstruction: string;
+    taskContent: string;
+    model?: ChatCompletionCreateParamsBase['model'] | CompletionCreateParamsBase['model'];
+}
 
 export interface VerificationFunctionCompletionOptions {
     taskInstruction: string;
@@ -28,7 +35,7 @@ export interface VerificationFunctionCompletionResult {
     moderatedReason: string;
 }
 
-export interface EnrichFunctionCompletionResult {
+export interface EnrichCompletionResult {
     enrichment: string;
 }
 
@@ -76,7 +83,7 @@ export async function createVerificationFunctionCompletion(options: Verification
     };
 }
 
-export async function createEnrichFunctionCompletion(options: EnrichFunctionCompletionOptions): Promise<EnrichFunctionCompletionResult> {
+export async function createEnrichFunctionCompletion(options: EnrichFunctionCompletionOptions): Promise<EnrichCompletionResult> {
     const { taskInstruction, taskContent } = options;
     const functionCall = await createFunctionCompletion({
         taskInstruction,
@@ -104,6 +111,19 @@ export async function createEnrichFunctionCompletion(options: EnrichFunctionComp
     };
 }
 
+export async function createEnrichPromptCompletion(options: EnrichFunctionCompletionOptions): Promise<EnrichCompletionResult> {
+    const { taskInstruction, taskContent } = options;
+    const enrichment = await createPromptCompletion({
+        taskInstruction,
+        taskContent
+    });
+    const validEnrichment = enrichment ?? '';
+    
+    return {
+        enrichment: validEnrichment,
+    };
+}
+
 export async function createFunctionCompletion(options: FunctionCompletionOptions): Promise<FunctionCall | undefined>  {
     const {
         taskInstruction,
@@ -111,6 +131,11 @@ export async function createFunctionCompletion(options: FunctionCompletionOption
         functionSchema,
         model = 'gpt-4-0613',
     } = options;
+    const startTime = dayjs();
+    const waitingMessageInterval = setInterval(() => {
+        const passedTimeMs = dayjs().diff(startTime, 'ms');
+        console.info(`Waiting on function completion (${passedTimeMs}): ${taskInstruction.trim().slice(0, 100)}`);
+    }, ONE_SECOND_MS * 3);
 
     const [completionResult, completionLogResult] = await Promise.allSettled([
 
@@ -141,6 +166,9 @@ export async function createFunctionCompletion(options: FunctionCompletionOption
         }),
     ]);
 
+    // disable debugging
+    clearInterval(waitingMessageInterval);
+
     if (completionResult.status !== 'fulfilled') {
         console.error(`Failed to get a valid function completion: ${completionResult.reason}`);
         return;
@@ -155,4 +183,57 @@ export async function createFunctionCompletion(options: FunctionCompletionOption
     const functionCall = completion?.message?.function_call;
 
     return functionCall;
+}
+
+export async function createPromptCompletion(options: PromptCompletionOptions): Promise<string | undefined>  {
+    const {
+        taskInstruction,
+        taskContent,
+        model = 'text-davinci-003',
+    } = options;
+    const startTime = dayjs();
+    const waitingMessageInterval = setInterval(() => {
+        const passedTimeMs = dayjs().diff(startTime, 'ms');
+        console.info(`Waiting on prompt completion (${passedTimeMs}): ${taskInstruction.trim().slice(0, 100)}`);
+    }, ONE_SECOND_MS * 3);
+    const prompt = `
+        Task instruction:
+        ${taskInstruction}
+
+        Task content:
+        ${taskContent}
+    `;
+    const [completionResult, completionLogResult] = await Promise.allSettled([
+
+        // perform the structured completion
+        openaiClient.completions.create({
+            model,
+            prompt,
+            max_tokens: 1000,
+        }),
+
+        // log the prompt to the database for transparency on decision making and debugging
+        supabaseClient.from('completions').insert({
+            prompt,
+            model: { name: model },
+            type: 'gpt',
+        }),
+    ]);
+
+    // disable debugging
+    clearInterval(waitingMessageInterval);
+
+    if (completionResult.status !== 'fulfilled') {
+        console.error(`Failed to get a valid prompt completion: ${completionResult.reason}`);
+        return;
+    }
+
+    if (completionLogResult.status !== 'fulfilled') {
+        console.error(`Failed to log the prompt completion: ${completionLogResult.reason}`);
+        return;
+    }
+
+    const completion = completionResult.value.choices?.[0]?.text;
+
+    return completion;
 }

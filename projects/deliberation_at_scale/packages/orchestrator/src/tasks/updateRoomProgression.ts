@@ -135,6 +135,8 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
                 jobKey,
             })
         ]);
+    } else {
+        helpers.logger.info('Skipping progression, because we are in testing mode.');
     }
 }
 
@@ -213,7 +215,7 @@ async function triggerEnrichments(options: TriggerEnrichmentsOptions) {
         return enrichment.waitFor;
     });
 
-    helpers.logger.info(`Triggering ${filteredEnrichments.length} enrichtments for room ${roomId} in progression layer ${progressionLayerId}.`);
+    helpers.logger.info(`Triggering ${filteredEnrichments.length} enrichments (types: ${JSON.stringify(executionTypes)}) for room ${roomId} in progression layer ${progressionLayerId}.`);
 
     // NOTE: catch errors here, because we want to continue with the other enrichments
     // try-catch clause only works with awaiting promises.

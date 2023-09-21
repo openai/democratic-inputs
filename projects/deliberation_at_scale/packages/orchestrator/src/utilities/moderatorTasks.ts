@@ -3,7 +3,7 @@ import { isEmpty, draw } from "radash";
 import dayjs, { Dayjs } from "dayjs";
 
 import { Json } from "../generated/database-public.types";
-import { EnrichFunctionCompletionResult, VerificationFunctionCompletionResult, createEnrichFunctionCompletion, createVerificationFunctionCompletion } from "../lib/openai";
+import { EnrichCompletionResult, VerificationFunctionCompletionResult, createEnrichFunctionCompletion, createEnrichPromptCompletion, createVerificationFunctionCompletion } from "../lib/openai";
 import { supabaseClient, MessageType } from "../lib/supabase";
 import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload, ProgressionHistoryMessageContext, RoomStatus } from "../types";
 
@@ -31,7 +31,7 @@ export interface CreateModeratorTaskOptions<PayloadType, ResultType> {
 }
 
 type CreateVerifyTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, VerificationFunctionCompletionResult>, 'performTask'>;
-type CreateEnrichTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, EnrichFunctionCompletionResult>, 'performTask'>;
+type CreateEnrichTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, EnrichCompletionResult>, 'performTask'>;
 
 export function createModeratedVerifyTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateVerifyTaskOptions<PayloadType>) {
     return createModeratorTask<PayloadType, VerificationFunctionCompletionResult>({
@@ -59,7 +59,7 @@ export function createModeratedVerifyTask<PayloadType extends BaseRoomWorkerTask
 }
 
 export function createModeratedEnrichTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateEnrichTaskOptions<PayloadType>) {
-    return createModeratorTask<PayloadType, EnrichFunctionCompletionResult>({
+    return createModeratorTask<PayloadType, EnrichCompletionResult>({
         performTask: async (helpers) => {
             const { taskInstruction, taskContent } = helpers;
             const enrichmentResult = await createEnrichFunctionCompletion({
@@ -82,6 +82,32 @@ export function createModeratedEnrichTask<PayloadType extends BaseRoomWorkerTask
         ...options,
     });
 }
+
+export function createModeratedEnrichPromptTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateEnrichTaskOptions<PayloadType>) {
+    return createModeratorTask<PayloadType, EnrichCompletionResult>({
+        performTask: async (helpers) => {
+            const { taskInstruction, taskContent } = helpers;
+            const enrichmentResult = await createEnrichPromptCompletion({
+                taskInstruction,
+                taskContent,
+            });
+
+            return enrichmentResult;
+        },
+        getShouldSendBotMessage: async (helpers) => {
+            const { result } = helpers;
+            const { enrichment } = result;
+            return !!enrichment;
+        },
+        getBotMessageContent: async (helpers) => {
+            const { result } = helpers;
+            const { enrichment } = result;
+            return enrichment;
+        },
+        ...options,
+    });
+}
+
 
 export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayload, ResultType>(options: CreateModeratorTaskOptions<PayloadType, ResultType>) {
     return async (payload: PayloadType, helpers: Helpers) => {
