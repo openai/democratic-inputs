@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { progressionTopology } from "../config/toplogy";
 import { supabaseClient, Moderation } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
-import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionEnrichmentTask, ProgressionLayerId, ProgressionTask, RoomStatus } from "../types";
+import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionEnrichmentTask, ProgressionLayer, ProgressionLayerId, ProgressionTask, RoomStatus } from "../types";
 import { Database } from "../generated/database-public.types";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
 import { ENABLE_ROOM_PROGRESSION } from "../config/constants";
@@ -50,19 +50,6 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
     helpers.logger.info(`Running update progression task for room ${roomId} in progression layer ${currentLayerId}.`);
 
-    const currentLayerVerifications = currentLayer?.verifications ?? [];
-    const activeVerifications = currentLayerVerifications.filter((verification) => verification.active ?? true);
-    const persistentVerifications = progressionTopology.layers.slice(0, currentLayerIndex).flatMap((topologyLayer) => {
-        const verifications = topologyLayer?.verifications ?? [];
-        return verifications.filter((verification) => {
-            const { active = true, persistent = false } = verification;
-
-            return active && persistent;
-        });
-    });
-
-    helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${persistentVerifications.length} persistent verifications for room ${roomId} in progression layer ${currentLayerId}.`);
-
     // trigger the enrichments that should be triggered before verification
     await triggerEnrichments({
         enrichments: currentEnrichments,
@@ -71,28 +58,20 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         helpers,
     });
 
-    const [currentLayerVerificationsResult, persistentVerificationResults] = await Promise.allSettled([
-        waitForAllProgressionTasks({
-            progressionTasks: activeVerifications,
-            ...progressionTaskBaseContext,
-        }),
-        waitForAllProgressionTasks({
-            progressionTasks: persistentVerifications,
-            ...progressionTaskBaseContext,
-        }),
-    ]);
+    const verificationResult = await triggerVerifications({
+        currentLayer,
+        currentLayerIndex,
+        helpers,
+        progressionTaskBaseContext,
+    });
 
-    if (currentLayerVerificationsResult.status === 'rejected') {
-        return Promise.reject(`Could not update progression, because the current layer verifications failed. Room ID: ${roomId}, Reason: ${currentLayerVerificationsResult.reason}`);
+    if (!verificationResult) {
+        helpers.logger.info(`Not all progression verifications passed for room ${roomId} for unknown reasons.`);
+        return;
     }
 
-    if (persistentVerificationResults.status === 'rejected') {
-        return Promise.reject(`Could not update progression, because the persistent layer verifications failed. Room ID: ${roomId}, Reason: ${persistentVerificationResults.reason}`);
-    }
-
-    const { failedProgressionTaskIds: currentFailedProgressionTaskIds } = currentLayerVerificationsResult.value;
-    const { failedProgressionTaskIds: persistentFailedProgressionTaskIds } = persistentVerificationResults.value;
-    const failedVerificationTaskIds = [...currentFailedProgressionTaskIds, ...persistentFailedProgressionTaskIds];
+    const { failedProgressionTaskIds: currentFailedProgressionTaskIds } = verificationResult;
+    const failedVerificationTaskIds = [...currentFailedProgressionTaskIds];
     const hasFailedVerifications = failedVerificationTaskIds.length > 0;
 
     // guard: if one verification has failed we cannot proceed to the next progression
@@ -159,6 +138,43 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
     }
 }
 
+interface TriggerVerificationsOptions {
+    currentLayer: ProgressionLayer;
+    currentLayerIndex: number;
+    progressionTaskBaseContext: ProgressionTasksBaseContext;
+    helpers: Helpers;
+}
+
+async function triggerVerifications(options: TriggerVerificationsOptions) {
+    const { currentLayer, currentLayerIndex, progressionTaskBaseContext, helpers } = options;
+    const { id: currentLayerId } = currentLayer;
+    const { roomId } = progressionTaskBaseContext;
+    const currentLayerVerifications = currentLayer?.verifications ?? [];
+    const activeVerifications = currentLayerVerifications.filter((verification) => verification.active ?? true);
+    const persistentVerifications = progressionTopology.layers.slice(0, currentLayerIndex).flatMap((topologyLayer) => {
+        const verifications = topologyLayer?.verifications ?? [];
+        return verifications.filter((verification) => {
+            const { active = true, persistent = false } = verification;
+
+            return active && persistent;
+        });
+    });
+    const handledVerifications = [...activeVerifications, ...persistentVerifications];
+
+    helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${persistentVerifications.length} persistent verifications for room ${roomId} in progression layer ${currentLayerId}.`);
+
+    try {
+        const verificationResult = await waitForAllProgressionTasks({
+            progressionTasks: handledVerifications,
+            ...progressionTaskBaseContext,
+        });
+
+        return verificationResult;
+    } catch (error) {
+        helpers.logger.error(`Could not update progression, because some of the verifications failed. Room ID: ${roomId}, Reason: ${error}`);
+    }
+}
+
 function getModerationJobKeyForRoomProgression(roomId: string, layerId: ProgressionLayerId) {
     return `updateRoomProgression-room-${roomId}-layer-${layerId}`;
 }
@@ -197,17 +213,24 @@ async function triggerEnrichments(options: TriggerEnrichmentsOptions) {
         return enrichment.waitFor;
     });
 
+    helpers.logger.info(`Triggering ${filteredEnrichments.length} enrichtments for room ${roomId} in progression layer ${progressionLayerId}.`);
+
+    // NOTE: catch errors here, because we want to continue with the other enrichments
+    // try-catch clause only works with awaiting promises.
+    addProgressionTaskJobs({
+        progressionTasks: nonBlockingEnrichments,
+        ...progressionTaskBaseContext,
+    }).catch((error) => {
+        helpers.logger.error(`Could not trigger non blocking enrichments for room ${roomId} in layer ${progressionLayerId}: ${error}`);
+    });
+
     try {
-        addProgressionTaskJobs({
-            progressionTasks: nonBlockingEnrichments,
-            ...progressionTaskBaseContext,
-        });
         await addProgressionTaskJobs({
             progressionTasks: blockingEnrichments,
             ...progressionTaskBaseContext,
         });
     } catch (error) {
-        helpers.logger.error(`Could not trigger enrichments for room ${roomId} in layer ${progressionLayerId}: ${error}`);
+        helpers.logger.error(`Could not trigger blocking enrichments for room ${roomId} in layer ${progressionLayerId}: ${error}`);
     }
 }
 
@@ -429,11 +452,11 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                     helpers.logger.info(`The cooldown is still active for job ${jobKey}. Cooldown remaining: ${cooldownRemainder}ms.`);
 
                     if (blockProgression) {
-                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`;
+                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownRemainder}ms.`;
                         helpers.logger.error(errorMessage);
                         return Promise.reject(errorMessage);
                     } else {
-                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down, but should NOT block progress. Cooldown: ${cooldownMs}ms.`);
+                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down, but should NOT block progress. Cooldown: ${cooldownRemainder}ms.`);
                         return;
                     }
                 }
