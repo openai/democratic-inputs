@@ -1,6 +1,5 @@
-import { DEFAULT_BOT_MESSAGE_SPEED_MS, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY } from "@/utilities/constants";
-import { ChatFlowConfig, FlowStep } from "./types";
-import { PermissionState } from "@/state/slices/room";
+import { DEFAULT_BOT_MESSAGE_SPEED_MS } from "@/utilities/constants";
+import { ChatFlowConfig } from "./types";
 
 const lobbyFlow: ChatFlowConfig = {
     id: "lobby",
@@ -12,73 +11,44 @@ const lobbyFlow: ChatFlowConfig = {
         },
         {
             name: "greeting_2",
-            messageOptions: [["If you have any questions at any point, you can ask them using the box below."]],
+            messageOptions: [["First, I need to ask you a few questions."]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         {
-            name: "permission_ask",
-            messageOptions: [["Before we can get started, you need to allow me to see your camera feed. We need this because we feel looking other people in the eye makes for a better discussion."]],
+            name: "greeting_2",
+            messageOptions: [["What nickname would you like to use? You can also choose your current name."]],
             quickReplies: [
                 {
-                    id: "permission_ask_yes",
-                    content: "Ask for permissions now",
+                    id: "use_current_nickname",
+                    content: "Use my current nickname",
                     onClick: (helpers) => {
-                        helpers.setFlowStateEntry(LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, true);
-                        helpers.goToNext();
+                        helpers.goToName('use_current_nickname');
                     }
-                },
-                {
-                    id: "permission_confirm",
-                    content: "The camera and microphone are all set up!",
-                    onClick: (helpers) => {
-                        helpers.goToNext();
-                    }
-                },
-            ],
-        },
-        {
-            name: "permission_verify_working",
-            messageOptions: [["Everything seems to be working fine. Let's get started!"]],
-            skip: (helpers) => {
-                const hasGivenPermission = helpers.roomState.permission === PermissionState.REQUESTED;
-
-                if (!hasGivenPermission) {
-                    helpers.goToName("permission_not_working");
                 }
-
-                return !hasGivenPermission;
-            },
-            quickReplies: [
-                {
-                    id: "lets_go",
-                    content: "Let's go!",
-                    onClick: (helpers) => {
-                        helpers.setFlowStateEntry(LOBBY_WAITING_FOR_ROOM_STATE_KEY, true);
-                        helpers.goToName("waiting_for_room_0");
-                    }
-                },
             ],
+            onInput: async (input, helpers) => {
+                helpers.setFlowStateEntry('nickname', input.content);
+                helpers.goToNext();
+            }
         },
         {
-            name: "permission_not_working",
-            messageOptions: [["It appears that you have not given me permission to use your camera. Please click the button below to try again."]],
+            name: "use_current_nickname",
+            messageOptions: [["Great, we'll keep calling you {nickName}."]],
+            timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+        },
+        {
+            name: "ask_go_to_permission_flow",
+            messageOptions: [["Now we need to setup your camera and microphone."]],
             quickReplies: [
                 {
-                    id: "permission_yes",
-                    content: "Ask for permissions now",
+                    id: "go_to_permission_flow",
+                    content: "Sure thing, let's set it up!",
                     onClick: (helpers) => {
-                        helpers.goToName("permission_ask");
+                        helpers.goToPage('/lobby/permission');
                     }
-                },
+                }
             ],
         },
-        ...([...Array(10)].map((_, waitingIndex) => {
-            return {
-                name: `waiting_for_room_${waitingIndex}`,
-                messageOptions: [["Waiting for a room to be ready..."]],
-                timeoutMs: 2000,
-            } satisfies FlowStep;
-        })),
     ]
 };
 

@@ -3,6 +3,6 @@
  * @param timeoutMs: number in ms to wait before returning promise
  * @returns Promise (void)
  */
-export default function sleep(timeoutMs: number){
+export default function sleep(timeoutMs: number) {
     return new Promise((resolve) => setTimeout(resolve, timeoutMs));
 }

@@ -46,6 +46,7 @@ export interface QuickReply {
     content: string;
     onClick: (helpers: OnInputHelpers) => void;
     enabled?: (helpers: OnInputHelpers) => boolean;
+    hidden?: (helpers: OnInputHelpers) => boolean;
 }
 
 export type MessageTemplate = Omit<Message, 'content'>;

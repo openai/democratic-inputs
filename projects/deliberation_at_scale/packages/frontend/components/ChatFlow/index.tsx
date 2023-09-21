@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { draw, isEmpty } from "radash";
@@ -14,7 +14,7 @@ import ChatMessageList from "../ChatMessageList";
 import Button from "../Button";
 import { aiSolid } from "../EntityIcons";
 import { useAppDispatch, useAppSelector } from "@/state/store";
-import { addFlowMessages, resetFlowMessages, setFlowStateEntry as setFlowStateEntryAction } from "@/state/slices/flow";
+import { addFlowMessages, resetFlowMessages, resetFlowPosition, setFlowPosition, setFlowStateEntry as setFlowStateEntryAction } from "@/state/slices/flow";
 import useChatFlowMessages from "@/hooks/useChatFlowMessages";
 
 interface Props {
@@ -38,13 +38,12 @@ export default function ChatFlow(props: Props) {
         botMessageTemplate = defaultBotMessageTemplate,
     } = flow;
     const { push } = useRouter();
-    const flowStateLookup = useAppSelector((state) => state.flow.flowStateLookup);
+    const flowStateEntries = useAppSelector((state) => state.flow.flowStateLookup[flowId]);
+    const positionIndex = useAppSelector((state) => state.flow.flowPositionLookup[flowId] ?? 0);
+    const previousHandledPositionIndex = useRef(positionIndex);
+    console.log("positionIndex2", positionIndex, previousHandledPositionIndex.current);
     const roomState = useAppSelector((state) => state.room);
     const dispatch = useAppDispatch();
-    const flowStateEntries = useMemo(() => {
-        return flowStateLookup[flowId] ?? {};
-    }, [flowId, flowStateLookup]);
-    const [positionIndex, setPositionIndex] = useState(0);
     const { flowMessages } = useChatFlowMessages({
         flowId,
     });
@@ -66,11 +65,13 @@ export default function ChatFlow(props: Props) {
 
     /** State helpers */
     const reset = useCallback(() => {
-        setPositionIndex(0);
+        dispatch(resetFlowPosition({
+            flowId,
+        }));
         dispatch(resetFlowMessages({
             flowId,
         }));
-    }, [setPositionIndex, dispatch, flowId]);
+    }, [dispatch, flowId]);
     const setFlowStateEntry = useCallback((key: string, value: any) => {
         dispatch(setFlowStateEntryAction({
             flowId,
@@ -80,18 +81,13 @@ export default function ChatFlow(props: Props) {
     }, [dispatch, flowId]);
 
     /* Navigation helpers */
-    const goTo = useCallback((deltaIndex: number) => {
-        setPositionIndex((currentPositionIndex) => {
-            const newPositionIndex = currentPositionIndex + deltaIndex;
-
-            // guard: check that the new position is not out of bounds
-            if (newPositionIndex < 0 || newPositionIndex > flow.steps.length - 1) {
-                return currentPositionIndex;
-            }
-
-            return newPositionIndex;
-        });
-    }, [flow]);
+    const goTo = useCallback((deltaPosition: number) => {
+        dispatch(setFlowPosition({
+            flowId,
+            deltaPosition,
+            maxPosition: (flow.steps.length - 1) ?? 0,
+        }));
+    }, [dispatch, flow.steps.length, flowId]);
     const goToNext = useCallback(() => {
         goTo(1);
     }, [goTo]);
@@ -153,20 +149,18 @@ export default function ChatFlow(props: Props) {
             postBotMessages,
             postUserMessages,
             setFlowStateEntry,
-            flowStateEntries,
+            flowStateEntries: flowStateEntries ?? {},
             roomState,
             reset,
             waitFor: async (timeoutMs: number) => {
                 return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, timeoutMs);
+                    setTimeout(resolve, timeoutMs);
                 });
             }
         } satisfies OnInputHelpers;
     }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset]);
 
-    useEffect(()=>{
+    useEffect(() => {
         // use an AbortController to prevent acting on timeout if user input resolves it
         const controller = new AbortController();
         const signal = controller.signal;
@@ -203,7 +197,7 @@ export default function ChatFlow(props: Props) {
 
         async function handler() {
 
-            // GUARD: Check if we need to skip this subflow
+            // GUARD: Check if we need to skip this step
             if (await skipHandler()) {
                 return;
             }
@@ -213,7 +207,10 @@ export default function ChatFlow(props: Props) {
             await timeoutHandler();
         }
 
-        handler();
+        if (previousHandledPositionIndex.current !== positionIndex || isEmpty(flowMessages)) {
+            previousHandledPositionIndex.current = positionIndex;
+            handler();
+        }
 
         // clean up on unmount
         return () => {
@@ -221,7 +218,7 @@ export default function ChatFlow(props: Props) {
             // we throw an abort signal so we don't trigger any resolving promises.
             controller.abort(); // abort timer functionality
         };
-    }, [currentStep, goToName, goToNext, onInputHelpers, onTimeout, postBotMessages, setInputDisabled]);
+    }, [currentStep, goToName, goToNext, onInputHelpers, onTimeout, postBotMessages, setInputDisabled, flowMessages, positionIndex, flowId]);
 
     /* Handler for any user input */
     const handleInput = useCallback(async (input: UserInput) => {
@@ -251,13 +248,19 @@ export default function ChatFlow(props: Props) {
                             animate={{ opacity: 1 }}
                         >
                             {quickReplies.map((quickReply) => {
-                                const { id, onClick, content, icon } = quickReply;
+                                const { id, onClick, content, icon, enabled, hidden } = quickReply;
                                 const key = `${id}-${content}`;
+                                const isEnabled = enabled?.(onInputHelpers) ?? true;
+                                const isHidden = hidden?.(onInputHelpers) ?? false;
+
+                                if (isHidden) {
+                                    return null;
+                                }
 
                                 return (
                                     <Button
                                         key={key}
-                                        disabled={inputDisabled}
+                                        disabled={inputDisabled || !isEnabled}
                                         onClick={async () => {
                                             setInputDisabled(true);
                                             try {
