@@ -26,7 +26,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
     // guard: check if the room is valid
     if (!roomId || !room) {
-        throw Error(`Could not update progression because the room was not found. Room ID: ${roomId}`);
+        return Promise.reject(`Could not update progression because the room was not found. Room ID: ${roomId}`);
     }
 
     const currentRoomStatus: RoomStatus = room?.status_type ?? 'safe';
@@ -37,7 +37,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
 
     // guard: make sure the layer is valid
     if (!currentLayer) {
-        throw Error(`Could not update progression topology layer could not be found. Room ID: ${roomId}, room status: ${currentRoomStatus}.`);
+        return Promise.reject(`Could not update progression topology layer could not be found. Room ID: ${roomId}, room status: ${currentRoomStatus}.`);
     }
 
     const currentLayerId = currentLayer.id;
@@ -83,11 +83,11 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
     ]);
 
     if (currentLayerVerificationsResult.status === 'rejected') {
-        throw Error(`Could not update progression, because the current layer verifications failed. Room ID: ${roomId}, Reason: ${currentLayerVerificationsResult.reason}`);
+        return Promise.reject(`Could not update progression, because the current layer verifications failed. Room ID: ${roomId}, Reason: ${currentLayerVerificationsResult.reason}`);
     }
 
     if (persistentVerificationResults.status === 'rejected') {
-        throw Error(`Could not update progression, because the persistent layer verifications failed. Room ID: ${roomId}, Reason: ${persistentVerificationResults.reason}`);
+        return Promise.reject(`Could not update progression, because the persistent layer verifications failed. Room ID: ${roomId}, Reason: ${persistentVerificationResults.reason}`);
     }
 
     const { failedProgressionTaskIds: currentFailedProgressionTaskIds } = currentLayerVerificationsResult.value;
@@ -300,7 +300,7 @@ async function addProgressionTaskJobs(options: ProgressionTasksContext) {
     const { hasErroredProgressionTasks, validProgressionTasks, erroredProgressionTasks } = await filterProgressionTasks(options);
 
     if (hasErroredProgressionTasks) {
-        throw new Error(`Could not add progression task jobs for room ${roomId} because one of the verifications failed before executing the jobs. Failed verifications: ${JSON.stringify(erroredProgressionTasks)}`);
+        return Promise.reject(`Could not add progression task jobs for room ${roomId} because one of the verifications failed before executing the jobs. Failed verifications: ${JSON.stringify(erroredProgressionTasks)}`);
     }
 
     // run in parallel to optimize speed of these tasks
@@ -338,11 +338,11 @@ async function addProgressionTaskJobs(options: ProgressionTasksContext) {
 
     // guard: check if the results are valid
     if (jobsResult.status === 'rejected') {
-        throw new Error(`Could not add progression task jobs for room ${roomId}: ${jobsResult.reason}`);
+        return Promise.reject(`Could not add progression task jobs for room ${roomId}: ${jobsResult.reason}`);
     }
 
     if (moderationsInsertResult.status === 'rejected') {
-        throw new Error(`Could not insert moderations when logging progression tasks for room ${roomId}: ${moderationsInsertResult.reason}`);
+        return Promise.reject(`Could not insert moderations when logging progression tasks for room ${roomId}: ${moderationsInsertResult.reason}`);
     }
 
     const jobs = jobsResult.value;
@@ -402,7 +402,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                     if (blockProgression) {
                         const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} is still delaying and should block progress. Delay: ${startDelayMs}ms.`;
                         helpers.logger.error(errorMessage);
-                        throw Error(errorMessage);
+                        return Promise.reject(errorMessage);
                     } else {
                         helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} is still delaying, but should NOT block progress. Delay: ${startDelayMs}ms.`);
                         return;
@@ -431,7 +431,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                     if (blockProgression) {
                         const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} is still cooling down and should block progress. Cooldown: ${cooldownMs}ms.`;
                         helpers.logger.error(errorMessage);
-                        throw Error(errorMessage);
+                        return Promise.reject(errorMessage);
                     } else {
                         helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} is still cooling down, but should NOT block progress. Cooldown: ${cooldownMs}ms.`);
                         return;
@@ -455,7 +455,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                     if (blockProgression) {
                         const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`;
                         helpers.logger.error(errorMessage);
-                        throw Error(errorMessage);
+                        return Promise.reject(errorMessage);
                     } else {
                         helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} does not have enough new messages, but should NOT block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
                         return;
