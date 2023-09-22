@@ -97,7 +97,6 @@ export const messageVisibilityType = pgEnum("visibilityType", [
 export const participantStatusType = pgEnum("participantStatusType", [
     "queued",
     "waiting_for_confirmation",
-    "transfering_to_room",
     "in_room",
     "end_of_session",
 ]);
