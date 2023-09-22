@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { draw, shuffle } from 'radash';
 
 import { supabaseClient } from "../lib/supabase";
-import { Helpers, quickAddJob } from "graphile-worker";
+import { Helpers } from "graphile-worker";
 import { createExternalRoom } from "../lib/whereby";
 import { MAX_ROOM_DURATION_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
 

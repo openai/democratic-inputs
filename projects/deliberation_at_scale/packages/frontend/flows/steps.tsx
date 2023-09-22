@@ -6,7 +6,7 @@ export const askForEmailStep: FlowStep = {
     messageOptions: [["Can you give me your email address?"]],
     onInput: async (input, helpers) => {
         const { content } = input;
-        const isEmailAddress = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(content);
+        const isEmailAddress = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(content);
 
         helpers.postUserMessages([[content]]);
         await helpers.waitFor(1000);

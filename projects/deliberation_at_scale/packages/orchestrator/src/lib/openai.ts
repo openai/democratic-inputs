@@ -118,7 +118,7 @@ export async function createEnrichPromptCompletion(options: EnrichFunctionComple
         taskContent
     });
     const validEnrichment = enrichment ?? '';
-    
+
     return {
         enrichment: validEnrichment,
     };

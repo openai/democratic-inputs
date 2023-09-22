@@ -3,13 +3,12 @@ import { BaseProgressionWorkerTaskPayload } from "../types";
 import { ONE_SECOND_MS, PARTICIPANTS_PER_ROOM } from "../config/constants";
 import openaiClient from "../lib/openai";
 import dayjs from "dayjs";
-import { Helpers } from "graphile-worker";
 
 export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
             You are a moderator of a conversation between ${PARTICIPANTS_PER_ROOM} participants.
-            Introduce the topic mentioned below to the participants. 
+            Introduce the topic mentioned below to the participants.
             Do not great the participants.
             After the topic is presented you'll ask if there is anyone who wants to share their first thoughts on the topic.
             Limit your answer to three sentences.
@@ -19,12 +18,12 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
         const { payload } = helpers;
         const { roomId } = payload;
         const topicContent = await getTopicContentByRoomId(roomId);
-    
+
         return topicContent;
     },
 });
 
-export async function enrichTopicIntroduction(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers) {
+export async function enrichTopicIntroduction(payload: BaseProgressionWorkerTaskPayload) {
     const { roomId } = payload;
     const topicContent = await getTopicContentByRoomId(roomId);
     const startTime = dayjs();
@@ -45,9 +44,9 @@ export async function enrichTopicIntroduction(payload: BaseProgressionWorkerTask
         Topic: ${topicContent}
         `,
     });
-    
+
     const content = completionResult.choices?.[0].text;
-    
+
     // disable debugging
     clearInterval(waitingMessageInterval);
 

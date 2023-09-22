@@ -19,14 +19,14 @@ const profileFlow: ChatFlowConfig = {
                 {
                     id: 'previous-rooms',
                     content: 'View results of previous rooms',
-                    onClick: async (helpers) => {
+                    onClick: async () => {
                         // empty
                     },
                 },
                 {
                     id: 'change-profile',
                     content: 'Change my profile',
-                    onClick: async (helpers) => {
+                    onClick: async () => {
                         // empty
                     },
                 }

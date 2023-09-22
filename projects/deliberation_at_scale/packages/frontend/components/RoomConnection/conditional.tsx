@@ -1,5 +1,4 @@
 'use client';
-import { useGetRoomsQuery } from '@/generated/graphql';
 import useRoom from '@/hooks/useRoom';
 import { PermissionState } from '@/state/slices/room';
 import { useAppSelector } from '@/state/store';
