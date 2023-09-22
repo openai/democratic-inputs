@@ -1,11 +1,11 @@
 import { Job, WorkerEventMap } from "graphile-worker";
 import { createClient } from '@supabase/supabase-js';
+import dayjs from "dayjs";
 
 import { SUPABASE_URL, SUPABASE_KEY, ONE_SECOND_MS } from "../config/constants";
-import { Database } from 'src/generated/database-graphile_worker.types';
+import { Database } from '../generated/database-graphile_worker.types';
 import { getRunner, getRunnerUtils } from "../runner";
 import { Moderation, supabaseClient } from "./supabase";
-import dayjs from "dayjs";
 
 export interface CompletionWaitOptions {
     job: Job;
@@ -101,17 +101,6 @@ export async function waitForAllModerationCompletions(options: AllCompletionsWai
     }));
 }
 
-export async function waitForAllJobCompletions(options: AllCompletionsWaitOptions) {
-    const { jobs, timeoutMs } = options;
-
-    return Promise.allSettled(jobs.map((job) => {
-        return waitForSingleJobCompletion({
-            job,
-            timeoutMs,
-        });
-    }));
-}
-
 export async function waitForSingleJobCompletion(options: CompletionWaitOptions): Promise<Job | null> {
     const { job, timeoutMs = 2 * 60 * ONE_SECOND_MS } = options;
     const { id: jobId, key: jobKey } = job ?? {};
@@ -136,6 +125,7 @@ export async function waitForSingleJobCompletion(options: CompletionWaitOptions)
 
             // cancel timeout
             clearTimeout(completionTimeout);
+            clearInterval(waitingMessageInterval);
 
             // unregister itself
             unregisterCompletionCallback();
@@ -154,6 +144,9 @@ export async function waitForSingleJobCompletion(options: CompletionWaitOptions)
             unregisterCompletionCallback();
             reject(`The job ${jobKey} (ID: ${jobId}) waiting time has reached the maximum timeout of ${timeoutMs}`);
         }, timeoutMs);
+        const waitingMessageInterval = setInterval(() => {
+            runnerUtils.logger.info(`Still waiting on job ${jobKey} (ID: ${jobId}) to complete...`);
+        }, ONE_SECOND_MS * 3);
 
         // register the event
         runner.events.on("job:complete", jobCompletionCallback);

@@ -7,7 +7,8 @@ import { PARTICIPANTS_PER_ROOM } from "../config/constants";
  * The amount of message history is provided via the payload.
  */
 export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
-    getTaskInstruction: async (payload) => {
+    getTaskInstruction: async (helpers) => {
+        const { payload } = helpers;
         const { roomId } = payload;
         const topicContent = await getTopicContentByRoomId(roomId);
 
@@ -18,7 +19,8 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
             You have to evaluate whether they have found a consensus on the topic.
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;

@@ -1,27 +1,42 @@
 import { Helpers } from "graphile-worker";
-import { isEmpty } from "radash";
+import { isEmpty, draw } from "radash";
 import dayjs, { Dayjs } from "dayjs";
 
 import { Json } from "../generated/database-public.types";
-import { EnrichFunctionCompletionResult, VerificationFunctionCompletionResult, createEnrichFunctionCompletion, createVerificationFunctionCompletion } from "../lib/openai";
+import { EnrichCompletionResult, VerificationFunctionCompletionResult, createEnrichFunctionCompletion, createEnrichPromptCompletion, createVerificationFunctionCompletion } from "../lib/openai";
 import { supabaseClient, MessageType } from "../lib/supabase";
 import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload, ProgressionHistoryMessageContext, RoomStatus } from "../types";
 
+export interface BaseTaskHelpers<PayloadType> {
+    helpers: Helpers;
+    payload: PayloadType;
+}
+
+export interface PerformTaskHelpers<PayloadType> extends BaseTaskHelpers<PayloadType> {
+    taskInstruction: string;
+    taskContent: string;
+}
+
+export interface ResultTaskHelpers<PayloadType, ResultType> extends PerformTaskHelpers<PayloadType> {
+    result: ResultType;
+}
+
 export interface CreateModeratorTaskOptions<PayloadType, ResultType> {
-    getTaskInstruction: (payload: PayloadType) => Promise<string> | string;
-    getTaskContent: (payload: PayloadType) => Promise<string> | string;
-    performTask: (taskInstruction: string, taskContent: string) => Promise<ResultType> | ResultType;
-    getShouldSendBotMessage?: (result: ResultType) => Promise<boolean> | boolean;
-    getBotMessageContent?: (result: ResultType) => Promise<string> | string;
-    onTaskCompleted?: (payload: PayloadType, result: ResultType) => Promise<void> | void;
+    getTaskInstruction: (helpers: BaseTaskHelpers<PayloadType>) => Promise<string> | string;
+    getTaskContent: (helpers: BaseTaskHelpers<PayloadType>) => Promise<string> | string;
+    performTask: (helpers: PerformTaskHelpers<PayloadType>) => Promise<ResultType> | ResultType;
+    getShouldSendBotMessage?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<boolean> | boolean;
+    getBotMessageContent?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<string> | string;
+    onTaskCompleted?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<void> | void;
 }
 
 type CreateVerifyTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, VerificationFunctionCompletionResult>, 'performTask'>;
-type CreateEnrichTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, EnrichFunctionCompletionResult>, 'performTask'>;
+type CreateEnrichTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, EnrichCompletionResult>, 'performTask'>;
 
 export function createModeratedVerifyTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateVerifyTaskOptions<PayloadType>) {
     return createModeratorTask<PayloadType, VerificationFunctionCompletionResult>({
-        performTask: async (taskInstruction, taskContent) => {
+        performTask: async (helpers) => {
+            const { taskInstruction, taskContent } = helpers;
             const verificationResult = await createVerificationFunctionCompletion({
                 taskInstruction,
                 taskContent,
@@ -29,12 +44,14 @@ export function createModeratedVerifyTask<PayloadType extends BaseRoomWorkerTask
 
             return verificationResult;
         },
-        getShouldSendBotMessage: async (verificationResult: VerificationFunctionCompletionResult) => {
-            const { verified } = verificationResult;
+        getShouldSendBotMessage: async (helpers) => {
+            const { result } = helpers;
+            const { verified } = result;
             return !verified;
         },
-        getBotMessageContent: async (verificationResult: VerificationFunctionCompletionResult) => {
-            const { moderatedReason } = verificationResult;
+        getBotMessageContent: async (helpers) => {
+            const { result } = helpers;
+            const { moderatedReason } = result;
             return moderatedReason;
         },
         ...options,
@@ -42,8 +59,9 @@ export function createModeratedVerifyTask<PayloadType extends BaseRoomWorkerTask
 }
 
 export function createModeratedEnrichTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateEnrichTaskOptions<PayloadType>) {
-    return createModeratorTask<PayloadType, EnrichFunctionCompletionResult>({
-        performTask: async (taskInstruction, taskContent) => {
+    return createModeratorTask<PayloadType, EnrichCompletionResult>({
+        performTask: async (helpers) => {
+            const { taskInstruction, taskContent } = helpers;
             const enrichmentResult = await createEnrichFunctionCompletion({
                 taskInstruction,
                 taskContent,
@@ -51,17 +69,45 @@ export function createModeratedEnrichTask<PayloadType extends BaseRoomWorkerTask
 
             return enrichmentResult;
         },
-        getShouldSendBotMessage: async (enrichmentResult: EnrichFunctionCompletionResult) => {
-            const { enrichtment } = enrichmentResult;
-            return !!enrichtment;
+        getShouldSendBotMessage: async (helpers) => {
+            const { result } = helpers;
+            const { enrichment } = result;
+            return !!enrichment;
         },
-        getBotMessageContent: async (enrichmentResult: EnrichFunctionCompletionResult) => {
-            const { enrichtment } = enrichmentResult;
-            return enrichtment;
+        getBotMessageContent: async (helpers) => {
+            const { result } = helpers;
+            const { enrichment } = result;
+            return enrichment;
         },
         ...options,
     });
 }
+
+export function createModeratedEnrichPromptTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateEnrichTaskOptions<PayloadType>) {
+    return createModeratorTask<PayloadType, EnrichCompletionResult>({
+        performTask: async (helpers) => {
+            const { taskInstruction, taskContent } = helpers;
+            const enrichmentResult = await createEnrichPromptCompletion({
+                taskInstruction,
+                taskContent,
+            });
+
+            return enrichmentResult;
+        },
+        getShouldSendBotMessage: async (helpers) => {
+            const { result } = helpers;
+            const { enrichment } = result;
+            return !!enrichment;
+        },
+        getBotMessageContent: async (helpers) => {
+            const { result } = helpers;
+            const { enrichment } = result;
+            return enrichment;
+        },
+        ...options,
+    });
+}
+
 
 export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayload, ResultType>(options: CreateModeratorTaskOptions<PayloadType, ResultType>) {
     return async (payload: PayloadType, helpers: Helpers) => {
@@ -74,6 +120,10 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
             onTaskCompleted,
         } = options;
         const { jobKey, roomId } = payload;
+        const baseTaskHelpers: BaseTaskHelpers<PayloadType> = {
+            helpers,
+            payload,
+        };
 
         // guard: skip task when there is no task instruction
         if (!jobKey || !roomId) {
@@ -83,8 +133,8 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
 
         // get these in parallel to each other to optimize speed
         const [taskInstructionResult, taskContentResult] = await Promise.allSettled([
-            getTaskInstruction(payload),
-            getTaskContent(payload),
+            getTaskInstruction(baseTaskHelpers),
+            getTaskContent(baseTaskHelpers),
         ]);
 
         // guard: retry when there is no instruction or content
@@ -102,9 +152,18 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
             return;
         }
 
-        const taskResult = await performTask(taskInstruction, taskContent);
-        const shouldSendBotMessage = await getShouldSendBotMessage(taskResult);
-        const botMessageContent = await getBotMessageContent(taskResult);
+        const performTaskHelpers: PerformTaskHelpers<PayloadType> = {
+            ...baseTaskHelpers,
+            taskInstruction,
+            taskContent,
+        };
+        const taskResult = await performTask(performTaskHelpers);
+        const resultTaskHelpers: ResultTaskHelpers<PayloadType, ResultType> = {
+            ...performTaskHelpers,
+            result: taskResult,
+        };
+        const shouldSendBotMessage = await getShouldSendBotMessage(resultTaskHelpers);
+        const botMessageContent = await getBotMessageContent(resultTaskHelpers);
 
         // guard: throw error when we should send a bot message but its invalid
         if (shouldSendBotMessage && isEmpty(botMessageContent)) {
@@ -118,7 +177,7 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
         await Promise.allSettled([
 
             // execute the the callback when it is defined
-            !!onTaskCompleted && onTaskCompleted(payload, taskResult),
+            !!onTaskCompleted && onTaskCompleted(resultTaskHelpers),
 
             // always store the result of this verification in the database for logging purposes
             storeModerationResult({
@@ -133,6 +192,59 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
             }),
         ]);
     };
+}
+
+interface GetContentForHardCodedEnrichMessageOptions {
+    contentOptions: string[];
+    helpers: Helpers,
+}
+
+export async function getContentForHardCodedEnrichMessage(payload: GetContentForHardCodedEnrichMessageOptions) {
+    const { contentOptions, helpers } = payload;
+
+    const selectedContent = draw(contentOptions);
+
+    if (!selectedContent) {
+        helpers.logger.error(``);
+        return;
+    }
+
+    return selectedContent;
+}
+
+interface SendHardCodedEnrichMessage extends BaseProgressionWorkerTaskPayload {
+    contentOptions: string[],
+    helpers: Helpers
+}
+
+export async function sendHardCodedEnrichMessage(options: SendHardCodedEnrichMessage) {
+    const { roomId, jobKey, progressionTask, contentOptions, helpers } = options;
+    const { id: progressionTaskId, workerTaskId } = progressionTask;
+    const selectedContent = draw(contentOptions);
+
+    if (!selectedContent) {
+        helpers.logger.error(``);
+        return;
+    }
+
+    // run inserting the moderations and sending the bot message in parallel
+    await Promise.allSettled([
+        supabaseClient.from("moderations").insert({
+            type: progressionTaskId,
+            job_key: jobKey,
+            statement: `A room received a hard coded enrich message with worker task ID: ${workerTaskId}.`,
+            completed_at: dayjs().toISOString(),
+            result: JSON.stringify({
+                selectedContent,
+            }),
+            target_type: 'room',
+            room_id: roomId,
+        }),
+        sendBotMessage({
+            content: selectedContent,
+            roomId,
+        }),
+    ]);
 }
 
 export async function getMessageContentForProgressionWorker(payload: BaseProgressionWorkerTaskPayload) {
@@ -222,21 +334,21 @@ async function getParticipantsByRoomId(roomId: string) {
     return participants;
 }
 
-interface SendMessageOptions {
+export interface SendMessageOptions {
     active?: boolean;
     type: MessageType;
     roomId: string;
     content: string;
 }
 
-async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
+export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
     return sendMessage({
         ...options,
         type: 'bot',
     });
 }
 
-async function sendMessage(options: SendMessageOptions) {
+export async function sendMessage(options: SendMessageOptions) {
     const { active = true, type, roomId, content } = options;
 
     await supabaseClient.from("messages").insert({
@@ -293,6 +405,7 @@ export async function updateRoomStatus(options: UpdateRoomStatusOptions) {
  * Get x amount of moderations for a specific job key.
  */
 export async function getCompletedModerationsByJobKey(jobKey: string, limit = 100) {
+
     const moderationsData = await supabaseClient
         .from('moderations')
         .select()

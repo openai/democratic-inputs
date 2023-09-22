@@ -9,8 +9,8 @@ const crontab: ToggleableCronItem[] = [
     {
         active: true,
         pattern: '* * * * *',
-        task: 'scheduleRoomProgressionUpdates',
-        identifier: 'scheduleRoomProgressionUpdates',
+        task: 'triggerRoomProgressionUpdates',
+        identifier: 'triggerRoomProgressionUpdates',
     },
 ];
 
