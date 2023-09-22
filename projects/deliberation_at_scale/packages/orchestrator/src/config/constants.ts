@@ -12,6 +12,7 @@ declare global {
             SUPABASE_URL: string;
             SUPABASE_KEY: string;
             SENTRY_DSN: string;
+            WHEREBY_BEARER_TOKEN: string;
         }
     }
 }
@@ -22,6 +23,7 @@ const requiredEnvVars = [
     'SUPABASE_KEY',
     'OPENAI_API_KEY',
     'SENTRY_DSN',
+    'WHEREBY_BEARER_TOKEN',
 ];
 
 // Check for missing environment variables
@@ -39,6 +41,10 @@ export const DATABASE_URL = process.env.DATABASE_URL;
 export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 export const SENTRY_DSN = process.env.SENTRY_DSN;
 
+/* Time */
+export const ONE_SECOND_MS = 1000;
+export const ONE_MINUTE_MS = 60 * ONE_SECOND_MS;
+
 /* Progression */
 export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
@@ -49,6 +55,14 @@ export const ENABLE_ROOM_PROGRESSION = false || !ENABLE_ROOM_TESTING;
 
 /* Deliberation */
 export const PARTICIPANTS_PER_ROOM = 3;
+export const MAX_ROOM_DURATION_MS = 60 * ONE_MINUTE_MS;
 
-/* Time */
-export const ONE_SECOND_MS = 1000;
+/* Lobby */
+export const PARTICIPANT_PING_EXPIRY_TIME_MS = 5 * ONE_SECOND_MS;
+export const PARTICIPANT_QUEUED_EXPIRY_TIME_MS = 5 * ONE_SECOND_MS;
+
+/* Tasks */
+export const HANDLE_QUEUED_PARTICIPANTS_INTERVAL_MS = 2 * ONE_SECOND_MS;
+
+/* Whereby */
+export const WHEREBY_API_URL = 'https://api.whereby.dev/v1/';
