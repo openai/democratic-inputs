@@ -14,4 +14,5 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
         const { payload } = helpers;
         return payload.message.content;
     },
+    getShouldSendBotMessage: () => false,
 });

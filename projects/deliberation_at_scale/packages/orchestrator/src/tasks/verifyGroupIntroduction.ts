@@ -5,7 +5,7 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
         Three participants are introducing themselves to each other.
-        Have all participants finished introducing themselves?
+        Have all participants introduced themselves?
         `;
     },
     getTaskContent: async (helpers) => {
