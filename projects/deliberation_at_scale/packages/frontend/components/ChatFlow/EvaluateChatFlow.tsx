@@ -15,28 +15,47 @@ export default function EvaluateChatFlow() {
             },
             {
                 name: "review_intro",
-                messageOptions: [["Let's review what you all discussed. What we're your general impressions?"]],
-                timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+                messageOptions: [["Let's review what you all discussed. What was your general impression?"]],
                 quickReplies: [
                     {
                         id: "review_great",
                         content: "It was great!",
-                        onClick: () => {
-                            console.log("Great!");
+                        onClick: (helpers) => {
+                            helpers.goToNext();
                         }
                     },
                     {
                         id: "review_okay",
                         content: "It was okay.",
-                        onClick: () => {
-                            console.log("Okay!");
+                        onClick: (helpers) => {
+                            helpers.goToNext();
                         }
                     },
                     {
                         id: "review_bad",
                         content: "It was bad.",
-                        onClick: () => {
-                            console.log("Bad!");
+                        onClick: (helpers) => {
+                            helpers.goToNext();
+                        }
+                    },
+                ],
+            },
+            {
+                name: "thank_you_1",
+                messageOptions: [["Thanks for the feedback {nickName}! What do you want to do next?"]],
+                quickReplies: [
+                    {
+                        id: "join_another_room",
+                        content: "Join another room",
+                        onClick: (helpers) => {
+                            helpers.goToPage("/lobby");
+                        }
+                    },
+                    {
+                        id: "go_to_profile",
+                        content: "Go back to the home page",
+                        onClick: (helpers) => {
+                            helpers.goToPage("/profile");
                         }
                     },
                 ],
