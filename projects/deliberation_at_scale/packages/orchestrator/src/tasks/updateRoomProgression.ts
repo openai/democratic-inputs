@@ -166,18 +166,18 @@ async function triggerVerifications(options: TriggerVerificationsOptions) {
     helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${persistentVerifications.length} persistent verifications for room ${roomId} in progression layer ${currentLayerId}.`);
 
     try {
-        const verificationResult = await waitForAllProgressionTasks({
+        const verificationResults = await waitForAllProgressionTasks({
             progressionTasks: handledVerifications,
             ...progressionTaskBaseContext,
         });
 
-        return verificationResult;
+        return verificationResults;
     } catch (error) {
         helpers.logger.error(`Could not update progression, because some of the verifications failed. Room ID: ${roomId}, Reason: ${error}`);
     }
 }
 
-function getModerationJobKeyForRoomProgression(roomId: string, layerId: ProgressionLayerId) {
+export function getModerationJobKeyForRoomProgression(roomId: string, layerId: ProgressionLayerId) {
     return `updateRoomProgression-room-${roomId}-layer-${layerId}`;
 }
 

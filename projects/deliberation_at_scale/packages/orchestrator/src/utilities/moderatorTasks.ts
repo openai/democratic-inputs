@@ -226,7 +226,7 @@ export async function sendHardCodedEnrichMessage(options: SendHardCodedEnrichMes
         helpers.logger.error(``);
         return;
     }
-    
+
     // run inserting the moderations and sending the bot message in parallel
     await Promise.allSettled([
         supabaseClient.from("moderations").insert({
