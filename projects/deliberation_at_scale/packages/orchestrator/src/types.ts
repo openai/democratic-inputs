@@ -60,6 +60,7 @@ export type WorkerTaskId =
     'enrichSafeBehaviour' |
     'enrichTopicIntroduction' |
     'enrichOffTopic' |
+    'enrichSmoothConversation' |
     'triggerRoomProgressionUpdates' |
     'updateRoomProgression' |
     'verifyConsensusForming' |
@@ -71,7 +72,8 @@ export type WorkerTaskId =
     'verifyGroupIntroduction' |
     'verifyOffTopic' |
     'verifySafeLanguage' |
-    'verifySafeMessage'
+    'verifySafeMessage' |
+    'verifySmoothConversation'
 ;
 
 /** A single task within a progression layer. */

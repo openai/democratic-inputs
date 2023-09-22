@@ -10,11 +10,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'groupIntro-verifyGroupIntroduction',
                     workerTaskId: 'verifyGroupIntroduction',
-                    maxAttempts: 12,
+                    maxAttempts: 3,
                     cooldown: {
                         messageAmount: 1,
                         durationMs: 15 * ONE_SECOND_MS,
-                        startDelayMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -39,11 +38,11 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'groupIntro-enrichGroupIntroduction',
                     workerTaskId: 'enrichGroupIntroduction',
-                    maxAttempts: 3, //Max attempts should not be necessary for enrichments?
+                    maxAttempts: 3,
                     executionType: 'onNotVerified',
                     cooldown: {
-                        startDelayMs: 30 * ONE_SECOND_MS,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        startDelayMs: 59 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -59,7 +58,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             enrichments: [
                 {
                     id: 'topicIntro-enrichTopicIntroduction',
-                    workerTaskId: 'enrichTopicIntroduction',
+                    workerTaskId: 'enrichTopicIntroduction', 
                     maxAttempts: 1,
                     executionType: 'alwaysBeforeVerification',
                     waitFor: true,
@@ -107,9 +106,9 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     maxAttempts: 3,
                     executionType: 'onNotVerified',
                     cooldown: {
-                        startDelayMs: 60 * ONE_SECOND_MS,
+                        startDelayMs: 30 * ONE_SECOND_MS,
                         messageAmount: 10,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        durationMs: 30 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -128,7 +127,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEasyLanguage',
                     maxAttempts: 3,
                     cooldown: {
-                        durationMs: 60 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -142,7 +141,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     persistent: true,
                     maxAttempts: 3,
                     cooldown: {
-                        durationMs: 60 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -162,8 +161,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                         progressionTaskId: 'informed-verifyOffTopic',
                     },
                     cooldown: {
-                        startDelayMs: 60 * ONE_SECOND_MS,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        startDelayMs: 59 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -182,26 +181,39 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEnoughContent',
                     maxAttempts: 5,
                     cooldown: {
-                        startDelayMs: 60 * ONE_SECOND_MS,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        startDelayMs: 59 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
-                            roomStatuses: ['debate'],
+                            roomStatuses: ['debate', 'safe', 'informed'],
                         }
                     }
                 },
                 {
                     id: 'debate-verifyEqualParticipation',
                     workerTaskId: 'verifyEqualParticipation',
-                    maxAttempts: 5,
+                    maxAttempts: 3,
                     cooldown: {
-                        startDelayMs: 60 * ONE_SECOND_MS,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        startDelayMs: 59 * ONE_SECOND_MS,
+                        durationMs: 90 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
-                            roomStatuses: ['debate'],
+                            durationMs: 3 * 60 * ONE_SECOND_MS,
+                        }
+                    }
+                },
+                {
+                    id: 'debate-verifySmoothConversation',
+                    workerTaskId: 'verifySmoothConversation',
+                    maxAttempts: 3,
+                    cooldown: {
+                        startDelayMs: 59 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
+                    },
+                    context: {
+                        messages: {
                             durationMs: 3 * 60 * ONE_SECOND_MS,
                         }
                     }
@@ -211,19 +223,37 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'debate-enrichEqualParticipation',
                     workerTaskId: 'enrichEqualParticipation',
-                    maxAttempts: 1,
-                    executionType: 'onNotVerified', //Maar dan alleen als verifyEqualParticipation not verified is
+                    maxAttempts: 3,
+                    executionType: 'onNotVerified',
                     conditions: {
                         isVerified: false,
                         progressionTaskId: 'debate-verifyEqualParticipation',
                     },
                     cooldown: {
-                        startDelayMs: 60 * ONE_SECOND_MS,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        startDelayMs: 119 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
-                            roomStatuses: ['debate'],
+                            durationMs: 3 * 60 * ONE_SECOND_MS,
+                        }
+                    }
+                },
+                {
+                    id: 'debate-enrichSmoothConversation',
+                    workerTaskId: 'enrichSmoothConversation',
+                    maxAttempts: 5,
+                    executionType: 'onNotVerified',
+                    conditions: {
+                        isVerified: false,
+                        progressionTaskId: 'debate-verifySmoothConversation',
+                    },
+                    cooldown: {
+                        startDelayMs: 59 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
+                    },
+                    context: {
+                        messages: {
                             durationMs: 3 * 60 * ONE_SECOND_MS,
                         }
                     }
@@ -255,8 +285,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     maxAttempts: 1,
                     executionType: 'onNotVerified',
                     cooldown: {
-                        startDelayMs: 60 * ONE_SECOND_MS,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        startDelayMs: 59 * ONE_SECOND_MS,
+                        durationMs: 59 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {

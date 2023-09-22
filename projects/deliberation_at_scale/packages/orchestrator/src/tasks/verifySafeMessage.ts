@@ -1,7 +1,7 @@
 import { Helpers } from "graphile-worker";
 import { supabaseClient } from "../lib/supabase";
 import { BaseMessageWorkerTaskPayload } from "../types";
-import openaiClient from "src/lib/openai";
+import openaiClient from "../lib/openai";
 
 /**
  * This task determines whether a single message is using safe language.

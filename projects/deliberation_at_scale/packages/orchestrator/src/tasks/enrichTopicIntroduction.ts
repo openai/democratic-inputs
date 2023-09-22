@@ -28,7 +28,6 @@ export async function enrichTopicIntroduction(payload: BaseProgressionWorkerTask
     const { roomId } = payload;
     const topicContent = await getTopicContentByRoomId(roomId);
     const startTime = dayjs();
-    console.log('TTTTTTT')
     const waitingMessageInterval = setInterval(() => {
         const passedTimeMs = dayjs().diff(startTime, 'ms');
         console.info(`Waiting on NORMAL completion (${passedTimeMs})...`);
@@ -48,8 +47,7 @@ export async function enrichTopicIntroduction(payload: BaseProgressionWorkerTask
     });
     
     const content = completionResult.choices?.[0].text;
-    console.log('CCC', content)
-
+    
     // disable debugging
     clearInterval(waitingMessageInterval);
 
