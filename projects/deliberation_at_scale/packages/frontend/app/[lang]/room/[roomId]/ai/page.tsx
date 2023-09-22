@@ -6,7 +6,7 @@ export default async function AI() {
     await useAuth();
 
     return (
-        <div className="h-full p-4">
+        <div className="h-full">
             <RoomParticipants variant="spacious" />
             <RoomChatSummary />
         </div>

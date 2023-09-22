@@ -9,6 +9,8 @@ import { useSendRoomMessageMutation } from '@/generated/graphql';
 import ChatInput from './ChatInput';
 import { isEmpty } from 'radash';
 
+const ENABLE_CHAT = false;
+
 export default function RoomChatSummary() {
     const { topic, lastBotMessages, lastParticipantMessages, currentParticipant, roomId } = useRoom();
     const { content: topicContent } = topic ?? {};
@@ -16,7 +18,11 @@ export default function RoomChatSummary() {
     const [sendRoomMessage] = useSendRoomMessageMutation();
 
     return (
-        <div className="flex flex-col gap-4">
+        <motion.div
+            className="flex flex-col gap-4"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+        >
             {topicContent && (
                 <div className={`p-4 rounded gap-4 flex items-center ${topicColorBg}`}>
                     <Pill icon={topicSolid} className="border-green-700">Topic</Pill>
@@ -67,19 +73,21 @@ export default function RoomChatSummary() {
                     </AnimatePresence>
                 </div>
             )}
-            <ChatInput
-                onSubmit={async (input) => {
-                    sendRoomMessage({
-                        variables: {
-                            content: input.content,
-                            roomId,
-                            participantId: currentParticipant?.id,
-                        }
-                    });
-                    return true;
-                }}
-            />
-        </div>
+            {ENABLE_CHAT && (
+                <ChatInput
+                    onSubmit={async (input) => {
+                        sendRoomMessage({
+                            variables: {
+                                content: input.content,
+                                roomId,
+                                participantId: currentParticipant?.id,
+                            }
+                        });
+                        return true;
+                    }}
+                />
+            )}
+        </motion.div>
     );
 }
 
