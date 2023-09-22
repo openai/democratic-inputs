@@ -35,7 +35,7 @@ const permissionFlow: ChatFlowConfig = {
             quickReplies: [
                 {
                     id: "find_room",
-                    content: "Let's find me a room to join!",
+                    content: "Let's find a room to join!",
                     hidden: (helpers) => {
                         return !isEmpty(helpers?.searchParams?.get('redirect'));
                     },

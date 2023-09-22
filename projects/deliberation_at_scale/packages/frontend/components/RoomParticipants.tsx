@@ -16,7 +16,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
 
     const { remoteParticipants, localParticipant } = connection.state;
     const { VideoView } = connection.components;
-    const variants = {
+    const defaultFadeInVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1 },
     };
@@ -24,9 +24,6 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
     return (
         <motion.div
             className="max-h-[50vh] overflow-hidden relative z-20 pb-2 mb-4"
-            variants={variants}
-            initial="hidden"
-            animate="visible"
         >
             <div
                 className={classNames(
@@ -43,7 +40,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                     const key = participant.id;
 
                     return (
-                        <div
+                        <motion.div
                             key={key}
                             className={classNames(
                                 'flex-grow flex-shrink min-w-0',
@@ -52,6 +49,9 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                                 i === 0 && variant === 'spacious' && 'right-0 top-0 z-10',
                                 i === 1 && variant === 'spacious' && 'left-0 bottom-0',
                             )}
+                            variants={defaultFadeInVariants}
+                            initial="hidden"
+                            animate="visible"
                         >
                             {participant.stream && (
                                 <VideoView
@@ -69,16 +69,19 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                             >
                                 <span>{participant.displayName || 'Guest'}</span>
                             </div>
-                        </div>
+                        </motion.div>
                     );
                 })}
             </div>
-            <div
+            <motion.div
                 className={classNames(
                     "flex justify-center gap-2 absolute w-1/5 bottom-0 absolute rounded overflow-hidden bg-gray-100 z-20",
                     variant === 'compact' && 'aspect-[3/4] left-1/2 translate-x-[-50%]',
                     variant === 'spacious' && 'aspect-square right-2 border',
                 )}
+                variants={defaultFadeInVariants}
+                initial="hidden"
+                animate="visible"
             >
                 {localParticipant?.stream && (
                     <VideoView
@@ -87,7 +90,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                     />
                 )}
-            </div>
+            </motion.div>
             {/* <div>
                 <button
                     className="bg-white shadow rounded py-3 px-4"
