@@ -8,7 +8,8 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
             - If in general the language used if very difficult and hard to understand.
         `;
     },
-    getTaskContent: (payload) => {
+    getTaskContent: (helpers) => {
+        const { payload } = helpers;
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;
