@@ -1,37 +1,32 @@
-import { usePingParticipantMutation } from "@/generated/graphql";
+import dayjs from "dayjs";
 import { useEffect } from "react";
 
-const PING_INTERVAL_DELAY_MS = 1000;
+import { usePingParticipantMutation } from "@/generated/graphql";
+import { PARTICIPANT_PING_INTERVAL_DELAY_MS } from "@/utilities/constants";
 
-export function usePingParticipant(participantID?: string) {
+export function usePingParticipant(participantId?: string) {
     const [ping, { loading, error, data }] = usePingParticipantMutation();
+
     useEffect(() => {
+
         // guard
-        if (!participantID) {
+        if (!participantId) {
             return;
         }
 
-        // if has participant ID set interval
-        const timer = setInterval(() => {
+        const pingInterval = setInterval(() => {
             ping({
                 variables: {
-                    participantID,
-                    updateTime: new Date().toISOString(),
+                    participantId,
+                    lastSeenAt: dayjs().toISOString(),
                 }
             });
-        }, PING_INTERVAL_DELAY_MS);
+        }, PARTICIPANT_PING_INTERVAL_DELAY_MS);
 
         return (() => {
-            clearInterval(timer);
+            clearInterval(pingInterval);
         });
-    }, [participantID, ping]);
-    useEffect(() => {
-        if (error) {
-            // eslint-disable-next-line no-console
-            console.error(error);
-        }
-    }, [error]
-    );
+    }, [participantId, ping]);
 
     return { loading, error, data };
 }

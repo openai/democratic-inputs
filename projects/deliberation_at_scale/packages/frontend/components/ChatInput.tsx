@@ -10,7 +10,7 @@ import { UserInput } from "@/flows/types";
 import useColorClassName from "@/hooks/useTintedThemeColor";
 
 export interface ChatInputProps {
-    onSubmit: (input: UserInput) => void;
+    onSubmit: (input: UserInput) => Promise<boolean>;
     disabled?: boolean;
     placeholder?: string;
 }
@@ -21,7 +21,7 @@ export default function ChatInput(props: ChatInputProps) {
     const submitBgColor = useColorClassName({ classNamePrefix: 'bg' });
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState('');
-    const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
         const validatedInput = input.trim();
         const userInput: UserInput = { content: validatedInput };
         e.preventDefault();
@@ -31,8 +31,12 @@ export default function ChatInput(props: ChatInputProps) {
             return;
         }
 
-        onSubmit(userInput);
-        setInput('');
+        const hasBeenSent = await onSubmit(userInput);
+
+        // only clear when the message was sent out
+        if (hasBeenSent) {
+            setInput('');
+        }
     }, [input, onSubmit, setInput]);
     const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);
@@ -60,7 +64,7 @@ export default function ChatInput(props: ChatInputProps) {
         >
             <input
                 ref={inputRef}
-                className="rounded-md py-3 px-4 shadow-3xl w-full bg-white"
+                className="rounded-md py-3 px-4 shadow-3xl w-full bg-white outline-none"
                 placeholder={placeholder}
                 value={input}
                 onChange={handleChange}

@@ -1,96 +1,66 @@
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect } from "react";
 
 import {
-    useGetLobbyParticipantFromUserQuery,
+    ParticipantStatusType,
     useCreateParticipantMutation,
     useEnterRoomMutation,
+    useGetLobbyParticipantsQuery,
 } from "@/generated/graphql";
 import { usePingParticipant } from "./usePingParticipant";
+import useProfile from "./useProfile";
+import useRealtimeQuery from "./useRealtimeQuery";
 
-enum ParticipantLoadingEnum {
-    'notLoaded',
-    'loading',
-    'loaded',
-}
-
-/**
-  * @brief: puts a user in a lobby. Will create a participant entry when none exist or return active participant when one does exist for this specific user.
-**/
-export default function useLobby(userId?: string) {
+export default function useLobby() {
+    const { user } = useProfile();
+    const { id: userId } = user ?? {};
     const { data: participantData,
         loading: participantLoading,
-        error: participantQueryError,
-        refetch: participantRefetch,
-    } = useGetLobbyParticipantFromUserQuery({ variables: { userId, } });
-    const [participantIsLoaded, setParticipantIsLoaded] = useState(ParticipantLoadingEnum.notLoaded);
-    const [transferToRoom, { loading: roomLoading }] = useEnterRoomMutation();
-
-
-    // checks to see if the participant is loaded once. This makes sure that there is no weird async issues
-    useEffect(() => {
-        if (userId && participantLoading) {
-            setParticipantIsLoaded(ParticipantLoadingEnum.loading);
-        }
-        if (userId && participantIsLoaded == ParticipantLoadingEnum.loading && !participantLoading) {
-            setParticipantIsLoaded(ParticipantLoadingEnum.loaded);
-        }
-
-    }, [setParticipantIsLoaded, participantIsLoaded, userId, participantLoading]);
-
-    const [
-        createParticipant,
-        {
-            loading: loadingParticipantMutation,
-            error: loadingParticipantError
-        }
-    ] = useCreateParticipantMutation({
+        refetch: refetchParticipants,
+    } = useRealtimeQuery(useGetLobbyParticipantsQuery({
         variables: {
             userId,
-        }
-    });
-
-    const currentParticipant = useMemo(() => (
-        participantData
-            ?.participantsCollection
-            ?.edges
-            ?.[0]
-            ?.node), [participantData]
-    );
-
-    useEffect(() => {
-        if (!participantLoading && !currentParticipant && userId) {
-            // create new participant
-            createParticipant({
-                variables: {
-                    userId,
-                }
-            }).then((result) => {
-                // eslint-disable-next-line no-console
-                console.log("created participant", result);
-            });
-        }
-    }, [participantLoading, currentParticipant, createParticipant, userId]);
-
-
-
-    const transfertToRoomFn = async () => {
-        const transferResult = await transferToRoom({
+        },
+    }));
+    const [createParticipant] = useCreateParticipantMutation();
+    const [enterRoomMutation, { loading: isEnteringRoom }] = useEnterRoomMutation();
+    const currentParticipant = participantData?.participantsCollection?.edges?.[0]?.node;
+    const currentParticipantId = currentParticipant?.id;
+    const enterRoom = useCallback(async () => {
+        const enterResult = await enterRoomMutation({
             variables: {
-                participantID: currentParticipant?.id
+                participantId: currentParticipantId,
+            },
+        });
+        const isEntered = (enterResult.data?.updateparticipantsCollection?.affectedCount ?? 0) > 0;
+        refetchParticipants();
+
+        return isEntered;
+    }, [currentParticipantId, enterRoomMutation, refetchParticipants]);
+    const canEnterRoom = (currentParticipant?.status === ParticipantStatusType.WaitingForConfirmation);
+
+    // ping the participant entry to make sure it is still alive for the group slicer
+    usePingParticipant(currentParticipantId);
+
+    // create a queued participant when the user has none yet
+    useEffect(() => {
+        if (participantLoading || currentParticipant || !userId) {
+            return;
+        }
+
+        // create new participant
+        createParticipant({
+            variables: {
+                userId,
             }
         });
-        participantRefetch();
-        return transferResult;
-    };
-    // pinging
-    // const pingValues = usePingParticipant(currentParticipant?.id);
-    usePingParticipant(currentParticipant?.id);
+    }, [participantLoading, currentParticipant, createParticipant, userId]);
+
     return {
         participant: currentParticipant,
-        loading: participantLoading || loadingParticipantMutation || roomLoading,
-        error: loadingParticipantError || participantQueryError,
-        transferToRoom: transfertToRoomFn,
+        canEnterRoom,
+        isEnteringRoom,
+        enterRoom,
     };
 }
 

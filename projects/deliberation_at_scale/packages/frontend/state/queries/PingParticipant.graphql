@@ -1,6 +1,6 @@
 
-mutation PingParticipant($participantID: UUID!, $updateTime: Datetime!) {
-    updateparticipantsCollection(filter: {id: {eq: $participantID} }, set: {last_seen_at: $updateTime}) {
+mutation PingParticipant($participantId: UUID!, $lastSeenAt: Datetime!) {
+    updateparticipantsCollection(filter: {id: {eq: $participantId} }, set: {last_seen_at: $lastSeenAt}) {
         affectedCount
     }
 }

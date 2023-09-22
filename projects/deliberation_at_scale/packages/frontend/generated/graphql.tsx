@@ -2453,21 +2453,21 @@ export type CreateParticipantMutationVariables = Exact<{
 }>;
 
 
-export type CreateParticipantMutation = { __typename?: 'Mutation', insertIntoparticipantsCollection?: { __typename?: 'participantsInsertResponse', records: Array<{ __typename?: 'participants', id: any, nodeId: string }> } | null };
+export type CreateParticipantMutation = { __typename?: 'Mutation', insertIntoparticipantsCollection?: { __typename?: 'participantsInsertResponse', records: Array<{ __typename?: 'participants', id: any }> } | null };
 
 export type EnterRoomMutationVariables = Exact<{
-  participantID: Scalars['UUID']['input'];
+  participantId: Scalars['UUID']['input'];
 }>;
 
 
 export type EnterRoomMutation = { __typename?: 'Mutation', updateparticipantsCollection: { __typename?: 'participantsUpdateResponse', affectedCount: number } };
 
-export type GetLobbyParticipantFromUserQueryVariables = Exact<{
+export type GetLobbyParticipantsQueryVariables = Exact<{
   userId: Scalars['UUID']['input'];
 }>;
 
 
-export type GetLobbyParticipantFromUserQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any } }> } | null };
+export type GetLobbyParticipantsQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any } }> } | null };
 
 export type GetParticipantsFromUserQueryVariables = Exact<{
   authUserId: Scalars['UUID']['input'];
@@ -2483,23 +2483,25 @@ export type GetRoomIdFromParticipantQueryVariables = Exact<{
 
 export type GetRoomIdFromParticipantQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', room_id?: any | null } }> } | null };
 
-export type RoomMessageFragment = { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, created_at: any };
+export type RoomMessageFragment = { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any };
 
 export type GetRoomMessagesQueryVariables = Exact<{
   roomId?: InputMaybe<Scalars['UUID']['input']>;
+  botMessageHistoryAmount: Scalars['Int']['input'];
+  participantMessageHistoryAmount: Scalars['Int']['input'];
 }>;
 
 
-export type GetRoomMessagesQuery = { __typename?: 'Query', messagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, created_at: any } }> } | null };
+export type GetRoomMessagesQuery = { __typename?: 'Query', messagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, botMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, participantMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null };
 
-export type RoomParticipantFragment = { __typename?: 'participants', id: any, active: boolean, nick_name: string, updated_at: any, created_at: any };
+export type RoomParticipantFragment = { __typename?: 'participants', id: any, active: boolean, nick_name: string, user_id?: any | null, room_id?: any | null, status: ParticipantStatusType, updated_at: any, created_at: any };
 
 export type GetRoomParticipantsQueryVariables = Exact<{
   roomId: Scalars['UUID']['input'];
 }>;
 
 
-export type GetRoomParticipantsQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, nick_name: string, updated_at: any, created_at: any } }> } | null };
+export type GetRoomParticipantsQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, nick_name: string, user_id?: any | null, room_id?: any | null, status: ParticipantStatusType, updated_at: any, created_at: any } }> } | null };
 
 export type SimpleRoomFragment = { __typename?: 'rooms', id: any, active: boolean, external_room_id?: string | null, status_type: RoomStatusType, updated_at: any, created_at: any, topics: { __typename?: 'topics', id: any, active: boolean, content: string, updated_at: any, created_at: any } };
 
@@ -2537,12 +2539,21 @@ export type JoinRoomMutationVariables = Exact<{
 export type JoinRoomMutation = { __typename?: 'Mutation', insertIntoparticipantsCollection?: { __typename?: 'participantsInsertResponse', affectedCount: number } | null };
 
 export type PingParticipantMutationVariables = Exact<{
-  participantID: Scalars['UUID']['input'];
-  updateTime: Scalars['Datetime']['input'];
+  participantId: Scalars['UUID']['input'];
+  lastSeenAt: Scalars['Datetime']['input'];
 }>;
 
 
 export type PingParticipantMutation = { __typename?: 'Mutation', updateparticipantsCollection: { __typename?: 'participantsUpdateResponse', affectedCount: number } };
+
+export type SendRoomMessageMutationVariables = Exact<{
+  roomId: Scalars['UUID']['input'];
+  participantId: Scalars['UUID']['input'];
+  content: Scalars['String']['input'];
+}>;
+
+
+export type SendRoomMessageMutation = { __typename?: 'Mutation', insertIntomessagesCollection?: { __typename?: 'messagesInsertResponse', records: Array<{ __typename?: 'messages', id: any, room_id?: any | null, participant_id?: any | null, content: string }> } | null };
 
 export type StartRoomMutationVariables = Exact<{
   topicId: Scalars['UUID']['input'];
@@ -2580,6 +2591,9 @@ export const RoomMessageFragmentDoc = gql`
   timing_type
   visibility_type
   content
+  participant_id
+  room_id
+  room_status_type
   created_at
   type
 }
@@ -2589,6 +2603,9 @@ export const RoomParticipantFragmentDoc = gql`
   id
   active
   nick_name
+  user_id
+  room_id
+  status
   updated_at
   created_at
 }
@@ -2640,11 +2657,10 @@ export const FullUserFragmentDoc = gql`
 export const CreateParticipantDocument = gql`
     mutation CreateParticipant($userId: UUID!, $nickName: String) {
   insertIntoparticipantsCollection(
-    objects: {user_id: $userId, nick_name: $nickName}
+    objects: {user_id: $userId, nick_name: $nickName, status: queued}
   ) {
     records {
       id
-      nodeId
     }
   }
 }
@@ -2677,10 +2693,10 @@ export type CreateParticipantMutationHookResult = ReturnType<typeof useCreatePar
 export type CreateParticipantMutationResult = Apollo.MutationResult<CreateParticipantMutation>;
 export type CreateParticipantMutationOptions = Apollo.BaseMutationOptions<CreateParticipantMutation, CreateParticipantMutationVariables>;
 export const EnterRoomDocument = gql`
-    mutation EnterRoom($participantID: UUID!) {
+    mutation EnterRoom($participantId: UUID!) {
   updateparticipantsCollection(
-    filter: {id: {eq: $participantID}}
-    set: {status: transfering_to_room}
+    filter: {id: {eq: $participantId}, status: {eq: waiting_for_confirmation}}
+    set: {status: in_room}
   ) {
     affectedCount
   }
@@ -2701,7 +2717,7 @@ export type EnterRoomMutationFn = Apollo.MutationFunction<EnterRoomMutation, Ent
  * @example
  * const [enterRoomMutation, { data, loading, error }] = useEnterRoomMutation({
  *   variables: {
- *      participantID: // value for 'participantID'
+ *      participantId: // value for 'participantId'
  *   },
  * });
  */
@@ -2712,11 +2728,10 @@ export function useEnterRoomMutation(baseOptions?: Apollo.MutationHookOptions<En
 export type EnterRoomMutationHookResult = ReturnType<typeof useEnterRoomMutation>;
 export type EnterRoomMutationResult = Apollo.MutationResult<EnterRoomMutation>;
 export type EnterRoomMutationOptions = Apollo.BaseMutationOptions<EnterRoomMutation, EnterRoomMutationVariables>;
-export const GetLobbyParticipantFromUserDocument = gql`
-    query GetLobbyParticipantFromUser($userId: UUID!) {
+export const GetLobbyParticipantsDocument = gql`
+    query GetLobbyParticipants($userId: UUID!) {
   participantsCollection(
-    filter: {user_id: {eq: $userId}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
-    first: 1
+    filter: {user_id: {eq: $userId}, room_id: {eq: null}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
   ) {
     edges {
       node {
@@ -2728,32 +2743,32 @@ export const GetLobbyParticipantFromUserDocument = gql`
     ${FullParticipantFragmentDoc}`;
 
 /**
- * __useGetLobbyParticipantFromUserQuery__
+ * __useGetLobbyParticipantsQuery__
  *
- * To run a query within a React component, call `useGetLobbyParticipantFromUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLobbyParticipantFromUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetLobbyParticipantsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLobbyParticipantsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetLobbyParticipantFromUserQuery({
+ * const { data, loading, error } = useGetLobbyParticipantsQuery({
  *   variables: {
  *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useGetLobbyParticipantFromUserQuery(baseOptions: Apollo.QueryHookOptions<GetLobbyParticipantFromUserQuery, GetLobbyParticipantFromUserQueryVariables>) {
+export function useGetLobbyParticipantsQuery(baseOptions: Apollo.QueryHookOptions<GetLobbyParticipantsQuery, GetLobbyParticipantsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetLobbyParticipantFromUserQuery, GetLobbyParticipantFromUserQueryVariables>(GetLobbyParticipantFromUserDocument, options);
+        return Apollo.useQuery<GetLobbyParticipantsQuery, GetLobbyParticipantsQueryVariables>(GetLobbyParticipantsDocument, options);
       }
-export function useGetLobbyParticipantFromUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLobbyParticipantFromUserQuery, GetLobbyParticipantFromUserQueryVariables>) {
+export function useGetLobbyParticipantsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLobbyParticipantsQuery, GetLobbyParticipantsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetLobbyParticipantFromUserQuery, GetLobbyParticipantFromUserQueryVariables>(GetLobbyParticipantFromUserDocument, options);
+          return Apollo.useLazyQuery<GetLobbyParticipantsQuery, GetLobbyParticipantsQueryVariables>(GetLobbyParticipantsDocument, options);
         }
-export type GetLobbyParticipantFromUserQueryHookResult = ReturnType<typeof useGetLobbyParticipantFromUserQuery>;
-export type GetLobbyParticipantFromUserLazyQueryHookResult = ReturnType<typeof useGetLobbyParticipantFromUserLazyQuery>;
-export type GetLobbyParticipantFromUserQueryResult = Apollo.QueryResult<GetLobbyParticipantFromUserQuery, GetLobbyParticipantFromUserQueryVariables>;
+export type GetLobbyParticipantsQueryHookResult = ReturnType<typeof useGetLobbyParticipantsQuery>;
+export type GetLobbyParticipantsLazyQueryHookResult = ReturnType<typeof useGetLobbyParticipantsLazyQuery>;
+export type GetLobbyParticipantsQueryResult = Apollo.QueryResult<GetLobbyParticipantsQuery, GetLobbyParticipantsQueryVariables>;
 export const GetParticipantsFromUserDocument = gql`
     query GetParticipantsFromUser($authUserId: UUID!) {
   usersCollection(filter: {auth_user_id: {eq: $authUserId}}) {
@@ -2841,11 +2856,33 @@ export type GetRoomIdFromParticipantQueryHookResult = ReturnType<typeof useGetRo
 export type GetRoomIdFromParticipantLazyQueryHookResult = ReturnType<typeof useGetRoomIdFromParticipantLazyQuery>;
 export type GetRoomIdFromParticipantQueryResult = Apollo.QueryResult<GetRoomIdFromParticipantQuery, GetRoomIdFromParticipantQueryVariables>;
 export const GetRoomMessagesDocument = gql`
-    query GetRoomMessages($roomId: UUID) {
+    query GetRoomMessages($roomId: UUID, $botMessageHistoryAmount: Int!, $participantMessageHistoryAmount: Int!) {
   messagesCollection(
     filter: {active: {eq: true}, room_id: {eq: $roomId}}
     orderBy: {created_at: AscNullsLast}
     last: 30
+  ) {
+    edges {
+      node {
+        ...RoomMessage
+      }
+    }
+  }
+  botMessagesCollection: messagesCollection(
+    filter: {type: {eq: bot}, active: {eq: true}, room_id: {eq: $roomId}}
+    orderBy: {created_at: AscNullsLast}
+    last: $botMessageHistoryAmount
+  ) {
+    edges {
+      node {
+        ...RoomMessage
+      }
+    }
+  }
+  participantMessagesCollection: messagesCollection(
+    filter: {type: {in: [chat, voice]}, active: {eq: true}, room_id: {eq: $roomId}}
+    orderBy: {created_at: AscNullsLast}
+    last: $participantMessageHistoryAmount
   ) {
     edges {
       node {
@@ -2869,10 +2906,12 @@ export const GetRoomMessagesDocument = gql`
  * const { data, loading, error } = useGetRoomMessagesQuery({
  *   variables: {
  *      roomId: // value for 'roomId'
+ *      botMessageHistoryAmount: // value for 'botMessageHistoryAmount'
+ *      participantMessageHistoryAmount: // value for 'participantMessageHistoryAmount'
  *   },
  * });
  */
-export function useGetRoomMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>) {
+export function useGetRoomMessagesQuery(baseOptions: Apollo.QueryHookOptions<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>(GetRoomMessagesDocument, options);
       }
@@ -3079,10 +3118,10 @@ export type JoinRoomMutationHookResult = ReturnType<typeof useJoinRoomMutation>;
 export type JoinRoomMutationResult = Apollo.MutationResult<JoinRoomMutation>;
 export type JoinRoomMutationOptions = Apollo.BaseMutationOptions<JoinRoomMutation, JoinRoomMutationVariables>;
 export const PingParticipantDocument = gql`
-    mutation PingParticipant($participantID: UUID!, $updateTime: Datetime!) {
+    mutation PingParticipant($participantId: UUID!, $lastSeenAt: Datetime!) {
   updateparticipantsCollection(
-    filter: {id: {eq: $participantID}}
-    set: {last_seen_at: $updateTime}
+    filter: {id: {eq: $participantId}}
+    set: {last_seen_at: $lastSeenAt}
   ) {
     affectedCount
   }
@@ -3103,8 +3142,8 @@ export type PingParticipantMutationFn = Apollo.MutationFunction<PingParticipantM
  * @example
  * const [pingParticipantMutation, { data, loading, error }] = usePingParticipantMutation({
  *   variables: {
- *      participantID: // value for 'participantID'
- *      updateTime: // value for 'updateTime'
+ *      participantId: // value for 'participantId'
+ *      lastSeenAt: // value for 'lastSeenAt'
  *   },
  * });
  */
@@ -3115,6 +3154,48 @@ export function usePingParticipantMutation(baseOptions?: Apollo.MutationHookOpti
 export type PingParticipantMutationHookResult = ReturnType<typeof usePingParticipantMutation>;
 export type PingParticipantMutationResult = Apollo.MutationResult<PingParticipantMutation>;
 export type PingParticipantMutationOptions = Apollo.BaseMutationOptions<PingParticipantMutation, PingParticipantMutationVariables>;
+export const SendRoomMessageDocument = gql`
+    mutation SendRoomMessage($roomId: UUID!, $participantId: UUID!, $content: String!) {
+  insertIntomessagesCollection(
+    objects: {room_id: $roomId, participant_id: $participantId, content: $content}
+  ) {
+    records {
+      id
+      room_id
+      participant_id
+      content
+    }
+  }
+}
+    `;
+export type SendRoomMessageMutationFn = Apollo.MutationFunction<SendRoomMessageMutation, SendRoomMessageMutationVariables>;
+
+/**
+ * __useSendRoomMessageMutation__
+ *
+ * To run a mutation, you first call `useSendRoomMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendRoomMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendRoomMessageMutation, { data, loading, error }] = useSendRoomMessageMutation({
+ *   variables: {
+ *      roomId: // value for 'roomId'
+ *      participantId: // value for 'participantId'
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useSendRoomMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendRoomMessageMutation, SendRoomMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendRoomMessageMutation, SendRoomMessageMutationVariables>(SendRoomMessageDocument, options);
+      }
+export type SendRoomMessageMutationHookResult = ReturnType<typeof useSendRoomMessageMutation>;
+export type SendRoomMessageMutationResult = Apollo.MutationResult<SendRoomMessageMutation>;
+export type SendRoomMessageMutationOptions = Apollo.BaseMutationOptions<SendRoomMessageMutation, SendRoomMessageMutationVariables>;
 export const StartRoomDocument = gql`
     mutation StartRoom($topicId: UUID!) {
   insertIntoroomsCollection(objects: {topic_id: $topicId}) {

@@ -4,12 +4,29 @@ fragment RoomMessage on messages {
   timing_type
   visibility_type
   content
+  participant_id
+  room_id
+  room_status_type
   created_at
   type
 }
 
-query GetRoomMessages($roomId: UUID) {
+query GetRoomMessages($roomId: UUID, $botMessageHistoryAmount: Int!, $participantMessageHistoryAmount: Int!) {
   messagesCollection(filter: { active: { eq: true }, room_id: { eq: $roomId } }, orderBy: { created_at: AscNullsLast }, last: 30) {
+    edges {
+      node {
+        ...RoomMessage
+      }
+    }
+  }
+  botMessagesCollection: messagesCollection(filter: { type: { eq: bot }, active: { eq: true }, room_id: { eq: $roomId } }, orderBy: { created_at: AscNullsLast }, last: $botMessageHistoryAmount) {
+    edges {
+      node {
+        ...RoomMessage
+      }
+    }
+  }
+  participantMessagesCollection: messagesCollection(filter: { type: { in: [chat, voice] }, active: { eq: true }, room_id: { eq: $roomId } }, orderBy: { created_at: AscNullsLast }, last: $participantMessageHistoryAmount) {
     edges {
       node {
         ...RoomMessage

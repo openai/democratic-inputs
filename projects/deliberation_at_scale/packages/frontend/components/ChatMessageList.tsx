@@ -5,7 +5,7 @@ import { Message } from '@/flows/types';
 import ChatMessage from './ChatMessage';
 
 interface Props {
-    messages: Message[] | undefined;
+    messages: (Message | null | undefined)[] | undefined;
 }
 
 export default function ChatMessageList(props: Props) {
@@ -40,11 +40,16 @@ export default function ChatMessageList(props: Props) {
         >
             <AnimatePresence>
                 {messages.map((message, index) => {
-                    const { id = index, date } = message;
+                    const { id = index, date } = message ?? {};
                     const key = `${id}-${date}`;
 
+                    // guard: check if message is valid
+                    if (!message) {
+                        return null;
+                    }
+
                     return (
-                        <ChatMessage key={key} {...message} />
+                        <ChatMessage key={key} message={message} />
                     );
                 })}
             </AnimatePresence>

@@ -1,10 +1,10 @@
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { PropsWithChildren } from 'react';
 
 export interface PillProps extends PropsWithChildren {
-    icon?: IconDefinition;
+    icon?: IconProp;
     className?: string;
 }
 

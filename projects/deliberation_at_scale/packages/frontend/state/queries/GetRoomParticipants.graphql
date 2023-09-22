@@ -2,6 +2,9 @@ fragment RoomParticipant on participants {
   id
   active
   nick_name
+  user_id
+  room_id
+  status
   updated_at
   created_at
 }

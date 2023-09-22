@@ -3,29 +3,21 @@ import { PropsWithChildren, useMemo } from 'react';
 
 import { RoomConnectionContext } from './context';
 import { useRoomConnection } from '@whereby.com/browser-sdk';
-import { useAppSelector } from '@/state/store';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
 import { NEXT_PUBLIC_WHEREBY_SUBDOMAIN } from '@/utilities/constants';
-import { useGetRoomsQuery } from '@/generated/graphql';
+import useRoom from '@/hooks/useRoom';
 
 /**
  * This provider will instantiate the Whereby `useLocalMedia` hook and make its
  * output available via the RoomConnection context.
  */
 export default function RoomConnectionProvider({ children }: PropsWithChildren) {
-    // Extract the room id from Redux
-    const roomId = useAppSelector((state) => state.room.currentRoomId);
-    const { data: roomData } = useGetRoomsQuery({
-        variables: {
-            roomId,
-        },
-    });
-    const room = roomData?.roomsCollection?.edges?.[0];
-    const externalRoomId = room?.node.external_room_id;
+    const { room } = useRoom();
+    const externalRoomId = room?.external_room_id ?? '';
 
     // Construct the room URL
     const roomUrl = useMemo(() => (
-        `https://${NEXT_PUBLIC_WHEREBY_SUBDOMAIN}/${externalRoomId}`
+        `https://${NEXT_PUBLIC_WHEREBY_SUBDOMAIN}/demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a`
     ), [externalRoomId]);
 
     // Retrieve the local media data, which should already be initialized.
@@ -33,7 +25,7 @@ export default function RoomConnectionProvider({ children }: PropsWithChildren) 
 
     // Then, start the room connection
     const connection = useRoomConnection(roomUrl, { localMedia, localMediaConstraints: { audio: true, video: true }, logger: console });
-    
+
     return (
         <RoomConnectionContext.Provider value={connection}>
             {children}

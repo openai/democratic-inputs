@@ -1,0 +1,14 @@
+mutation SendRoomMessage($roomId: UUID!, $participantId: UUID!, $content: String!) {
+    insertIntomessagesCollection(objects: {
+        room_id: $roomId,
+        participant_id: $participantId,
+        content: $content,
+    }) {
+        records {
+            id
+            room_id
+            participant_id
+            content
+        }
+    }
+}

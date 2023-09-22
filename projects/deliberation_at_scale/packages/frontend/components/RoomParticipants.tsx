@@ -6,7 +6,7 @@ export interface ParticipantsProps {
     variant: 'compact' | 'spacious';
 }
 
-export default function Participants({ variant }: ParticipantsProps) {
+export default function RoomParticipants({ variant }: ParticipantsProps) {
     const connection = useRoomConnection();
 
     if (!connection) {

@@ -13,7 +13,7 @@
     "db:generate-types": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > ./types/database.ts' && eslint --fix ./types/database.ts",
     "db:login": "supabase login",
     "codegen": "dotenv -e .env -- gql-gen --config codegen.ts",
-    "codegen:watch": "npm run codegen --watch",
+    "codegen:watch": "npm run codegen -- --watch",
     "lint": "eslint . --ext .ts,.tsx",
     "clean": "rimraf ./node_modules",
     "lingui:extract": "lingui extract --clean",

@@ -16,9 +16,18 @@ export const DELIBERATION_ROOM_BASE_COLOR = 'green';
 export const ANIMATION_DURATION_S = '0.3s';
 
 /**
+ * Element IDs
+ */
+export const MAIN_SCROLL_CONTAINER_ID = 'main-scroll-container';
+
+/**
  * Chat flows
  */
 export const DEFAULT_BOT_MESSAGE_SPEED_MS = 1500;
+export const FIXED_CHAT_FLOW_BOT_NAME = "Deliberation at Scale";
+export const ROOM_CHAT_FLOW_BOT_NAME = "AI Moderator";
 
 export const LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY = 'allowAskPermission';
 export const LOBBY_WAITING_FOR_ROOM_STATE_KEY = 'waitingForRoom';
+export const PARTICIPANT_PING_INTERVAL_DELAY_MS = 1000;
+

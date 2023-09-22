@@ -1,3 +1,4 @@
+import { MessageType } from '@/generated/graphql';
 import { IconDefinition, IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
 export const groupSolid: IconDefinition = {
@@ -59,3 +60,16 @@ export const aiRegular: IconDefinition = {
     iconName: 'aiRegular' as IconName,
     icon: [512, 512, [], "", "M177.144 20.975c-35.078 0-67.586 18.78-85.126 49.178l-78.855 136.67c-17.54 30.397-17.54 67.957 0 98.355l78.855 136.67c17.54 30.397 50.048 49.177 85.126 49.177h157.712c35.078 0 67.586-18.78 85.126-49.178l78.855-136.67c17.54-30.397 17.54-67.957 0-98.355l-78.855-136.67c-17.54-30.397-50.048-49.177-85.126-49.177Zm0 48.016h157.712a50.21 50.21 0 0 1 43.57 25.17l78.856 136.668a50.276 50.276 0 0 1 0 50.342L378.426 417.84a50.21 50.21 0 0 1-43.57 25.169H177.144a50.21 50.21 0 0 1-43.57-25.17L54.718 281.172a50.276 50.276 0 0 1 0-50.342L133.574 94.16a50.21 50.21 0 0 1 43.57-25.169z"]
 };
+
+export function getIconByMessageType(type: MessageType) {
+    switch (type) {
+        case MessageType.Bot:
+            return aiSolid;
+        case MessageType.Chat:
+            return personSolid;
+        case MessageType.Voice:
+            return personSolid;
+    }
+
+    return personSolid;
+}

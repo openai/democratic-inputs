@@ -1,23 +1,32 @@
 import { aiRegular, aiSolid, groupRegular, groupSolid } from '@/components/EntityIcons';
 import { NavLink } from '@/components/NavLink';
-import { useAppSelector } from '@/state/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { useParams } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 const LinkClassNames = "w-1/2 flex items-center justify-center";
 
 export default function RoomMenu() {
     const params = useParams();
-    const currentRoomId = useAppSelector((state) => state.room.currentRoomId);
+    const currentRoomId = params?.roomId;
+    const variants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+    };
 
     return (
-        <nav className="flex gap-4 p-4 border-t">
-            <NavLink 
+        <motion.nav
+            className="sticky bottom-0 flex gap-4 p-4 border-t bg-white"
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+        >
+            <NavLink
                 className={LinkClassNames}
                 href={`/${params?.lang}/room/${currentRoomId}/ai`}
             >
-                {(active) => ( 
+                {(active) => (
                     <div
                         className={classNames(
                             "flex items-center gap-2",
@@ -33,7 +42,7 @@ export default function RoomMenu() {
                 className={LinkClassNames}
                 href={`/${params?.lang}/room/${currentRoomId}/chat`}
             >
-                {(active) => ( 
+                {(active) => (
                     <div
                         className={classNames(
                             "flex items-center gap-2",
@@ -45,6 +54,6 @@ export default function RoomMenu() {
                     </div>
                 )}
             </NavLink>
-        </nav>
+        </motion.nav>
     );
 }

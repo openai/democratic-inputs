@@ -1,11 +1,11 @@
 mutation CreateParticipant($userId: UUID!, $nickName: String) {
     insertIntoparticipantsCollection(objects: {
-        user_id:$userId
-        nick_name:$nickName
+        user_id: $userId,
+        nick_name: $nickName,
+        status: queued
     }) {
         records {
-            id,
-            nodeId
+            id
         }
     }
 }

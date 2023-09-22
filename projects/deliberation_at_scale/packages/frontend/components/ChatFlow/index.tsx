@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { draw, isEmpty } from "radash";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,6 +16,8 @@ import { aiSolid } from "../EntityIcons";
 import { useAppDispatch, useAppSelector } from "@/state/store";
 import { addFlowMessages, resetFlowMessages, resetFlowPosition, setFlowPosition, setFlowStateEntry as setFlowStateEntryAction } from "@/state/slices/flow";
 import useChatFlowMessages from "@/hooks/useChatFlowMessages";
+import { FIXED_CHAT_FLOW_BOT_NAME } from "@/utilities/constants";
+import useScrollToBottom from "@/hooks/useScrollToBottom";
 
 interface Props {
     flow: FlowType;
@@ -24,7 +26,7 @@ const defaultUserMessageTemplate: MessageTemplate = {
     name: "{nickName}",
 };
 const defaultBotMessageTemplate: MessageTemplate = {
-    name: "Deliberation at Scale",
+    name: FIXED_CHAT_FLOW_BOT_NAME,
     nameIcon: aiSolid,
     highlighted: true,
 };
@@ -38,6 +40,7 @@ export default function ChatFlow(props: Props) {
         botMessageTemplate = defaultBotMessageTemplate,
     } = flow;
     const { push } = useRouter();
+    const searchParams = useSearchParams();
     const flowStateEntries = useAppSelector((state) => state.flow.flowStateLookup[flowId]);
     const positionIndex = useAppSelector((state) => state.flow.flowPositionLookup[flowId] ?? 0);
     const roomState = useAppSelector((state) => state.room);
@@ -152,13 +155,14 @@ export default function ChatFlow(props: Props) {
             flowStateEntries: flowStateEntries ?? {},
             roomState,
             reset,
+            searchParams,
             waitFor: async (timeoutMs: number) => {
                 return new Promise((resolve) => {
                     setTimeout(resolve, timeoutMs);
                 });
             }
         } satisfies OnInputHelpers;
-    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset]);
+    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams]);
 
     useEffect(() => {
         // use an AbortController to prevent acting on timeout if user input resolves it
@@ -227,10 +231,16 @@ export default function ChatFlow(props: Props) {
             await onInput?.(input, onInputHelpers);
         } catch (error) {
             postBotMessages([["Something went wrong! Please try again."]]);
+            setInputDisabled(false);
             console.error(error);
+            return false;
         }
         setInputDisabled(false);
+        return true;
     }, [currentStep, onInputHelpers, postBotMessages]);
+
+    // scroll when new messages appear
+    useScrollToBottom({ data: flowMessages });
 
     return (
         <motion.div

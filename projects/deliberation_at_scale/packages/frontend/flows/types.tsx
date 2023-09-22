@@ -3,6 +3,7 @@ import { Dayjs } from "dayjs";
 
 import { FlowId, FlowStateEntries } from "@/state/slices/flow";
 import { RoomState } from "@/state/slices/room";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
 export interface ChatFlowConfig {
     id: FlowId;
@@ -37,6 +38,7 @@ export interface OnInputHelpers {
     setFlowStateEntry: (key: string, value: any) => void;
     flowStateEntries: FlowStateEntries;
     roomState: RoomState;
+    searchParams: ReadonlyURLSearchParams | null;
     reset: () => void;
 }
 

@@ -19,12 +19,12 @@ const defaultUseLocalMediaOptions: UseLocalMediaOptions = {
 };
 
 /**
- * Retrieve the state for the current local media. 
+ * Retrieve the state for the current local media.
  */
 export function useLocalMedia(): LocalMediaContext;
 export function useLocalMedia(options: Partial<UseLocalMediaOptions>): LocalMediaContext | { state: null, actions: null, _ref: null };
 export function useLocalMedia(options: Partial<UseLocalMediaOptions> = {}) {
-    const { 
+    const {
         request, redirect,
     } = useMemo(() => Object.assign({}, defaultUseLocalMediaOptions, options), [options]);
 
@@ -38,8 +38,8 @@ export function useLocalMedia(options: Partial<UseLocalMediaOptions> = {}) {
     useEffect(() => {
         if (permission === PermissionState.NONE) {
             if (redirect) {
-                push(`/permission?redirect=${pathname}`);
-            } 
+                push(`/lobby/permission?redirect=${pathname}`);
+            }
             if (request) {
                 dispatch(setPermissionState(PermissionState.REQUESTED));
             }

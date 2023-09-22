@@ -1,6 +1,7 @@
-import { DEFAULT_BOT_MESSAGE_SPEED_MS, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY } from "@/utilities/constants";
+import { LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY } from "@/utilities/constants";
 import { ChatFlowConfig, FlowStep, QuickReply } from "./types";
 import { PermissionState } from "@/state/slices/room";
+import { isEmpty } from "radash";
 
 const askPermissionQuickReply: QuickReply = {
     id: "permission_ask_yes",
@@ -33,11 +34,31 @@ const permissionFlow: ChatFlowConfig = {
             },
             quickReplies: [
                 {
-                    id: "lets_go",
-                    content: "Let's go!",
+                    id: "find_room",
+                    content: "Let's find me a room to join!",
+                    hidden: (helpers) => {
+                        return !isEmpty(helpers?.searchParams?.get('redirect'));
+                    },
                     onClick: (helpers) => {
                         helpers.setFlowStateEntry(LOBBY_WAITING_FOR_ROOM_STATE_KEY, true);
                         helpers.goToName("waiting_for_room_0");
+                    }
+                },
+                {
+                    id: "to_existing_room",
+                    content: "Continue to room",
+                    hidden: (helpers) => {
+                        return isEmpty(helpers?.searchParams?.get('redirect'));
+                    },
+                    onClick: (helpers) => {
+                        const redirect = helpers?.searchParams?.get('redirect');
+
+                        if (!redirect) {
+                            helpers.goToName('find_room');
+                            return;
+                        }
+
+                        helpers.goToPage(redirect);
                     }
                 },
             ],
