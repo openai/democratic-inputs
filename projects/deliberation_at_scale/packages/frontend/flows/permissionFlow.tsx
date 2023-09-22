@@ -1,4 +1,4 @@
-import { LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY } from "@/utilities/constants";
+import { ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY, TEST_ROOM_ID } from "@/utilities/constants";
 import { ChatFlowConfig, FlowStep, QuickReply } from "./types";
 import { PermissionState } from "@/state/slices/room";
 import { isEmpty } from "radash";
@@ -70,13 +70,38 @@ const permissionFlow: ChatFlowConfig = {
                 askPermissionQuickReply,
             ],
         },
-        ...([...Array(10)].map((_, waitingIndex) => {
+        ...([...Array(3)].map((_, waitingIndex) => {
             return {
                 name: `waiting_for_room_${waitingIndex}`,
                 messageOptions: [["Waiting for a room to be ready..."]],
                 timeoutMs: 2000,
             } satisfies FlowStep;
         })),
+        {
+            name: "ask_to_enter_room",
+            messageOptions: [["A room has been found! Do you want to enter now?"]],
+            quickReplies: [
+                {
+                    id: "enter_room",
+                    content: "Enter room",
+                    onClick: (helpers) => {
+                        if (ENABLE_TEST_ROOM) {
+                            helpers.goToPage(`/room/${TEST_ROOM_ID}`);
+                            return;
+                        }
+
+                        // TODO: wait for real room
+                    }
+                },
+                {
+                    id: "cancel_enter_room",
+                    content: "No, go back to home page",
+                    onClick: (helpers) => {
+                        helpers.goToPage(`/profile`);
+                    }
+                },
+            ],
+        },
     ]
 };
 

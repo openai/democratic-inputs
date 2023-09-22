@@ -1,5 +1,7 @@
 'use client';
 import { useGetRoomsQuery } from '@/generated/graphql';
+import useRoom from '@/hooks/useRoom';
+import { PermissionState } from '@/state/slices/room';
 import { useAppSelector } from '@/state/store';
 import dynamic from 'next/dynamic';
 import { PropsWithChildren, createContext, useContext } from 'react';
@@ -26,16 +28,10 @@ const DynamicRoomConnectionProvider = dynamic(
  * application tree based on whether a `roomId` has been set in Redux.
  */
 export default function ConditionalRoomConnectionProvider({ children }: PropsWithChildren) {
-    const roomId = useAppSelector((state) => state.room.currentRoomId);
-    const { data: roomData } = useGetRoomsQuery({
-        variables: {
-            roomId,
-        },
-    });
-    const room = roomData?.roomsCollection?.edges?.[0];
-    const externalRoomId = room?.node.external_room_id;
+    const hasRequested = useAppSelector((state) => state.room.permission === PermissionState.REQUESTED);
+    const { externalRoomId } = useRoom();
 
-    return externalRoomId ? (
+    return externalRoomId && hasRequested ? (
         <LoadingValueContext.Provider value={children as JSX.Element}>
             <DynamicRoomConnectionProvider>
                 {children}

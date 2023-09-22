@@ -7,7 +7,9 @@ export default async function Chat() {
 
     return (
         <div className="h-full">
-            <RoomParticipants variant="compact" />
+            <div className="sticky top-0 z-30">
+                <RoomParticipants variant="compact" />
+            </div>
             <RoomChatMessages />
         </div>
     );

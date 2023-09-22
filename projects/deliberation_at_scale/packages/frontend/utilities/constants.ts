@@ -31,3 +31,9 @@ export const LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY = 'allowAskPermission';
 export const LOBBY_WAITING_FOR_ROOM_STATE_KEY = 'waitingForRoom';
 export const PARTICIPANT_PING_INTERVAL_DELAY_MS = 1000;
 
+/**
+ * External rooms
+ */
+export const ENABLE_TEST_ROOM = true;
+export const TEST_ROOM_ID = '0a323099-4c94-49f9-89ff-2bf11d4dfb21';
+export const TEST_EXTERNAL_ROOM_ID = 'demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a';

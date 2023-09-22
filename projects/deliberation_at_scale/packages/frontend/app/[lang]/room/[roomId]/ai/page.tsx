@@ -7,7 +7,9 @@ export default async function AI() {
 
     return (
         <div className="h-full">
-            <RoomParticipants variant="spacious" />
+            <div className="sticky top-0 z-30">
+                <RoomParticipants variant="spacious" />
+            </div>
             <RoomChatSummary />
         </div>
     );

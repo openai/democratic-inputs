@@ -5,6 +5,7 @@ import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 import useRoomMessages from "./useRoomMessages";
 import useProfile from './useProfile';
+import { ENABLE_TEST_ROOM, TEST_EXTERNAL_ROOM_ID } from '@/utilities/constants';
 
 export interface UseRoomOptions {
     roomId?: RoomId;
@@ -31,6 +32,7 @@ export default function useRoom(options?: UseRoomOptions) {
     });
     const room = roomNode?.node;
     const roomStatus = room?.status_type;
+    const externalRoomId = ENABLE_TEST_ROOM ? TEST_EXTERNAL_ROOM_ID : room?.external_room_id;
     const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
     const currentParticipant = participants?.find(participant => participant.user_id === userId);
     const roomMessagesTuple = useRoomMessages({ roomId, participants, userId });
@@ -38,7 +40,7 @@ export default function useRoom(options?: UseRoomOptions) {
 
     return {
         room,
-
+        externalRoomId,
         loadingRooms,
         roomError,
         roomId,

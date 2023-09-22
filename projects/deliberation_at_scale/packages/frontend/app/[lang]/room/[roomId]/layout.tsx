@@ -28,9 +28,9 @@ export default function RoomLayout({ children }: PropsWithChildren) {
     }, [roomId, localMedia, connection, room, loadingRooms]);
 
     // GUARD: Display loader when everything is not ready yet
-    // if (!isReady) {
-    //     return <Loader />;
-    // }
+    if (!isReady) {
+        return <Loader />;
+    }
 
     return (
         <div className="flex max-h-screen h-full w-full flex-col">

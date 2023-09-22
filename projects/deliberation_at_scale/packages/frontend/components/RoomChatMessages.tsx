@@ -40,7 +40,7 @@ export default function RoomChatMessages() {
 
     return (
         <>
-            <div className="flex flex-col w-full h-full pb-10">
+            <div className="flex flex-col w-full pb-10">
                 <div className="grow">
                     <ChatMessageList messages={messages} />
                 </div>

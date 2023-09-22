@@ -1,6 +1,7 @@
 'use client';
 import { useRoomConnection } from '@/components/RoomConnection/context';
 import classNames from 'classnames';
+import { motion } from 'framer-motion';
 
 export interface ParticipantsProps {
     variant: 'compact' | 'spacious';
@@ -15,9 +16,18 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
 
     const { remoteParticipants, localParticipant } = connection.state;
     const { VideoView } = connection.components;
+    const variants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+    };
 
     return (
-        <div className="max-h-[50vh] overflow-hidden relative pb-2 mb-4">
+        <motion.div
+            className="max-h-[50vh] overflow-hidden relative z-20 pb-2 mb-4"
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+        >
             <div
                 className={classNames(
                     "flex",
@@ -25,35 +35,43 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                     variant === 'spacious' && 'h-[50vh] relative',
                 )}
             >
-                {remoteParticipants.map((participant, i) => participant && (
-                    <div
-                        key={participant.id}
-                        className={classNames(
-                            'flex-grow flex-shrink min-w-0',
-                            variant === 'compact' && 'relative',
-                            variant === 'spacious' && 'aspect-square rounded overflow-hidden bg-gray-100 w-[52%] absolute border',
-                            i === 0 && variant === 'spacious' && 'right-0 top-0 z-10',
-                            i === 1 && variant === 'spacious' && 'left-0 bottom-0',
-                        )}
-                    >
-                        {participant.stream && (
-                            <VideoView
-                                stream={participant.stream}
-                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                            />
-                        )}
+                {remoteParticipants.map((participant, i) => {
+                    if (!participant) {
+                        return null;
+                    }
+
+                    const key = participant.id;
+
+                    return (
                         <div
+                            key={key}
                             className={classNames(
-                                `absolute bottom-2 backdrop-blur-lg p-2 flex justify-center rounded gap-4 bg-gray-800/90 text-white z-20`,
-                                variant === 'spacious' && 'left-2',
-                                i === 0 && variant === 'compact' && 'left-2',
-                                i > 0 && variant === 'compact' && 'right-2',
+                                'flex-grow flex-shrink min-w-0',
+                                variant === 'compact' && 'relative',
+                                variant === 'spacious' && 'aspect-square rounded overflow-hidden bg-gray-100 w-[52%] absolute border',
+                                i === 0 && variant === 'spacious' && 'right-0 top-0 z-10',
+                                i === 1 && variant === 'spacious' && 'left-0 bottom-0',
                             )}
                         >
-                            <span>{participant.displayName || 'Guest'}</span>
+                            {participant.stream && (
+                                <VideoView
+                                    stream={participant.stream}
+                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                />
+                            )}
+                            <div
+                                className={classNames(
+                                    `absolute bottom-2 backdrop-blur-lg p-2 flex justify-center rounded gap-4 bg-gray-800/90 text-white z-20`,
+                                    variant === 'spacious' && 'left-2',
+                                    i === 0 && variant === 'compact' && 'left-2',
+                                    i > 0 && variant === 'compact' && 'right-2',
+                                )}
+                            >
+                                <span>{participant.displayName || 'Guest'}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
             <div
                 className={classNames(
@@ -84,6 +102,6 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                     {localMedia.state.isAudioEnabled ? 'Disable' : 'Enable'} microphone
                 </button>
             </div> */}
-        </div>
+        </motion.div>
     );
 }

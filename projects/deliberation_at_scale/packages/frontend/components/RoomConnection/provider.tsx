@@ -12,12 +12,11 @@ import useRoom from '@/hooks/useRoom';
  * output available via the RoomConnection context.
  */
 export default function RoomConnectionProvider({ children }: PropsWithChildren) {
-    const { room } = useRoom();
-    const externalRoomId = room?.external_room_id ?? '';
+    const { externalRoomId } = useRoom();
 
     // Construct the room URL
     const roomUrl = useMemo(() => (
-        `https://${NEXT_PUBLIC_WHEREBY_SUBDOMAIN}/demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a`
+        `https://${NEXT_PUBLIC_WHEREBY_SUBDOMAIN}/${externalRoomId}`
     ), [externalRoomId]);
 
     // Retrieve the local media data, which should already be initialized.
