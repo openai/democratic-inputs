@@ -99,8 +99,10 @@ export interface ProgressionTaskCooldown {
     startDelayMs?: number;
     /** The amount of seconds required to wait before this task can run again. */
     durationMs?: number;
-    /** The amount of new messages required before this task can become valid. */
+    /** The minimum amount of new messages after last execution of this task required before it can become valid. */
     minMessageAmount?: number;
+    /** The maximum amount of new messages after last execution of this task required before it can become valid. */
+    maxMessageAmount?: number;
     /** An optional amount of maximum atempt in a specific layer (This could be more in total, e.g.: when it switches back to the layer because of X) */
     maxAtemptsInLayer?: number;
     /** An optional amount of maximum atempt in total (Even when switching between layers, the value wont be reset) */
@@ -129,7 +131,7 @@ export interface ProgressionEnrichmentTask extends ProgressionTask {
     /** Whether the updateRoomProgression function should wait to continue as long as the enrichment task is not finished */
     waitFor?: boolean;
     /** Conditions to specifiy whether the enrichment should trigger on specific verifications*/
-    conditions?: VerificationCondition;
+    conditions?: VerificationCondition[];
 }
 
 export interface ProgressionContext {

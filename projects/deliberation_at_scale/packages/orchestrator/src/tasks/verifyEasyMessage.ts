@@ -35,5 +35,5 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
             })
             .eq('id', messageId);
     },
-
+    getShouldSendBotMessage: () => false,
 });

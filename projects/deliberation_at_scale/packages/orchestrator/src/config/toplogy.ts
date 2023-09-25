@@ -157,10 +157,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'enrichOffTopic',
                     maxAttempts: 3,
                     executionType: 'onNotVerified',
-                    conditions: {
+                    conditions: [{
                         isVerified: false,
                         progressionTaskId: 'informed-verifyOffTopic',
-                    },
+                    }],
                     cooldown: {
                         startDelayMs: 59 * ONE_SECOND_MS,
                         durationMs: 59 * ONE_SECOND_MS,
@@ -226,10 +226,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'enrichEqualParticipation',
                     maxAttempts: 3,
                     executionType: 'onNotVerified',
-                    conditions: {
+                    conditions: [{
                         isVerified: false,
                         progressionTaskId: 'debate-verifyEqualParticipation',
-                    },
+                    }],
                     cooldown: {
                         startDelayMs: 119 * ONE_SECOND_MS,
                         durationMs: 59 * ONE_SECOND_MS,
@@ -245,10 +245,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'enrichSmoothConversation',
                     maxAttempts: 5,
                     executionType: 'onNotVerified',
-                    conditions: {
+                    conditions: [{
                         isVerified: false,
                         progressionTaskId: 'debate-verifySmoothConversation',
-                    },
+                    }],
                     cooldown: {
                         startDelayMs: 59 * ONE_SECOND_MS,
                         durationMs: 59 * ONE_SECOND_MS,
