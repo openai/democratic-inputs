@@ -6,7 +6,6 @@ import { Json } from "../generated/database-public.types";
 import { EnrichCompletionResult, VerificationFunctionCompletionResult, createEnrichFunctionCompletion, createEnrichPromptCompletion, createVerificationFunctionCompletion } from "../lib/openai";
 import { supabaseClient, MessageType } from "../lib/supabase";
 import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload, ProgressionHistoryMessageContext, RoomStatus } from "../types";
-import { PRINT_JOBKEY } from "../config/constants";
 
 export interface BaseTaskHelpers<PayloadType> {
     helpers: Helpers;
@@ -188,7 +187,7 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
 
             // send a message to the room only when there is no safe language
             shouldSendBotMessage && sendBotMessage({
-                content: PRINT_JOBKEY ? `${jobKey}: ${botMessageContent}` : botMessageContent,
+                content: botMessageContent,
                 roomId,
             }),
         ]);
@@ -207,21 +206,6 @@ export async function getContentForHardCodedEnrichMessage(payload: GetContentFor
 
     if (!selectedContent) {
         helpers.logger.error(``);
-        return;
-    }
-
-    return selectedContent;
-}
-
-interface SelectHardCodedEnrichMessage {
-    contentOptions: string[],
-}
-
-export async function selectHardCodedEnrichMessage(options: SelectHardCodedEnrichMessage) {
-    const { contentOptions } = options;
-    const selectedContent = draw(contentOptions);
-
-    if (!selectedContent) {
         return;
     }
 

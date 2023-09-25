@@ -1,4 +1,4 @@
-import { createModeratedEnrichTask, getMessageContentForProgressionWorker, selectHardCodedEnrichMessage, sendHardCodedEnrichMessage } from "../utilities/moderatorTasks";
+import { createModeratedEnrichTask, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { PARTICIPANTS_PER_ROOM } from "../config/constants";
 
@@ -18,30 +18,5 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
         const content = getMessageContentForProgressionWorker(payload);
 
         return content;
-    },
-    getBotMessageContent: async (helpers) => {
-
-        const { result } = helpers;
-        const { enrichment: consensus } = result;
-
-        const contentOptions = [
-            `
-            A consensus was found:
-            `,
-            `
-            The consensus is:
-            `,
-            `
-            We found a consensus:
-            `,
-            `
-            A possible consensus is:
-            `,
-        ];
-
-        const selectedOption = await selectHardCodedEnrichMessage({contentOptions});
-
-        return `${selectedOption} **${consensus}**`;
-        
     },
 });
