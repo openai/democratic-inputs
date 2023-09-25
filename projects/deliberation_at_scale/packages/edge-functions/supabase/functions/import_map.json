@@ -1,0 +1,7 @@
+{
+    "imports": {
+      "openai": "https://esm.sh/openai@3.1.0",
+      "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.36.0",
+      "dayjs": "https://esm.sh/dayjs@1.11.10"
+    }
+  }
