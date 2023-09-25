@@ -6,7 +6,7 @@ export default async function Chat() {
     await useAuth();
 
     return (
-        <div className="h-full">
+        <div className="h-full flex flex-col">
             <div className="sticky top-0 z-30">
                 <RoomParticipants variant="compact" />
             </div>

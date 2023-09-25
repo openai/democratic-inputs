@@ -1,10 +1,10 @@
 import { QueryResult, gql } from "@apollo/client";
-import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from "@supabase/supabase-js";
-import { useEffect } from "react";
+import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, RealtimeChannel } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
 import objectHash from "object-hash";
+import { get, isEmpty, set } from "radash";
 
 import { supabaseClient } from "@/state/supabase";
-import { get, isEmpty, set } from "radash";
 
 export interface UseNestedLiveQueryOptions {
     channelPrefix?: string;
@@ -52,6 +52,19 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         observable: { query: query, variables: queryVariables },
     } = queryResult;
     const { cache } = apolloClient;
+    const [trackedSubscription, setTrackedSubscription] = useState<RealtimeChannel | null>(null);
+    const trackedSubscriptionState = trackedSubscription?.state;
+
+    // handle disconnects
+    useEffect(() => {
+        if (trackedSubscriptionState !== 'errored') {
+            return;
+        }
+
+        console.error('Subscription has errored, refetching and re-subscribing...');
+        console.error('This was or the following query:', query);
+        refetch();
+    }, [refetch, trackedSubscriptionState, query]);
 
     useEffect(() => {
 
@@ -288,13 +301,26 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         }
 
         // subscribe to all the requested tables and nodes
-        subscription.subscribe();
+        subscription.subscribe((status) => {
+
+            if (status === 'SUBSCRIBED') {
+                console.log(`Subscription successfully subscribed with status: ${status}`);
+                setTrackedSubscription(() => {
+                    return subscription;
+                });
+            } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+                console.error(`Subscription failed to subscribe and gave status: ${status}`);
+            }
+        });
 
         return () => {
+            setTrackedSubscription(() => {
+                return null;
+            });
             subscription.unsubscribe();
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.stringify(data), loading, maxNestedDepth, refetch, schemaName, JSON.stringify(tableEventsLookup)]);
+    }, [JSON.stringify(data), loading, maxNestedDepth, refetch, schemaName, JSON.stringify(tableEventsLookup), setTrackedSubscription]);
 
     return queryResult;
 }

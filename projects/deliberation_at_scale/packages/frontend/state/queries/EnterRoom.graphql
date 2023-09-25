@@ -9,5 +9,10 @@ mutation EnterRoom($participantId: UUID!) {
         }
     ) {
         affectedCount
+        records {
+            id
+            status
+            room_id
+        }
     }
 }

@@ -2460,7 +2460,7 @@ export type EnterRoomMutationVariables = Exact<{
 }>;
 
 
-export type EnterRoomMutation = { __typename?: 'Mutation', updateparticipantsCollection: { __typename?: 'participantsUpdateResponse', affectedCount: number } };
+export type EnterRoomMutation = { __typename?: 'Mutation', updateparticipantsCollection: { __typename?: 'participantsUpdateResponse', affectedCount: number, records: Array<{ __typename?: 'participants', id: any, status: ParticipantStatusType, room_id?: any | null }> } };
 
 export type GetLobbyParticipantsQueryVariables = Exact<{
   userId: Scalars['UUID']['input'];
@@ -2483,7 +2483,7 @@ export type GetRoomIdFromParticipantQueryVariables = Exact<{
 
 export type GetRoomIdFromParticipantQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', room_id?: any | null } }> } | null };
 
-export type RoomMessageFragment = { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any };
+export type RoomMessageFragment = { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any };
 
 export type GetRoomMessagesQueryVariables = Exact<{
   roomId?: InputMaybe<Scalars['UUID']['input']>;
@@ -2492,7 +2492,7 @@ export type GetRoomMessagesQueryVariables = Exact<{
 }>;
 
 
-export type GetRoomMessagesQuery = { __typename?: 'Query', messagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, botMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, participantMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null };
+export type GetRoomMessagesQuery = { __typename?: 'Query', messagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, botMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, participantMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null };
 
 export type RoomParticipantFragment = { __typename?: 'participants', id: any, active: boolean, nick_name: string, user_id?: any | null, room_id?: any | null, status: ParticipantStatusType, updated_at: any, created_at: any };
 
@@ -2587,6 +2587,7 @@ export const FullParticipantFragmentDoc = gql`
 export const RoomMessageFragmentDoc = gql`
     fragment RoomMessage on messages {
   id
+  active
   type
   timing_type
   visibility_type
@@ -2699,6 +2700,11 @@ export const EnterRoomDocument = gql`
     set: {status: in_room}
   ) {
     affectedCount
+    records {
+      id
+      status
+      room_id
+    }
   }
 }
     `;
@@ -2731,7 +2737,8 @@ export type EnterRoomMutationOptions = Apollo.BaseMutationOptions<EnterRoomMutat
 export const GetLobbyParticipantsDocument = gql`
     query GetLobbyParticipants($userId: UUID!) {
   participantsCollection(
-    filter: {user_id: {eq: $userId}, room_id: {eq: null}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
+    filter: {user_id: {eq: $userId}, room_id: {is: NULL}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
+    orderBy: {created_at: DescNullsLast}
   ) {
     edges {
       node {
@@ -2924,7 +2931,9 @@ export type GetRoomMessagesLazyQueryHookResult = ReturnType<typeof useGetRoomMes
 export type GetRoomMessagesQueryResult = Apollo.QueryResult<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>;
 export const GetRoomParticipantsDocument = gql`
     query GetRoomParticipants($roomId: UUID!) {
-  participantsCollection(filter: {active: {eq: true}, id: {eq: $roomId}}) {
+  participantsCollection(
+    filter: {active: {eq: true}, status: {in: [in_room]}, room_id: {eq: $roomId}}
+  ) {
     edges {
       node {
         ...RoomParticipant

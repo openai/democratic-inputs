@@ -1,5 +1,5 @@
-import { ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY, TEST_ROOM_ID } from "@/utilities/constants";
-import { ChatFlowConfig, FlowStep, QuickReply } from "./types";
+import { ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_FOUND_ROOM_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY, LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, ONE_SECOND_MS, TEST_ROOM_ID } from "@/utilities/constants";
+import { ChatFlowConfig, FlowStep, OnInputHelpers, QuickReply } from "./types";
 import { PermissionState } from "@/state/slices/room";
 import { isEmpty } from "radash";
 
@@ -10,6 +10,24 @@ const askPermissionQuickReply: QuickReply = {
         helpers.setFlowStateEntry(LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, true);
         helpers.goToName('permission_verify_working');
     }
+};
+
+const waitingForRoomOnTimeout = async (helpers: OnInputHelpers, goToName: string) => {
+    if (ENABLE_TEST_ROOM) {
+        helpers.goToName("ask_to_enter_room");
+        return;
+    }
+
+    const hasFoundRoom = helpers.flowStateEntries[LOBBY_FOUND_ROOM_STATE_KEY];
+
+    // go to the other waiting step when no room was found
+    // TODO: add mechanism to stop this look via a simple counter in the state?
+    if (!hasFoundRoom) {
+        helpers.goToName(goToName);
+        return;
+    }
+
+    helpers.goToName("ask_to_enter_room");
 };
 
 const permissionFlow: ChatFlowConfig = {
@@ -41,8 +59,8 @@ const permissionFlow: ChatFlowConfig = {
                     },
                     onClick: (helpers) => {
                         helpers.setFlowStateEntry(LOBBY_WAITING_FOR_ROOM_STATE_KEY, true);
-                        helpers.goToName("waiting_for_room_0");
-                    }
+                        helpers.goToName("waiting_for_room_1");
+                    },
                 },
                 {
                     id: "to_existing_room",
@@ -59,7 +77,7 @@ const permissionFlow: ChatFlowConfig = {
                         }
 
                         helpers.goToPage(redirect);
-                    }
+                    },
                 },
             ],
         },
@@ -70,13 +88,22 @@ const permissionFlow: ChatFlowConfig = {
                 askPermissionQuickReply,
             ],
         },
-        ...([...Array(3)].map((_, waitingIndex) => {
-            return {
-                name: `waiting_for_room_${waitingIndex}`,
-                messageOptions: [["Waiting for a room to be ready..."]],
-                timeoutMs: 2000,
-            } satisfies FlowStep;
-        })),
+        {
+            name: `waiting_for_room_1`,
+            messageOptions: [["Waiting for a room to be ready..."]],
+            timeoutMs: ONE_SECOND_MS * 5,
+            onTimeout: (helpers) => {
+                return waitingForRoomOnTimeout(helpers, 'waiting_for_room_2');
+            },
+        },
+        {
+            name: `waiting_for_room_2`,
+            messageOptions: [["Waiting for a room to be ready..."]],
+            timeoutMs: ONE_SECOND_MS * 5,
+            onTimeout: (helpers) => {
+                return waitingForRoomOnTimeout(helpers, 'waiting_for_room_1');
+            },
+        },
         {
             name: "ask_to_enter_room",
             messageOptions: [["A room has been found! Do you want to enter now?"]],
@@ -90,7 +117,7 @@ const permissionFlow: ChatFlowConfig = {
                             return;
                         }
 
-                        // TODO: wait for real room
+                        helpers.setFlowStateEntry(LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, true);
                     }
                 },
                 {

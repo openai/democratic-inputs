@@ -27,7 +27,7 @@ const lobbyFlow: ChatFlowConfig = {
                 }
             ],
             onInput: async (input, helpers) => {
-                helpers.setFlowStateEntry('nickname', input.content);
+                helpers.setFlowStateEntry('nickName', input.content);
                 helpers.goToNext();
             }
         },

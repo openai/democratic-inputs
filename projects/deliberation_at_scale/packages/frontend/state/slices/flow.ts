@@ -87,9 +87,18 @@ const slice = createSlice({
         addFlowMessages: (state, action: AddFlowMessagesAction) => {
             const { flowId, messages: incomingFlowMessages } = action.payload;
             const currentFlowMessages = state.flowMessagesLookup?.[flowId] ?? [];
-            const newFlowMessages = unique([...currentFlowMessages, ...incomingFlowMessages], (message) => {
-                return message.id;
-            });
+
+            // filter out messages where the id of subsequent messages is the same
+            // this is a workaround to prevent double messages from being displayed (e.g. with hot reloading)
+            const newFlowMessages = [...currentFlowMessages, ...incomingFlowMessages].reduce((acc, message) => {
+                const lastMessage = acc[acc.length - 1];
+
+                if (lastMessage?.id === message.id) {
+                    return acc;
+                }
+
+                return [...acc, message];
+            }, [] as Message[]);
 
             state.flowMessagesLookup[flowId] = newFlowMessages;
         },

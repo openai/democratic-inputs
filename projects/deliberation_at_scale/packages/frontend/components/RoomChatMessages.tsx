@@ -7,9 +7,8 @@ import { useSendRoomMessageMutation } from "@/generated/graphql";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
 
 export default function RoomChatMessages() {
-    const { messages, currentParticipant, roomId, messagesLoading } = useRoom();
+    const { messages, participantId, roomId, messagesLoading } = useRoom();
     const [sendRoomMessage, { loading: isSendingMessage }] = useSendRoomMessageMutation();
-    const { id: currentParticipantId } = currentParticipant ?? {};
     const chatInputDisabled = isSendingMessage;
     const sendMessage = useCallback(async (content: string) => {
         const formattedMessage = content?.trim?.();
@@ -21,12 +20,12 @@ export default function RoomChatMessages() {
         sendRoomMessage({
             variables: {
                 content: formattedMessage,
-                participantId: currentParticipantId,
+                participantId,
                 roomId,
             }
         });
         return true;
-    }, [currentParticipantId, isSendingMessage, roomId, sendRoomMessage]);
+    }, [participantId, isSendingMessage, roomId, sendRoomMessage]);
 
     // automatically scroll the main container to the bottom on new messages
     const { scrollToBottom } = useScrollToBottom({ data: messages });
@@ -40,8 +39,8 @@ export default function RoomChatMessages() {
 
     return (
         <>
-            <div className="flex flex-col w-full pb-10">
-                <div className="grow">
+            <div className="flex flex-col w-full grow pb-10">
+                <div className="grow flex flex-col justify-end">
                     <ChatMessageList messages={messages} />
                 </div>
             </div>

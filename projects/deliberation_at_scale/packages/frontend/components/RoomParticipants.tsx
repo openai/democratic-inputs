@@ -37,11 +37,9 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                         return null;
                     }
 
-                    const key = participant.id;
-
                     return (
                         <motion.div
-                            key={key}
+                            key={participant.id}
                             className={classNames(
                                 'flex-grow flex-shrink min-w-0',
                                 variant === 'compact' && 'relative',

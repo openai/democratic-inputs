@@ -164,6 +164,24 @@ export default function ChatFlow(props: Props) {
         } satisfies OnInputHelpers;
     }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams]);
 
+    /* Handler for any user input */
+    const handleInput = useCallback(async (input: UserInput) => {
+        const { onInput } = currentStep ?? {};
+
+        // Run the onInput function
+        setInputDisabled(true);
+        try {
+            await onInput?.(input, onInputHelpers);
+        } catch (error) {
+            postBotMessages([["Something went wrong! Please try again."]]);
+            setInputDisabled(false);
+            console.error('An error occurred when handling onInput: ', error);
+            return false;
+        }
+        setInputDisabled(false);
+        return true;
+    }, [currentStep, onInputHelpers, postBotMessages]);
+
     useEffect(() => {
         // use an AbortController to prevent acting on timeout if user input resolves it
         const controller = new AbortController();
@@ -221,35 +239,16 @@ export default function ChatFlow(props: Props) {
         };
     }, [currentStep, goToName, goToNext, onInputHelpers, onTimeout, postBotMessages, setInputDisabled, positionIndex, flowId]);
 
-    /* Handler for any user input */
-    const handleInput = useCallback(async (input: UserInput) => {
-        const { onInput } = currentStep ?? {};
-
-        // Run the onInput function
-        setInputDisabled(true);
-        try {
-            await onInput?.(input, onInputHelpers);
-        } catch (error) {
-            postBotMessages([["Something went wrong! Please try again."]]);
-            setInputDisabled(false);
-            console.error(error);
-            return false;
-        }
-        setInputDisabled(false);
-        return true;
-    }, [currentStep, onInputHelpers, postBotMessages]);
-
     // scroll when new messages appear
     useScrollToBottom({ data: flowMessages });
 
     return (
         <motion.div
             layoutId={`chat-flow-${flowId}`}
-            className="flex flex-col gap-2"
+            className="flex flex-col-reverse gap-2 pt-2 mt-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
-            <ChatMessageList messages={flowMessages} />
             <div className="sticky bottom-2 pt-4 flex flex-col gap-3">
                 <AnimatePresence>
                     {!isEmpty(quickReplies) && (
@@ -303,7 +302,7 @@ export default function ChatFlow(props: Props) {
                     )}
                 </AnimatePresence>
             </div>
+            <ChatMessageList messages={flowMessages} />
         </motion.div>
     );
 }
-

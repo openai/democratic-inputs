@@ -34,7 +34,8 @@ export default function useRoom(options?: UseRoomOptions) {
     const roomStatus = room?.status_type;
     const externalRoomId = ENABLE_TEST_ROOM ? TEST_EXTERNAL_ROOM_ID : room?.external_room_id;
     const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
-    const currentParticipant = participants?.find(participant => participant.user_id === userId);
+    const participant = participants?.find(participant => participant.user_id === userId);
+    const participantId = participant?.id;
     const roomMessagesTuple = useRoomMessages({ roomId, participants, userId });
     const topic = room?.topics;
 
@@ -49,7 +50,8 @@ export default function useRoom(options?: UseRoomOptions) {
         topic,
 
         participants,
-        currentParticipant,
+        participant,
+        participantId,
         loadingParticipants,
         participantsError,
 

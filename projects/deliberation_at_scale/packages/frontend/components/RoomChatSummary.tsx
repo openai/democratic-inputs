@@ -12,7 +12,7 @@ import { isEmpty } from 'radash';
 const ENABLE_CHAT = false;
 
 export default function RoomChatSummary() {
-    const { topic, lastBotMessages, lastParticipantMessages, currentParticipant, roomId } = useRoom();
+    const { topic, lastBotMessages, lastParticipantMessages, participantId, roomId } = useRoom();
     const { content: topicContent } = topic ?? {};
     const topicColorBg = useTintedThemeColor({ classNamePrefix: 'bg', tint: 400 });
     const [sendRoomMessage] = useSendRoomMessageMutation();
@@ -80,7 +80,7 @@ export default function RoomChatSummary() {
                             variables: {
                                 content: input.content,
                                 roomId,
-                                participantId: currentParticipant?.id,
+                                participantId,
                             }
                         });
                         return true;

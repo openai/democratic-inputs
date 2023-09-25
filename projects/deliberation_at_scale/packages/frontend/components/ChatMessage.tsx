@@ -38,7 +38,7 @@ export default function ChatMessage(props: Props) {
         });
     }, [nickName]);
     const formattedContent = useMemo(() => {
-        return replaceMessageVariables(content);
+        return replaceMessageVariables(content).trim();
     }, [content, replaceMessageVariables]);
     const formattedName = useMemo(() => {
         return replaceMessageVariables(name ?? t`Anonymous`);

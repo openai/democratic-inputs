@@ -1,5 +1,6 @@
 fragment RoomMessage on messages {
   id
+  active
   type
   timing_type
   visibility_type

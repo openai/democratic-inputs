@@ -1,5 +1,15 @@
 query GetLobbyParticipants($userId: UUID!) {
-    participantsCollection(filter: {user_id: {eq: $userId}, room_id: { eq: null }, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}})  {
+    participantsCollection(
+        filter: {
+            user_id: { eq: $userId },
+            room_id: { is: NULL },
+            status: { in: [waiting_for_confirmation, queued] },
+            active: { eq: true },
+        },
+        orderBy: {
+            created_at: DescNullsLast,
+        },
+    )  {
         edges {
             node {
                 ...FullParticipant

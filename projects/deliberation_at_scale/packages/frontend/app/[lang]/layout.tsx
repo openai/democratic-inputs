@@ -27,8 +27,8 @@ export default async function Layout({
                 <section>
                     <ColouredHeader />
                 </section>
-                <section id={MAIN_SCROLL_CONTAINER_ID} className="overflow-y-scroll overflow-x-hidden flex-auto flex flex-col justify-end">
-                    <section className="max-w-[768px] w-full h-full mx-auto px-4 flex flex-col justify-end">
+                <section id={MAIN_SCROLL_CONTAINER_ID} className="overflow-y-scroll overflow-x-hidden flex-auto flex flex-col">
+                    <section className="max-w-[768px] w-full min-h-full mx-auto px-4 flex flex-col">
                         {children}
                     </section>
                 </section>

@@ -44,13 +44,18 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         },
     });
     const convertMessage = useCallback((databaseMessage: RoomMessageFragment) => {
-        const { id, content, visibility_type: visibilityType, created_at: createdAt, type, participant_id: participantId } = databaseMessage ?? {};
+        const { id, active, content, visibility_type: visibilityType, created_at: createdAt, type, participant_id: participantId } = databaseMessage ?? {};
         const isBot = (type === MessageType.Bot);
         const participant = participants?.find((participant) => participant.id === participantId);
         const nickName = isBot ? ROOM_CHAT_FLOW_BOT_NAME : (participant?.nick_name ?? 'Anonymous');
         const isCurrentParticipant = (!!userId && participant?.user_id === userId);
         const nameIcon = getIconByMessageType(type);
         const highlighted = isBot;
+
+        // guard: skip any inactive messages
+        if (!active) {
+            return null;
+        }
 
         // guard: skip any invalid or private messages are not meant for the current participant
         if (!!participant && visibilityType === 'private' && !isCurrentParticipant) {

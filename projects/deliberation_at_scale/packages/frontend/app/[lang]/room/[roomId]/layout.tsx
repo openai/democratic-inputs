@@ -1,11 +1,12 @@
 'use client';
 import { PropsWithChildren, useMemo } from 'react';
 
-import RoomMenu from './menu';
+import RoomMenu from '@/components/RoomMenu';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
 import { useRoomConnection } from '@/components/RoomConnection/context';
 import Loader from '@/components/Loader';
 import useRoom from '@/hooks/useRoom';
+import RoomTranscription from '@/components/RoomTranscription';
 
 /**
  * This is the layout for all room interfaces, i.e. all interfaces in which a
@@ -37,6 +38,7 @@ export default function RoomLayout({ children }: PropsWithChildren) {
             <div className="flex-grow flex-shrink min-w-0">
                 {children}
             </div>
+            <RoomTranscription />
             <RoomMenu />
         </div>
     );

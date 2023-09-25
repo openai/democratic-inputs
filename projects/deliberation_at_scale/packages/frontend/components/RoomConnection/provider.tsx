@@ -4,7 +4,6 @@ import { PropsWithChildren, useMemo } from 'react';
 import { RoomConnectionContext } from './context';
 import { useRoomConnection } from '@whereby.com/browser-sdk';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
-import { NEXT_PUBLIC_WHEREBY_SUBDOMAIN } from '@/utilities/constants';
 import useRoom from '@/hooks/useRoom';
 
 /**
@@ -15,9 +14,10 @@ export default function RoomConnectionProvider({ children }: PropsWithChildren) 
     const { externalRoomId } = useRoom();
 
     // Construct the room URL
-    const roomUrl = useMemo(() => (
-        `https://${NEXT_PUBLIC_WHEREBY_SUBDOMAIN}/${externalRoomId}`
-    ), [externalRoomId]);
+    const roomUrl = useMemo(() => {
+        //return `https://${NEXT_PUBLIC_WHEREBY_SUBDOMAIN}/${externalRoomId}`;
+        return externalRoomId ?? '';
+    }, [externalRoomId]);
 
     // Retrieve the local media data, which should already be initialized.
     const localMedia = useLocalMedia();
