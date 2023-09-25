@@ -1,1 +1,1 @@
-export const PARTICIPANTS_PER_ROOM = 3;
+export const _PARTICIPANTS_PER_ROOM = 3;
