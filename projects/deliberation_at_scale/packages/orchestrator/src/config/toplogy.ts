@@ -60,7 +60,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'topicIntro-enrichTopicIntroduction',
                     workerTaskId: 'enrichTopicIntroduction',
-                    maxAttempts: 10,
+                    maxAttempts: 1,
                     executionType: 'alwaysBeforeVerification',
                     waitFor: true,
                 },
