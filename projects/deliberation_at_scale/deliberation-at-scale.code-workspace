@@ -1,0 +1,32 @@
+{
+    "folders": [
+      {
+        "name": "project-root",
+        "path": "./"
+      },
+      {
+        "name": "data-core",
+        "path": "./packages/data-core"
+      },
+      {
+        "name": "edge-functions",
+        "path": "./packages/edge-functions"
+      },
+      {
+        "name": "frontend",
+        "path": "./packages/frontend"
+      },
+      {
+        "name": "orchestrator",
+        "path": "./packages/orchestrator"
+      },
+    ],
+    "settings": {
+      "files.exclude": {
+        "node_modules/": true,
+        "app/": true,
+        "edge-functions/functions/": true
+      },
+      "deno.importMap": "./edge-functions/functions/import_map.json"
+    }
+  }
