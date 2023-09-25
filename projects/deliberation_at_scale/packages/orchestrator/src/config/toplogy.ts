@@ -42,8 +42,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     maxAttempts: 3,
                     executionType: 'onNotVerified',
                     cooldown: {
-                        startDelayMs: 59 * ONE_SECOND_MS,
-                        durationMs: 59 * ONE_SECOND_MS,
+                        startDelayMs: 90 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -60,7 +60,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'topicIntro-enrichTopicIntroduction',
                     workerTaskId: 'enrichTopicIntroduction',
-                    maxAttempts: 1,
+                    maxAttempts: 10,
                     executionType: 'alwaysBeforeVerification',
                     waitFor: true,
                 },
@@ -92,6 +92,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     cooldown: {
                         minMessageAmount: 5,
                         durationMs: 30 * ONE_SECOND_MS,
+                        startDelayMs: 90 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -107,7 +108,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     maxAttempts: 3,
                     executionType: 'onNotVerified',
                     cooldown: {
-                        startDelayMs: 30 * ONE_SECOND_MS,
+                        startDelayMs: 90 * ONE_SECOND_MS,
                         minMessageAmount: 10,
                         durationMs: 30 * ONE_SECOND_MS,
                     },
@@ -305,8 +306,11 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'close-enrichConsensusProposal',
                     workerTaskId: 'enrichConsensusProposal',
-                    maxAttempts: 3,
+                    maxAttempts: 30,
                     executionType: 'alwaysBeforeVerification',
+                    cooldown: {
+                        durationMs: 60 * ONE_SECOND_MS,
+                    },
                     context: {
                         messages: {
                             roomStatuses: ['informed', 'debate', 'results'],

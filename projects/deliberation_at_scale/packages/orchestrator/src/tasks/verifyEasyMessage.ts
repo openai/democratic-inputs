@@ -31,7 +31,7 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
         await supabaseClient
             .from("messages")
             .update({
-                content: `${messageContent}. This message was flagged because: ${moderatedReason}`,
+                content: `${messageContent}. **This message was flagged because: ${moderatedReason}**`,
             })
             .eq('id', messageId);
     },

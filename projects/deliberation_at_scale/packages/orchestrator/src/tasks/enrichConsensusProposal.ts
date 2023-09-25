@@ -19,4 +19,33 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
 
         return content;
     },
+    getBotMessageContent: async (helpers) => {
+
+        const { result } = helpers;
+        const { enrichment: consensus } = result;
+
+        const contentOptions = [
+            `
+            A consensus was found:
+            `,
+            `
+            The consensus is:
+            `,
+            `
+            We found a consensus:
+            `,
+            `
+            A possible consensus is:
+            `,
+        ];
+
+        const selectedOption = await selectHardCodedEnrichMessage({contentOptions});
+
+        return `${selectedOption} **${consensus}**`;
+        
+    },
 });
+function selectHardCodedEnrichMessage(arg0: { contentOptions: string[]; }) {
+    throw new Error("Function not implemented.");
+}
+
