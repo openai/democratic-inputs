@@ -22,7 +22,7 @@ export default function useTranscribe(options?: UseTranscribeOptions) {
     const onTranscribe = useRef<(blob: Blob) => Promise<UseWhisperTranscript> | undefined>();
     const { transcript, startRecording, pauseRecording, resetRecordings } = useWhisper({
         streaming: true,
-        autoStart: true,
+        autoStart: false,
         removeSilence: false,
         timeSlice: ONE_SECOND_MS * 3,
         ...whisperOptions,
