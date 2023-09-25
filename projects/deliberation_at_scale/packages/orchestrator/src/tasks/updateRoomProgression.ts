@@ -382,7 +382,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
     // undefined = should be skipped
     const settledProgressionTasks = await Promise.allSettled(progressionTasks.map(async (progressionTask) => {
         const { id: progressionTaskId, active = true, cooldown, maxAttempts } = progressionTask;
-        const { blockProgression = true, messageAmount, durationMs: cooldownMs, startDelayMs } = cooldown ?? {};
+        const { blockProgression = true, minMessageAmount, durationMs: cooldownMs, startDelayMs } = cooldown ?? {};
         const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
 
         if (!active) {
@@ -438,7 +438,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
         // check for a couple of properties that need the last moderation to be fetched
         // TODO: refactor these checks into a single function, because a lot of the logic is the same
         // we will do this once we have discovered more of these checks
-        if (messageAmount || cooldownMs) {
+        if (minMessageAmount || cooldownMs) {
             const lastModeration = await getLastCompletedModerationByJobKey(jobKey);
             const lastModerationDate = dayjs(lastModeration?.created_at);
 
@@ -464,7 +464,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
             }
 
             // check if we need to verify the amount of messages before adding the job
-            if (messageAmount && lastModeration) {
+            if (minMessageAmount && lastModeration) {
                 const fromDate = (lastModeration ? lastModerationDate : undefined);
                 const newMessages = await getMessagesAfter({
                     roomId,
@@ -473,15 +473,15 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                 const newMessageAmount = newMessages.length;
 
                 // guard: check if we have enough messages
-                if (newMessageAmount < messageAmount) {
-                    helpers.logger.info(`The new amount of messages after ${lastModerationDate} is not enough for job ${jobKey}. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
+                if (newMessageAmount < minMessageAmount) {
+                    helpers.logger.info(`The new amount of messages after ${lastModerationDate} is not enough for job ${jobKey}. Required: ${minMessageAmount}, actual: ${newMessageAmount}.`);
 
                     if (blockProgression) {
-                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`;
+                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${minMessageAmount}, actual: ${newMessageAmount}.`;
                         helpers.logger.error(errorMessage);
                         return Promise.reject(errorMessage);
                     } else {
-                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} does not have enough new messages, but should NOT block progress. Required: ${messageAmount}, actual: ${newMessageAmount}.`);
+                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} does not have enough new messages, but should NOT block progress. Required: ${minMessageAmount}, actual: ${newMessageAmount}.`);
                         return;
                     }
                 }

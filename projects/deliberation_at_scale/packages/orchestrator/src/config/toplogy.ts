@@ -12,7 +12,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyGroupIntroduction',
                     maxAttempts: 3,
                     cooldown: {
-                        messageAmount: 1,
+                        minMessageAmount: 1,
+                        // maxMessageAmoun: 0,
                         durationMs: 15 * ONE_SECOND_MS,
                     },
                     context: {
@@ -75,7 +76,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     persistent: true,
                     maxAttempts: 3,
                     cooldown: {
-                        messageAmount: 5,
+                        minMessageAmount: 5,
                         durationMs: 30 * ONE_SECOND_MS,
                     },
                     context: {
@@ -89,7 +90,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEmotionalWellbeing',
                     maxAttempts: 3,
                     cooldown: {
-                        messageAmount: 5,
+                        minMessageAmount: 5,
                         durationMs: 30 * ONE_SECOND_MS,
                     },
                     context: {
@@ -107,7 +108,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     executionType: 'onNotVerified',
                     cooldown: {
                         startDelayMs: 30 * ONE_SECOND_MS,
-                        messageAmount: 10,
+                        minMessageAmount: 10,
                         durationMs: 30 * ONE_SECOND_MS,
                     },
                     context: {

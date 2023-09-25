@@ -100,7 +100,7 @@ export interface ProgressionTaskCooldown {
     /** The amount of seconds required to wait before this task can run again. */
     durationMs?: number;
     /** The amount of new messages required before this task can become valid. */
-    messageAmount?: number;
+    minMessageAmount?: number;
     /** An optional amount of maximum atempt in a specific layer (This could be more in total, e.g.: when it switches back to the layer because of X) */
     maxAtemptsInLayer?: number;
     /** An optional amount of maximum atempt in total (Even when switching between layers, the value wont be reset) */

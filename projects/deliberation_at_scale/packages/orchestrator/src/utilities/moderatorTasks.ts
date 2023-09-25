@@ -264,7 +264,7 @@ export async function getMessageContentForProgressionWorker(payload: BaseProgres
     const getParticipantName = (participantId: string | null) => {
         const participant = participants.find((participant) => participant.id === participantId);
         const { nick_name: name } = participant ?? {};
-        return name ?? participantId ?? 'unknown';
+        return `${name} (${participantId})` ?? participantId ?? 'unknown';
     };
 
     const content = messages.map((message) => {
