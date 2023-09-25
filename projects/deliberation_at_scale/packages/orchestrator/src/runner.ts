@@ -17,14 +17,15 @@ export async function startRunner() {
     if (ENABLE_TASK_TESTING) {
         runnerOptions.taskDirectory = undefined;
         runnerOptions.taskList = {
-            triggerRoomProgressionUpdates: require('./tasks/triggerRoomProgressionUpdates').default,
-            updateRoomProgression: require('./tasks/updateRoomProgression').default,
-            verifyConsensusForming: require('./tasks/verifyConsensusForming').default,
-            verifySafeLanguage: require('./tasks/verifySafeLanguage').default,
-            verifyOffTopic: require('./tasks/verifyOffTopic').default,
-            verifyEasyLanguage: require('./tasks/verifyEasyLanguage').default,
-            verifyGroupIntroduction: require('./tasks/verifyGroupIntroduction').default,
-            enrichGroupIntroduction: require('./tasks/enrichGroupIntroduction').default,
+            handleQueuedParticipants: require('./tasks/handleQueuedParticipants').default,
+            // triggerRoomProgressionUpdates: require('./tasks/triggerRoomProgressionUpdates').default,
+            // updateRoomProgression: require('./tasks/updateRoomProgression').default,
+            // verifyConsensusForming: require('./tasks/verifyConsensusForming').default,
+            // verifySafeLanguage: require('./tasks/verifySafeLanguage').default,
+            // verifyOffTopic: require('./tasks/verifyOffTopic').default,
+            // verifyEasyLanguage: require('./tasks/verifyEasyLanguage').default,
+            // verifyGroupIntroduction: require('./tasks/verifyGroupIntroduction').default,
+            // enrichGroupIntroduction: require('./tasks/enrichGroupIntroduction').default,
         };
     }
 

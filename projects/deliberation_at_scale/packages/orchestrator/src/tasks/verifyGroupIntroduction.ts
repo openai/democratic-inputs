@@ -1,11 +1,12 @@
 import { createModeratedVerifyTask, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
+import { PARTICIPANTS_PER_ROOM } from "../config/constants";
 
 export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
-        Three participants are introducing themselves to each other.
-        Have all participants introduced themselves?
+            ${PARTICIPANTS_PER_ROOM} participants are introducing themselves to each other.
+            Have all participants introduced themselves?
         `;
     },
     getTaskContent: async (helpers) => {

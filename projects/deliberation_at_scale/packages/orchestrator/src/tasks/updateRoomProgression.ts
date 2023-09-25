@@ -343,7 +343,6 @@ async function addProgressionTaskJobs(options: ProgressionTasksContext) {
                 roomId,
             } satisfies BaseProgressionWorkerTaskPayload, {
                 jobKey,
-                jobKeyMode: 'preserve_run_at',
             });
         })),
 

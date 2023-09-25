@@ -1,13 +1,14 @@
 import dayjs from "dayjs";
 import { draw, shuffle } from 'radash';
+import { Helpers } from "graphile-worker";
 
 import { supabaseClient } from "../lib/supabase";
-import { Helpers } from "graphile-worker";
 import { createExternalRoom } from "../lib/whereby";
-import { MAX_ROOM_DURATION_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
+import { MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
+import { reschedule } from "../scheduler";
 
-export interface HandleParticipantsPayload {
-
+export interface HandleQueuedParticipantsPayload {
+    jobKey: string;
 }
 
 // if somebody enters the lobby a participant should be created for a user
@@ -16,7 +17,7 @@ export interface HandleParticipantsPayload {
 // after a certain period the user will be seen as inactive, the participant will be removed.
 // if more than N participants are in the lobby some sort of algorithm needs to be used to assign people
 // this should be linked to the other groups effort which have the Python script for assigning good groups
-export default async function handleQueuedParticipants(payload: HandleParticipantsPayload, helpers: Helpers) {
+export default async function handleQueuedParticipants(payload: HandleQueuedParticipantsPayload, helpers: Helpers) {
     try {
         await deactivateInactiveParticipants(helpers);
         await performDynamicGroupSlicing(helpers);
@@ -24,8 +25,15 @@ export default async function handleQueuedParticipants(payload: HandleParticipan
         helpers.logger.error(`An error occured when handling queued participants: ${error}`);
     }
 
-    // reschedule
-    // reschedule();
+    await reschedule<HandleQueuedParticipantsPayload>({
+        workerTaskId: "handleQueuedParticipants",
+        jobKey: "handleQueuedParticipants",
+        intervalMs: ONE_SECOND_MS * 2,
+        payload: {
+            jobKey: "handleQueuedParticipants",
+        },
+        helpers,
+    });
 }
 
 /**
@@ -44,6 +52,11 @@ async function deactivateInactiveParticipants(helpers: Helpers) {
 
     if (error) {
         helpers.logger.error(`An error occured when deactivating queued participants: ${JSON.stringify(error)}`);
+        return;
+    }
+
+    if (count === null) {
+        helpers.logger.error(`No queued participants were deactivated.`);
         return;
     }
 
@@ -66,6 +79,7 @@ async function performDynamicGroupSlicing(helpers: Helpers) {
 
     // guard: check if there are enough participants to assign to a room
     if (queuedParticipantsAmount < PARTICIPANTS_PER_ROOM) {
+        helpers.logger.info(`Not enough participants to assign to a room, waiting for more participants...`);
         return;
     }
 
@@ -118,9 +132,26 @@ async function performDynamicGroupSlicing(helpers: Helpers) {
     }
 
     try {
-        await Promise.allSettled(assignRoomPromises);
+        const assignResults = await Promise.allSettled(assignRoomPromises);
+
+        // check if all promises were successful
+        const successfulAssignments = assignResults.filter((result) => {
+            return result.status === 'fulfilled';
+        });
+        const failedAssignments = assignResults.filter((result) => {
+            return result.status === 'rejected';
+        });
+
+        helpers.logger.info(`Successfully assigned ${successfulAssignments.length} rooms.`);
+        helpers.logger.error(`Failed to assign ${failedAssignments.length} rooms.`);
+
+        // debug all failed reasons
+        failedAssignments.forEach((failedAssignment) => {
+            helpers.logger.error(`Failed to assign room:`);
+            helpers.logger.error(JSON.stringify(failedAssignment));
+        });
     } catch (error) {
-        helpers.logger.error(`An error occurred when : ${error}`);
+        helpers.logger.error(`An error occured when assigning all participants to rooms: ${error}`);
     }
 }
 
@@ -150,7 +181,7 @@ async function assignParticipantsToRoom(options: AssignParticipantsToRoomOptions
         active: true,
         topic_id: selectedTopicId,
         starts_at: dayjs().toISOString(),
-        external_room_id: externalRoom.roomURL,
+        external_room_id: externalRoom.roomUrl,
     }).select();
     const roomId = insertRoomResult?.data?.[0].id;
 
@@ -173,20 +204,6 @@ async function assignParticipantsToRoom(options: AssignParticipantsToRoomOptions
         return false;
     }
 
+    helpers.logger.info(`Successfully assigned participants to room ${roomId}, participants: ${JSON.stringify(participantIds)}`);
     return true;
 }
-
-/**
- * Reschedule this job for the next iteration
- */
-// function reschedule() {
-//     // schedule this job n seconds after the last invocation
-//     quickAddJob({}, "lobby", new Date(), {
-//         runAt: new Date(
-//             Date.now() +
-//             1_000 * TASK_INTERVAL_SECONDS
-//         ),
-//         jobKey: "lobby",
-//         jobKeyMode: "preserve_run_at",
-//     });
-// }

@@ -12,6 +12,12 @@ const crontab: ToggleableCronItem[] = [
         task: 'triggerRoomProgressionUpdates',
         identifier: 'triggerRoomProgressionUpdates',
     },
+    {
+        active: true,
+        pattern: '* * * * *',
+        task: 'handleQueuedParticipants',
+        identifier: 'handleQueuedParticipants',
+    },
 ];
 
 export default crontab.filter((cronItem) => cronItem.active && !DISABLE_CRONTAB);

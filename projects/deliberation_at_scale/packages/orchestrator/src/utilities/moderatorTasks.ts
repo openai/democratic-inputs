@@ -445,6 +445,7 @@ export async function getMessagesAfter(options: GetMessagesAfterOptions) {
         .select()
         .eq('active', true)
         .eq('room_id', roomId)
+        .in('type', ['chat', 'voice'])
         .order('created_at', { ascending: false })
         .limit(limit);
 

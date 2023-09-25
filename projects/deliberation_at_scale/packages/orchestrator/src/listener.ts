@@ -30,7 +30,7 @@ async function startMessageListener() {
         const { id, room_id: roomId } = newMessage;
         const jobKeyPostfix = `message-${id}`;
         const workerTasks: Array<{ taskId: WorkerTaskId, maxAttempts: number }> = [
-            { taskId: 'verifySafeMessage', maxAttempts: 25 },
+            { taskId: 'verifySafeMessage', maxAttempts: 10 },
             { taskId: 'verifyEasyMessage', maxAttempts: 1 },
         ];
 
@@ -50,7 +50,6 @@ async function startMessageListener() {
 
             quickAddJob({}, workerTaskId, jobPayload, {
                 jobKey,
-                jobKeyMode: "preserve_run_at",
                 maxAttempts,
             });
         });

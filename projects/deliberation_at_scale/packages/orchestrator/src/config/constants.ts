@@ -48,13 +48,15 @@ export const ONE_MINUTE_MS = 60 * ONE_SECOND_MS;
 /* Progression */
 export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
-export const ENABLE_TASK_TESTING = true && IS_DEVELOPMENT;
-export const ENABLE_ROOM_TESTING = true && IS_DEVELOPMENT;
-export const TEST_ROOM_ID_ALLOWLIST = ['f9aeae5f-e5bc-476a-9f31-9482eaadd28d'];
-export const ENABLE_ROOM_PROGRESSION = false || !ENABLE_ROOM_TESTING;
+export const ENABLE_TASK_TESTING = false && IS_DEVELOPMENT;
+export const ENABLE_SINGLE_ROOM_TESTING = true && IS_DEVELOPMENT;
+export const TEST_ROOM_ID_ALLOWLIST = ['5ab38de6-3516-4b9e-8b1a-67e80f3b38c2'];
+export const ENABLE_ROOM_PROGRESSION = true || !IS_DEVELOPMENT;
 
 /* Deliberation */
-export const PARTICIPANTS_PER_ROOM = 3;
+export const DEVELOPMENT_PARTICIPANTS_PER_ROOM = 1;
+export const PRODUCTION_PARTICIPANTS_PER_ROOM = 3;
+export const PARTICIPANTS_PER_ROOM = IS_DEVELOPMENT ? DEVELOPMENT_PARTICIPANTS_PER_ROOM : PRODUCTION_PARTICIPANTS_PER_ROOM;
 export const MAX_ROOM_DURATION_MS = 60 * ONE_MINUTE_MS;
 
 /* Lobby */

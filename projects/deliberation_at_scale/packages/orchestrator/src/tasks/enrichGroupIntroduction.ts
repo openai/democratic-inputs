@@ -7,9 +7,9 @@ import { PARTICIPANTS_PER_ROOM } from "../config/constants";
 export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
         return `
-        You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants. 
-        
-        All three participants need to introduce themelves. Ask the participants that have not yet to introduce themselves.
+        You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants.
+
+        All ${PARTICIPANTS_PER_ROOM} participants need to introduce themelves. Ask the participants that have not yet to introduce themselves.
         Do not greet the participants.
         `;
     },
