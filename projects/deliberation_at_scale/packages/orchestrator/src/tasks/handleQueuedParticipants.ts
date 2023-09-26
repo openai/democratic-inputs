@@ -4,7 +4,7 @@ import { Helpers } from "graphile-worker";
 
 import { supabaseClient } from "../lib/supabase";
 import { createExternalRoom } from "../lib/whereby";
-import { MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
+import { MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_CONFIRM_EXPIRY_TIME_MS, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
 import { reschedule } from "../scheduler";
 
 export interface HandleQueuedParticipantsPayload {
@@ -20,6 +20,7 @@ export interface HandleQueuedParticipantsPayload {
 export default async function handleQueuedParticipants(payload: HandleQueuedParticipantsPayload, helpers: Helpers) {
     try {
         await deactivateInactiveParticipants(helpers);
+        await deactivateExpiredRooms(helpers);
         await performDynamicGroupSlicing(helpers);
     } catch (error) {
         helpers.logger.error(`An error occured when handling queued participants: ${error}`);
@@ -47,20 +48,60 @@ async function deactivateInactiveParticipants(helpers: Helpers) {
         .from("participants")
         .update({ active: false })
         .eq('status', "queued")
-        .lt('last_seen_at', minimumLastSeenAt.toISOString());
-    const { count, error } = deactivatedQueuedParticipants;
+        .lt('last_seen_at', minimumLastSeenAt.toISOString())
+        .select();
+    const { data: deactivatedParticipants, error } = deactivatedQueuedParticipants;
 
     if (error) {
         helpers.logger.error(`An error occured when deactivating queued participants: ${JSON.stringify(error)}`);
         return;
     }
 
-    if (count === null) {
-        helpers.logger.error(`No queued participants were deactivated.`);
+    if (deactivatedParticipants.length <= 0) {
+        helpers.logger.info(`No queued participants were deactivated.`);
         return;
     }
 
-    helpers.logger.error(`Deactivated ${count} queued participants.`);
+    helpers.logger.error(`Deactivated ${deactivatedParticipants.length} queued participants.`);
+}
+
+/**
+ * Deactivate rooms that are expired because participants are not joining quickly enough
+ */
+async function deactivateExpiredRooms(helpers: Helpers) {
+    const minimumUpdatedAt = dayjs().subtract(PARTICIPANT_CONFIRM_EXPIRY_TIME_MS, 'ms');
+
+    // delete participants where ping failed and they are still in queu
+    const { data: deactivatedParticipants, error } = await supabaseClient
+        .from("participants")
+        .update({ active: false, status: 'end_of_session' })
+        .eq('status', "waiting_for_confirmation")
+        .lt('updated_at', minimumUpdatedAt.toISOString())
+        .select();
+
+    if (error) {
+        helpers.logger.error(`An error occurred when deactivating expired rooms: ${JSON.stringify(error)}`);
+        return;
+    }
+
+    if (deactivatedParticipants.length <= 0) {
+        helpers.logger.info(`No expired confirming participants were deactivated.`);
+        return;
+    }
+
+    helpers.logger.error(`Deactivated ${deactivatedParticipants.length} confirming participants. Now also deactivating the rooms...`);
+
+    const roomIds = deactivatedParticipants.map((participant) => {
+        return participant.room_id;
+    });
+
+    const { data: deactivatedRooms } = await supabaseClient
+        .from("rooms")
+        .update({ active: false })
+        .in('id', roomIds)
+        .select();
+
+    helpers.logger.error(`Deactivated ${deactivatedRooms?.length ?? 0} rooms. Participants should be automatically notified: ${JSON.stringify(deactivatedRooms)}`);
 }
 
 /**
@@ -168,13 +209,11 @@ async function assignParticipantsToRoom(options: AssignParticipantsToRoomOptions
     const selectedTopicId = draw(topicIds);
 
     if (!externalRoom) {
-        helpers.logger.error(`Could not create an external room, participants: ${JSON.stringify(participantIds)}`);
-        return false;
+        return Promise.reject(`Could not create an external room, participants: ${JSON.stringify(participantIds)}`);
     }
 
     if (!selectedTopicId) {
-        helpers.logger.error(`Could not find a topic candidate for a new room, topic IDs: ${JSON.stringify(topicIds)}`);
-        return false;
+        return Promise.reject(`Could not find a topic candidate for a new room, topic IDs: ${JSON.stringify(topicIds)}`);
     }
 
     const insertRoomResult = await supabaseClient.from('rooms').insert({
@@ -186,8 +225,7 @@ async function assignParticipantsToRoom(options: AssignParticipantsToRoomOptions
     const roomId = insertRoomResult?.data?.[0].id;
 
     if (!roomId) {
-        helpers.logger.error(`Could not create a new room for topic ${selectedTopicId} and external room: ${JSON.stringify(externalRoom)}`);
-        return false;
+        return Promise.reject(`Could not create a new room for topic ${selectedTopicId} and external room: ${JSON.stringify(externalRoom)}`);
     }
 
     helpers.logger.info(`Successfully created a new room with ID ${roomId}, with external room: ${JSON.stringify(externalRoom)}`);
@@ -200,8 +238,7 @@ async function assignParticipantsToRoom(options: AssignParticipantsToRoomOptions
     }).in('id', [participantIds]);
 
     if (assignParticipantsResult.error) {
-        helpers.logger.error(`Could not assign participants to room ${roomId}, participants: ${JSON.stringify(participantIds)}`);
-        return false;
+        return Promise.reject(`Could not assign participants to room ${roomId}, participants: ${JSON.stringify(participantIds)}`);
     }
 
     helpers.logger.info(`Successfully assigned participants to room ${roomId}, participants: ${JSON.stringify(participantIds)}`);
