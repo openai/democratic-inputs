@@ -7,6 +7,9 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
         return `
             You are the supervisor of a discussion. You must make sure that the message below adheres to the following rules:
             - If messages are too long or too complex in nature
+            - Contain words that are difficult to understand
+
+            You do not need to flag messages containing inappropiate language.
 
             Always make sure you give the proper reasons of why it is verified or not.
         `;
@@ -31,7 +34,7 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
         await supabaseClient
             .from("messages")
             .update({
-                content: `${messageContent}. **This message was flagged because: ${moderatedReason}**`,
+                content: `${messageContent}. **This message was flagged because:** ${moderatedReason}`,
             })
             .eq('id', messageId);
     },
