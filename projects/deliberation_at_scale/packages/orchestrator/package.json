@@ -15,6 +15,7 @@
     "start:runner": "ORCHESTRATOR_ROLE=runner node dist/index.js",
     "start:scheduler": "ORCHESTRATOR_ROLE=scheduler node dist/index.js",
     "start:listener": "ORCHESTRATOR_ROLE=listener node dist/index.js",
+    "start:migrator": "ORCHESTRATOR_ROLE=migrator node dist/index.js",
     "lint": "eslint src --ext .ts",
     "clean": "rimraf ./node_modules"
   },

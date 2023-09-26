@@ -1,11 +1,18 @@
 /* eslint-disable no-console */
 import { ORCHESTRATOR_ROLE } from "./config/constants";
 import { startListener, stopListener } from "./listener";
+import { startMigrator, stopMigrator } from "./migrator";
 import { startRunner, stopRunner } from "./runner";
 import { startScheduler, stopScheduler } from "./scheduler";
 import { OrchestratorRoleTask } from "./types";
 
 const tasks: OrchestratorRoleTask[] = [
+    {
+        name: 'migrator',
+        startTask: startMigrator,
+        stopTask: stopMigrator,
+        roles: ['migrator'],
+    },
     {
         name: 'runner',
         startTask: startRunner,
@@ -35,12 +42,14 @@ async function runTasks(taskType: 'startTask' | 'stopTask') {
         const shouldExecuteTask = roles.includes(ORCHESTRATOR_ROLE);
 
         if (!shouldExecuteTask) {
-            return;
+            continue;
         }
 
         console.log(`Running task ${name}...`);
-        taskHandler().catch((error) => {
-            console.error(`An error occured with the task ${name}:`);
+        taskHandler().then(() => {
+            console.log(`Successfully finished the task ${name}`);
+        }).catch((error) => {
+            console.error(`An error occurred with the task ${name}:`);
             console.error(error);
             process.exit(1);
         });
