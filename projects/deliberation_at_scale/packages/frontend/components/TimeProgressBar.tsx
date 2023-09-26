@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import dayjs from "dayjs";
+import useColorClassName from "@/hooks/useTintedThemeColor";
 
 const UPDATE_PROGRESS_INTERVAL_MS = 100;
 
@@ -18,6 +19,8 @@ export default function TimeProgressBar(props: Props) {
     const durationLeftMs = Math.max(durationMs - timePassedMs, 0);
     const percentageDone = Math.ceil(100 - (hasDuration ? durationLeftMs / durationMs : 0) * 100);
     const isCompleted = hasDuration && (percentageDone >= 100);
+    const bgColor = useColorClassName({ classNamePrefix: 'bg', tint: 400 });
+    const bgBarColor = useColorClassName({ classNamePrefix: 'bg', tint: 800 });
 
     // periodially adjust the time
     useEffect(() => {
@@ -43,14 +46,14 @@ export default function TimeProgressBar(props: Props) {
 
     return (
         <motion.div
-            className="rounded-lg w-full h-[8px] bg-green-400"
+            className={`rounded-lg w-full h-[8px] ${bgColor}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
             <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${percentageDone}%` }}
-                className="rounded-lg h-full bg-green-800"
+                className={`rounded-lg h-full ${bgBarColor}`}
             ></motion.div>
         </motion.div>
     );
