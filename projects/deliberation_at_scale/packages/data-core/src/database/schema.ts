@@ -66,6 +66,11 @@ export const opinionType = pgEnum("opinionType", [
     "relevance_range",
     "agreement_range",
     "statement",
+    "option",
+]);
+export const opinionOptionType = pgEnum("opinionOptionType", [
+    "agree_consensus",
+    "disagree_consensus",
 ]);
 export const crossPollinationType = pgEnum("crossPollinationType", [
     "outcome",
@@ -212,6 +217,7 @@ export const outcomes = pgTable(OUTCOMES_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
     type: outcomeType("type").notNull().default("milestone"),
+    roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id),
     originalOutcomeId: uuid(ORIGINAL_OUTCOME_ID_FIELD_NAME).references(
         (): AnyPgColumn => outcomes.id
     ),
@@ -220,6 +226,7 @@ export const outcomes = pgTable(OUTCOMES_TABLE_NAME, {
 }, (table) => {
     return {
         typeIndex: index("type_index").on(table.type),
+        roomIdIndex: index("room_id_index").on(table.roomId),
         originalOutcomeIdIndex: index("original_outcome_id_index").on(table.originalOutcomeId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
@@ -250,14 +257,19 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
     active: generateActiveField(),
     type: opinionType("type").notNull().default("statement"),
     outcomeId: uuid(OUTCOME_ID_FIELD_NAME).references(() => outcomes.id),
+    participantId: uuid(PARTICIPANT_ID_FIELD_NAME).notNull().references(() => participants.id),
     rangeValue: integer("range_value").notNull().default(0),
     statement: text("statement").notNull().default(""),
+    optionType: opinionOptionType("option_type"),
     ...generateTimestampFields(),
 }, (table) => {
     return {
+        // TODO: add contraint here where only one is allowed per outcome and participant
         typeIndex: index("type_index").on(table.type),
         outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
+        participantIdIndex: index("participant_id_index").on(table.participantId),
         rangeValueIndex: index("range_value_index").on(table.rangeValue),
+        optionTypeIndex: index("option_type_index").on(table.optionType),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -274,10 +286,8 @@ export const crossPollinations = pgTable(CROSS_POLLINATIONS_TABLE_NAME, {
     topicId: uuid(TOPIC_ID_FIELD_NAME).references(() => topics.id),
 
     // an outcome can be cross-pollinated to a room, participant, or user
-    roomId: uuid(ROOM_ID_FIELD_NAME).references(() => messages.id),
-    participantId: uuid(PARTICIPANT_ID_FIELD_NAME).references(
-        () => participants.id
-    ),
+    roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id),
+    participantId: uuid(PARTICIPANT_ID_FIELD_NAME).references(() => participants.id),
     userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
 
     ...generateTimestampFields(),
