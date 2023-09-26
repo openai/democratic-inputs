@@ -33,7 +33,7 @@ export default function ChatMessageList(props: Props) {
 
     return (
         <motion.div
-            className="flex flex-col gap-2"
+            className="flex flex-col gap-1"
             variants={variants}
             initial="hidden"
             animate="visible"
@@ -42,6 +42,7 @@ export default function ChatMessageList(props: Props) {
                 {messages.map((message, index) => {
                     const { id = index, date } = message ?? {};
                     const key = `${id}-${date}`;
+                    const previousMessage = messages[index - 1];
 
                     // guard: check if message is valid
                     if (!message) {
@@ -49,7 +50,11 @@ export default function ChatMessageList(props: Props) {
                     }
 
                     return (
-                        <ChatMessage key={key} message={message} />
+                        <ChatMessage
+                            key={key}
+                            message={message}
+                            header={previousMessage?.name !== message.name}
+                        />
                     );
                 })}
             </AnimatePresence>
