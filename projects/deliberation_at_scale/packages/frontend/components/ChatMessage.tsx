@@ -14,20 +14,22 @@ import { replaceTextVariables } from '@/utilities/text';
 interface Props {
     message: Message;
     enablePadding?: boolean;
+    header?: boolean;
 }
 
 export default function ChatMessage(props: Props) {
-    const { message, enablePadding = true } = props;
+    const { message, enablePadding = true, header = true } = props;
     const { content, name, nameIcon, date, highlighted = false} = message;
-    const highlightedBgColor = useColorClassName({ classNamePrefix: 'bg', tint: 200 });
-    const nameTextColor = useColorClassName({ classNamePrefix: 'text', tint: 800 });
+    const highlightedBgColor = useColorClassName({ classNamePrefix: 'bg', tint: 100 });
+    const headerTextColor = useColorClassName({ classNamePrefix: 'text', tint: 800 });
+    const bodyTextColor = useColorClassName({ classNamePrefix: 'text', tint: 900 });
     const { user } = useProfile();
     const nickName = user?.nick_name ?? t`You`;
     const hasDate = !!date;
     const parsedDate = dayjs(date);
     const isToday = parsedDate.isSame(dayjs(), 'day');
     const formattedDate = dayjs(date).format(isToday ? 'HH:mm' : 'DD/MM/YYYY HH:mm');
-    const wrapperClassName = `flex flex-col gap-1 grow width-full rounded-md ${enablePadding ? 'p-4' : ''} transition-colors duration-1000 ${highlighted ? highlightedBgColor : ''}`;
+    const wrapperClassName = `flex flex-col gap-1 grow width-full rounded-md ${enablePadding ? 'p-4' : ''} transition-colors duration-1000 ${highlighted ? highlightedBgColor : ''} group`;
     const variants = {
         hidden: { opacity: 0, y: 70 },
         visible: { opacity: 1, y: 0 },
@@ -52,20 +54,22 @@ export default function ChatMessage(props: Props) {
             initial="hidden"
             animate="visible"
         >
-            <div className="flex justify-between text-sm uppercase opacity-70">
-                <div className="self-start inline-flex content-center items-center gap-2">
-                    {nameIcon && (
-                        <span><FontAwesomeIcon icon={nameIcon} /></span>
-                    )}
-                    <span className={nameTextColor}>{formattedName}</span>
-                </div>
-                {hasDate && (
-                    <div className="self-end">
-                        {formattedDate}
+            {header && (
+                <div className={`flex justify-between text-sm uppercase opacity-50 ${highlighted ? headerTextColor : 'opacity-20'} group-hover:opacity-90 transition-opacity`}>
+                    <div className="self-start inline-flex content-center items-center gap-2">
+                        {nameIcon && (
+                            <span><FontAwesomeIcon icon={nameIcon} /></span>
+                        )}
+                        <span>{formattedName}</span>
                     </div>
-                )}
-            </div>
-            <div>
+                    {hasDate && (
+                        <div className="self-end">
+                            {formattedDate}
+                        </div>
+                    )}
+                </div>
+            )}
+            <div className={highlighted ? bodyTextColor : undefined}>
                 <ReactMarkdown>
                     {formattedContent}
                 </ReactMarkdown>

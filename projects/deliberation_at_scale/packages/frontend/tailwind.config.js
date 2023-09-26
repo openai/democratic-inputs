@@ -8,7 +8,7 @@ module.exports = {
     content: ['./{app,components,hooks,pages}/**/*.{js,ts,jsx,tsx,mdx}'],
     safelist: [
         {
-            pattern: /^(bg-|text-|border-)/,
+            pattern: /^(bg-|text-|border-|ring-)/,
             variants: ['hover', 'focus', 'focus-within']
         },
     ],

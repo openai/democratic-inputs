@@ -19,8 +19,8 @@ export default function ChatInput(props: ChatInputProps) {
     const defaultPlaceholder = t`Tap to type`;
     const { onSubmit, disabled = false, placeholder = defaultPlaceholder} = props;
     const submitBgColor = useColorClassName({ classNamePrefix: 'bg', tint: 500 });
-    const focusColor = useColorClassName({ classNamePrefix: 'focus-within:ring', tint: 500 });
-    const hoverBorder = useColorClassName({ classNamePrefix: 'focus-within:border', tint: 300 });
+    const focusColor = useColorClassName({ classNamePrefix: 'ring', tint: 400 });
+    const hoverBorder = useColorClassName({ classNamePrefix: 'focus-within:border', tint: 400 });
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState('');
     const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
