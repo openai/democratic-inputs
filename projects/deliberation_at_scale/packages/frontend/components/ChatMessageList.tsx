@@ -43,6 +43,7 @@ export default function ChatMessageList(props: Props) {
                     const { id = index, date } = message ?? {};
                     const key = `${id}-${date}`;
                     const previousMessage = messages[index - 1];
+                    const nextMessage = messages[index + 1];
 
                     // guard: check if message is valid
                     if (!message) {
@@ -53,7 +54,8 @@ export default function ChatMessageList(props: Props) {
                         <ChatMessage
                             key={key}
                             message={message}
-                            header={previousMessage?.name !== message.name}
+                            first={previousMessage?.name !== message.name}
+                            last={nextMessage?.name !== message.name}
                         />
                     );
                 })}

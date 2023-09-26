@@ -10,6 +10,7 @@ import { Message } from '@/flows/types';
 import useProfile from '@/hooks/useProfile';
 import { useCallback, useMemo } from 'react';
 import { replaceTextVariables } from '@/utilities/text';
+import classNames from 'classnames';
 
 const highlightedBgColorMap: Record<ThemeColors, string> = {
     'blue': 'bg-blue-100',
@@ -32,11 +33,12 @@ const bodyTextColorMap: Record<ThemeColors, string> = {
 interface Props {
     message: Message;
     enablePadding?: boolean;
-    header?: boolean;
+    first?: boolean;
+    last?: boolean;
 }
 
 export default function ChatMessage(props: Props) {
-    const { message, enablePadding = true, header = true } = props;
+    const { message, enablePadding = true, first = false, last = false } = props;
     const { content, name, nameIcon, date, highlighted = false} = message;
     const theme = useTheme();
     const { user } = useProfile();
@@ -45,7 +47,13 @@ export default function ChatMessage(props: Props) {
     const parsedDate = dayjs(date);
     const isToday = parsedDate.isSame(dayjs(), 'day');
     const formattedDate = dayjs(date).format(isToday ? 'HH:mm' : 'DD/MM/YYYY HH:mm');
-    const wrapperClassName = `flex flex-col gap-1 grow width-full rounded-md ${enablePadding ? 'p-4' : ''} transition-colors duration-1000 ${highlighted ? highlightedBgColorMap[theme] : ''} group`;
+    const wrapperClassName = classNames(
+        `flex flex-col gap-1 grow width-full rounded transition-colors duration-1000 group`,
+        enablePadding && 'p-4',
+        highlighted && highlightedBgColorMap[theme],
+        first && 'rounded-t-lg',
+        last && 'rounded-br-lg',
+    );
     const variants = {
         hidden: { opacity: 0, y: 70 },
         visible: { opacity: 1, y: 0 },
@@ -70,8 +78,8 @@ export default function ChatMessage(props: Props) {
             initial="hidden"
             animate="visible"
         >
-            {header && (
-                <div className={`flex justify-between text-sm uppercase opacity-50 ${highlighted ? headerTextColorMap[theme] : 'opacity-20'} group-hover:opacity-90 transition-opacity`}>
+            {first && (
+                <div className={`flex justify-between text-sm uppercase opacity-50 ${highlighted ? headerTextColorMap[theme] : 'opacity-[.30]'} group-hover:opacity-90 transition-opacity`}>
                     <div className="self-start inline-flex content-center items-center gap-2">
                         {nameIcon && (
                             <span><FontAwesomeIcon icon={nameIcon} /></span>

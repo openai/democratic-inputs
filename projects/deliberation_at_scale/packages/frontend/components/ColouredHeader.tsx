@@ -4,9 +4,9 @@ import useTheme, { ThemeColors } from "@/hooks/useTheme";
 import { usePathname } from "next/navigation";
 
 const bgColorMap: Record<ThemeColors, string> = {
-    'blue': 'bg-blue-300',
-    'green': 'bg-green-300',
-    'orange': 'bg-orange-300',
+    'blue': 'bg-blue-400',
+    'green': 'bg-green-400',
+    'orange': 'bg-orange-400',
 };
 
 export default function ColouredHeader() {
