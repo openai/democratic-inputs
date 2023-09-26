@@ -55,7 +55,7 @@ export default function ChatMessage(props: Props) {
         last && 'rounded-br-xl',
     );
     const variants = {
-        hidden: { opacity: 0, y: 0, maxHeight: 0 },
+        hidden: { opacity: 0, y: 70, maxHeight: 0 },
         visible: { opacity: 1, y: 0, maxHeight: 10_000 },
     };
     const replaceMessageVariables = useCallback((text: string) => {
@@ -77,6 +77,7 @@ export default function ChatMessage(props: Props) {
             variants={variants}
             initial="hidden"
             animate="visible"
+            transition={{ duration: 0.15, bounce: 1 }}
         >
             {first && (
                 <div className={`flex justify-between text-sm uppercase opacity-50 ${highlighted ? headerTextColorMap[theme] : 'opacity-[.30]'} group-hover:opacity-90 transition-opacity`}>

@@ -278,6 +278,7 @@ export default function ChatFlow(props: Props) {
                                         onClick={async () => {
                                             setInputDisabled(true);
                                             try {
+                                                postUserMessages([[ content ]]);
                                                 await onClick(onInputHelpers);
                                             } catch (error) {
                                                 postBotMessages([["Something went wrong! Please try again."]]);
