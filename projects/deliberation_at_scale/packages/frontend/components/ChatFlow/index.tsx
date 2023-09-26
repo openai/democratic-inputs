@@ -252,7 +252,7 @@ export default function ChatFlow(props: Props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
-            <div className="sticky bottom-4 pt-4 flex flex-col gap-2">
+            <div className="sticky bottom-4 pt-4 flex flex-col gap-2 z-20">
                 <AnimatePresence>
                     {!isEmpty(quickReplies) && (
                         <motion.div
