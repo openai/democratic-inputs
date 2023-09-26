@@ -5,9 +5,9 @@ import { ReactNode } from 'react';
 import useTheme, { ThemeColors } from "@/hooks/useTheme";
 
 const textColorMap: Record<ThemeColors, string> = {
-    'blue': 'text-blue-300',
-    'green': 'text-green-300',
-    'orange': 'text-orange-300',
+    'blue': 'text-blue-600',
+    'green': 'text-green-600',
+    'orange': 'text-orange-600',
 };
 
 interface Props {
