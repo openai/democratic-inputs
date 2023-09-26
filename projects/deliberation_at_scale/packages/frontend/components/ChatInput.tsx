@@ -7,7 +7,25 @@ import { motion } from 'framer-motion';
 import { t } from "@lingui/macro";
 
 import { UserInput } from "@/flows/types";
-import useColorClassName from "@/hooks/useTintedThemeColor";
+import useTheme, { ThemeColors } from '@/hooks/useTheme';
+
+const submitBgColorMap: Record<ThemeColors, string> = {
+    'blue': 'bg-blue-500',
+    'green': 'bg-green-500',
+    'orange': 'bg-orange-500',
+};
+
+const focusColorMap: Record<ThemeColors, string> = {
+    'blue': 'ring-blue-400',
+    'green': 'ring-green-400',
+    'orange': 'ring-orange-400',
+};
+
+const hoverBorderMap: Record<ThemeColors, string> = {
+    'blue': 'focus-within:border-blue-400',
+    'green': 'focus-within:border-green-400',
+    'orange': 'focus-within:border-orange-400',
+};
 
 export interface ChatInputProps {
     onSubmit: (input: UserInput) => Promise<boolean>;
@@ -18,9 +36,7 @@ export interface ChatInputProps {
 export default function ChatInput(props: ChatInputProps) {
     const defaultPlaceholder = t`Tap to type`;
     const { onSubmit, disabled = false, placeholder = defaultPlaceholder} = props;
-    const submitBgColor = useColorClassName({ classNamePrefix: 'bg', tint: 500 });
-    const focusColor = useColorClassName({ classNamePrefix: 'ring', tint: 400 });
-    const hoverBorder = useColorClassName({ classNamePrefix: 'focus-within:border', tint: 400 });
+    const theme = useTheme();
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState('');
     const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
@@ -64,7 +80,7 @@ export default function ChatInput(props: ChatInputProps) {
             onSubmit={handleSubmit}
             className={`relative ${disabled ? 'grayscale cursor-not-allowed' : ''}`}
         >
-            <div className={`flex rounded-md border w-full bg-white focus-within:ring ${focusColor} ${hoverBorder}`}>
+            <div className={`flex rounded-md border w-full bg-white focus-within:ring ${focusColorMap[theme]} ${hoverBorderMap[theme]}`}>
                 <input
                     ref={inputRef}
                     className={`py-3 px-4 outline-none rounded-md border-none w-full bg-none`}
@@ -75,7 +91,7 @@ export default function ChatInput(props: ChatInputProps) {
                 />
                 <motion.button
                     type="submit"
-                    className={`transition-colors duration-1000 rounded-lg m-2 p-2 w-10 aspect-square shrink-0 text-white ${submitBgColor}`}
+                    className={`transition-colors duration-1000 rounded-lg m-2 p-2 w-10 aspect-square shrink-0 text-white ${submitBgColorMap[theme]}`}
                     whileTap={{ scale: (disabled ? 1: 0.9) }}
                     disabled={disabled}
                 >

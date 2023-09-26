@@ -2,14 +2,11 @@ import { AUTHENTICATE_ROOM_BASE_COLOR, DELIBERATION_ROOM_BASE_COLOR, DEFAULT_ROO
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
-interface Options {
-    classNamePrefix: string;
-    baseColor?: string;
-    tint?: number;
-}
+export type ThemeColors = typeof DEFAULT_ROOM_BASE_COLOR | typeof DELIBERATION_ROOM_BASE_COLOR | typeof AUTHENTICATE_ROOM_BASE_COLOR;
 
-export default function useColorClassName(options?: Options) {
+export default function useTheme(): ThemeColors {
     const pathname = usePathname();
+
     const inferredBaseColor = useMemo(() => {
 
         // TODO: better way to do this? Bit harder due to translations in URL
@@ -28,12 +25,6 @@ export default function useColorClassName(options?: Options) {
         // home page
         return DELIBERATION_ROOM_BASE_COLOR;
     }, [pathname]);
-    const {
-        classNamePrefix = "bg",
-        baseColor = inferredBaseColor,
-        tint = 300,
-    } = options ?? {};
-    const className = `${classNamePrefix}-${baseColor}-${tint}`;
 
-    return className;
+    return inferredBaseColor;
 }

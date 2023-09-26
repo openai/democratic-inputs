@@ -6,12 +6,6 @@ const colors = require('tailwindcss/colors');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: ['./{app,components,hooks,pages}/**/*.{js,ts,jsx,tsx,mdx}'],
-    safelist: [
-        {
-            pattern: /^(bg-|text-|border-|ring-)/,
-            variants: ['hover', 'focus', 'focus-within']
-        },
-    ],
     darkMode: false,
     theme: {
         colors: {

@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { isEmpty } from 'radash';
 import { Trans } from '@lingui/macro';
 
-import useTintedThemeColor from "@/hooks/useTintedThemeColor";
-import { topicSolid, statementSolid } from "./EntityIcons";
+import useTheme, { ThemeColors } from "@/hooks/useTheme";
+import { topicSolid } from "./EntityIcons";
 import Pill from "./Pill";
 import useRoom from "@/hooks/useRoom";
 import { useSendRoomMessageMutation } from '@/generated/graphql';
@@ -13,10 +13,16 @@ import RoomOutcome from './RoomOutcome';
 
 const ENABLE_CHAT = false;
 
+const topicColorBgMap: Record<ThemeColors, string> = {
+    'blue': 'bg-blue-400',
+    'green': 'bg-green-400',
+    'orange': 'bg-orange-400',
+};
+
 export default function RoomChatSummary() {
     const { topic, lastBotMessages, lastParticipantMessages, participantId, roomId, outcomes } = useRoom();
     const { content: topicContent } = topic ?? {};
-    const topicColorBg = useTintedThemeColor({ classNamePrefix: 'bg', tint: 400 });
+    const theme = useTheme();
     const [sendRoomMessage] = useSendRoomMessageMutation();
 
     return (
@@ -26,7 +32,7 @@ export default function RoomChatSummary() {
             animate={{ opacity: 1, y: 0 }}
         >
             {topicContent && (
-                <div className={`sticky top-0 p-4 rounded gap-4 flex items-center ${topicColorBg}`}>
+                <div className={`p-4 rounded gap-4 flex items-center ${topicColorBgMap[theme]}`}>
                     <Pill icon={topicSolid} className="border-green-700"><Trans>Topic</Trans></Pill>
                     {topicContent}
                 </div>
