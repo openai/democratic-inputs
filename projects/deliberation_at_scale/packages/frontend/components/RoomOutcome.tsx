@@ -54,6 +54,7 @@ export default function RoomOutcome(props: Props) {
     const opinionOptions = useMemo(() => {
         return getOpinionOptionsByOutcomeType(type);
     }, [type]);
+    const hasOpinionOptions = (opinionOptions.length > 0);
 
     if (!outcome) {
         return null;
@@ -63,52 +64,54 @@ export default function RoomOutcome(props: Props) {
         <motion.div
             layoutId={outcomeId}
             className="p-4 gap-4 flex flex-col items-start"
-            initial={{ opacity: 0, x: -70 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
         >
             <Pill icon={statementSolid} className="border-black">
                 <Trans>{title}</Trans>
             </Pill>
             <span>{content}</span>
-            <div className="flex flex-col gap-2 w-full">
-                {opinionOptions.map((option) => {
-                    const { content, icon, optionType } = option;
-                    // TODO: implement on button
-                    const isSelected = (existingOpinion?.option_type === optionType);
-                    const isDisabled = isGivingOpinion || (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
-                    const onOptionClick = () => {
-                        const mutationVariables = {
-                            outcomeId,
-                            participantId,
-                            type: OpinionType.Option,
-                            optionType,
-                        };
+            {hasOpinionOptions && (
+                <div className="flex flex-col gap-2 w-full">
+                    {opinionOptions.map((option) => {
+                        const { content, icon, optionType } = option;
+                        // TODO: implement on button
+                        const isSelected = (existingOpinion?.option_type === optionType);
+                        const isDisabled = isGivingOpinion || (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
+                        const onOptionClick = () => {
+                            const mutationVariables = {
+                                outcomeId,
+                                participantId,
+                                type: OpinionType.Option,
+                                optionType,
+                            };
 
-                        // guard: update an existing opinion when already given one
-                        if (hasExistingOpinion) {
-                            changeOpinion({
+                            // guard: update an existing opinion when already given one
+                            if (hasExistingOpinion) {
+                                changeOpinion({
+                                    variables: mutationVariables,
+                                });
+                                return;
+                            }
+
+                            createOpinion({
                                 variables: mutationVariables,
                             });
-                            return;
-                        }
+                        };
 
-                        createOpinion({
-                            variables: mutationVariables,
-                        });
-                    };
-
-                    return (
-                        <Button
-                            disabled={isDisabled}
-                            key={optionType}
-                            icon={icon}
-                            onClick={onOptionClick}
-                        >
-                            {content}
-                        </Button>
-                    );
-                })}
-            </div>
+                        return (
+                            <Button
+                                disabled={isDisabled}
+                                key={optionType}
+                                icon={icon}
+                                onClick={onOptionClick}
+                            >
+                                {content}
+                            </Button>
+                        );
+                    })}
+                </div>
+            )}
             {hasTimeout && (
                 <TimeProgressBar
                     durationMs={timeoutMs}
