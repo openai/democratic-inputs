@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import { isEmpty } from "radash";
 import { supabaseClient } from "../lib/supabase";
 import { BaseProgressionWorkerTaskPayload } from "../types";
@@ -24,17 +23,17 @@ export async function storeOutcome<PayloadType, ResultType>(options: StoreOutcom
     }
 
     // store the outcome to get the outcome ID to use for the outcome sources
-    const outcomeId = randomUUID();
-    const outcomeResult = await supabaseClient
+    const { data: outcomeData } = await supabaseClient
         .from("outcomes")
         .insert({
-            id: outcomeId,
             content: outcomeContent,
             type: outcomeType,
-        });
+        })
+        .select();
+    const outcomeId = outcomeData?.[0]?.id;
 
     // guard: make sure there is an outcome
-    if (!outcomeResult.count) {
+    if (!outcomeId) {
         helpers.helpers.logger.error(`Could not create an outcome with content ${outcomeContent} for job payload ${JSON.stringify(helpers.payload)}`);
         return;
     }
@@ -46,10 +45,11 @@ export async function storeOutcome<PayloadType, ResultType>(options: StoreOutcom
                 outcome_id: outcomeId,
                 message_id: messageId,
             };
-        }));
+        }))
+        .select();
 
     // check if all message references were stored
-    if (!outcomeSourcesResult?.count || outcomeSourcesResult.count < messageIds.length) {
+    if ((outcomeSourcesResult?.data?.length ?? 0) < messageIds.length) {
         helpers.helpers.logger.error(`Could not create all outcome sources for outcome: ${outcomeId}`);
     }
 }

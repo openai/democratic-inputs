@@ -27,9 +27,9 @@ export interface UpdateRoomStatusOptions {
  */
 export async function updateRoomStatus(options: UpdateRoomStatusOptions) {
     const { roomId, roomStatus, helpers } = options;
-    const newRoomData = await supabaseClient.from('rooms').update({
+    const newRoomResult = await supabaseClient.from('rooms').update({
         status_type: roomStatus,
-    }).eq('id', roomId);
+    }).eq('id', roomId).select();
 
-    helpers.logger.info(`Room ${roomId} has a new room status: ${roomStatus} (affected: ${newRoomData.count})`);
+    helpers.logger.info(`Room ${roomId} has a new room status: ${roomStatus} (affected: ${newRoomResult?.data?.length ?? 0})`);
 }
