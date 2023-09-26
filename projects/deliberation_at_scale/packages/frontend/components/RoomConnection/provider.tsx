@@ -5,6 +5,7 @@ import { RoomConnectionContext } from './context';
 import { useRoomConnection } from '@whereby.com/browser-sdk';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
 import useRoom from '@/hooks/useRoom';
+import { ENABLE_WHEREBY } from '@/utilities/constants';
 
 /**
  * This provider will instantiate the Whereby `useLocalMedia` hook and make its
@@ -26,7 +27,7 @@ export default function RoomConnectionProvider({ children }: PropsWithChildren) 
     const connection = useRoomConnection(roomUrl, { localMedia, localMediaConstraints: { audio: true, video: true }, logger: console });
 
     return (
-        <RoomConnectionContext.Provider value={connection}>
+        <RoomConnectionContext.Provider value={ENABLE_WHEREBY ? connection : null}>
             {children}
         </RoomConnectionContext.Provider>
     );
