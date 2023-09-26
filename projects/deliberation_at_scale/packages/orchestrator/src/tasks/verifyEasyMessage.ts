@@ -9,8 +9,6 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
             - If messages are too long or too complex in nature
             - Contain words that are difficult to understand
 
-            You do not need to flag messages containing inappropiate language.
-
             Always make sure you give the proper reasons of why it is verified or not.
         `;
     },
