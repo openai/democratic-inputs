@@ -55,8 +55,8 @@ export default function ChatMessage(props: Props) {
         last && 'rounded-br-xl',
     );
     const variants = {
-        hidden: { opacity: 0, y: 70 },
-        visible: { opacity: 1, y: 0 },
+        hidden: { opacity: 0, y: 0, maxHeight: 0 },
+        visible: { opacity: 1, y: 0, maxHeight: 10_000 },
     };
     const replaceMessageVariables = useCallback((text: string) => {
         return replaceTextVariables(text, {
