@@ -1,6 +1,6 @@
 import { useParams } from 'next/navigation';
 
-import { useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
+import { useGetRoomOutcomesQuery, useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
 import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 import useRoomMessages from "./useRoomMessages";
@@ -25,6 +25,11 @@ export default function useRoom(options?: UseRoomOptions) {
             roomId,
         },
     }));
+    const { data: outcomesData } = useRealtimeQuery(useGetRoomOutcomesQuery({
+        variables: {
+            roomId,
+        },
+    }));
     const { user } = useProfile();
     const userId = user?.id;
     const roomNode = roomData?.roomsCollection?.edges?.find((roomEdge) => {
@@ -36,10 +41,14 @@ export default function useRoom(options?: UseRoomOptions) {
     const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
     const participant = participants?.find(participant => participant.user_id === userId);
     const participantId = participant?.id;
+    const outcomes = outcomesData?.outcomesCollection?.edges?.map((outcome) => outcome.node);
     const roomMessagesTuple = useRoomMessages({ roomId, participants, userId });
     const topic = room?.topics;
+    const topicId = topic?.id;
 
     return {
+
+        // room info
         room,
         externalRoomId,
         loadingRooms,
@@ -47,14 +56,21 @@ export default function useRoom(options?: UseRoomOptions) {
         roomId,
         roomStatus,
 
+        // topic info
         topic,
+        topicId,
 
+        // participants info
         participants,
         participant,
         participantId,
         loadingParticipants,
         participantsError,
 
+        // outcomes info
+        outcomes,
+
+        // messages info
         ...roomMessagesTuple,
     };
 }

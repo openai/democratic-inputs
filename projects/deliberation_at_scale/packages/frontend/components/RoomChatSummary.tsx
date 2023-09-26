@@ -1,18 +1,20 @@
 'use client';
 import { AnimatePresence, motion } from 'framer-motion';
+import { isEmpty } from 'radash';
+import { Trans } from '@lingui/macro';
 
 import useTintedThemeColor from "@/hooks/useTintedThemeColor";
-import { topicSolid } from "./EntityIcons";
+import { topicSolid, statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
 import useRoom from "@/hooks/useRoom";
 import { useSendRoomMessageMutation } from '@/generated/graphql';
 import ChatInput from './ChatInput';
-import { isEmpty } from 'radash';
+import RoomOutcome from './RoomOutcome';
 
 const ENABLE_CHAT = false;
 
 export default function RoomChatSummary() {
-    const { topic, lastBotMessages, lastParticipantMessages, participantId, roomId } = useRoom();
+    const { topic, lastBotMessages, lastParticipantMessages, participantId, roomId, outcomes } = useRoom();
     const { content: topicContent } = topic ?? {};
     const topicColorBg = useTintedThemeColor({ classNamePrefix: 'bg', tint: 400 });
     const [sendRoomMessage] = useSendRoomMessageMutation();
@@ -24,11 +26,21 @@ export default function RoomChatSummary() {
             animate={{ opacity: 1, y: 0 }}
         >
             {topicContent && (
-                <div className={`p-4 rounded gap-4 flex items-center ${topicColorBg}`}>
-                    <Pill icon={topicSolid} className="border-green-700">Topic</Pill>
+                <div className={`sticky top-0 p-4 rounded gap-4 flex items-center ${topicColorBg}`}>
+                    <Pill icon={topicSolid} className="border-green-700"><Trans>Topic</Trans></Pill>
                     {topicContent}
                 </div>
             )}
+            <AnimatePresence>
+                {outcomes?.map((outcome) => {
+                    const { id: outcomeId } = outcome;
+
+                    return (
+                        <RoomOutcome key={outcomeId} outcome={outcome} participantId={participantId} />
+                    );
+                })}
+            </AnimatePresence>
+            <RoomOutcome />
             {!isEmpty(lastBotMessages) && (
                 <div className="flex flex-col gap-2">
                     <AnimatePresence mode="wait" initial={false}>

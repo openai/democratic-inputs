@@ -1,0 +1,17 @@
+query GetRoomOutcomes($roomId: UUID) {
+  outcomesCollection(
+    filter: {
+        active: { eq: true },
+        room_id: { eq: $roomId },
+    }
+    orderBy: {
+        created_at: DescNullsLast
+    }
+  ) {
+    edges {
+        node {
+            ...FullOutcome
+        }
+    }
+  }
+}

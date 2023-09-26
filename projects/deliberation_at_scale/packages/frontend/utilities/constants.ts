@@ -1,3 +1,4 @@
+import { OpinionType, OutcomeType } from "@/generated/graphql";
 
 /**
  * Environment variables from .env file
@@ -58,3 +59,13 @@ export const TEST_EXTERNAL_ROOM_ID = 'demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a'
  */
 export const DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS = ONE_SECOND_MS * 60 * 2;
 export const TRANSCRIBE_VALID_MIN_TEXT_LENGTH = 30;
+
+/**
+ * Opinions
+ */
+export const DISABLE_OPINION_INPUT_WHEN_TIMED_OUT = false;
+export const OUTCOME_OPINION_TIMEOUT_MS_LOOKUP: Record<OutcomeType, number> = {
+    [OutcomeType.Consensus]: 15 * ONE_SECOND_MS,
+    [OutcomeType.Milestone]: 0,
+    [OutcomeType.OffTopic]: 0,
+};

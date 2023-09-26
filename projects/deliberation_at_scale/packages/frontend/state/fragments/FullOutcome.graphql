@@ -1,0 +1,18 @@
+fragment FullOutcome on outcomes {
+  id
+  active
+  type
+  room_id
+  content
+  created_at
+  updated_at
+
+  # Don't filter on active flag, because up the custom upsert behaviour
+  opinionsCollection(orderBy: { created_at: DescNullsLast }) {
+    edges {
+        node {
+            ...FullOpinion
+        }
+    }
+  }
+}

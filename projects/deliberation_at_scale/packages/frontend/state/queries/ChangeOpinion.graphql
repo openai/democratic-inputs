@@ -1,0 +1,16 @@
+mutation ChangeOpinion($outcomeId: UUID!, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
+  updateopinionsCollection(
+    filter: { outcome_id: { eq: $outcomeId }, participant_id: { eq: $participantId } }
+    set: {
+        type: $type,
+        range_value: $rangeValue,
+        statement: $statement,
+        option_type: $optionType,
+    }
+  ) {
+    affectedCount
+    records {
+        ...FullOpinion
+    }
+  }
+}

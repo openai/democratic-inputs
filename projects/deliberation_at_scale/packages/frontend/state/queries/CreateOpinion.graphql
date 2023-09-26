@@ -1,0 +1,15 @@
+mutation CreateOpinion($outcomeId: UUID!, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
+  insertIntoopinionsCollection(objects: {
+    outcome_id: $outcomeId,
+    participant_id: $participantId,
+    type: $type,
+    range_value: $rangeValue,
+    statement: $statement,
+    option_type: $optionType,
+  }) {
+    affectedCount
+    records {
+        ...FullOpinion
+    }
+  }
+}

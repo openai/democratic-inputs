@@ -1,0 +1,12 @@
+fragment FullOpinion on opinions {
+    id
+    active
+    type
+    outcome_id
+    participant_id
+    range_value
+    statement
+    option_type
+    created_at
+    updated_at
+}
