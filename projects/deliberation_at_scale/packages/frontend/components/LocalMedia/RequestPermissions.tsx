@@ -26,8 +26,8 @@ export default function RequestPermissions(props: Props) {
     }
 
     return (
-        <div className='max-w-[500px] w-full mx-auto absolute top-0 left-0 right-0 my-8 bg-white shadow-lg rounded-lg z-20'>
-            <div className="relative aspect-video w-full bg-gray-100 rounded overflow-hidden">
+        <div className='max-w-[500px] w-full mx-auto absolute top-0 left-0 right-0 my-8 z-20 px-4'>
+            <div className="relative aspect-video w-full bg-gray-100 overflow-hidden shadow-xl rounded-lg">
                 {state?.localStream && <VideoView muted stream={state?.localStream} className="w-full h-full object-cover" />}
                 {/* <div className="absolute left-0 right-0 bottom-0 backdrop-blur-lg p-2 flex justify-center gap-4 bg-gray-800/90 text-white">
                     <span>{state?.isVideoEnabled ? '✅' : '🚫'} Camera</span>
