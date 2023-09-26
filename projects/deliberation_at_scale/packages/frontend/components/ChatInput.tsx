@@ -18,7 +18,9 @@ export interface ChatInputProps {
 export default function ChatInput(props: ChatInputProps) {
     const defaultPlaceholder = t`Tap to type`;
     const { onSubmit, disabled = false, placeholder = defaultPlaceholder} = props;
-    const submitBgColor = useColorClassName({ classNamePrefix: 'bg' });
+    const submitBgColor = useColorClassName({ classNamePrefix: 'bg', tint: 500 });
+    const focusColor = useColorClassName({ classNamePrefix: 'focus-within:ring', tint: 500 });
+    const hoverBorder = useColorClassName({ classNamePrefix: 'focus-within:border', tint: 300 });
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState('');
     const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
@@ -62,22 +64,24 @@ export default function ChatInput(props: ChatInputProps) {
             onSubmit={handleSubmit}
             className={`relative ${disabled ? 'grayscale cursor-not-allowed' : ''}`}
         >
-            <input
-                ref={inputRef}
-                className="rounded-md py-3 px-4 shadow-3xl w-full bg-white outline-none"
-                placeholder={placeholder}
-                value={input}
-                onChange={handleChange}
-                disabled={disabled}
-            />
-            <motion.button
-                type="submit"
-                className={`transition-colors duration-1000 rounded-lg absolute right-2 top-2 py-1 px-2 text-white ${submitBgColor}`}
-                whileTap={{ scale: (disabled ? 1: 0.9) }}
-                disabled={disabled}
-            >
-                <FontAwesomeIcon icon={faPaperPlane} />
-            </motion.button>
+            <div className={`flex rounded-md border w-full bg-white focus-within:ring ${focusColor} ${hoverBorder}`}>
+                <input
+                    ref={inputRef}
+                    className={`py-3 px-4 outline-none rounded-md border-none w-full bg-none`}
+                    placeholder={placeholder}
+                    value={input}
+                    onChange={handleChange}
+                    disabled={disabled}
+                />
+                <motion.button
+                    type="submit"
+                    className={`transition-colors duration-1000 rounded-lg m-2 p-2 w-10 aspect-square shrink-0 text-white ${submitBgColor}`}
+                    whileTap={{ scale: (disabled ? 1: 0.9) }}
+                    disabled={disabled}
+                >
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                </motion.button>
+            </div>
         </motion.form>
     );
 }
