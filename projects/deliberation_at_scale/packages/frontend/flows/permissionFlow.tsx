@@ -36,7 +36,7 @@ const permissionFlow: ChatFlowConfig = {
     steps: [
         {
             name: "permission_ask",
-            messageOptions: [["Before we continue, you need to allow me to see your camera feed. We need this because we feel looking other people in the eye makes for a better discussion."]],
+            messageOptions: [["Before we continue, you will need to give permission to use your camera and microphone. We recommend giving those permissions because we prefer face-to-face discussions."]],
             timeoutMs: 2000, // keep this fixed to give devices time to initialize
         },
         {

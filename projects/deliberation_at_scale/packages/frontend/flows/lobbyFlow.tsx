@@ -18,7 +18,7 @@ const lobbyFlow: ChatFlowConfig = {
         },
         {
             name: "greeting_2",
-            messageOptions: [["What nickname would you like to use? You can also choose your current name ({nickName})."]],
+            messageOptions: [["What nickname would you like to use? You can also choose your current name (\"{nickName}\")."]],
             quickReplies: [
                 {
                     id: "use_current_nickname",
@@ -36,7 +36,7 @@ const lobbyFlow: ChatFlowConfig = {
         },
         {
             name: "use_current_nickname",
-            messageOptions: [["Great, we'll keep calling you \"{nickName}.\""]],
+            messageOptions: [["Great, we'll keep calling you \"{nickName}\"."]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         {
