@@ -784,7 +784,6 @@ input UUIDFilter {
 
 enum completionType {
   gpt
-  gpt4
 }
 
 """
@@ -990,9 +989,8 @@ type completionsUpdateResponse {
 }
 
 enum crossPollinationType {
-  afterwards
-  closing
-  discussion
+  outcome
+  topic
 }
 
 """
@@ -1154,22 +1152,6 @@ type cross_pollinationsUpdateResponse {
 
   """Array of records impacted by the mutation"""
   records: [cross_pollinations!]!
-}
-
-enum discussionType {
-  bot
-  chat
-  voice
-}
-
-"""
-Boolean expression comparing fields on type "discussionType"
-"""
-input discussionTypeFilter {
-  eq: discussionType
-  in: [discussionType!]
-  is: FilterIs
-  neq: discussionType
 }
 
 enum messageType {
@@ -1400,26 +1382,6 @@ type messagesUpdateResponse {
 
   """Array of records impacted by the mutation"""
   records: [messages!]!
-}
-
-enum moderationType {
-  clarification
-  consensus
-  harrashment
-  off_topic
-  other
-  spam
-  unequal
-}
-
-"""
-Boolean expression comparing fields on type "moderationType"
-"""
-input moderationTypeFilter {
-  eq: moderationType
-  in: [moderationType!]
-  is: FilterIs
-  neq: moderationType
 }
 
 type moderations implements Node {
@@ -2077,7 +2039,6 @@ enum participantStatusType {
   end_of_session
   in_room
   queued
-  transfering_to_room
   waiting_for_confirmation
 }
 

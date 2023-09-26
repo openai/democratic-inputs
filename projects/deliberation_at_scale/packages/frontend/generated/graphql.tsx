@@ -642,8 +642,7 @@ export type UuidFilter = {
 };
 
 export enum CompletionType {
-  Gpt = 'gpt',
-  Gpt4 = 'gpt4'
+  Gpt = 'gpt'
 }
 
 /** Boolean expression comparing fields on type "completionType" */
@@ -833,9 +832,8 @@ export type CompletionsUpdateResponse = {
 };
 
 export enum CrossPollinationType {
-  Afterwards = 'afterwards',
-  Closing = 'closing',
-  Discussion = 'discussion'
+  Outcome = 'outcome',
+  Topic = 'topic'
 }
 
 /** Boolean expression comparing fields on type "crossPollinationType" */
@@ -981,20 +979,6 @@ export type Cross_PollinationsUpdateResponse = {
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
   records: Array<Cross_Pollinations>;
-};
-
-export enum DiscussionType {
-  Bot = 'bot',
-  Chat = 'chat',
-  Voice = 'voice'
-}
-
-/** Boolean expression comparing fields on type "discussionType" */
-export type DiscussionTypeFilter = {
-  eq?: InputMaybe<DiscussionType>;
-  in?: InputMaybe<Array<DiscussionType>>;
-  is?: InputMaybe<FilterIs>;
-  neq?: InputMaybe<DiscussionType>;
 };
 
 export enum MessageType {
@@ -1185,24 +1169,6 @@ export type MessagesUpdateResponse = {
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
   records: Array<Messages>;
-};
-
-export enum ModerationType {
-  Clarification = 'clarification',
-  Consensus = 'consensus',
-  Harrashment = 'harrashment',
-  OffTopic = 'off_topic',
-  Other = 'other',
-  Spam = 'spam',
-  Unequal = 'unequal'
-}
-
-/** Boolean expression comparing fields on type "moderationType" */
-export type ModerationTypeFilter = {
-  eq?: InputMaybe<ModerationType>;
-  in?: InputMaybe<Array<ModerationType>>;
-  is?: InputMaybe<FilterIs>;
-  neq?: InputMaybe<ModerationType>;
 };
 
 export type Moderations = Node & {
@@ -1784,7 +1750,6 @@ export enum ParticipantStatusType {
   EndOfSession = 'end_of_session',
   InRoom = 'in_room',
   Queued = 'queued',
-  TransferingToRoom = 'transfering_to_room',
   WaitingForConfirmation = 'waiting_for_confirmation'
 }
 
@@ -2737,7 +2702,7 @@ export type EnterRoomMutationOptions = Apollo.BaseMutationOptions<EnterRoomMutat
 export const GetLobbyParticipantsDocument = gql`
     query GetLobbyParticipants($userId: UUID!) {
   participantsCollection(
-    filter: {user_id: {eq: $userId}, room_id: {is: NULL}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
+    filter: {user_id: {eq: $userId}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
     orderBy: {created_at: DescNullsLast}
   ) {
     edges {
