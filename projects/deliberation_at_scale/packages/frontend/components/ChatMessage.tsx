@@ -51,8 +51,8 @@ export default function ChatMessage(props: Props) {
         `flex flex-col gap-1 grow width-full rounded transition-colors duration-1000 group`,
         enablePadding && 'p-4',
         highlighted && highlightedBgColorMap[theme],
-        first && 'rounded-t-lg',
-        last && 'rounded-br-lg',
+        first && 'rounded-t-xl',
+        last && 'rounded-br-xl',
     );
     const variants = {
         hidden: { opacity: 0, y: 70 },
