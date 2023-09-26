@@ -43,12 +43,13 @@ export default function RoomOutcome(props: Props) {
         }
     }, [type]);
     const timeoutMs = useMemo(() => {
-        if (!type) {
+        if (!type || hasExistingOpinion) {
             return 0;
         }
 
         return OUTCOME_OPINION_TIMEOUT_MS_LOOKUP[type];
-    }, [type]);
+    }, [type, hasExistingOpinion]);
+    const hasTimeout = timeoutMs > 0;
 
     const opinionOptions = useMemo(() => {
         return getOpinionOptionsByOutcomeType(type);
@@ -108,9 +109,15 @@ export default function RoomOutcome(props: Props) {
                     );
                 })}
             </div>
-            <TimeProgressBar durationMs={timeoutMs} onIsCompleted={(isCompleted) => {
-                setTimeoutCompleted(isCompleted);
-            }} />
+            {hasTimeout && (
+                <TimeProgressBar
+                    durationMs={timeoutMs}
+                    startReferenceTime={outcome.created_at}
+                    onIsCompleted={(isCompleted) => {
+                        setTimeoutCompleted(isCompleted);
+                    }}
+                />
+            )}
         </motion.div>
     );
 }

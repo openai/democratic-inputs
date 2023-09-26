@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
+import dayjs from "dayjs";
 
 const UPDATE_PROGRESS_INTERVAL_MS = 100;
 
 interface Props {
     durationMs?: number;
+    startReferenceTime?: string;
     hideOnComplete?: boolean;
     onIsCompleted?: (completed: boolean) => void;
 }
 
 export default function TimeProgressBar(props: Props) {
-    const { durationMs = 0, hideOnComplete = false, onIsCompleted } = props;
-    const [timePassedMs, setTimePassedMs] = useState(0);
+    const { durationMs = 0, startReferenceTime, hideOnComplete = false, onIsCompleted } = props;
+    const [timePassedMs, setTimePassedMs] = useState(dayjs().diff(startReferenceTime, 'ms'));
     const hasDuration = durationMs > 0; // timeoutMs > 0 && !hasExistingOpinion;
     const durationLeftMs = Math.max(durationMs - timePassedMs, 0);
     const percentageDone = Math.ceil(100 - (hasDuration ? durationLeftMs / durationMs : 0) * 100);
