@@ -5,6 +5,7 @@ import useTheme, { ThemeColors } from '@/hooks/useTheme';
 import { faMicrophoneAlt, faMicrophoneAltSlash, faSpinner, faVideo, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const bgColorMap: Record<ThemeColors, string> = {
     'blue': 'text-blue-400 bg-blue-800/50',
@@ -40,36 +41,45 @@ export default function RequestPermissions(props: Props) {
                     <span>{state?.isAudioEnabled ? '✅' : '🚫'} Microphone</span>
                 </div> */}
             </div>
-            <div className="absolute bottom-[-36px] left-0 right-0 flex justify-center gap-2 p-3 text-xl">
-                <button
-                    className={classNames(
-                        "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-600/50",
-                        state?.isAudioEnabled
-                            ? bgColorMap[theme]
-                            : 'text-gray-400 bg-gray-600/50',
-                    )}
-                    onClick={() => actions?.toggleMicrophoneEnabled()}
-                >
-                    <FontAwesomeIcon
-                        icon={state?.isAudioEnabled ? faMicrophoneAlt : faMicrophoneAltSlash} 
-                        fixedWidth 
-                    />
-                </button>
-                <button
-                    className={classNames(
-                        "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none",
-                        state?.isVideoEnabled
-                            ? bgColorMap[theme]
-                            : 'text-gray-400 bg-gray-600/50',
-                    )}
-                    onClick={() => actions?.toggleCameraEnabled()}
-                >
-                    <FontAwesomeIcon
-                        icon={state?.isVideoEnabled ? faVideo : faVideoSlash} 
-                        fixedWidth 
-                    />
-                </button>
-            </div>
+            <AnimatePresence>
+                {state?.localStream && (
+                    <motion.div
+                        className="absolute bottom-[-36px] left-0 right-0 flex justify-center gap-2 p-3 text-xl"
+                        initial={{ opacity: 0, scale: 0.7 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <button
+                            className={classNames(
+                                "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-600/50",
+                                state?.isAudioEnabled
+                                    ? bgColorMap[theme]
+                                    : 'text-gray-400 bg-gray-600/50',
+                            )}
+                            onClick={() => actions?.toggleMicrophoneEnabled()}
+                        >
+                            <FontAwesomeIcon
+                                icon={state?.isAudioEnabled ? faMicrophoneAlt : faMicrophoneAltSlash} 
+                                fixedWidth 
+                            />
+                        </button>
+                        <button
+                            className={classNames(
+                                "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none",
+                                state?.isVideoEnabled
+                                    ? bgColorMap[theme]
+                                    : 'text-gray-400 bg-gray-600/50',
+                            )}
+                            onClick={() => actions?.toggleCameraEnabled()}
+                        >
+                            <FontAwesomeIcon
+                                icon={state?.isVideoEnabled ? faVideo : faVideoSlash} 
+                                fixedWidth 
+                            />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             {/* <div className="mt-4 flex items-center justify-center gap-2">
                 <button
                     className="bg-white shadow rounded py-3 px-4"
