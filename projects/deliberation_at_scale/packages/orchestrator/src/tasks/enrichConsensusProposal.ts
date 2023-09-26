@@ -1,4 +1,4 @@
-import { createModeratedEnrichTask, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
+import { createModeratedEnrichTask, getContentForHardCodedEnrichMessage, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { PARTICIPANTS_PER_ROOM } from "../config/constants";
 
@@ -39,13 +39,10 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
             `,
         ];
 
-        const selectedOption = await selectHardCodedEnrichMessage({contentOptions});
+        const selectedOption = await getContentForHardCodedEnrichMessage({contentOptions});
 
         return `${selectedOption} **${consensus}**`;
         
     },
 });
-function selectHardCodedEnrichMessage(arg0: { contentOptions: string[]; }) {
-    throw new Error("Function not implemented.");
-}
 
