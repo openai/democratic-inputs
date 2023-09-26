@@ -1,5 +1,6 @@
+import { getMessageContentForProgressionWorker } from "../utilities/messages";
 import { BaseProgressionWorkerTaskPayload } from "../types";
-import { createModeratedVerifyTask, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
+import { createModeratedVerifyTask } from "../utilities/tasks";
 
 /**
  * This task verifies whether the conversation is still about the topic for the past x amount of messages.

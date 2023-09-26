@@ -9,7 +9,9 @@ import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionE
 import { Database } from "../generated/database-public.types";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
 import { ENABLE_ROOM_PROGRESSION } from "../config/constants";
-import { getRoomById, updateRoomStatus, getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey, getMessagesAfter } from "../utilities/moderatorTasks";
+import { getMessagesAfter } from "../utilities/messages";
+import { getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey } from "../utilities/moderations";
+import { getRoomById, updateRoomStatus } from "../utilities/rooms";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;

@@ -1,6 +1,6 @@
 import { supabaseClient } from "../lib/supabase";
 import { BaseMessageWorkerTaskPayload } from "../types";
-import { createModeratedVerifyTask } from "../utilities/moderatorTasks";
+import { createModeratedVerifyTask } from "../utilities/tasks";
 
 export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
     getTaskInstruction: () => {

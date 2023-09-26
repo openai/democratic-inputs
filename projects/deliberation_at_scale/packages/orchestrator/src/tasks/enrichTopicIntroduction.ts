@@ -1,11 +1,13 @@
-import { createModeratedEnrichPromptTask, getTopicContentByRoomId, getParticipantsByRoomId } from "../utilities/moderatorTasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
+import { getParticipantsByRoomId } from "../utilities/participants";
+import { createModeratedEnrichPromptTask } from "../utilities/tasks";
+import { getTopicContentByRoomId } from "../utilities/topics";
 
 export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async (helpers) => {
         const { payload } = helpers;
         const { roomId } = payload;
-        
+
         const participants = await getParticipantsByRoomId(roomId);
         const participantsNicknames = JSON.stringify(participants.map((participant) => participant.nick_name));
 

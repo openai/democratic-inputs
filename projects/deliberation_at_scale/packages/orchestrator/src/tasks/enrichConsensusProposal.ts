@@ -1,6 +1,7 @@
-import { createModeratedEnrichTask, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
+import { getContentForHardCodedEnrichMessage, getMessageContentForProgressionWorker } from "../utilities/messages";
 import { PARTICIPANTS_PER_ROOM } from "../config/constants";
+import { createModeratedEnrichTask } from "../utilities/tasks";
 
 export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
@@ -39,13 +40,12 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
             `,
         ];
 
-        const selectedOption = await selectHardCodedEnrichMessage({contentOptions});
+        const selectedOption = await getContentForHardCodedEnrichMessage({contentOptions});
 
         return `${selectedOption} **${consensus}**`;
-        
+
     },
+    getShouldStoreOutcome: () => true,
+    getOutcomeType: () => 'consensus',
 });
-function selectHardCodedEnrichMessage(arg0: { contentOptions: string[]; }) {
-    throw new Error("Function not implemented.");
-}
 

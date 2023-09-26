@@ -1,4 +1,4 @@
-import { createModeratedEnrichTask } from "../utilities/moderatorTasks";
+import { createModeratedEnrichTask } from "../utilities/tasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { PARTICIPANTS_PER_ROOM } from "../config/constants";
 
