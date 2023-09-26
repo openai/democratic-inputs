@@ -1,5 +1,7 @@
 import { DEFAULT_BOT_MESSAGE_SPEED_MS } from "@/utilities/constants";
 import { ChatFlowConfig } from "./types";
+import { faSignature } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 
 const lobbyFlow: ChatFlowConfig = {
     id: "lobby",
@@ -16,11 +18,12 @@ const lobbyFlow: ChatFlowConfig = {
         },
         {
             name: "greeting_2",
-            messageOptions: [["What nickname would you like to use? You can also choose your current name."]],
+            messageOptions: [["What nickname would you like to use? You can also choose your current name ({nickName})."]],
             quickReplies: [
                 {
                     id: "use_current_nickname",
                     content: "Use my current nickname",
+                    icon: faSignature,
                     onClick: (helpers) => {
                         helpers.goToName('use_current_nickname');
                     }
@@ -33,7 +36,7 @@ const lobbyFlow: ChatFlowConfig = {
         },
         {
             name: "use_current_nickname",
-            messageOptions: [["Great, we'll keep calling you {nickName}."]],
+            messageOptions: [["Great, we'll keep calling you \"{nickName}.\""]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         {
@@ -43,6 +46,7 @@ const lobbyFlow: ChatFlowConfig = {
                 {
                     id: "go_to_permission_flow",
                     content: "Sure thing, let's set it up!",
+                    icon: faThumbsUp,
                     onClick: (helpers) => {
                         helpers.goToPage('/lobby/permission');
                     }

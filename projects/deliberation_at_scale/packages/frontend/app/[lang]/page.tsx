@@ -1,6 +1,6 @@
 "use client";
 import { useCallback } from "react";
-import { faUser as profileIcon, faPenToSquare as registerIcon, faRightToBracket as loginIcon } from "@fortawesome/free-solid-svg-icons";
+import { faUser as profileIcon, faPenToSquare as registerIcon, faHandPointRight as loginIcon } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 

@@ -1,3 +1,4 @@
+import { faChartBar, faChartLine, faMessage, faUser } from '@fortawesome/free-regular-svg-icons';
 import { ChatFlowConfig } from "./types";
 
 const profileFlow: ChatFlowConfig = {
@@ -9,6 +10,7 @@ const profileFlow: ChatFlowConfig = {
             quickReplies: [
                 {
                     id: 'join-room',
+                    icon: faMessage,
                     content: 'Join a room',
                     onClick: async (helpers) => {
                         helpers.postBotMessages([["Great! Moving you to the lobby... Hold on tight!"]]);
@@ -19,6 +21,7 @@ const profileFlow: ChatFlowConfig = {
                 {
                     id: 'previous-rooms',
                     content: 'View results of previous rooms',
+                    icon: faChartBar,
                     onClick: async () => {
                         // empty
                     },
@@ -26,6 +29,7 @@ const profileFlow: ChatFlowConfig = {
                 {
                     id: 'change-profile',
                     content: 'Change my profile',
+                    icon: faUser,
                     onClick: async () => {
                         // empty
                     },

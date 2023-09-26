@@ -2,6 +2,7 @@ import { ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_FOUND_ROO
 import { ChatFlowConfig, FlowStep, OnInputHelpers, QuickReply } from "./types";
 import { PermissionState } from "@/state/slices/room";
 import { isEmpty } from "radash";
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const askPermissionQuickReply: QuickReply = {
     id: "permission_ask_yes",
@@ -54,6 +55,7 @@ const permissionFlow: ChatFlowConfig = {
                 {
                     id: "find_room",
                     content: "Let's find a room to join!",
+                    icon: faSearch,
                     hidden: (helpers) => {
                         return !isEmpty(helpers?.searchParams?.get('redirect'));
                     },
