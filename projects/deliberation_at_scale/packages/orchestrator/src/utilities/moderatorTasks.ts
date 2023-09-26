@@ -322,7 +322,7 @@ export async function getTopicContentByRoomId(roomId: string) {
     return content;
 }
 
-async function getParticipantsByRoomId(roomId: string) {
+export async function getParticipantsByRoomId(roomId: string) {
     const participantsData = await supabaseClient
         .from("participants")
         .select()
