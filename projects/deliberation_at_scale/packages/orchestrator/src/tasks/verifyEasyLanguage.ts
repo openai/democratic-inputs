@@ -14,4 +14,5 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
 
         return content;
     },
+    getShouldSendBotMessage: () => false,
 });
