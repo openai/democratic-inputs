@@ -21,7 +21,7 @@ export default function Index() {
                 <h1>Welcome,</h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel ipsum nec odio vestibulum varius. Fusce efficitur, dui id laoreet eleifend, sapien tortor venenatis quam, vel tincidunt metus sapien eget elit. Integer </p>
             </motion.div>
-            <motion.div className="flex flex-col gap-3">
+            <motion.div className="flex flex-col gap-2">
                 <Button icon={registerIcon} onClick={goToRegister}>Register</Button>
                 <Button icon={loginIcon} onClick={goToLogin}>Login</Button>
                 {isLoggedIn && (
