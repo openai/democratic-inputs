@@ -1,7 +1,7 @@
 import { Database } from "./generated/database-public.types";
 import { Message } from "./lib/supabase";
 
-export type OrchestratorRole = 'all' | 'runner' | 'listener' | 'scheduler';
+export type OrchestratorRole = 'all' | 'runner' | 'listener' | 'scheduler' | 'migrator';
 
 export interface OrchestratorRoleTask {
     name: string;
