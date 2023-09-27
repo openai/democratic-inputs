@@ -1,3 +1,4 @@
+import { ONE_SECOND_MS } from "@/utilities/constants";
 import { useCallback, useEffect } from "react";
 
 export interface UseScrollToBottomOptions {
@@ -18,7 +19,9 @@ export default function useScrollToBottom(options: UseScrollToBottomOptions) {
     }, [behavior]);
 
     useEffect(() => {
-        scrollToBottom();
+        setTimeout(() => {
+            scrollToBottom();
+        }, ONE_SECOND_MS);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(data), scrollToBottom]);
 
