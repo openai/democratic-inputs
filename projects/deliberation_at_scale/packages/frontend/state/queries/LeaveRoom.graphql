@@ -1,0 +1,17 @@
+mutation LeaveRoom($participantId: UUID!) {
+    updateparticipantsCollection(
+        filter: {
+            id: { eq: $participantId },
+        },
+        set: {
+            status: end_of_session
+        }
+    ) {
+        affectedCount
+        records {
+            id
+            status
+            room_id
+        }
+    }
+}

@@ -49,7 +49,7 @@ export const AUTO_QUERY_REFETCH_INTERVAL_MS = ONE_SECOND_MS * 2;
 /**
  * External rooms
  */
-export const ENABLE_WHEREBY = false;
+export const ENABLE_WHEREBY = true;
 export const ENABLE_TEST_ROOM = false;
 export const TEST_ROOM_ID = '0a323099-4c94-49f9-89ff-2bf11d4dfb21';
 export const TEST_EXTERNAL_ROOM_ID = 'demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a';
