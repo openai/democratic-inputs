@@ -26,7 +26,6 @@
     "@apollo/client": "3.8.2",
     "@chengsokdara/react-hooks-async": "0.0.2",
     "@chengsokdara/use-whisper": "0.2.0",
-    "@deliberation-at-scale/common": "*",
     "@ffmpeg/core": "0.10.0",
     "@ffmpeg/ffmpeg": "0.10.0",
     "@formatjs/intl-localematcher": "0.4.2",
