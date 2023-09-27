@@ -53,6 +53,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                         >
                             {participant.stream && (
                                 <VideoView
+                                    className="w-full h-full object-cover"
                                     stream={participant.stream}
                                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                 />
@@ -83,9 +84,9 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
             >
                 {localParticipant?.stream && (
                     <VideoView
+                        className="scale-x-[-100%] w-full h-full object-cover"
                         muted
                         stream={localParticipant.stream}
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
                     />
                 )}
             </motion.div>
