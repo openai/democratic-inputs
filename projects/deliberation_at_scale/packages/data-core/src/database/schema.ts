@@ -61,6 +61,9 @@ export const outcomeType = pgEnum("outcomeType", [
     "milestone",
     "consensus",
     "off_topic",
+
+    "overall_impression",
+    "topic_interest",
 ]);
 export const opinionType = pgEnum("opinionType", [
     "relevance_range",
@@ -69,8 +72,13 @@ export const opinionType = pgEnum("opinionType", [
     "option",
 ]);
 export const opinionOptionType = pgEnum("opinionOptionType", [
-    "agree_consensus",
-    "disagree_consensus",
+    "agree",
+    "disagree",
+    "wrong",
+
+    "positive",
+    "negative",
+    "neutral",
 ]);
 export const crossPollinationType = pgEnum("crossPollinationType", [
     "outcome",
