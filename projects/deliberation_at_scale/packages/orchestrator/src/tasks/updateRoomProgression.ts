@@ -8,8 +8,8 @@ import { waitForAllModerationCompletions } from "../lib/graphileWorker";
 import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionEnrichmentTask, ProgressionLayer, ProgressionLayerId, ProgressionTask, RoomStatus } from "../types";
 import { Database } from "../generated/database-public.types";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
-import { ENABLE_ROOM_PROGRESSION } from "../config/constants";
-import { getMessagesAfter } from "../utilities/messages";
+import { ENABLE_ROOM_PROGRESSION, PRINT_ROOM_PROGRESSION } from "../config/constants";
+import { getMessagesAfter, sendBotMessage } from "../utilities/messages";
 import { getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey } from "../utilities/moderations";
 import { getRoomById, updateRoomStatus } from "../utilities/rooms";
 
@@ -135,6 +135,10 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
             }),
             helpers.addJob("updateRoomProgression", payload, {
                 jobKey,
+            }),
+            PRINT_ROOM_PROGRESSION && sendBotMessage({
+                roomId,
+                content: `[DEBUG] The room progressed from ${currentLayerId} to the next layer ${nextLayerId}`,
             })
         ]);
     } else {
