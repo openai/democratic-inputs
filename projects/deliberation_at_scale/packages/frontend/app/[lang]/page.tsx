@@ -1,6 +1,6 @@
 "use client";
 import { useCallback } from "react";
-import { faUser as profileIcon, faPenToSquare as registerIcon, faRightToBracket as loginIcon } from "@fortawesome/free-solid-svg-icons";
+import { faUser as profileIcon, faPenToSquare as registerIcon, faHandPointRight as loginIcon } from "@fortawesome/free-regular-svg-icons";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -21,7 +21,7 @@ export default function Index() {
                 <h1>Welcome,</h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel ipsum nec odio vestibulum varius. Fusce efficitur, dui id laoreet eleifend, sapien tortor venenatis quam, vel tincidunt metus sapien eget elit. Integer </p>
             </motion.div>
-            <motion.div className="flex flex-col gap-3">
+            <motion.div className="flex flex-col gap-2">
                 <Button icon={registerIcon} onClick={goToRegister}>Register</Button>
                 <Button icon={loginIcon} onClick={goToLogin}>Login</Button>
                 {isLoggedIn && (

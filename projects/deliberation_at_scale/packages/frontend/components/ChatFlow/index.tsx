@@ -248,16 +248,16 @@ export default function ChatFlow(props: Props) {
     return (
         <motion.div
             layoutId={`chat-flow-${flowId}`}
-            className="flex flex-col-reverse gap-2 pt-2 mt-auto"
+            className="flex flex-col-reverse gap-2 pt-2 mt-auto h-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
-            <div className="sticky bottom-2 pt-4 flex flex-col gap-3">
+            <div className="sticky bottom-4 pt-4 flex flex-col gap-2 z-20">
                 <AnimatePresence>
                     {!isEmpty(quickReplies) && (
                         <motion.div
                             key="quickReplies"
-                            className="flex flex-col gap-3"
+                            className="flex flex-col gap-1"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                         >
@@ -278,6 +278,7 @@ export default function ChatFlow(props: Props) {
                                         onClick={async () => {
                                             setInputDisabled(true);
                                             try {
+                                                postUserMessages([[ content ]]);
                                                 await onClick(onInputHelpers);
                                             } catch (error) {
                                                 postBotMessages([["Something went wrong! Please try again."]]);
