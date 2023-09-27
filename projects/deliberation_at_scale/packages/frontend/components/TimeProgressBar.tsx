@@ -5,15 +5,15 @@ import dayjs from "dayjs";
 import useTheme, { ThemeColors } from "@/hooks/useTheme";
 
 const bgColorMap: Record<ThemeColors, string> = {
-    'blue': 'text-blue-400',
-    'green': 'text-green-400',
-    'orange': 'text-orange-400',
+    'blue': 'bg-blue-400',
+    'green': 'bg-green-400',
+    'orange': 'bg-orange-400',
 };
 
 const bgBarColorMap: Record<ThemeColors, string> = {
-    'blue': 'text-blue-800',
-    'green': 'text-green-800',
-    'orange': 'text-orange-800',
+    'blue': 'bg-blue-800',
+    'green': 'bg-green-800',
+    'orange': 'bg-orange-800',
 };
 
 const UPDATE_PROGRESS_INTERVAL_MS = 100;
