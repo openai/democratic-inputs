@@ -75,7 +75,7 @@ export async function createVerificationFunctionCompletion(options: Verification
     });
     const parsedArguments = JSON.parse(functionCall?.arguments ?? '{}');
     const verified = !!parsedArguments?.verified;
-    const moderatedReason = (parsedArguments?.moderatedReason as string) ?? '';
+    const moderatedReason = ((parsedArguments?.moderatedReason as string) ?? '').trim();
 
     return {
         verified,
