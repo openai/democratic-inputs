@@ -33,7 +33,7 @@ export interface ProgressionTopology {
 }
 
 /** All the possible tasks that can be registered in the job system */
-export type ProgressionLayerId = 'groupIntro' | 'topicIntro' | 'safe' | 'informed' | 'debate' | 'results' | 'close';
+export type ProgressionLayerId = 'groupIntro' | 'topicIntro' | 'safe' | 'informed' | 'debate' | 'results' | 'close' | 'end';
 
 export type RoomStatus = Database['public']['Enums']['roomStatusType'];
 

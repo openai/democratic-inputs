@@ -190,9 +190,9 @@ export interface Database {
                         referencedColumns: ["id"]
                     },
                     {
-                        foreignKeyName: "cross_pollinations_room_id_messages_id_fk"
+                        foreignKeyName: "cross_pollinations_room_id_rooms_id_fk"
                         columns: ["room_id"]
-                        referencedRelation: "messages"
+                        referencedRelation: "rooms"
                         referencedColumns: ["id"]
                     },
                     {
@@ -415,7 +415,9 @@ export interface Database {
                     active: boolean
                     created_at: string
                     id: string
+                    option_type: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id: string | null
+                    participant_id: string
                     range_value: number
                     statement: string
                     type: Database["public"]["Enums"]["opinionType"]
@@ -425,7 +427,9 @@ export interface Database {
                     active?: boolean
                     created_at?: string
                     id?: string
+                    option_type?: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id?: string | null
+                    participant_id: string
                     range_value?: number
                     statement?: string
                     type?: Database["public"]["Enums"]["opinionType"]
@@ -435,7 +439,9 @@ export interface Database {
                     active?: boolean
                     created_at?: string
                     id?: string
+                    option_type?: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id?: string | null
+                    participant_id?: string
                     range_value?: number
                     statement?: string
                     type?: Database["public"]["Enums"]["opinionType"]
@@ -446,6 +452,12 @@ export interface Database {
                         foreignKeyName: "opinions_outcome_id_outcomes_id_fk"
                         columns: ["outcome_id"]
                         referencedRelation: "outcomes"
+                        referencedColumns: ["id"]
+                    },
+                    {
+                        foreignKeyName: "opinions_participant_id_participants_id_fk"
+                        columns: ["participant_id"]
+                        referencedRelation: "participants"
                         referencedColumns: ["id"]
                     }
                 ]
@@ -497,6 +509,7 @@ export interface Database {
                     created_at: string
                     id: string
                     original_outcome_id: string | null
+                    room_id: string | null
                     type: Database["public"]["Enums"]["outcomeType"]
                     updated_at: string
                 }
@@ -506,6 +519,7 @@ export interface Database {
                     created_at?: string
                     id?: string
                     original_outcome_id?: string | null
+                    room_id?: string | null
                     type?: Database["public"]["Enums"]["outcomeType"]
                     updated_at?: string
                 }
@@ -515,6 +529,7 @@ export interface Database {
                     created_at?: string
                     id?: string
                     original_outcome_id?: string | null
+                    room_id?: string | null
                     type?: Database["public"]["Enums"]["outcomeType"]
                     updated_at?: string
                 }
@@ -523,6 +538,12 @@ export interface Database {
                         foreignKeyName: "outcomes_original_outcome_id_outcomes_id_fk"
                         columns: ["original_outcome_id"]
                         referencedRelation: "outcomes"
+                        referencedColumns: ["id"]
+                    },
+                    {
+                        foreignKeyName: "outcomes_room_id_rooms_id_fk"
+                        columns: ["room_id"]
+                        referencedRelation: "rooms"
                         referencedColumns: ["id"]
                     }
                 ]
@@ -709,8 +730,26 @@ export interface Database {
             | "consensus"
             | "unequal"
             | "clarification"
-            opinionType: "relevance_range" | "agreement_range" | "statement"
-            outcomeType: "milestone" | "consensus" | "off_topic"
+            opinionOptionType:
+            | "agree_consensus"
+            | "disagree_consensus"
+            | "agree"
+            | "disagree"
+            | "wrong"
+            | "positive"
+            | "negative"
+            | "neutral"
+            opinionType:
+            | "relevance_range"
+            | "agreement_range"
+            | "statement"
+            | "option"
+            outcomeType:
+            | "milestone"
+            | "consensus"
+            | "off_topic"
+            | "overall_impression"
+            | "topic_interest"
             participantStatusType:
             | "queued"
             | "waiting_for_confirmation"
@@ -725,6 +764,7 @@ export interface Database {
             | "group_intro"
             | "topic_intro"
             | "close"
+            | "end"
             targetType:
             | "user"
             | "topic"
