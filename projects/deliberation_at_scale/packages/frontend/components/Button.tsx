@@ -10,18 +10,25 @@ const textColorMap: Record<ThemeColors, string> = {
     'orange': 'text-orange-600',
 };
 
+const selectedBorderMap: Record<ThemeColors, string> = {
+    'blue': 'border-blue-600',
+    'green': 'border-green-600',
+    'orange': 'border-orange-600',
+};
+
 interface Props {
     children: ReactNode;
     icon?: IconProp;
     onClick: () => void;
     widthVariant?: WidthVariant;
     disabled?: boolean;
+    selected?: boolean;
 }
 
 type WidthVariant = 'w-full' | 'w-auto';
 
 export default function Button(props: Props) {
-    const { children, icon, onClick, widthVariant = 'w-full', disabled = false } = props;
+    const { children, icon, onClick, widthVariant = 'w-full', disabled = false, selected = false } = props;
     const theme = useTheme();
 
     const className = `
@@ -31,6 +38,7 @@ export default function Button(props: Props) {
         border bg-white hover:bg-gray-50
         flex items-center justify-center gap-2
         ${disabled ? 'grayscale cursor-not-allowed' : ''}
+        ${selected ? selectedBorderMap[theme] : ''}
     `;
 
     return (

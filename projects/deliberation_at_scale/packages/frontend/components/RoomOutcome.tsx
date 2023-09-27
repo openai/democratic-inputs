@@ -84,6 +84,7 @@ export default function RoomOutcome(props: Props) {
                         return (
                             <Button
                                 disabled={isDisabled}
+                                selected={isSelected}
                                 key={optionType}
                                 icon={icon}
                                 onClick={onOptionClick}
