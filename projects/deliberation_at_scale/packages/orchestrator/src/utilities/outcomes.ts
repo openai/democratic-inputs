@@ -1,6 +1,6 @@
 import { isEmpty } from "radash";
 import { supabaseClient } from "../lib/supabase";
-import { BaseProgressionWorkerTaskPayload } from "../types";
+import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload } from "../types";
 import { ResultTaskHelpers, CreateModeratorTaskOptions } from "./tasks";
 import { getMessagesByContext } from "./messages";
 
@@ -11,8 +11,10 @@ interface StoreOutcomeOptions<PayloadType, ResultType> {
     getOutcomeType: CreateModeratorTaskOptions<PayloadType, ResultType>['getOutcomeType'];
 }
 
-export async function storeOutcome<PayloadType, ResultType>(options: StoreOutcomeOptions<PayloadType, ResultType>) {
+export async function storeOutcome<PayloadType extends BaseRoomWorkerTaskPayload, ResultType>(options: StoreOutcomeOptions<PayloadType, ResultType>) {
     const { helpers, getOutcomeSourcesMessageIds, getOutcomeContent, getOutcomeType } = options;
+    const { payload } = helpers;
+    const { roomId } = payload;
     const messageIds = await getOutcomeSourcesMessageIds?.(helpers) ?? [];
     const outcomeContent = await getOutcomeContent?.(helpers);
     const outcomeType = await getOutcomeType?.(helpers);
@@ -28,6 +30,7 @@ export async function storeOutcome<PayloadType, ResultType>(options: StoreOutcom
         .insert({
             content: outcomeContent,
             type: outcomeType,
+            room_id: roomId,
         })
         .select();
     const outcomeId = outcomeData?.[0]?.id;
