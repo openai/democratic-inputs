@@ -19,9 +19,9 @@ const highlightedBgColorMap: Record<ThemeColors, string> = {
 };
 
 const headerTextColorMap: Record<ThemeColors, string> = {
-    'blue': 'text-blue-800',
-    'green': 'text-green-800',
-    'orange': 'text-orange-800',
+    'blue': 'text-blue-900',
+    'green': 'text-green-900',
+    'orange': 'text-orange-900',
 };
 
 const bodyTextColorMap: Record<ThemeColors, string> = {
