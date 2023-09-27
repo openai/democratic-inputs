@@ -35,10 +35,11 @@ interface Props {
     enablePadding?: boolean;
     first?: boolean;
     last?: boolean;
+    className?: string;
 }
 
 export default function ChatMessage(props: Props) {
-    const { message, enablePadding = true, first = false, last = false } = props;
+    const { message, enablePadding = true, first = false, last = false, className } = props;
     const { content, name, nameIcon, date, highlighted = false} = message;
     const theme = useTheme();
     const { user } = useProfile();
@@ -53,6 +54,7 @@ export default function ChatMessage(props: Props) {
         highlighted && highlightedBgColorMap[theme],
         first && 'rounded-t-xl',
         last && 'rounded-br-xl',
+        className
     );
     const variants = {
         hidden: { opacity: 0, y: 70, maxHeight: 0 },
