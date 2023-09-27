@@ -68,4 +68,6 @@ export const OUTCOME_OPINION_TIMEOUT_MS_LOOKUP: Record<OutcomeType, number> = {
     [OutcomeType.Consensus]: 15 * ONE_SECOND_MS,
     [OutcomeType.Milestone]: 0,
     [OutcomeType.OffTopic]: 0,
+    [OutcomeType.OverallImpression]: 0,
+    [OutcomeType.TopicInterest]: 0
 };
