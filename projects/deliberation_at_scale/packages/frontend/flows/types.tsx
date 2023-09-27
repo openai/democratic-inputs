@@ -40,6 +40,7 @@ export interface OnInputHelpers {
     flowStateEntries: FlowStateEntries;
     roomState: RoomState;
     searchParams: ReadonlyURLSearchParams | null;
+    params: Record<string, string | string[]> | null;
     reset: () => void;
 }
 

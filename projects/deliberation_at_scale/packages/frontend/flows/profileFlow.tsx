@@ -1,12 +1,18 @@
-import { faChartBar, faChartLine, faMessage, faUser } from '@fortawesome/free-regular-svg-icons';
+import { faChartBar, faMessage, faUser } from '@fortawesome/free-regular-svg-icons';
 import { ChatFlowConfig } from "./types";
+import { DEFAULT_BOT_MESSAGE_SPEED_MS } from '@/utilities/constants';
 
 const profileFlow: ChatFlowConfig = {
     id: "profile",
     steps: [
         {
             name: "welcome",
-            messageOptions: [["Hi there {nickName}! What would you like to do?"]],
+            messageOptions: [["Hi there {nickName}! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."]],
+            timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+        },
+        {
+            name: "choose",
+            messageOptions: [["What would you like to do?"]],
             quickReplies: [
                 {
                     id: 'join-room',

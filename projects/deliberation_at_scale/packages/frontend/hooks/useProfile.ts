@@ -9,6 +9,7 @@ import { Session } from "@supabase/supabase-js";
 export default function useProfile() {
     const [authUser, setAuthUser] = useState<User | null>(null);
     const [authSession, setAuthSession] = useState<Session | null>(null);
+    const [loading, setLoading] = useState(true);
     const authUserId = authUser?.id;
     const { data: usersData, refetch: refetchUser } = useRealtimeQuery(useGetUserQuery({
         variables: {
@@ -27,11 +28,13 @@ export default function useProfile() {
     const rooms = roomsData?.roomsCollection?.edges;
 
     const updateAuthUser = useCallback(async () => {
+        setLoading(true);
         const { data: { user } } = await supabaseClient.auth.getUser();
         const { data: { session } } = await supabaseClient.auth.getSession();
 
         setAuthUser(user);
         setAuthSession(session);
+        setLoading(false);
     }, []);
 
     useEffect(() => {
@@ -54,5 +57,6 @@ export default function useProfile() {
         authSession,
         user,
         rooms,
+        loading,
     };
 }

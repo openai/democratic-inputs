@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { Message } from '@/flows/types';
 import ChatMessage from './ChatMessage';
+import { MAIN_SCROLL_CONTAINER_ID } from '@/utilities/constants';
 
 interface Props {
     messages: (Message | null | undefined)[] | undefined;
@@ -33,11 +34,11 @@ export default function ChatMessageList(props: Props) {
 
     return (
         <motion.div
-            /** TODO: overflow-y-scroll and justify-end do not combine */
-            className="flex flex-col gap-1 h-full overflow-y-scroll justify-end"
+            className="flex flex-col gap-1 h-full overflow-y-scroll px-4"
             variants={variants}
             initial="hidden"
             animate="visible"
+            id={MAIN_SCROLL_CONTAINER_ID}
         >
             <AnimatePresence>
                 {messages.map((message, index) => {
@@ -53,6 +54,7 @@ export default function ChatMessageList(props: Props) {
 
                     return (
                         <ChatMessage
+                            className={index === 0 ? 'mt-auto' : ''}
                             key={key}
                             message={message}
                             first={previousMessage?.name !== message.name}

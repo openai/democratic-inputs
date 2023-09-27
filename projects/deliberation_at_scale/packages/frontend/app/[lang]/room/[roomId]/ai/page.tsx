@@ -6,7 +6,7 @@ export default async function AI() {
     await useAuth();
 
     return (
-        <div className="h-full">
+        <div className="h-full px-4">
             <div className="sticky top-0 z-30">
                 <RoomParticipants variant="spacious" />
             </div>

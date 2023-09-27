@@ -2627,6 +2627,13 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = { __typename?: 'Query', usersCollection?: { __typename?: 'usersConnection', edges: Array<{ __typename?: 'usersEdge', node: { __typename?: 'users', id: any, active: boolean, nick_name: string, demographics: any, auth_user_id?: any | null, updated_at: any, created_at: any } }> } | null };
 
+export type LeaveRoomMutationVariables = Exact<{
+  participantId: Scalars['UUID']['input'];
+}>;
+
+
+export type LeaveRoomMutation = { __typename?: 'Mutation', updateparticipantsCollection: { __typename?: 'participantsUpdateResponse', affectedCount: number, records: Array<{ __typename?: 'participants', id: any, status: ParticipantStatusType, room_id?: any | null }> } };
+
 export type PingParticipantMutationVariables = Exact<{
   participantId: Scalars['UUID']['input'];
   lastSeenAt: Scalars['Datetime']['input'];
@@ -3342,6 +3349,47 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const LeaveRoomDocument = gql`
+    mutation LeaveRoom($participantId: UUID!) {
+  updateparticipantsCollection(
+    filter: {id: {eq: $participantId}}
+    set: {status: end_of_session}
+  ) {
+    affectedCount
+    records {
+      id
+      status
+      room_id
+    }
+  }
+}
+    `;
+export type LeaveRoomMutationFn = Apollo.MutationFunction<LeaveRoomMutation, LeaveRoomMutationVariables>;
+
+/**
+ * __useLeaveRoomMutation__
+ *
+ * To run a mutation, you first call `useLeaveRoomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveRoomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [leaveRoomMutation, { data, loading, error }] = useLeaveRoomMutation({
+ *   variables: {
+ *      participantId: // value for 'participantId'
+ *   },
+ * });
+ */
+export function useLeaveRoomMutation(baseOptions?: Apollo.MutationHookOptions<LeaveRoomMutation, LeaveRoomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LeaveRoomMutation, LeaveRoomMutationVariables>(LeaveRoomDocument, options);
+      }
+export type LeaveRoomMutationHookResult = ReturnType<typeof useLeaveRoomMutation>;
+export type LeaveRoomMutationResult = Apollo.MutationResult<LeaveRoomMutation>;
+export type LeaveRoomMutationOptions = Apollo.BaseMutationOptions<LeaveRoomMutation, LeaveRoomMutationVariables>;
 export const PingParticipantDocument = gql`
     mutation PingParticipant($participantId: UUID!, $lastSeenAt: Datetime!) {
   updateparticipantsCollection(

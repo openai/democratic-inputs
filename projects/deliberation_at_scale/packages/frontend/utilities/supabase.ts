@@ -1,7 +1,7 @@
 import { supabaseClient } from "@/state/supabase";
 import { isEmpty } from "radash";
 
-export const sendMagicLink = async (email: string) => {
+export const sendMagicLink = async (email: string, lang = 'en') => {
     const formattedEmail = email.trim();
 
     // guard: skip when email invalid
@@ -11,6 +11,9 @@ export const sendMagicLink = async (email: string) => {
 
     const result = await supabaseClient.auth.signInWithOtp({
         email,
+        // TODO: Fix `useAuth` hook returning unauthenticated when a link
+        // contains an OTP code
+        // options: { emailRedirectTo: `${window.location.origin}/${lang}/profile` },
     });
     const hasError = !!result.error;
 
