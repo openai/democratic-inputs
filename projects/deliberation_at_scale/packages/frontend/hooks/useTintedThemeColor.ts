@@ -17,17 +17,18 @@ export default function useColorClassName(options?: Options) {
             return AUTHENTICATE_ROOM_BASE_COLOR;
         }
 
-        if (pathname?.includes('/room')) {
-            return DELIBERATION_ROOM_BASE_COLOR;
-        }
-
         if (pathname?.includes('/lobby') || pathname?.includes('/evaluate') || pathname?.includes('/profile')) {
             return DEFAULT_ROOM_BASE_COLOR;
+        }
+
+        if (pathname?.includes('/room')) {
+            return DELIBERATION_ROOM_BASE_COLOR;
         }
 
         // home page
         return DELIBERATION_ROOM_BASE_COLOR;
     }, [pathname]);
+
     const {
         classNamePrefix = "bg",
         baseColor = inferredBaseColor,

@@ -1346,8 +1346,14 @@ export type ModerationsUpdateResponse = {
 };
 
 export enum OpinionOptionType {
+  Agree = 'agree',
   AgreeConsensus = 'agree_consensus',
-  DisagreeConsensus = 'disagree_consensus'
+  Disagree = 'disagree',
+  DisagreeConsensus = 'disagree_consensus',
+  Negative = 'negative',
+  Neutral = 'neutral',
+  Positive = 'positive',
+  Wrong = 'wrong'
 }
 
 /** Boolean expression comparing fields on type "opinionOptionType" */
@@ -1505,7 +1511,9 @@ export type OpinionsUpdateResponse = {
 export enum OutcomeType {
   Consensus = 'consensus',
   Milestone = 'milestone',
-  OffTopic = 'off_topic'
+  OffTopic = 'off_topic',
+  OverallImpression = 'overall_impression',
+  TopicInterest = 'topic_interest'
 }
 
 /** Boolean expression comparing fields on type "outcomeType" */

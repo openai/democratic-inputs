@@ -1565,8 +1565,14 @@ type moderationsUpdateResponse {
 }
 
 enum opinionOptionType {
+  agree
   agree_consensus
+  disagree
   disagree_consensus
+  negative
+  neutral
+  positive
+  wrong
 }
 
 """
@@ -1743,6 +1749,8 @@ enum outcomeType {
   consensus
   milestone
   off_topic
+  overall_impression
+  topic_interest
 }
 
 """

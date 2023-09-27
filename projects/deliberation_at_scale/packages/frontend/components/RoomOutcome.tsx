@@ -5,12 +5,13 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
-import { FullOutcomeFragment, OpinionOptionType, OpinionType, OutcomeType, useChangeOpinionMutation, useCreateOpinionMutation } from '@/generated/graphql';
+import { FullOutcomeFragment, OpinionOptionType, OpinionType, OutcomeType } from '@/generated/graphql';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useMemo, useState } from 'react';
 import Button from './Button';
 import { DISABLE_OPINION_INPUT_WHEN_TIMED_OUT, OUTCOME_OPINION_TIMEOUT_MS_LOOKUP } from '@/utilities/constants';
 import TimeProgressBar from './TimeProgressBar';
+import useUpsertOpinion from '@/hooks/useUpsertOpinion';
 
 export interface OpinionOption {
     content: string;
@@ -25,16 +26,10 @@ interface Props {
 
 export default function RoomOutcome(props: Props) {
     const { outcome, participantId } = props;
-    const opinions = outcome?.opinionsCollection?.edges?.map((opinion) => opinion.node);
-    const existingOpinion = opinions?.find((opinion) => {
-        return opinion.participant_id === participantId;
-    });
-    const hasExistingOpinion = !!existingOpinion;
     const { id: outcomeId, content, type } = outcome ?? {};
-    const [createOpinion, { loading: isCreatingOpinion }] = useCreateOpinionMutation();
-    const [changeOpinion, { loading: isChangingOpinion }] = useChangeOpinionMutation();
+    const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ outcomes: [outcome], participantId });
+    const existingOpinion = getExistingOpinion(outcomeId);
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
-    const isGivingOpinion = isCreatingOpinion || isChangingOpinion;
     const title = useMemo(() => {
         switch (type) {
             case OutcomeType.Consensus: return 'Consensus Proposal';
@@ -43,12 +38,12 @@ export default function RoomOutcome(props: Props) {
         }
     }, [type]);
     const timeoutMs = useMemo(() => {
-        if (!type || hasExistingOpinion) {
+        if (!type || !!existingOpinion) {
             return 0;
         }
 
         return OUTCOME_OPINION_TIMEOUT_MS_LOOKUP[type];
-    }, [type, hasExistingOpinion]);
+    }, [type, existingOpinion]);
     const hasTimeout = timeoutMs > 0;
 
     const opinionOptions = useMemo(() => {
@@ -79,23 +74,10 @@ export default function RoomOutcome(props: Props) {
                         const isSelected = (existingOpinion?.option_type === optionType);
                         const isDisabled = isGivingOpinion || (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
                         const onOptionClick = () => {
-                            const mutationVariables = {
+                            setOpinion({
                                 outcomeId,
-                                participantId,
                                 type: OpinionType.Option,
                                 optionType,
-                            };
-
-                            // guard: update an existing opinion when already given one
-                            if (hasExistingOpinion) {
-                                changeOpinion({
-                                    variables: mutationVariables,
-                                });
-                                return;
-                            }
-
-                            createOpinion({
-                                variables: mutationVariables,
                             });
                         };
 
