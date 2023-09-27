@@ -1,0 +1,1 @@
+ALTER TYPE "roomStatusType" ADD VALUE 'end';

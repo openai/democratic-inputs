@@ -183,6 +183,13 @@
       "when": 1695768918195,
       "tag": "0025_new_chameleon",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1695843979242,
+      "tag": "0026_warm_silver_sable",
+      "breakpoints": true
     }
   ]
 }

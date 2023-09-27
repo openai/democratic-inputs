@@ -55,7 +55,7 @@ export const UPDATED_AT_FIELD_NAME = "updated_at";
 // NOTE: use lowercase for enum values to avoid issues with postgres
 export const topicType = pgEnum("topicType", ["original", "remixed"]);
 export const messageType = pgEnum("messageType", ["chat", "voice", "bot"]);
-export const roomStatusType = pgEnum("roomStatusType", ["group_intro", "topic_intro", "safe", "informed", "debate", "results", "close"]);
+export const roomStatusType = pgEnum("roomStatusType", ["group_intro", "topic_intro", "safe", "informed", "debate", "results", "close", "end"]);
 export const startRoomStatusType = roomStatusType.enumValues[0];
 export const outcomeType = pgEnum("outcomeType", [
     "milestone",
