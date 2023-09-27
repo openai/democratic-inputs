@@ -1,7 +1,7 @@
-import { BaseProgressionWorkerTaskPayload } from "../types";
-import { getContentForHardCodedEnrichMessage, getMessageContentForProgressionWorker } from "../utilities/messages";
-import { PARTICIPANTS_PER_ROOM } from "../config/constants";
-import { createModeratedEnrichTask } from "../utilities/tasks";
+import { PARTICIPANTS_PER_ROOM } from "@deliberation-at-scale/common";
+import { BaseProgressionWorkerTaskPayload } from "src/types";
+import { getMessageContentForProgressionWorker, getContentForHardCodedEnrichMessage } from "src/utilities/messages";
+import { createModeratedEnrichTask } from "src/utilities/tasks";
 
 export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {

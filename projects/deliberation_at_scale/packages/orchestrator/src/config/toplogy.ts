@@ -117,7 +117,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                             durationMs: 30 * ONE_SECOND_MS,
                         }
                     },
-                }
+                },
             ]
         },
         {
@@ -211,12 +211,11 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifySmoothConversation',
                     maxAttempts: 3,
                     cooldown: {
-                        startDelayMs: 59 * ONE_SECOND_MS,
-                        durationMs: 59 * ONE_SECOND_MS,
+                        durationMs: 20 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
-                            durationMs: 3 * 60 * ONE_SECOND_MS,
+                            durationMs: 60 * ONE_SECOND_MS,
                         }
                     }
                 }
@@ -251,8 +250,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                         progressionTaskId: 'debate-verifySmoothConversation',
                     }],
                     cooldown: {
-                        startDelayMs: 59 * ONE_SECOND_MS,
-                        durationMs: 59 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
+                        //Enrichment is only triggered if there have not been any new messages
+                        minMessageAmount: 0,
+                        maxMessageAmount: 1,
                     },
                     context: {
                         messages: {
