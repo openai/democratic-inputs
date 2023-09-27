@@ -1,3 +1,5 @@
+import { isEmpty } from "radash";
+
 import { supabaseClient } from "../lib/supabase";
 import { BaseMessageWorkerTaskPayload } from "../types";
 import { createModeratedVerifyTask } from "../utilities/tasks";
@@ -24,7 +26,7 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
         const { id: messageId, content: messageContent } = message;
 
         // guard: only update the message when it is not verified
-        if (verified) {
+        if (verified || isEmpty(moderatedReason)) {
             return;
         }
 
