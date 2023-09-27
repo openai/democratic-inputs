@@ -22,7 +22,9 @@ export const askForEmailStep: FlowStep = {
             await sendMagicLink(content);
         } catch (error) {
             helpers.postBotMessages([["There was an error sending you an email. Please try again!"]]);
-            return;
+
+            // dont clear the chat input field!
+            return false;
         }
         helpers.goToNext?.();
         return;

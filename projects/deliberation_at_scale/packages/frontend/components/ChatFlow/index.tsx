@@ -174,7 +174,14 @@ export default function ChatFlow(props: Props) {
         // Run the onInput function
         setInputDisabled(true);
         try {
-            await onInput?.(input, onInputHelpers);
+            const onInputResult = await onInput?.(input, onInputHelpers);
+
+            // return the result to the onSubmit of the chatinput so it can determine
+            // whether the text should be cleared or not.
+            if (typeof onInputResult === 'boolean') {
+                setInputDisabled(false);
+                return onInputResult;
+            }
         } catch (error) {
             postBotMessages([["Something went wrong! Please try again."]]);
             setInputDisabled(false);
