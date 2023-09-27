@@ -31,6 +31,7 @@ export async function createExternalRoom(endDate: Dayjs): Promise<ValidCreateExt
     };
     const body = {
         roomNamePrefix: 'das-',
+        roomMode: 'group',
         endDate: endDate.toISOString(),
         fields: ['hostRoomUrl']
     };
