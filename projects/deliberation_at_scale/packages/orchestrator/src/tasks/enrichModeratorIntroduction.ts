@@ -1,4 +1,4 @@
-import { sendHardCodedEnrichMessage } from "../utilities/moderatorTasks";
+import { sendHardCodedEnrichMessage } from "../utilities/tasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { Helpers } from "graphile-worker";
 

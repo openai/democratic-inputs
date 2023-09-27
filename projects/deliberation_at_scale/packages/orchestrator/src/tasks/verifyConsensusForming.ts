@@ -1,6 +1,8 @@
 import { BaseProgressionWorkerTaskPayload } from "../types";
-import { createModeratedVerifyTask, getMessageContentForProgressionWorker, getTopicContentByRoomId } from "../utilities/moderatorTasks";
 import { PARTICIPANTS_PER_ROOM } from "../config/constants";
+import { getMessageContentForProgressionWorker } from "../utilities/messages";
+import { createModeratedVerifyTask } from "../utilities/tasks";
+import { getTopicContentByRoomId } from "../utilities/topics";
 
 /**
  * This task verifies whether the conversation is still about the topic for the past x amount of messages.

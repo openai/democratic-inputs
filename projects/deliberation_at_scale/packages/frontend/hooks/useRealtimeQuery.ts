@@ -5,12 +5,15 @@ import objectHash from "object-hash";
 import { get, isEmpty, set } from "radash";
 
 import { supabaseClient } from "@/state/supabase";
+import { AUTO_QUERY_REFETCH_INTERVAL_MS, ENABLE_AUTO_QUERY_REFETCH } from "@/utilities/constants";
 
 export interface UseNestedLiveQueryOptions {
     channelPrefix?: string;
     schemaName?: string;
     tableEventsLookup?: TableEventsLookup;
     maxNestedDepth?: number;
+    autoRefetch?: boolean;
+    autoRefetchIntervalMs?: number;
 }
 
 export interface TableEvents {
@@ -45,6 +48,8 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         schemaName = 'public',
         tableEventsLookup = defaultTableEventsLookup,
         maxNestedDepth = 9999,
+        autoRefetch = ENABLE_AUTO_QUERY_REFETCH,
+        autoRefetchIntervalMs = AUTO_QUERY_REFETCH_INTERVAL_MS,
     } = options ?? {};
     const {
         data, loading, refetch,
@@ -54,6 +59,21 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
     const { cache } = apolloClient;
     const [trackedSubscription, setTrackedSubscription] = useState<RealtimeChannel | null>(null);
     const trackedSubscriptionState = trackedSubscription?.state;
+
+    // handle auto refetching
+    useEffect(() => {
+        if (!autoRefetch || !autoRefetchIntervalMs) {
+            return;
+        }
+
+        const refetchInterval = setInterval(() => {
+            refetch();
+        }, autoRefetchIntervalMs);
+
+        return () => {
+            clearInterval(refetchInterval);
+        };
+    }, [autoRefetch, autoRefetchIntervalMs, refetch]);
 
     // handle disconnects
     useEffect(() => {

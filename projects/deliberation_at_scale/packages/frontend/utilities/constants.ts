@@ -1,3 +1,4 @@
+import { OpinionType, OutcomeType } from "@/generated/graphql";
 
 /**
  * Environment variables from .env file
@@ -40,8 +41,15 @@ export const LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY = 'wantToJoinRoom';
 export const PARTICIPANT_PING_INTERVAL_DELAY_MS = ONE_SECOND_MS;
 
 /**
+ * Enable when you want all the `useRealtimeQuery` wrappers to automaticlly refetch periodically
+ */
+export const ENABLE_AUTO_QUERY_REFETCH = true;
+export const AUTO_QUERY_REFETCH_INTERVAL_MS = ONE_SECOND_MS * 2;
+
+/**
  * External rooms
  */
+export const ENABLE_WHEREBY = false;
 export const ENABLE_TEST_ROOM = false;
 export const TEST_ROOM_ID = '0a323099-4c94-49f9-89ff-2bf11d4dfb21';
 export const TEST_EXTERNAL_ROOM_ID = 'demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a';
@@ -51,3 +59,13 @@ export const TEST_EXTERNAL_ROOM_ID = 'demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a'
  */
 export const DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS = ONE_SECOND_MS * 60 * 2;
 export const TRANSCRIBE_VALID_MIN_TEXT_LENGTH = 30;
+
+/**
+ * Opinions
+ */
+export const DISABLE_OPINION_INPUT_WHEN_TIMED_OUT = false;
+export const OUTCOME_OPINION_TIMEOUT_MS_LOOKUP: Record<OutcomeType, number> = {
+    [OutcomeType.Consensus]: 15 * ONE_SECOND_MS,
+    [OutcomeType.Milestone]: 0,
+    [OutcomeType.OffTopic]: 0,
+};

@@ -7,6 +7,7 @@ import { useRoomConnection } from '@/components/RoomConnection/context';
 import Loader from '@/components/Loader';
 import useRoom from '@/hooks/useRoom';
 import RoomTranscription from '@/components/RoomTranscription';
+import { ENABLE_WHEREBY } from '@/utilities/constants';
 
 /**
  * This is the layout for all room interfaces, i.e. all interfaces in which a
@@ -22,10 +23,10 @@ export default function RoomLayout({ children }: PropsWithChildren) {
         return roomId
             && room
             && !loadingRooms
-            && connection
             && localMedia
             && localMedia.state?.localStream
-            && connection?.state?.roomConnectionStatus !== 'connecting';
+            && (!ENABLE_WHEREBY || connection)
+            && (!ENABLE_WHEREBY || connection?.state?.roomConnectionStatus !== 'connecting');
     }, [roomId, localMedia, connection, room, loadingRooms]);
 
     // GUARD: Display loader when everything is not ready yet

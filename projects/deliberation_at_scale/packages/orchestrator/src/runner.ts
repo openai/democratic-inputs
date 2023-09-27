@@ -33,6 +33,7 @@ export async function startRunner() {
     runnerUtils = await makeWorkerUtils({
         connectionString: DATABASE_URL,
     });
+
     await runner.promise;
 }
 

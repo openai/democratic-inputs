@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { unique } from "radash";
 
 type PartialRecord<K extends keyof any, T> =  Partial<Record<K, T>>;
-export type FlowId = "register" | "login" | "profile" | "lobby" | "permission" | "evaluate";
+export type FlowId = "register" | "login" | "profile" | "lobby" | "permission" | "evaluate" | "idle";
 export type FlowStateEntryValue = any;
 export type FlowStateEntries = Record<string, FlowStateEntryValue>;
 export type FlowStateLookup = PartialRecord<FlowId, FlowStateEntries>;

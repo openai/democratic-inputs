@@ -1,11 +1,15 @@
 import { Helpers } from "graphile-worker";
 import { isEmpty, draw } from "radash";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 import { Json } from "../generated/database-public.types";
 import { EnrichCompletionResult, VerificationFunctionCompletionResult, createEnrichFunctionCompletion, createEnrichPromptCompletion, createVerificationFunctionCompletion } from "../lib/openai";
-import { supabaseClient, MessageType } from "../lib/supabase";
-import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload, ProgressionHistoryMessageContext, RoomStatus } from "../types";
+import { supabaseClient, OutcomeType } from "../lib/supabase";
+import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload } from "../types";
+import { getDefaultOutsomeSourcesMessageIds, storeOutcome } from "./outcomes";
+import { sendBotMessage } from "./messages";
+import { storeModerationResult } from "./moderations";
+import { PRINT_JOBKEY } from "../config/constants";
 
 export interface BaseTaskHelpers<PayloadType> {
     helpers: Helpers;
@@ -28,6 +32,10 @@ export interface CreateModeratorTaskOptions<PayloadType, ResultType> {
     getShouldSendBotMessage?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<boolean> | boolean;
     getBotMessageContent?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<string> | string;
     onTaskCompleted?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<void> | void;
+    getShouldStoreOutcome?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<boolean> | boolean;
+    getOutcomeContent?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<string> | string;
+    getOutcomeType?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<OutcomeType> | OutcomeType;
+    getOutcomeSourcesMessageIds?: (helpers: ResultTaskHelpers<PayloadType, ResultType>) => Promise<string[]> | string[];
 }
 
 type CreateVerifyTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, VerificationFunctionCompletionResult>, 'performTask'>;
@@ -58,7 +66,17 @@ export function createModeratedVerifyTask<PayloadType extends BaseRoomWorkerTask
     });
 }
 
-export function createModeratedEnrichTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateEnrichTaskOptions<PayloadType>) {
+export function createProgressionVerifyTask<PayloadType extends BaseProgressionWorkerTaskPayload>(options: CreateVerifyTaskOptions<PayloadType>) {
+    return createModeratedVerifyTask<PayloadType>({
+        getOutcomeSourcesMessageIds: getDefaultOutsomeSourcesMessageIds,
+        getOutcomeContent: (helpers) => {
+            return helpers.result.moderatedReason;
+        },
+        ...options,
+    });
+}
+
+export function createModeratedEnrichTask<PayloadType extends BaseProgressionWorkerTaskPayload>(options: CreateEnrichTaskOptions<PayloadType>) {
     return createModeratorTask<PayloadType, EnrichCompletionResult>({
         performTask: async (helpers) => {
             const { taskInstruction, taskContent } = helpers;
@@ -79,11 +97,15 @@ export function createModeratedEnrichTask<PayloadType extends BaseRoomWorkerTask
             const { enrichment } = result;
             return enrichment;
         },
+        getOutcomeSourcesMessageIds: getDefaultOutsomeSourcesMessageIds,
+        getOutcomeContent: (helpers) => {
+            return helpers.result.enrichment;
+        },
         ...options,
     });
 }
 
-export function createModeratedEnrichPromptTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateEnrichTaskOptions<PayloadType>) {
+export function createModeratedEnrichPromptTask<PayloadType extends BaseProgressionWorkerTaskPayload>(options: CreateEnrichTaskOptions<PayloadType>) {
     return createModeratorTask<PayloadType, EnrichCompletionResult>({
         performTask: async (helpers) => {
             const { taskInstruction, taskContent } = helpers;
@@ -104,10 +126,13 @@ export function createModeratedEnrichPromptTask<PayloadType extends BaseRoomWork
             const { enrichment } = result;
             return enrichment;
         },
+        getOutcomeSourcesMessageIds: getDefaultOutsomeSourcesMessageIds,
+        getOutcomeContent: (helpers) => {
+            return helpers.result.enrichment;
+        },
         ...options,
     });
 }
-
 
 export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayload, ResultType>(options: CreateModeratorTaskOptions<PayloadType, ResultType>) {
     return async (payload: PayloadType, helpers: Helpers) => {
@@ -118,6 +143,10 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
             getBotMessageContent = () => '',
             performTask,
             onTaskCompleted,
+            getShouldStoreOutcome = () => false,
+            getOutcomeSourcesMessageIds,
+            getOutcomeContent,
+            getOutcomeType,
         } = options;
         const { jobKey, roomId } = payload;
         const baseTaskHelpers: BaseTaskHelpers<PayloadType> = {
@@ -164,6 +193,7 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
         };
         const shouldSendBotMessage = await getShouldSendBotMessage(resultTaskHelpers);
         const botMessageContent = await getBotMessageContent(resultTaskHelpers);
+        const shouldStoreOutcome = await getShouldStoreOutcome(resultTaskHelpers);
 
         // guard: throw error when we should send a bot message but its invalid
         if (shouldSendBotMessage && isEmpty(botMessageContent)) {
@@ -179,6 +209,14 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
             // execute the the callback when it is defined
             !!onTaskCompleted && onTaskCompleted(resultTaskHelpers),
 
+            // store the outcome only when requested
+            shouldStoreOutcome && storeOutcome({
+                helpers: resultTaskHelpers,
+                getOutcomeSourcesMessageIds,
+                getOutcomeContent,
+                getOutcomeType,
+            }),
+
             // always store the result of this verification in the database for logging purposes
             storeModerationResult({
                 jobKey,
@@ -187,7 +225,7 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
 
             // send a message to the room only when there is no safe language
             shouldSendBotMessage && sendBotMessage({
-                content: botMessageContent,
+                content: PRINT_JOBKEY ? `${jobKey}: ${botMessageContent}` : botMessageContent,
                 roomId,
             }),
         ]);
@@ -245,241 +283,4 @@ export async function sendHardCodedEnrichMessage(options: SendHardCodedEnrichMes
             roomId,
         }),
     ]);
-}
-
-export async function getMessageContentForProgressionWorker(payload: BaseProgressionWorkerTaskPayload) {
-    const { roomId, jobKey, progressionTask } = payload;
-    const messageContext = progressionTask.context?.messages;
-    const [messagesResult, participantsResult] = await Promise.allSettled([
-        getMessagesByContext(roomId, messageContext),
-        getParticipantsByRoomId(roomId),
-    ]);
-
-    if (messagesResult.status === 'rejected' || participantsResult.status === 'rejected') {
-        throw Error(`Could not get the messages or participants for the progression task with job key ${jobKey}.`);
-    }
-
-    const messages = messagesResult?.value ?? [];
-    const participants = participantsResult?.value ?? [];
-    const getParticipantName = (participantId: string | null) => {
-        const participant = participants.find((participant) => participant.id === participantId);
-        const { nick_name: name } = participant ?? {};
-        return `${name} (${participantId})` ?? participantId ?? 'unknown';
-    };
-
-    const content = messages.map((message) => {
-        const { content, participant_id: participantId } = message;
-        const participantName = getParticipantName(participantId);
-
-        return `Participant ${participantName}: ${content}`;
-    }).join('\n');
-
-    return content;
-}
-
-export async function getMessagesByContext(roomId: string, context?: ProgressionHistoryMessageContext) {
-    const { amount, durationMs, roomStatuses } = context ?? {};
-    let statement = supabaseClient
-        .from("messages")
-        .select()
-        .in("type", ["chat", "voice"])
-        .eq("room_id", roomId)
-        .order("created_at", { ascending: true });
-
-    if (durationMs) {
-        const fromDate = dayjs().subtract(durationMs, 'ms').toISOString();
-        statement = statement.gte("created_at", fromDate);
-    }
-
-    if (amount) {
-        statement = statement.limit(amount);
-    }
-
-    if (roomStatuses) {
-        statement = statement.in("room_status_type", roomStatuses);
-    }
-
-    const messagesData = await statement;
-    const messages = messagesData?.data ?? [];
-
-    return messages;
-}
-
-export async function getTopicContentByRoomId(roomId: string) {
-    const room = await getRoomById(roomId);
-    const topicId = room?.topic_id;
-
-    if (!topicId) {
-        throw Error(`Could not get valid topic content for room ${roomId} because there is no topic ID.`);
-    }
-
-    const topic = await getTopicById(topicId);
-    const { content } = topic ?? {};
-
-    if (!content) {
-        throw Error(`Could not get valid topic content for topic ${topicId}.`);
-    }
-
-    return content;
-}
-
-async function getParticipantsByRoomId(roomId: string) {
-    const participantsData = await supabaseClient
-        .from("participants")
-        .select()
-        .eq("room_id", roomId);
-
-    const participants = participantsData?.data ?? [];
-
-    return participants;
-}
-
-export interface SendMessageOptions {
-    active?: boolean;
-    type: MessageType;
-    roomId: string;
-    content: string;
-}
-
-export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
-    return sendMessage({
-        ...options,
-        type: 'bot',
-    });
-}
-
-export async function sendMessage(options: SendMessageOptions) {
-    const { active = true, type, roomId, content } = options;
-
-    await supabaseClient.from("messages").insert({
-        active,
-        type,
-        room_id: roomId,
-        content,
-    });
-}
-
-export interface StoreModerationResultOptions {
-    jobKey: string;
-    result: Json;
-    messageId?: string | null;
-    roomId?: string | null;
-    participantId?: string | null;
-}
-
-export async function storeModerationResult(options: StoreModerationResultOptions) {
-    const { jobKey, result, messageId, roomId, participantId } = options;
-
-    const { error } = await supabaseClient.from("moderations").update({
-        result,
-        completed_at: dayjs().toISOString(),
-        message_id: messageId,
-        room_id: roomId,
-        participant_id: participantId,
-    }).eq("job_key", jobKey);
-
-    if (error) {
-        throw Error(`Could not store moderation result due to error: ${JSON.stringify(error)}`);
-    }
-}
-
-export interface UpdateRoomStatusOptions {
-    roomId: string;
-    roomStatus: RoomStatus;
-    helpers: Helpers
-}
-
-/**
- * Update the room status in the database.
- */
-export async function updateRoomStatus(options: UpdateRoomStatusOptions) {
-    const { roomId, roomStatus, helpers } = options;
-    const newRoomData = await supabaseClient.from('rooms').update({
-        status_type: roomStatus,
-    }).eq('id', roomId);
-
-    helpers.logger.info(`Room ${roomId} has a new room status: ${roomStatus} (affected: ${newRoomData.count})`);
-}
-
-/**
- * Get x amount of moderations for a specific job key.
- */
-export async function getCompletedModerationsByJobKey(jobKey: string, limit = 100) {
-
-    const moderationsData = await supabaseClient
-        .from('moderations')
-        .select()
-        .eq('active', true)
-        .eq('job_key', jobKey)
-        .not('completed_at', 'is', null)
-        .order('created_at', { ascending: false })
-        .limit(limit);
-    const moderations = moderationsData?.data ?? [];
-
-    return moderations;
-}
-
-/**
- * Get the last moderation for a certain job key.
- */
-export async function getLastCompletedModerationByJobKey(jobKey: string) {
-    const moderations = await getCompletedModerationsByJobKey(jobKey, 1);
-    const lastModeration = moderations?.[0];
-
-    return lastModeration;
-}
-
-export interface GetMessagesAfterOptions {
-    roomId: string;
-    fromDate?: Dayjs;
-    limit?: number;
-}
-
-/**
- * Get all the messages that are created after a certain time.
- */
-export async function getMessagesAfter(options: GetMessagesAfterOptions) {
-    const { roomId, fromDate, limit = 100 } = options;
-    let messageStatement = supabaseClient
-        .from('messages')
-        .select()
-        .eq('active', true)
-        .eq('room_id', roomId)
-        .in('type', ['chat', 'voice'])
-        .order('created_at', { ascending: false })
-        .limit(limit);
-
-    if (fromDate) {
-        messageStatement = messageStatement.gte('created_at', fromDate.toISOString());
-    }
-
-    const messagesData = await messageStatement;
-    const messages = messagesData?.data ?? [];
-
-    return messages;
-}
-
-/**
- * Get the room by ID
- */
-export async function getRoomById(roomId: string) {
-    const roomData = await supabaseClient
-        .from('rooms')
-        .select()
-        .eq('active', true)
-        .eq('id', roomId)
-        .limit(1);
-
-    return roomData.data?.[0];
-}
-
-export async function getTopicById(topicId: string) {
-    const topicData = await supabaseClient
-        .from('topics')
-        .select()
-        .eq('active', true)
-        .eq('id', topicId)
-        .limit(1);
-
-    return topicData.data?.[0];
 }

@@ -1,17 +1,23 @@
-import { createModeratedEnrichPromptTask, getTopicContentByRoomId, sendBotMessage } from "../utilities/moderatorTasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
-import { ONE_SECOND_MS, PARTICIPANTS_PER_ROOM } from "../config/constants";
-import openaiClient from "../lib/openai";
-import dayjs from "dayjs";
+import { getParticipantsByRoomId } from "../utilities/participants";
+import { createModeratedEnrichPromptTask } from "../utilities/tasks";
+import { getTopicContentByRoomId } from "../utilities/topics";
 
 export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>({
-    getTaskInstruction: async () => {
+    getTaskInstruction: async (helpers) => {
+        const { payload } = helpers;
+        const { roomId } = payload;
+
+        const participants = await getParticipantsByRoomId(roomId);
+        const participantsNicknames = JSON.stringify(participants.map((participant) => participant.nick_name));
+
         return `
-            You are a moderator of a conversation between ${PARTICIPANTS_PER_ROOM} participants.
+            You are a moderator of a conversation.
+            The participants just introduced themselves. Thank the participants for introducing themselves.
             Introduce the topic mentioned below to the participants.
-            Do not great the participants.
-            After the topic is presented you'll ask if there is anyone who wants to share their first thoughts on the topic.
-            Limit your answer to three sentences.
+            After you presented the topic ask one of the participants: ${participantsNicknames} to share their first thoughts on the topic.
+
+            Do not greet the participants.
         `;
     },
     getTaskContent: async (helpers) => {
@@ -21,37 +27,10 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
 
         return topicContent;
     },
+    getBotMessageContent: async (helpers) => {
+        const { result } = helpers;
+        const { enrichment } = result;
+
+        return enrichment;
+    },
 });
-
-export async function enrichTopicIntroduction(payload: BaseProgressionWorkerTaskPayload) {
-    const { roomId } = payload;
-    const topicContent = await getTopicContentByRoomId(roomId);
-    const startTime = dayjs();
-    const waitingMessageInterval = setInterval(() => {
-        const passedTimeMs = dayjs().diff(startTime, 'ms');
-        console.info(`Waiting on NORMAL completion (${passedTimeMs})...`);
-    }, ONE_SECOND_MS * 3);
-
-    const completionResult = await openaiClient.completions.create({
-        model: 'text-davinci-003',
-        max_tokens: 1000,
-        prompt: `
-        You are a moderator of a conversation between ${PARTICIPANTS_PER_ROOM} participants.
-        Introduce the topic mentioned below to the participants.
-        After the topic is presented you'll ask if there is anyone who wants to share their first thoughts on the topic.
-        Limit your answer to three sentences.
-
-        Topic: ${topicContent}
-        `,
-    });
-
-    const content = completionResult.choices?.[0].text;
-
-    // disable debugging
-    clearInterval(waitingMessageInterval);
-
-    await sendBotMessage({
-        roomId,
-        content,
-    });
-}

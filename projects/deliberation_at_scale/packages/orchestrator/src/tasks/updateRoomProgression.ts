@@ -1,5 +1,5 @@
 import { Helpers, Job } from "graphile-worker";
-import { isEmpty, isObject } from "radash";
+import { flat, isEmpty, isObject } from "radash";
 import dayjs from "dayjs";
 
 import { progressionTopology } from "../config/toplogy";
@@ -9,7 +9,9 @@ import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionE
 import { Database } from "../generated/database-public.types";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
 import { ENABLE_ROOM_PROGRESSION } from "../config/constants";
-import { getRoomById, updateRoomStatus, getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey, getMessagesAfter } from "../utilities/moderatorTasks";
+import { getMessagesAfter } from "../utilities/messages";
+import { getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey } from "../utilities/moderations";
+import { getRoomById, updateRoomStatus } from "../utilities/rooms";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -200,14 +202,49 @@ async function triggerEnrichments(options: TriggerEnrichmentsOptions) {
         return;
     }
 
-    const filteredEnrichments = enrichments.filter((enrichment) => {
+    const activeEnrichments = enrichments.filter((enrichment) => {
         const { active = true, executionType = 'onNotVerified' } = enrichment;
         return active && executionTypes.includes(executionType);
     });
-    // TODO: implement conditions
-    // const settledEnrichments = await Promise.allSettled(filteredEnrichments.map(async (enrichment) => {
-    //     const { conditions } = enrichment;
-    // }));
+    const validConditionEnrichmentIds = flat(await Promise.all(activeEnrichments.map(async (enrichment) => {
+        const { conditions = [], id: enrichmentId } = enrichment;
+
+        // guard: check if there are conditions
+        if (isEmpty(conditions)) {
+            return Promise.all([Promise.resolve(enrichmentId)]);
+        }
+
+        // handle multiple conditions
+        return Promise.all(conditions?.map(async (condition) => {
+            return new Promise<string>((resolve) => {
+                const { progressionTaskId, isVerified: shouldBeVerified } = condition;
+                const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
+
+                getLastCompletedModerationByJobKey(jobKey).then((lastModeration) => {
+                    const result = lastModeration?.result as unknown as VerificationFunctionCompletionResult;
+                    const isVerified = result?.verified ?? false;
+
+                    // when the required verification matches the result the promise should resolve to true
+                    if (isVerified === shouldBeVerified) {
+                        return resolve(enrichmentId);
+                    }
+
+                    resolve('');
+                });
+            });
+        }));
+    })));
+    const filteredEnrichments = activeEnrichments.filter((activeEnrichment) => {
+        const { id: enrichmentId, conditions } = activeEnrichment;
+        const hasValidConditions = validConditionEnrichmentIds.includes(enrichmentId);
+
+        if (hasValidConditions) {
+            helpers.logger.info(`Enrichment ${enrichmentId} has valid conditions and will be triggered: ${JSON.stringify(conditions)}`);
+        } else {
+            helpers.logger.info(`Enrichment ${enrichmentId} has invalid conditions and will be skipped: ${JSON.stringify(conditions)}`);
+        }
+        return hasValidConditions;
+    });
     const nonBlockingEnrichments = filteredEnrichments.filter((enrichment) => {
         return !enrichment.waitFor;
     });
@@ -382,7 +419,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
     // undefined = should be skipped
     const settledProgressionTasks = await Promise.allSettled(progressionTasks.map(async (progressionTask) => {
         const { id: progressionTaskId, active = true, cooldown, maxAttempts } = progressionTask;
-        const { blockProgression = true, minMessageAmount, durationMs: cooldownMs, startDelayMs } = cooldown ?? {};
+        const { blockProgression = true, minMessageAmount, maxMessageAmount, durationMs: cooldownMs, startDelayMs } = cooldown ?? {};
         const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
 
         if (!active) {
@@ -438,7 +475,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
         // check for a couple of properties that need the last moderation to be fetched
         // TODO: refactor these checks into a single function, because a lot of the logic is the same
         // we will do this once we have discovered more of these checks
-        if (minMessageAmount || cooldownMs) {
+        if (minMessageAmount || maxMessageAmount || cooldownMs) {
             const lastModeration = await getLastCompletedModerationByJobKey(jobKey);
             const lastModerationDate = dayjs(lastModeration?.created_at);
 
@@ -464,7 +501,7 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
             }
 
             // check if we need to verify the amount of messages before adding the job
-            if (minMessageAmount && lastModeration) {
+            if ((minMessageAmount || maxMessageAmount) && lastModeration) {
                 const fromDate = (lastModeration ? lastModerationDate : undefined);
                 const newMessages = await getMessagesAfter({
                     roomId,
@@ -472,16 +509,17 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
                 });
                 const newMessageAmount = newMessages.length;
 
-                // guard: check if we have enough messages
-                if (newMessageAmount < minMessageAmount) {
-                    helpers.logger.info(`The new amount of messages after ${lastModerationDate} is not enough for job ${jobKey}. Required: ${minMessageAmount}, actual: ${newMessageAmount}.`);
+                // guard: check if the min max is not exceeded
+                if ((minMessageAmount && newMessageAmount < minMessageAmount) || (maxMessageAmount && newMessageAmount > maxMessageAmount)) {
+                    const minMaxMessage = `Range: min ${minMessageAmount}, max ${maxMessageAmount}, actual: ${newMessageAmount}.`;
+                    helpers.logger.info(`The new amount of messages after ${lastModerationDate} out of range for job ${jobKey}. ${minMaxMessage}`);
 
                     if (blockProgression) {
-                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} does not have enough messages and should block progress. Required: ${minMessageAmount}, actual: ${newMessageAmount}.`;
+                        const errorMessage = `Progression task ${progressionTaskId} for room ${roomId} has out or range messages and should block progress. ${minMaxMessage}`;
                         helpers.logger.error(errorMessage);
                         return Promise.reject(errorMessage);
                     } else {
-                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} does not have enough new messages, but should NOT block progress. Required: ${minMessageAmount}, actual: ${newMessageAmount}.`);
+                        helpers.logger.info(`Progression task ${progressionTaskId} for room ${roomId} has out of range messages, but should NOT block progress. ${minMaxMessage}`);
                         return;
                     }
                 }

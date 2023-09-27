@@ -784,7 +784,6 @@ input UUIDFilter {
 
 enum completionType {
   gpt
-  gpt4
 }
 
 """
@@ -990,9 +989,8 @@ type completionsUpdateResponse {
 }
 
 enum crossPollinationType {
-  afterwards
-  closing
-  discussion
+  outcome
+  topic
 }
 
 """
@@ -1028,7 +1026,6 @@ type cross_pollinations implements Node {
   ): completionsConnection
   created_at: Datetime!
   id: UUID!
-  messages: messages
   moderationsCollection(
     """Query values in the collection after the provided cursor"""
     after: Cursor
@@ -1056,6 +1053,7 @@ type cross_pollinations implements Node {
   participant_id: UUID
   participants: participants
   room_id: UUID
+  rooms: rooms
   timing_type: timingType!
   topic_id: UUID
   topics: topics
@@ -1156,22 +1154,6 @@ type cross_pollinationsUpdateResponse {
   records: [cross_pollinations!]!
 }
 
-enum discussionType {
-  bot
-  chat
-  voice
-}
-
-"""
-Boolean expression comparing fields on type "discussionType"
-"""
-input discussionTypeFilter {
-  eq: discussionType
-  in: [discussionType!]
-  is: FilterIs
-  neq: discussionType
-}
-
 enum messageType {
   bot
   chat
@@ -1211,25 +1193,6 @@ type messages implements Node {
   ): completionsConnection
   content: String!
   created_at: Datetime!
-  cross_pollinationsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: cross_pollinationsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [cross_pollinationsOrderBy!]
-  ): cross_pollinationsConnection
   embeddings: JSON!
   id: UUID!
   messages: messages
@@ -1400,26 +1363,6 @@ type messagesUpdateResponse {
 
   """Array of records impacted by the mutation"""
   records: [messages!]!
-}
-
-enum moderationType {
-  clarification
-  consensus
-  harrashment
-  off_topic
-  other
-  spam
-  unequal
-}
-
-"""
-Boolean expression comparing fields on type "moderationType"
-"""
-input moderationTypeFilter {
-  eq: moderationType
-  in: [moderationType!]
-  is: FilterIs
-  neq: moderationType
 }
 
 type moderations implements Node {
@@ -1621,8 +1564,24 @@ type moderationsUpdateResponse {
   records: [moderations!]!
 }
 
+enum opinionOptionType {
+  agree_consensus
+  disagree_consensus
+}
+
+"""
+Boolean expression comparing fields on type "opinionOptionType"
+"""
+input opinionOptionTypeFilter {
+  eq: opinionOptionType
+  in: [opinionOptionType!]
+  is: FilterIs
+  neq: opinionOptionType
+}
+
 enum opinionType {
   agreement_range
+  option
   relevance_range
   statement
 }
@@ -1682,8 +1641,11 @@ type opinions implements Node {
 
   """Globally Unique Record Identifier"""
   nodeId: ID!
+  option_type: opinionOptionType
   outcome_id: UUID
   outcomes: outcomes
+  participant_id: UUID!
+  participants: participants!
   range_value: Int!
   statement: String!
   type: opinionType!
@@ -1713,7 +1675,9 @@ input opinionsFilter {
   created_at: DatetimeFilter
   id: UUIDFilter
   nodeId: IDFilter
+  option_type: opinionOptionTypeFilter
   outcome_id: UUIDFilter
+  participant_id: UUIDFilter
   range_value: IntFilter
   statement: StringFilter
   type: opinionTypeFilter
@@ -1724,7 +1688,9 @@ input opinionsInsertInput {
   active: Boolean
   created_at: Datetime
   id: UUID
+  option_type: opinionOptionType
   outcome_id: UUID
+  participant_id: UUID
   range_value: Int
   statement: String
   type: opinionType
@@ -1743,7 +1709,9 @@ input opinionsOrderBy {
   active: OrderByDirection
   created_at: OrderByDirection
   id: OrderByDirection
+  option_type: OrderByDirection
   outcome_id: OrderByDirection
+  participant_id: OrderByDirection
   range_value: OrderByDirection
   statement: OrderByDirection
   type: OrderByDirection
@@ -1754,7 +1722,9 @@ input opinionsUpdateInput {
   active: Boolean
   created_at: Datetime
   id: UUID
+  option_type: opinionOptionType
   outcome_id: UUID
+  participant_id: UUID
   range_value: Int
   statement: String
   type: opinionType
@@ -1994,6 +1964,8 @@ type outcomes implements Node {
     """Sort order to apply to the collection"""
     orderBy: [outcomesOrderBy!]
   ): outcomesConnection
+  room_id: UUID
+  rooms: rooms
   type: outcomeType!
   updated_at: Datetime!
 }
@@ -2023,6 +1995,7 @@ input outcomesFilter {
   id: UUIDFilter
   nodeId: IDFilter
   original_outcome_id: UUIDFilter
+  room_id: UUIDFilter
   type: outcomeTypeFilter
   updated_at: DatetimeFilter
 }
@@ -2033,6 +2006,7 @@ input outcomesInsertInput {
   created_at: Datetime
   id: UUID
   original_outcome_id: UUID
+  room_id: UUID
   type: outcomeType
   updated_at: Datetime
 }
@@ -2051,6 +2025,7 @@ input outcomesOrderBy {
   created_at: OrderByDirection
   id: OrderByDirection
   original_outcome_id: OrderByDirection
+  room_id: OrderByDirection
   type: OrderByDirection
   updated_at: OrderByDirection
 }
@@ -2061,6 +2036,7 @@ input outcomesUpdateInput {
   created_at: Datetime
   id: UUID
   original_outcome_id: UUID
+  room_id: UUID
   type: outcomeType
   updated_at: Datetime
 }
@@ -2077,7 +2053,6 @@ enum participantStatusType {
   end_of_session
   in_room
   queued
-  transfering_to_room
   waiting_for_confirmation
 }
 
@@ -2176,6 +2151,25 @@ type participants implements Node {
 
   """Globally Unique Record Identifier"""
   nodeId: ID!
+  opinionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: opinionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [opinionsOrderBy!]
+  ): opinionsConnection
   participation_score: Int!
   room_id: UUID
   rooms: rooms
@@ -2314,6 +2308,25 @@ type rooms implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
+  cross_pollinationsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: cross_pollinationsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [cross_pollinationsOrderBy!]
+  ): cross_pollinationsConnection
   external_room_id: String
   id: UUID!
   messagesCollection(
@@ -2357,6 +2370,25 @@ type rooms implements Node {
 
   """Globally Unique Record Identifier"""
   nodeId: ID!
+  outcomesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: outcomesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [outcomesOrderBy!]
+  ): outcomesConnection
   participantsCollection(
     """Query values in the collection after the provided cursor"""
     after: Cursor

@@ -642,8 +642,7 @@ export type UuidFilter = {
 };
 
 export enum CompletionType {
-  Gpt = 'gpt',
-  Gpt4 = 'gpt4'
+  Gpt = 'gpt'
 }
 
 /** Boolean expression comparing fields on type "completionType" */
@@ -833,9 +832,8 @@ export type CompletionsUpdateResponse = {
 };
 
 export enum CrossPollinationType {
-  Afterwards = 'afterwards',
-  Closing = 'closing',
-  Discussion = 'discussion'
+  Outcome = 'outcome',
+  Topic = 'topic'
 }
 
 /** Boolean expression comparing fields on type "crossPollinationType" */
@@ -852,7 +850,6 @@ export type Cross_Pollinations = Node & {
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
   id: Scalars['UUID']['output'];
-  messages?: Maybe<Messages>;
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
@@ -861,6 +858,7 @@ export type Cross_Pollinations = Node & {
   participant_id?: Maybe<Scalars['UUID']['output']>;
   participants?: Maybe<Participants>;
   room_id?: Maybe<Scalars['UUID']['output']>;
+  rooms?: Maybe<Rooms>;
   timing_type: TimingType;
   topic_id?: Maybe<Scalars['UUID']['output']>;
   topics?: Maybe<Topics>;
@@ -983,20 +981,6 @@ export type Cross_PollinationsUpdateResponse = {
   records: Array<Cross_Pollinations>;
 };
 
-export enum DiscussionType {
-  Bot = 'bot',
-  Chat = 'chat',
-  Voice = 'voice'
-}
-
-/** Boolean expression comparing fields on type "discussionType" */
-export type DiscussionTypeFilter = {
-  eq?: InputMaybe<DiscussionType>;
-  in?: InputMaybe<Array<DiscussionType>>;
-  is?: InputMaybe<FilterIs>;
-  neq?: InputMaybe<DiscussionType>;
-};
-
 export enum MessageType {
   Bot = 'bot',
   Chat = 'chat',
@@ -1017,7 +1001,6 @@ export type Messages = Node & {
   completionsCollection?: Maybe<CompletionsConnection>;
   content: Scalars['String']['output'];
   created_at: Scalars['Datetime']['output'];
-  cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
   embeddings: Scalars['JSON']['output'];
   id: Scalars['UUID']['output'];
   messages?: Maybe<Messages>;
@@ -1046,16 +1029,6 @@ export type MessagesCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
-};
-
-
-export type MessagesCross_PollinationsCollectionArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<Cross_PollinationsFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
 };
 
 
@@ -1185,24 +1158,6 @@ export type MessagesUpdateResponse = {
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
   records: Array<Messages>;
-};
-
-export enum ModerationType {
-  Clarification = 'clarification',
-  Consensus = 'consensus',
-  Harrashment = 'harrashment',
-  OffTopic = 'off_topic',
-  Other = 'other',
-  Spam = 'spam',
-  Unequal = 'unequal'
-}
-
-/** Boolean expression comparing fields on type "moderationType" */
-export type ModerationTypeFilter = {
-  eq?: InputMaybe<ModerationType>;
-  in?: InputMaybe<Array<ModerationType>>;
-  is?: InputMaybe<FilterIs>;
-  neq?: InputMaybe<ModerationType>;
 };
 
 export type Moderations = Node & {
@@ -1390,8 +1345,22 @@ export type ModerationsUpdateResponse = {
   records: Array<Moderations>;
 };
 
+export enum OpinionOptionType {
+  AgreeConsensus = 'agree_consensus',
+  DisagreeConsensus = 'disagree_consensus'
+}
+
+/** Boolean expression comparing fields on type "opinionOptionType" */
+export type OpinionOptionTypeFilter = {
+  eq?: InputMaybe<OpinionOptionType>;
+  in?: InputMaybe<Array<OpinionOptionType>>;
+  is?: InputMaybe<FilterIs>;
+  neq?: InputMaybe<OpinionOptionType>;
+};
+
 export enum OpinionType {
   AgreementRange = 'agreement_range',
+  Option = 'option',
   RelevanceRange = 'relevance_range',
   Statement = 'statement'
 }
@@ -1413,8 +1382,11 @@ export type Opinions = Node & {
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
+  option_type?: Maybe<OpinionOptionType>;
   outcome_id?: Maybe<Scalars['UUID']['output']>;
   outcomes?: Maybe<Outcomes>;
+  participant_id: Scalars['UUID']['output'];
+  participants: Participants;
   range_value: Scalars['Int']['output'];
   statement: Scalars['String']['output'];
   type: OpinionType;
@@ -1466,7 +1438,9 @@ export type OpinionsFilter = {
   created_at?: InputMaybe<DatetimeFilter>;
   id?: InputMaybe<UuidFilter>;
   nodeId?: InputMaybe<IdFilter>;
+  option_type?: InputMaybe<OpinionOptionTypeFilter>;
   outcome_id?: InputMaybe<UuidFilter>;
+  participant_id?: InputMaybe<UuidFilter>;
   range_value?: InputMaybe<IntFilter>;
   statement?: InputMaybe<StringFilter>;
   type?: InputMaybe<OpinionTypeFilter>;
@@ -1477,7 +1451,9 @@ export type OpinionsInsertInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  option_type?: InputMaybe<OpinionOptionType>;
   outcome_id?: InputMaybe<Scalars['UUID']['input']>;
+  participant_id?: InputMaybe<Scalars['UUID']['input']>;
   range_value?: InputMaybe<Scalars['Int']['input']>;
   statement?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<OpinionType>;
@@ -1496,7 +1472,9 @@ export type OpinionsOrderBy = {
   active?: InputMaybe<OrderByDirection>;
   created_at?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
+  option_type?: InputMaybe<OrderByDirection>;
   outcome_id?: InputMaybe<OrderByDirection>;
+  participant_id?: InputMaybe<OrderByDirection>;
   range_value?: InputMaybe<OrderByDirection>;
   statement?: InputMaybe<OrderByDirection>;
   type?: InputMaybe<OrderByDirection>;
@@ -1507,7 +1485,9 @@ export type OpinionsUpdateInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
+  option_type?: InputMaybe<OpinionOptionType>;
   outcome_id?: InputMaybe<Scalars['UUID']['input']>;
+  participant_id?: InputMaybe<Scalars['UUID']['input']>;
   range_value?: InputMaybe<Scalars['Int']['input']>;
   statement?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<OpinionType>;
@@ -1639,6 +1619,8 @@ export type Outcomes = Node & {
   outcome_sourcesCollection?: Maybe<Outcome_SourcesConnection>;
   outcomes?: Maybe<Outcomes>;
   outcomesCollection?: Maybe<OutcomesConnection>;
+  room_id?: Maybe<Scalars['UUID']['output']>;
+  rooms?: Maybe<Rooms>;
   type: OutcomeType;
   updated_at: Scalars['Datetime']['output'];
 };
@@ -1730,6 +1712,7 @@ export type OutcomesFilter = {
   id?: InputMaybe<UuidFilter>;
   nodeId?: InputMaybe<IdFilter>;
   original_outcome_id?: InputMaybe<UuidFilter>;
+  room_id?: InputMaybe<UuidFilter>;
   type?: InputMaybe<OutcomeTypeFilter>;
   updated_at?: InputMaybe<DatetimeFilter>;
 };
@@ -1740,6 +1723,7 @@ export type OutcomesInsertInput = {
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   original_outcome_id?: InputMaybe<Scalars['UUID']['input']>;
+  room_id?: InputMaybe<Scalars['UUID']['input']>;
   type?: InputMaybe<OutcomeType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -1758,6 +1742,7 @@ export type OutcomesOrderBy = {
   created_at?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
   original_outcome_id?: InputMaybe<OrderByDirection>;
+  room_id?: InputMaybe<OrderByDirection>;
   type?: InputMaybe<OrderByDirection>;
   updated_at?: InputMaybe<OrderByDirection>;
 };
@@ -1768,6 +1753,7 @@ export type OutcomesUpdateInput = {
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   original_outcome_id?: InputMaybe<Scalars['UUID']['input']>;
+  room_id?: InputMaybe<Scalars['UUID']['input']>;
   type?: InputMaybe<OutcomeType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -1784,7 +1770,6 @@ export enum ParticipantStatusType {
   EndOfSession = 'end_of_session',
   InRoom = 'in_room',
   Queued = 'queued',
-  TransferingToRoom = 'transfering_to_room',
   WaitingForConfirmation = 'waiting_for_confirmation'
 }
 
@@ -1809,6 +1794,7 @@ export type Participants = Node & {
   nick_name: Scalars['String']['output'];
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
+  opinionsCollection?: Maybe<OpinionsConnection>;
   participation_score: Scalars['Int']['output'];
   room_id?: Maybe<Scalars['UUID']['output']>;
   rooms?: Maybe<Rooms>;
@@ -1856,6 +1842,16 @@ export type ParticipantsModerationsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ModerationsOrderBy>>;
+};
+
+
+export type ParticipantsOpinionsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<OpinionsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OpinionsOrderBy>>;
 };
 
 export type ParticipantsConnection = {
@@ -1970,12 +1966,14 @@ export type Rooms = Node & {
   active: Scalars['Boolean']['output'];
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
+  cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
   external_room_id?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
   messagesCollection?: Maybe<MessagesConnection>;
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
+  outcomesCollection?: Maybe<OutcomesConnection>;
   participantsCollection?: Maybe<ParticipantsConnection>;
   starts_at?: Maybe<Scalars['Datetime']['output']>;
   status_type: RoomStatusType;
@@ -1992,6 +1990,16 @@ export type RoomsCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
+};
+
+
+export type RoomsCross_PollinationsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<Cross_PollinationsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
 };
 
 
@@ -2012,6 +2020,16 @@ export type RoomsModerationsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ModerationsOrderBy>>;
+};
+
+
+export type RoomsOutcomesCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<OutcomesFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OutcomesOrderBy>>;
 };
 
 
@@ -2445,7 +2463,35 @@ export type VisibilityTypeFilter = {
   neq?: InputMaybe<VisibilityType>;
 };
 
+export type FullOpinionFragment = { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any };
+
+export type FullOutcomeFragment = { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null };
+
 export type FullParticipantFragment = { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any };
+
+export type ChangeOpinionMutationVariables = Exact<{
+  outcomeId: Scalars['UUID']['input'];
+  participantId: Scalars['UUID']['input'];
+  type: OpinionType;
+  rangeValue?: InputMaybe<Scalars['Int']['input']>;
+  statement?: InputMaybe<Scalars['String']['input']>;
+  optionType?: InputMaybe<OpinionOptionType>;
+}>;
+
+
+export type ChangeOpinionMutation = { __typename?: 'Mutation', updateopinionsCollection: { __typename?: 'opinionsUpdateResponse', affectedCount: number, records: Array<{ __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any }> } };
+
+export type CreateOpinionMutationVariables = Exact<{
+  outcomeId: Scalars['UUID']['input'];
+  participantId: Scalars['UUID']['input'];
+  type: OpinionType;
+  rangeValue?: InputMaybe<Scalars['Int']['input']>;
+  statement?: InputMaybe<Scalars['String']['input']>;
+  optionType?: InputMaybe<OpinionOptionType>;
+}>;
+
+
+export type CreateOpinionMutation = { __typename?: 'Mutation', insertIntoopinionsCollection?: { __typename?: 'opinionsInsertResponse', affectedCount: number, records: Array<{ __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any }> } | null };
 
 export type CreateParticipantMutationVariables = Exact<{
   userId: Scalars['UUID']['input'];
@@ -2494,6 +2540,13 @@ export type GetRoomMessagesQueryVariables = Exact<{
 
 export type GetRoomMessagesQuery = { __typename?: 'Query', messagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, botMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, participantMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null };
 
+export type GetRoomOutcomesQueryVariables = Exact<{
+  roomId?: InputMaybe<Scalars['UUID']['input']>;
+}>;
+
+
+export type GetRoomOutcomesQuery = { __typename?: 'Query', outcomesCollection?: { __typename?: 'outcomesConnection', edges: Array<{ __typename?: 'outcomesEdge', node: { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null } }> } | null };
+
 export type RoomParticipantFragment = { __typename?: 'participants', id: any, active: boolean, nick_name: string, user_id?: any | null, room_id?: any | null, status: ParticipantStatusType, updated_at: any, created_at: any };
 
 export type GetRoomParticipantsQueryVariables = Exact<{
@@ -2530,14 +2583,6 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = { __typename?: 'Query', usersCollection?: { __typename?: 'usersConnection', edges: Array<{ __typename?: 'usersEdge', node: { __typename?: 'users', id: any, active: boolean, nick_name: string, demographics: any, auth_user_id?: any | null, updated_at: any, created_at: any } }> } | null };
 
-export type JoinRoomMutationVariables = Exact<{
-  roomId: Scalars['UUID']['input'];
-  userId: Scalars['UUID']['input'];
-}>;
-
-
-export type JoinRoomMutation = { __typename?: 'Mutation', insertIntoparticipantsCollection?: { __typename?: 'participantsInsertResponse', affectedCount: number } | null };
-
 export type PingParticipantMutationVariables = Exact<{
   participantId: Scalars['UUID']['input'];
   lastSeenAt: Scalars['Datetime']['input'];
@@ -2570,6 +2615,38 @@ export type UpdateDemographicsMutationVariables = Exact<{
 
 export type UpdateDemographicsMutation = { __typename?: 'Mutation', updateusersCollection: { __typename?: 'usersUpdateResponse', affectedCount: number } };
 
+export const FullOpinionFragmentDoc = gql`
+    fragment FullOpinion on opinions {
+  id
+  active
+  type
+  outcome_id
+  participant_id
+  range_value
+  statement
+  option_type
+  created_at
+  updated_at
+}
+    `;
+export const FullOutcomeFragmentDoc = gql`
+    fragment FullOutcome on outcomes {
+  id
+  active
+  type
+  room_id
+  content
+  created_at
+  updated_at
+  opinionsCollection(orderBy: {created_at: DescNullsLast}) {
+    edges {
+      node {
+        ...FullOpinion
+      }
+    }
+  }
+}
+    ${FullOpinionFragmentDoc}`;
 export const FullParticipantFragmentDoc = gql`
     fragment FullParticipant on participants {
   id
@@ -2655,6 +2732,93 @@ export const FullUserFragmentDoc = gql`
   created_at
 }
     `;
+export const ChangeOpinionDocument = gql`
+    mutation ChangeOpinion($outcomeId: UUID!, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
+  updateopinionsCollection(
+    filter: {outcome_id: {eq: $outcomeId}, participant_id: {eq: $participantId}}
+    set: {type: $type, range_value: $rangeValue, statement: $statement, option_type: $optionType}
+  ) {
+    affectedCount
+    records {
+      ...FullOpinion
+    }
+  }
+}
+    ${FullOpinionFragmentDoc}`;
+export type ChangeOpinionMutationFn = Apollo.MutationFunction<ChangeOpinionMutation, ChangeOpinionMutationVariables>;
+
+/**
+ * __useChangeOpinionMutation__
+ *
+ * To run a mutation, you first call `useChangeOpinionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeOpinionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeOpinionMutation, { data, loading, error }] = useChangeOpinionMutation({
+ *   variables: {
+ *      outcomeId: // value for 'outcomeId'
+ *      participantId: // value for 'participantId'
+ *      type: // value for 'type'
+ *      rangeValue: // value for 'rangeValue'
+ *      statement: // value for 'statement'
+ *      optionType: // value for 'optionType'
+ *   },
+ * });
+ */
+export function useChangeOpinionMutation(baseOptions?: Apollo.MutationHookOptions<ChangeOpinionMutation, ChangeOpinionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeOpinionMutation, ChangeOpinionMutationVariables>(ChangeOpinionDocument, options);
+      }
+export type ChangeOpinionMutationHookResult = ReturnType<typeof useChangeOpinionMutation>;
+export type ChangeOpinionMutationResult = Apollo.MutationResult<ChangeOpinionMutation>;
+export type ChangeOpinionMutationOptions = Apollo.BaseMutationOptions<ChangeOpinionMutation, ChangeOpinionMutationVariables>;
+export const CreateOpinionDocument = gql`
+    mutation CreateOpinion($outcomeId: UUID!, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
+  insertIntoopinionsCollection(
+    objects: {outcome_id: $outcomeId, participant_id: $participantId, type: $type, range_value: $rangeValue, statement: $statement, option_type: $optionType}
+  ) {
+    affectedCount
+    records {
+      ...FullOpinion
+    }
+  }
+}
+    ${FullOpinionFragmentDoc}`;
+export type CreateOpinionMutationFn = Apollo.MutationFunction<CreateOpinionMutation, CreateOpinionMutationVariables>;
+
+/**
+ * __useCreateOpinionMutation__
+ *
+ * To run a mutation, you first call `useCreateOpinionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOpinionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOpinionMutation, { data, loading, error }] = useCreateOpinionMutation({
+ *   variables: {
+ *      outcomeId: // value for 'outcomeId'
+ *      participantId: // value for 'participantId'
+ *      type: // value for 'type'
+ *      rangeValue: // value for 'rangeValue'
+ *      statement: // value for 'statement'
+ *      optionType: // value for 'optionType'
+ *   },
+ * });
+ */
+export function useCreateOpinionMutation(baseOptions?: Apollo.MutationHookOptions<CreateOpinionMutation, CreateOpinionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOpinionMutation, CreateOpinionMutationVariables>(CreateOpinionDocument, options);
+      }
+export type CreateOpinionMutationHookResult = ReturnType<typeof useCreateOpinionMutation>;
+export type CreateOpinionMutationResult = Apollo.MutationResult<CreateOpinionMutation>;
+export type CreateOpinionMutationOptions = Apollo.BaseMutationOptions<CreateOpinionMutation, CreateOpinionMutationVariables>;
 export const CreateParticipantDocument = gql`
     mutation CreateParticipant($userId: UUID!, $nickName: String) {
   insertIntoparticipantsCollection(
@@ -2737,7 +2901,7 @@ export type EnterRoomMutationOptions = Apollo.BaseMutationOptions<EnterRoomMutat
 export const GetLobbyParticipantsDocument = gql`
     query GetLobbyParticipants($userId: UUID!) {
   participantsCollection(
-    filter: {user_id: {eq: $userId}, room_id: {is: NULL}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
+    filter: {user_id: {eq: $userId}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
     orderBy: {created_at: DescNullsLast}
   ) {
     edges {
@@ -2929,6 +3093,48 @@ export function useGetRoomMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetRoomMessagesQueryHookResult = ReturnType<typeof useGetRoomMessagesQuery>;
 export type GetRoomMessagesLazyQueryHookResult = ReturnType<typeof useGetRoomMessagesLazyQuery>;
 export type GetRoomMessagesQueryResult = Apollo.QueryResult<GetRoomMessagesQuery, GetRoomMessagesQueryVariables>;
+export const GetRoomOutcomesDocument = gql`
+    query GetRoomOutcomes($roomId: UUID) {
+  outcomesCollection(
+    filter: {active: {eq: true}, room_id: {eq: $roomId}}
+    orderBy: {created_at: DescNullsLast}
+  ) {
+    edges {
+      node {
+        ...FullOutcome
+      }
+    }
+  }
+}
+    ${FullOutcomeFragmentDoc}`;
+
+/**
+ * __useGetRoomOutcomesQuery__
+ *
+ * To run a query within a React component, call `useGetRoomOutcomesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRoomOutcomesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRoomOutcomesQuery({
+ *   variables: {
+ *      roomId: // value for 'roomId'
+ *   },
+ * });
+ */
+export function useGetRoomOutcomesQuery(baseOptions?: Apollo.QueryHookOptions<GetRoomOutcomesQuery, GetRoomOutcomesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRoomOutcomesQuery, GetRoomOutcomesQueryVariables>(GetRoomOutcomesDocument, options);
+      }
+export function useGetRoomOutcomesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRoomOutcomesQuery, GetRoomOutcomesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRoomOutcomesQuery, GetRoomOutcomesQueryVariables>(GetRoomOutcomesDocument, options);
+        }
+export type GetRoomOutcomesQueryHookResult = ReturnType<typeof useGetRoomOutcomesQuery>;
+export type GetRoomOutcomesLazyQueryHookResult = ReturnType<typeof useGetRoomOutcomesLazyQuery>;
+export type GetRoomOutcomesQueryResult = Apollo.QueryResult<GetRoomOutcomesQuery, GetRoomOutcomesQueryVariables>;
 export const GetRoomParticipantsDocument = gql`
     query GetRoomParticipants($roomId: UUID!) {
   participantsCollection(
@@ -3092,40 +3298,6 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
-export const JoinRoomDocument = gql`
-    mutation JoinRoom($roomId: UUID!, $userId: UUID!) {
-  insertIntoparticipantsCollection(objects: {room_id: $roomId, user_id: $userId}) {
-    affectedCount
-  }
-}
-    `;
-export type JoinRoomMutationFn = Apollo.MutationFunction<JoinRoomMutation, JoinRoomMutationVariables>;
-
-/**
- * __useJoinRoomMutation__
- *
- * To run a mutation, you first call `useJoinRoomMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useJoinRoomMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [joinRoomMutation, { data, loading, error }] = useJoinRoomMutation({
- *   variables: {
- *      roomId: // value for 'roomId'
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useJoinRoomMutation(baseOptions?: Apollo.MutationHookOptions<JoinRoomMutation, JoinRoomMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<JoinRoomMutation, JoinRoomMutationVariables>(JoinRoomDocument, options);
-      }
-export type JoinRoomMutationHookResult = ReturnType<typeof useJoinRoomMutation>;
-export type JoinRoomMutationResult = Apollo.MutationResult<JoinRoomMutation>;
-export type JoinRoomMutationOptions = Apollo.BaseMutationOptions<JoinRoomMutation, JoinRoomMutationVariables>;
 export const PingParticipantDocument = gql`
     mutation PingParticipant($participantId: UUID!, $lastSeenAt: Datetime!) {
   updateparticipantsCollection(

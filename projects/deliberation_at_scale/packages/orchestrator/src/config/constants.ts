@@ -1,7 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
 
+import { ValidCreateExternalRoomResult } from "src/lib/whereby";
 import { OrchestratorRole } from "../types";
+import dayjs from "dayjs";
 
 declare global {
     namespace NodeJS {
@@ -40,6 +42,7 @@ export const SUPABASE_URL = process.env.SUPABASE_URL;
 export const DATABASE_URL = process.env.DATABASE_URL;
 export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 export const SENTRY_DSN = process.env.SENTRY_DSN;
+export const WHEREBY_BEARER_TOKEN = process.env.WHEREBY_BEARER_TOKEN;
 
 /* Time */
 export const ONE_SECOND_MS = 1000;
@@ -50,8 +53,17 @@ export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
 export const ENABLE_TASK_TESTING = false && IS_DEVELOPMENT;
 export const ENABLE_SINGLE_ROOM_TESTING = true && IS_DEVELOPMENT;
-export const TEST_ROOM_ID_ALLOWLIST = ['48cf1af3-db76-4c2a-b68e-b1909b8ca26c'];
+export const TEST_ROOM_ID_ALLOWLIST = ['77b5436a-1dbe-45f3-91a3-477244bca68b'];
 export const ENABLE_ROOM_PROGRESSION = true || !IS_DEVELOPMENT;
+export const PRINT_JOBKEY = true && IS_DEVELOPMENT;
+export const ENABLE_TEST_WHEREBY_ROOM = false || !IS_DEVELOPMENT;
+export const TEST_WHEREBY_ROOM: ValidCreateExternalRoomResult = {
+    endDate: dayjs().add(1, 'hour').toISOString(),
+    hostRoomUrl: '',
+    meetingId: 'test',
+    roomUrl: '',
+    startDate: dayjs().toISOString(),
+};
 
 /* Deliberation */
 export const DEVELOPMENT_PARTICIPANTS_PER_ROOM = 1;
@@ -61,7 +73,7 @@ export const MAX_ROOM_DURATION_MS = 60 * ONE_MINUTE_MS;
 
 /* Lobby */
 export const PARTICIPANT_PING_EXPIRY_TIME_MS = 5 * ONE_SECOND_MS;
-export const PARTICIPANT_QUEUED_EXPIRY_TIME_MS = 5 * ONE_SECOND_MS;
+export const PARTICIPANT_CONFIRM_EXPIRY_TIME_MS = 30 * ONE_SECOND_MS;
 
 /* Tasks */
 export const HANDLE_QUEUED_PARTICIPANTS_INTERVAL_MS = 2 * ONE_SECOND_MS;

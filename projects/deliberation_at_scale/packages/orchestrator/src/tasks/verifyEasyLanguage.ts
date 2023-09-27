@@ -1,5 +1,6 @@
 import { BaseProgressionWorkerTaskPayload } from "../types";
-import { createModeratedVerifyTask, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
+import { getMessageContentForProgressionWorker } from "../utilities/messages";
+import { createModeratedVerifyTask } from "../utilities/tasks";
 
 export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
@@ -14,4 +15,5 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
 
         return content;
     },
+    getShouldSendBotMessage: () => false,
 });

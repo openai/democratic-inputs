@@ -44,7 +44,7 @@ export default async function verifySafeMessage(payload: BaseMessageWorkerTaskPa
         await supabaseClient
             .from("messages")
             .update({
-                content: "This message has been flagged as inappropiate.",
+                content: "**This message has been flagged as inappropiate.**",
             })
             .eq('id', messageId)
     ]);

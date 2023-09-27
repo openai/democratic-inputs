@@ -15,6 +15,7 @@ export interface ChatFlowConfig {
 export type MessagesOptions = string[][];
 
 export interface FlowStep {
+    active?: boolean;
     name: string;
     messageOptions: MessagesOptions;
     quickReplies?: QuickReply[];

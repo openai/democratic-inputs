@@ -1,7 +1,7 @@
 import fetch from 'cross-fetch';
 import { Dayjs } from 'dayjs';
 
-import { WHEREBY_API_URL } from '../config/constants';
+import { ENABLE_TEST_WHEREBY_ROOM, TEST_WHEREBY_ROOM, WHEREBY_API_URL } from '../config/constants';
 
 export interface ValidCreateExternalRoomResult {
     roomUrl: string;
@@ -35,6 +35,11 @@ export async function createExternalRoom(endDate: Dayjs): Promise<ValidCreateExt
         endDate: endDate.toISOString(),
         fields: ['hostRoomUrl']
     };
+
+    // guard: test if we are forcing the testing room
+    if (ENABLE_TEST_WHEREBY_ROOM) {
+        return TEST_WHEREBY_ROOM;
+    }
 
     const rawCreationResult = await fetch(createRoomUrl, {
         method: 'POST',

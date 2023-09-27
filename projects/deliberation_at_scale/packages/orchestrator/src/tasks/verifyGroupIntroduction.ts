@@ -1,6 +1,7 @@
-import { createModeratedVerifyTask, getMessageContentForProgressionWorker } from "../utilities/moderatorTasks";
+import { createModeratedVerifyTask } from "../utilities/tasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { PARTICIPANTS_PER_ROOM } from "../config/constants";
+import { getMessageContentForProgressionWorker } from "../utilities/messages";
 
 export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {

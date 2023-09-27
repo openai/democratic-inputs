@@ -35,10 +35,13 @@ export default function ChatFlow(props: Props) {
     const { flow } = props;
     const {
         id: flowId,
-        steps,
+        steps: unfilteredSteps,
         userMessageTemplate = defaultUserMessageTemplate,
         botMessageTemplate = defaultBotMessageTemplate,
     } = flow;
+    const steps = unfilteredSteps.filter((step) => {
+        return step.active ?? true;
+    });
     const { push } = useRouter();
     const searchParams = useSearchParams();
     const flowStateEntries = useAppSelector((state) => state.flow.flowStateLookup[flowId]);

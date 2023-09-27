@@ -1,16 +1,19 @@
 import dayjs from "dayjs";
 import { useEffect } from "react";
 
-import { usePingParticipantMutation } from "@/generated/graphql";
+import { FullParticipantFragment, ParticipantStatusType, usePingParticipantMutation } from "@/generated/graphql";
 import { PARTICIPANT_PING_INTERVAL_DELAY_MS } from "@/utilities/constants";
 
-export function usePingParticipant(participantId?: string) {
+export function usePingParticipant(candidateParticipant?: FullParticipantFragment) {
+    const participantId = candidateParticipant?.id;
+    const participantStatus = candidateParticipant?.status;
     const [ping, { loading, error, data }] = usePingParticipantMutation();
 
     useEffect(() => {
 
-        // guard
-        if (!participantId) {
+        // guard check if the ID is valid and only ping when queued
+        // this prevent in confirmation participants to be updated as well
+        if (!participantId || participantStatus !== ParticipantStatusType.Queued) {
             return;
         }
 
@@ -26,7 +29,7 @@ export function usePingParticipant(participantId?: string) {
         return (() => {
             clearInterval(pingInterval);
         });
-    }, [participantId, ping]);
+    }, [participantId, participantStatus, ping]);
 
     return { loading, error, data };
 }
