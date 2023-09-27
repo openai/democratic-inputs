@@ -43,7 +43,7 @@ export const PARTICIPANT_PING_INTERVAL_DELAY_MS = ONE_SECOND_MS;
 /**
  * Enable when you want all the `useRealtimeQuery` wrappers to automaticlly refetch periodically
  */
-export const ENABLE_AUTO_QUERY_REFETCH = true;
+export const ENABLE_AUTO_QUERY_REFETCH = false;
 export const AUTO_QUERY_REFETCH_INTERVAL_MS = ONE_SECOND_MS * 2;
 
 /**
