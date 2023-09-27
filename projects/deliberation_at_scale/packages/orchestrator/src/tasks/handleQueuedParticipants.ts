@@ -48,6 +48,7 @@ async function deactivateInactiveParticipants(helpers: Helpers) {
         .from("participants")
         .update({ active: false })
         .eq('status', "queued")
+        .eq("active", true)
         .lt('last_seen_at', minimumLastSeenAt.toISOString())
         .select();
     const { data: deactivatedParticipants, error } = deactivatedQueuedParticipants;
@@ -76,6 +77,7 @@ async function deactivateExpiredRooms(helpers: Helpers) {
         .from("participants")
         .update({ active: false, status: 'end_of_session' })
         .eq('status', "waiting_for_confirmation")
+        .eq("active", true)
         .lt('updated_at', minimumUpdatedAt.toISOString())
         .select();
 

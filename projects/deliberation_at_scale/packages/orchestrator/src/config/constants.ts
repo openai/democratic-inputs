@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
 
-import { ValidCreateExternalRoomResult } from "src/lib/whereby";
+import { ValidCreateExternalRoomResult } from "../lib/whereby";
 import { OrchestratorRole } from "../types";
 import dayjs from "dayjs";
 
