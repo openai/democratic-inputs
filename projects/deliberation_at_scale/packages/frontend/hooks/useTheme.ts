@@ -14,12 +14,12 @@ export default function useTheme(): ThemeColors {
             return AUTHENTICATE_ROOM_BASE_COLOR;
         }
 
-        if (pathname?.includes('/room')) {
-            return DELIBERATION_ROOM_BASE_COLOR;
-        }
-
         if (pathname?.includes('/lobby') || pathname?.includes('/evaluate') || pathname?.includes('/profile')) {
             return DEFAULT_ROOM_BASE_COLOR;
+        }
+
+        if (pathname?.includes('/room')) {
+            return DELIBERATION_ROOM_BASE_COLOR;
         }
 
         // home page
