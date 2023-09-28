@@ -31,7 +31,7 @@ async function startMessageListener() {
         const jobKeyPostfix = `message-${id}`;
         const workerTasks: Array<{ taskId: WorkerTaskId, maxAttempts: number }> = [
             { taskId: 'verifySafeMessage', maxAttempts: 10 },
-            { taskId: 'verifyEasyMessage', maxAttempts: 1 },
+            // { taskId: 'verifyEasyMessage', maxAttempts: 1 }, // TMP: disabled for now to avoid spamming
         ];
 
         // guard: skip invalid message
