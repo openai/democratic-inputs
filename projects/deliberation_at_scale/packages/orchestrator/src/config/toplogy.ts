@@ -10,7 +10,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'groupIntro-verifyGroupIntroduction',
                     workerTaskId: 'verifyGroupIntroduction',
-                    maxAttempts: 3,
+                    maxAttempts: 10,
                     cooldown: {
                         minMessageAmount: 1,
                         // maxMessageAmoun: 0,
@@ -129,7 +129,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEasyLanguage',
                     maxAttempts: 3,
                     cooldown: {
-                        durationMs: 59 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -143,7 +143,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     persistent: true,
                     maxAttempts: 3,
                     cooldown: {
-                        durationMs: 59 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -163,8 +163,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                         progressionTaskId: 'informed-verifyOffTopic',
                     }],
                     cooldown: {
-                        startDelayMs: 59 * ONE_SECOND_MS,
-                        durationMs: 59 * ONE_SECOND_MS,
+                        startDelayMs: 60 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -183,8 +183,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEnoughContent',
                     maxAttempts: 5,
                     cooldown: {
-                        startDelayMs: 59 * ONE_SECOND_MS,
-                        durationMs: 59 * ONE_SECOND_MS,
+                        startDelayMs: 60 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -197,8 +197,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     workerTaskId: 'verifyEqualParticipation',
                     maxAttempts: 3,
                     cooldown: {
-                        startDelayMs: 59 * ONE_SECOND_MS,
-                        durationMs: 90 * ONE_SECOND_MS,
+                        startDelayMs: 60 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -232,7 +232,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     }],
                     cooldown: {
                         startDelayMs: 119 * ONE_SECOND_MS,
-                        durationMs: 59 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -271,6 +271,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     id: 'results-verifyConsensusForming',
                     workerTaskId: 'verifyConsensusForming',
                     cooldown: {
+                        startDelayMs: 60 * ONE_SECOND_MS,
                         durationMs: 30 * ONE_SECOND_MS,
                     },
                     context: {
@@ -288,8 +289,8 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     maxAttempts: 1,
                     executionType: 'onNotVerified',
                     cooldown: {
-                        startDelayMs: 59 * ONE_SECOND_MS,
-                        durationMs: 59 * ONE_SECOND_MS,
+                        startDelayMs: 10 * ONE_SECOND_MS,
+                        durationMs: 60 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -307,10 +308,10 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'close-enrichConsensusProposal',
                     workerTaskId: 'enrichConsensusProposal',
-                    maxAttempts: 30,
+                    maxAttempts: 1,
                     executionType: 'alwaysBeforeVerification',
                     cooldown: {
-                        durationMs: 60 * ONE_SECOND_MS,
+                        durationMs: 20 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -319,6 +320,24 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     }
                 },
             ],
-        }
+        },
+        {
+            id: 'end',
+            roomStatus: 'end',
+            verifications: [],
+            enrichments: [
+                {
+                    id: 'close-enrichClosure',
+                    workerTaskId: 'enrichClosure',
+                    maxAttempts: 1,
+                    executionType: 'alwaysBeforeVerification',
+                    context: {
+                        messages: {
+                            roomStatuses: ['informed', 'debate', 'results', 'close'],
+                        }
+                    }
+                },
+            ],
+        },
     ],
 };
