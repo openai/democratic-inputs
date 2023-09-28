@@ -43,7 +43,7 @@ export const PARTICIPANT_PING_INTERVAL_DELAY_MS = ONE_SECOND_MS;
 /**
  * Enable when you want all the `useRealtimeQuery` wrappers to automaticlly refetch periodically
  */
-export const ENABLE_AUTO_QUERY_REFETCH = true;
+export const ENABLE_AUTO_QUERY_REFETCH = false;
 export const AUTO_QUERY_REFETCH_INTERVAL_MS = ONE_SECOND_MS * 2;
 
 /**
@@ -57,6 +57,7 @@ export const TEST_EXTERNAL_ROOM_ID = 'demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a'
 /**
  * Transcriptions
  */
+export const ENABLE_AUTO_START_TRANSCRIPTION = false;
 export const DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS = ONE_SECOND_MS * 60 * 2;
 export const TRANSCRIBE_VALID_MIN_TEXT_LENGTH = 30;
 
