@@ -12,7 +12,11 @@ export default function useScrollToBottom(options: UseScrollToBottomOptions) {
         const messagesScrollContainer = document.getElementById(MESSAGES_SCROLL_CONTAINER_ID);
 
         // now scroll the main container to the bottom smoothly
-        messagesScrollContainer?.scrollTo({
+        if (!messagesScrollContainer) {
+            return;
+        }
+
+        messagesScrollContainer.scrollTo({
             top: messagesScrollContainer.scrollHeight,
             behavior: overrideBehavior ?? behavior,
         });
