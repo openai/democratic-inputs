@@ -91,7 +91,7 @@ export default function ChatInput(props: ChatInputProps) {
                 />
                 <motion.button
                     type="submit"
-                    className={`transition-colors duration-1000 rounded-lg m-2 p-2 w-10 aspect-square shrink-0 text-white ${submitBgColorMap[theme]}`}
+                    className={`transition-colors duration-1000 rounded m-2 p-2 w-10 aspect-square shrink-0 text-white ${submitBgColorMap[theme]}`}
                     whileTap={{ scale: (disabled ? 1: 0.9) }}
                     disabled={disabled}
                 >

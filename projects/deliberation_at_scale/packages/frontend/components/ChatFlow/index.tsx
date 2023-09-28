@@ -320,7 +320,7 @@ export default function ChatFlow(props: Props) {
                     )}
                 </AnimatePresence>
             </div>
-            <ChatMessageList messages={flowMessages} />
+            <ChatMessageList messages={flowMessages} className="pt-16" />
         </motion.div>
     );
 }

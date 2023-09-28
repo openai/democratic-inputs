@@ -4,13 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Message } from '@/flows/types';
 import ChatMessage from './ChatMessage';
 import { MESSAGES_SCROLL_CONTAINER_ID } from '@/utilities/constants';
+import classNames from 'classnames';
 
 interface Props {
     messages: (Message | null | undefined)[] | undefined;
+    className?: string;
 }
 
 export default function ChatMessageList(props: Props) {
-    const { messages } = props;
+    const { messages, className } = props;
     const variants = {
         visible: {
             transition: {
@@ -35,7 +37,10 @@ export default function ChatMessageList(props: Props) {
     return (
         <motion.div
             id={MESSAGES_SCROLL_CONTAINER_ID}
-            className="flex flex-col gap-1 overflow-y-scroll px-4 pt-4 min-h-0 shrink grow"
+            className={classNames(
+                "flex flex-col gap-1 overflow-y-scroll px-4 pt-4 min-h-0 shrink grow",
+                className
+            )}
             variants={variants}
             initial="hidden"
             animate="visible"
