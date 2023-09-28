@@ -1,5 +1,5 @@
 import { ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_FOUND_ROOM_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY, LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, ONE_SECOND_MS, TEST_ROOM_ID } from "@/utilities/constants";
-import { ChatFlowConfig, FlowStep, OnInputHelpers, QuickReply } from "./types";
+import { ChatFlowConfig, OnInputHelpers, QuickReply } from "./types";
 import { PermissionState } from "@/state/slices/room";
 import { isEmpty } from "radash";
 import { faSearch } from '@fortawesome/free-solid-svg-icons';

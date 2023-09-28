@@ -1,4 +1,4 @@
-import { OpinionType, OutcomeType } from "@/generated/graphql";
+import { OutcomeType } from "@/generated/graphql";
 
 /**
  * Environment variables from .env file
