@@ -1,4 +1,4 @@
-import { MAIN_SCROLL_CONTAINER_ID, ONE_SECOND_MS } from "@/utilities/constants";
+import { MESSAGES_SCROLL_CONTAINER_ID, ONE_SECOND_MS } from "@/utilities/constants";
 import { useCallback, useEffect } from "react";
 
 export interface UseScrollToBottomOptions {
@@ -9,19 +9,17 @@ export interface UseScrollToBottomOptions {
 export default function useScrollToBottom(options: UseScrollToBottomOptions) {
     const { behavior = 'smooth', data } = options;
     const scrollToBottom = useCallback((overrideBehavior?: ScrollBehavior) => {
-        const mainScrollContainer = document.getElementById(MAIN_SCROLL_CONTAINER_ID);
+        const messagesScrollContainer = document.getElementById(MESSAGES_SCROLL_CONTAINER_ID);
 
         // now scroll the main container to the bottom smoothly
-        mainScrollContainer?.scrollTo({
-            top: mainScrollContainer.scrollHeight,
+        messagesScrollContainer?.scrollTo({
+            top: messagesScrollContainer.scrollHeight,
             behavior: overrideBehavior ?? behavior,
         });
     }, [behavior]);
 
     useEffect(() => {
-        setTimeout(() => {
-            scrollToBottom();
-        }, ONE_SECOND_MS * 0.5);
+        scrollToBottom();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(data), scrollToBottom]);
 

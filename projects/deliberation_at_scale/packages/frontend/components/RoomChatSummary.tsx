@@ -11,6 +11,7 @@ import { useSendRoomMessageMutation } from '@/generated/graphql';
 import ChatInput from './ChatInput';
 import RoomOutcome from './RoomOutcome';
 import ReactMarkdown from 'react-markdown';
+import { MESSAGES_SCROLL_CONTAINER_ID } from '@/utilities/constants';
 
 const ENABLE_CHAT = false;
 
@@ -28,6 +29,7 @@ export default function RoomChatSummary() {
 
     return (
         <motion.div
+            id={MESSAGES_SCROLL_CONTAINER_ID}
             className="flex flex-col gap-4 overflow-y-scroll py-4"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
