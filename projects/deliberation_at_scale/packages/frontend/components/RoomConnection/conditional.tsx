@@ -1,5 +1,5 @@
 'use client';
-import useRoom from '@/hooks/useRoom';
+import { useExternalRoomId } from '@/hooks/useRoom';
 import { PermissionState } from '@/state/slices/room';
 import { useAppSelector } from '@/state/store';
 import dynamic from 'next/dynamic';
@@ -28,7 +28,7 @@ const DynamicRoomConnectionProvider = dynamic(
  */
 export default function ConditionalRoomConnectionProvider({ children }: PropsWithChildren) {
     const hasRequested = useAppSelector((state) => state.room.permission === PermissionState.REQUESTED);
-    const { externalRoomId } = useRoom();
+    const externalRoomId = useExternalRoomId();
 
     return externalRoomId && hasRequested ? (
         <LoadingValueContext.Provider value={children as JSX.Element}>

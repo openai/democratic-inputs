@@ -100,7 +100,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                 <button onClick={handleLocalParticipantClick}>
                     {(state.localStream && state.isVideoEnabled) ? (
                         <VideoView
-                            className="w-full h-full object-cover rounded"
+                            className="w-full h-full object-cover rounded border"
                             stream={state.localStream}
                         />
                     ) : (
