@@ -17,16 +17,16 @@ const profileFlow: ChatFlowConfig = {
                 {
                     id: 'join-room',
                     icon: faMessage,
-                    content: 'Join a room',
+                    content: 'Join a conversation',
                     onClick: async (helpers) => {
-                        helpers.postBotMessages([["Great! Moving you to the lobby... Hold on tight!"]]);
+                        helpers.postBotMessages([["Great! Moving you to the waiting lobby... Hold on tight!"]]);
                         await helpers.waitFor(2000);
                         helpers.goToPage('/lobby');
                     },
                 },
                 {
                     id: 'previous-rooms',
-                    content: 'View results of previous rooms',
+                    content: 'View results of previous conversations',
                     icon: faChartBar,
                     onClick: async () => {
                         // empty

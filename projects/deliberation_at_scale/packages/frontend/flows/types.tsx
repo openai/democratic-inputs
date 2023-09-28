@@ -20,7 +20,7 @@ export interface FlowStep {
     messageOptions: MessagesOptions;
     quickReplies?: QuickReply[];
     skip?: (helpers: OnInputHelpers) => Promise<boolean> | boolean;
-    onInput?: (input: UserInput, helpers: OnInputHelpers) => Promise<void>;
+    onInput?: (input: UserInput, helpers: OnInputHelpers) => Promise<boolean | void>;
     timeoutMs?: number;
     onTimeout?: (helpers: OnInputHelpers) => Promise<void>;
     hideInput?: boolean;

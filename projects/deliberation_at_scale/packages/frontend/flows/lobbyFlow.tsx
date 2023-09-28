@@ -31,12 +31,20 @@ const lobbyFlow: ChatFlowConfig = {
             ],
             onInput: async (input, helpers) => {
                 helpers.setFlowStateEntry('nickName', input.content);
-                helpers.goToNext();
+                helpers.goToName("use_new_nickname");
             }
         },
         {
             name: "use_current_nickname",
             messageOptions: [["Great, we'll keep calling you \"{nickName}\"."]],
+            timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+            onTimeout: async (helpers) => {
+                helpers.goToName("ask_go_to_permission_flow");
+            },
+        },
+        {
+            name: "use_new_nickname",
+            messageOptions: [["Great, we'll call you \"{nickName}\"."]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         {

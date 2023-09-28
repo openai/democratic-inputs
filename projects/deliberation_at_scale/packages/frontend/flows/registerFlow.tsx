@@ -11,7 +11,7 @@ const registerFlow: ChatFlowConfig = {
     steps: [
         {
             name: "greeting",
-            messageOptions: [["Very nice to meet you!"], ["Hello there!"]],
+            messageOptions: [["Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute."]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         {
