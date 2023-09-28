@@ -14,7 +14,7 @@ import ChatMessageList from "../ChatMessageList";
 import Button from "../Button";
 import { aiSolid } from "../EntityIcons";
 import { useAppDispatch, useAppSelector } from "@/state/store";
-import { addFlowMessages, resetFlowMessages, resetFlowPosition, setFlowPosition, setFlowStateEntry as setFlowStateEntryAction } from "@/state/slices/flow";
+import { addFlowMessages, resetFlowMessages, resetFlowPosition, setCurrentFlow, setFlowPosition, setFlowStateEntry as setFlowStateEntryAction } from "@/state/slices/flow";
 import useChatFlowMessages from "@/hooks/useChatFlowMessages";
 import { FIXED_CHAT_FLOW_BOT_NAME } from "@/utilities/constants";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
@@ -193,6 +193,11 @@ export default function ChatFlow(props: Props) {
         setInputDisabled(false);
         return true;
     }, [currentStep, onInputHelpers, postBotMessages]);
+
+    // on initial render set the current flow ID
+    useEffect(() => {
+        dispatch(setCurrentFlow(flowId));
+    }, [dispatch, flowId]);
 
     useEffect(() => {
         // use an AbortController to prevent acting on timeout if user input resolves it
