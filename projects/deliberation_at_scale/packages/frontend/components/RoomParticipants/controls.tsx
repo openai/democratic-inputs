@@ -8,7 +8,7 @@ import { faMicrophoneAlt, faMicrophoneAltSlash, faVideo, faVideoSlash, faDoorOpe
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback } from 'react';
 
 const bgColorMap: Record<ThemeColors, string> = {
@@ -22,8 +22,7 @@ export default function LocalParticipantControls() {
     const theme = useTheme();
 
     const { push } = useRouter();
-    const params = useParams();
-    const { participantId } = useRoom();
+    const { participantId, roomId } = useRoom();
     const [leaveRoom] = useLeaveRoomMutation({ variables: { participantId }});
 
     const handleToggleMicrophone = useCallback((e: MouseEvent<HTMLButtonElement>) => {
@@ -42,8 +41,8 @@ export default function LocalParticipantControls() {
         e.preventDefault();
         e.stopPropagation();
         await leaveRoom();
-        push(`/${params?.lang || 'en'}/evaluate`);
-    }, [leaveRoom, params, push]);
+        push(`/room/${roomId}/evaluate`);
+    }, [leaveRoom, push, roomId]);
 
     return (
         <motion.div
@@ -63,8 +62,8 @@ export default function LocalParticipantControls() {
                 onClick={handleToggleMicrophone}
             >
                 <FontAwesomeIcon
-                    icon={state.isAudioEnabled ? faMicrophoneAlt : faMicrophoneAltSlash} 
-                    fixedWidth 
+                    icon={state.isAudioEnabled ? faMicrophoneAlt : faMicrophoneAltSlash}
+                    fixedWidth
                 />
             </button>
             <button
@@ -77,8 +76,8 @@ export default function LocalParticipantControls() {
                 onClick={handleToggleCamera}
             >
                 <FontAwesomeIcon
-                    icon={state.isVideoEnabled ? faVideo : faVideoSlash} 
-                    fixedWidth 
+                    icon={state.isVideoEnabled ? faVideo : faVideoSlash}
+                    fixedWidth
                 />
             </button>
             <button
@@ -88,8 +87,8 @@ export default function LocalParticipantControls() {
                 onClick={handleLeaveRoomClick}
             >
                 <FontAwesomeIcon
-                    icon={faDoorOpen} 
-                    fixedWidth 
+                    icon={faDoorOpen}
+                    fixedWidth
                 />
             </button>
         </motion.div>
