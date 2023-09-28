@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { Message } from '@/flows/types';
 import ChatMessage from './ChatMessage';
-import { MAIN_SCROLL_CONTAINER_ID } from '@/utilities/constants';
 
 interface Props {
     messages: (Message | null | undefined)[] | undefined;
@@ -34,11 +33,10 @@ export default function ChatMessageList(props: Props) {
 
     return (
         <motion.div
-            className="flex flex-col gap-1 h-full overflow-y-scroll px-4"
+            className="flex flex-col gap-1 h-full px-4"
             variants={variants}
             initial="hidden"
             animate="visible"
-            id={MAIN_SCROLL_CONTAINER_ID}
         >
             <AnimatePresence>
                 {messages.map((message, index) => {
