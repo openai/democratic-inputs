@@ -1,4 +1,4 @@
-import { MESSAGES_SCROLL_CONTAINER_ID, ONE_SECOND_MS } from "@/utilities/constants";
+import { MESSAGES_SCROLL_CONTAINER_ID } from "@/utilities/constants";
 import { useCallback, useEffect } from "react";
 
 export interface UseScrollToBottomOptions {

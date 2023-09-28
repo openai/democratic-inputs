@@ -3,7 +3,6 @@ import { i18n } from '@lingui/core';
 import loadCatalog from '@/utilities/loadCatalog';
 import Language from '@/components/Language';
 import ColouredHeader from '@/components/ColouredHeader';
-import { MESSAGES_SCROLL_CONTAINER_ID } from '@/utilities/constants';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
