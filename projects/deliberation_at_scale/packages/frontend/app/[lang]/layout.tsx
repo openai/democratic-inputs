@@ -23,7 +23,7 @@ export default async function Layout({
 
     return (
         <Language initialMessages={messages} locale={params.lang}>
-            <article className="flex flex-col justify-between h-screen">
+            <article className="flex flex-col justify-between h-screen" style={{ height: '100dvh' }}>
                 <section className="shrink-0">
                     <ColouredHeader />
                 </section>

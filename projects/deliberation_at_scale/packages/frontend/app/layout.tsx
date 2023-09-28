@@ -23,7 +23,7 @@ export default async function RootLayout({
         <html lang="en">
             <body className={inter.variable}>
                 <Providers>
-                    <main className="min-h-screen bg-background flex flex-col items-center">
+                    <main className="bg-background flex flex-col items-center">
                         {children}
                     </main>
                 </Providers>
