@@ -3,7 +3,7 @@ import { FlowStep } from "./types";
 
 export const askForEmailStep: FlowStep = {
     name: "ask_for_email_address",
-    messageOptions: [["Can you give me your email address?"]],
+    messageOptions: [["Will you please enter your e-mail address?"]],
     onInput: async (input, helpers) => {
         const { content } = input;
         const isEmailAddress = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(content);
@@ -17,9 +17,9 @@ export const askForEmailStep: FlowStep = {
             return;
         }
 
-        helpers.postBotMessages([["Sending you an email..."]]);
+        helpers.postBotMessages([["That looks like a valid e-mail. We're sending you an email now..."]]);
         try {
-            await sendMagicLink(content);
+            await sendMagicLink(content, (typeof helpers.params?.lang === 'string') ? helpers.params.lang : undefined);
         } catch (error) {
             helpers.postBotMessages([["There was an error sending you an email. Please try again!"]]);
 

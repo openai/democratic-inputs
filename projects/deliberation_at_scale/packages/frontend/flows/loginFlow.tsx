@@ -11,13 +11,22 @@ const loginFlow: ChatFlowConfig = {
     steps: [
         {
             name: "greeting",
-            messageOptions: [["Good to see you again"], ["Welcome back!"]],
+            messageOptions: [[
+                "Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute.",
+            ]],
+            timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+        },
+        {
+            name: "data_justification",
+            messageOptions: [[
+                "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification.",
+            ]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         askForEmailStep,
         {
             name: "thank_you",
-            messageOptions: [["Thank you! An email has been sent with a link to login with!"]],
+            messageOptions: [["Thank you! You will find a link to login to Deliberation at Scale in your inbox. Use this link to login."]],
             quickReplies: [resetQuickReply],
         }
     ]

@@ -1,20 +1,32 @@
 'use client';
 import { useRoomConnection } from '@/components/RoomConnection/context';
+import { useLocalMedia } from '@/hooks/useLocalMedia';
+import { faVideoSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useCallback, useState } from 'react';
+import LocalParticipantControls from './controls';
 
 export interface ParticipantsProps {
     variant: 'compact' | 'spacious';
 }
 
 export default function RoomParticipants({ variant }: ParticipantsProps) {
+    const [showLocalControls, setShowLocalControls] = useState(false);
     const connection = useRoomConnection();
+    const { state } = useLocalMedia();
+
+    const handleLocalParticipantClick = useCallback(() => {
+        setShowLocalControls((current) => !current);
+    }, []);
+
 
     if (!connection) {
         return null;
     }
 
-    const { remoteParticipants, localParticipant } = connection.state;
+    const { remoteParticipants } = connection.state;
     const { VideoView } = connection.components;
     const defaultFadeInVariants = {
         hidden: { opacity: 0 },
@@ -23,7 +35,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
 
     return (
         <motion.div
-            className="max-h-[50vh] overflow-hidden relative z-20 pb-2 mb-4"
+            className="max-h-[50vh] relative z-20 pb-2 mb-4"
         >
             <div
                 className={classNames(
@@ -51,11 +63,15 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                             initial="hidden"
                             animate="visible"
                         >
-                            {participant.stream && (
+                            {(participant.stream && participant.isVideoEnabled) ? (
                                 <VideoView
+                                    className="w-full h-full object-cover"
                                     stream={participant.stream}
-                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                                 />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center border">
+                                    <FontAwesomeIcon icon={faVideoSlash} />
+                                </div>
                             )}
                             <div
                                 className={classNames(
@@ -73,36 +89,32 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
             </div>
             <motion.div
                 className={classNames(
-                    "flex justify-center gap-2 absolute w-1/5 bottom-0 absolute rounded overflow-hidden bg-gray-100 z-20",
+                    "flex justify-center gap-2 absolute w-1/5 bottom-0 bg-gray-100 z-20",
                     variant === 'compact' && 'aspect-[3/4] left-1/2 translate-x-[-50%]',
-                    variant === 'spacious' && 'aspect-square right-2 border',
+                    variant === 'spacious' && 'aspect-square right-2',
                 )}
                 variants={defaultFadeInVariants}
                 initial="hidden"
                 animate="visible"
             >
-                {localParticipant?.stream && (
-                    <VideoView
-                        muted
-                        stream={localParticipant.stream}
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    />
-                )}
+                <button onClick={handleLocalParticipantClick}>
+                    {(state.localStream && state.isVideoEnabled) ? (
+                        <VideoView
+                            className="w-full h-full object-cover rounded"
+                            stream={state.localStream}
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center border rounded text-gray-300">
+                            <FontAwesomeIcon icon={faVideoSlash} />
+                        </div>
+                    )}
+                </button>
+                <AnimatePresence>
+                    {showLocalControls && (
+                        <LocalParticipantControls />
+                    )}
+                </AnimatePresence>
             </motion.div>
-            {/* <div>
-                <button
-                    className="bg-white shadow rounded py-3 px-4"
-                    onClick={() => localMedia.actions.toggleCameraEnabled()}
-                >
-                    {localMedia.state.isVideoEnabled ? 'Disable' : 'Enable'} camera
-                </button>
-                <button
-                    className="bg-white shadow rounded py-3 px-4"
-                    onClick={() => localMedia.actions.toggleMicrophoneEnabled()}
-                >
-                    {localMedia.state.isAudioEnabled ? 'Disable' : 'Enable'} microphone
-                </button>
-            </div> */}
         </motion.div>
     );
 }

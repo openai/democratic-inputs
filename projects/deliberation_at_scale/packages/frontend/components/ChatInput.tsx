@@ -78,7 +78,7 @@ export default function ChatInput(props: ChatInputProps) {
             animate={{ opacity: 1 }}
             exit={{ y: 100 }}
             onSubmit={handleSubmit}
-            className={`relative z-10 ${disabled ? 'grayscale cursor-not-allowed' : ''}`}
+            className={`relative z-10 px-4 ${disabled ? 'grayscale cursor-not-allowed' : ''}`}
         >
             <div className={`flex rounded-md border w-full bg-white focus-within:ring ${focusColorMap[theme]} ${hoverBorderMap[theme]}`}>
                 <input

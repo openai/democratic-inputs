@@ -1,11 +1,11 @@
-import { faArrowAltCircleDown } from '@fortawesome/free-regular-svg-icons';
 import { QuickReply } from "./types";
 import { t } from '@lingui/macro';
+import { faRotate } from '@fortawesome/free-solid-svg-icons';
 
 export const resetQuickReply: QuickReply = {
-    content: t`Start Over`,
+    content: t`Start over`,
     id: 'start-over',
-    icon: faArrowAltCircleDown,
+    icon: faRotate,
     onClick(helpers) {
         helpers.reset?.();
     },

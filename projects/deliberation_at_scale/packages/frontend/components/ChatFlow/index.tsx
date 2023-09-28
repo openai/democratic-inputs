@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { draw, isEmpty } from "radash";
 import { AnimatePresence, motion } from "framer-motion";
@@ -44,6 +44,7 @@ export default function ChatFlow(props: Props) {
     });
     const { push } = useRouter();
     const searchParams = useSearchParams();
+    const params = useParams();
     const flowStateEntries = useAppSelector((state) => state.flow.flowStateLookup[flowId]);
     const positionIndex = useAppSelector((state) => state.flow.flowPositionLookup[flowId] ?? 0);
     const roomState = useAppSelector((state) => state.room);
@@ -159,6 +160,7 @@ export default function ChatFlow(props: Props) {
             roomState,
             reset,
             searchParams,
+            params,
             waitFor: async (timeoutMs: number) => {
                 return new Promise((resolve) => {
                     setTimeout(resolve, timeoutMs);
@@ -264,7 +266,7 @@ export default function ChatFlow(props: Props) {
                     {!isEmpty(quickReplies) && (
                         <motion.div
                             key="quickReplies"
-                            className="flex flex-col gap-1"
+                            className="flex flex-col gap-1 px-4"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                         >

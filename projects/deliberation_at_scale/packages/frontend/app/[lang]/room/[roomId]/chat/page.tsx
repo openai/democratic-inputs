@@ -7,7 +7,7 @@ export default async function Chat() {
 
     return (
         <div className="h-full flex flex-col">
-            <div className="sticky top-0 z-30">
+            <div className="sticky top-0 z-30 px-4">
                 <RoomParticipants variant="compact" />
             </div>
             <RoomChatMessages />
