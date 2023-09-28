@@ -13,14 +13,38 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: app/[lang]/page.tsx:13
+#: components/RoomOutcome.tsx:66
+msgid "{title}"
+msgstr ""
+
+#: components/ChatMessage.tsx:74
+msgid "Anonymous"
+msgstr ""
+
+#: app/[lang]/tests/page.tsx:13
 msgid "Landing page"
 msgstr "Landingspagina"
 
-#: components/UserInput/index.tsx:30
-msgid "Submit"
+#: components/RoomOutcome.tsx:121
+msgid "No, this does not reflect our deliberation"
 msgstr ""
 
-#: components/UserInput/index.tsx:26
+#: flows/quickReplies.tsx:6
+msgid "Start over"
+msgstr ""
+
+#: components/ChatInput.tsx:37
 msgid "Tap to type"
+msgstr ""
+
+#: components/RoomChatSummary.tsx:36
+msgid "Topic"
+msgstr ""
+
+#: components/RoomOutcome.tsx:116
+msgid "Yes, this reflects our deliberation"
+msgstr ""
+
+#: components/ChatMessage.tsx:46
+msgid "You"
 msgstr ""

@@ -16,7 +16,7 @@
     "codegen:watch": "npm run codegen -- --watch",
     "lint": "eslint . --ext .ts,.tsx",
     "clean": "rimraf ./node_modules",
-    "lingui:extract": "lingui extract --clean",
+    "lingui:extract": "lingui extract --clean && lingui compile",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build"
   },
