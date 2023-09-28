@@ -38,20 +38,14 @@ export default function RoomChatMessages() {
     }, [messagesLoading, scrollToBottom]);
 
     return (
-        <>
-            <div className="flex flex-col w-full grow pb-10">
-                <div className="grow flex flex-col justify-end">
-                    <ChatMessageList messages={messages} />
-                </div>
-            </div>
-            <div className="sticky bottom-20">
-                <ChatInput
-                    onSubmit={async (input) => {
-                        return sendMessage(input.content);
-                    }}
-                    disabled={chatInputDisabled}
-                />
-            </div>
-        </>
+        <div className="flex flex-col shrink min-h-0 gap-2 pb-2 grow">
+            <ChatMessageList messages={messages} />
+            <ChatInput
+                onSubmit={async (input) => {
+                    return sendMessage(input.content);
+                }}
+                disabled={chatInputDisabled}
+            />
+        </div>
     );
 }

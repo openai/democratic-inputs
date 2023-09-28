@@ -34,7 +34,7 @@ export default function ChatMessageList(props: Props) {
 
     return (
         <motion.div
-            className="flex flex-col gap-1 h-full overflow-y-scroll px-4"
+            className="flex flex-col gap-1 overflow-y-scroll px-4 pt-4 min-h-0 shrink grow"
             variants={variants}
             initial="hidden"
             animate="visible"

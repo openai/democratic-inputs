@@ -27,7 +27,7 @@ export default function RoomChatSummary() {
 
     return (
         <motion.div
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 overflow-y-scroll py-4"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
         >

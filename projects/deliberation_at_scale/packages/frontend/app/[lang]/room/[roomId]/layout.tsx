@@ -36,7 +36,7 @@ export default function RoomLayout({ children }: PropsWithChildren) {
 
     return (
         <div className="flex max-h-screen h-full w-full flex-col">
-            <div className="flex-grow flex-shrink min-w-0">
+            <div className="flex-grow flex-shrink min-h-0">
                 {children}
             </div>
             <RoomTranscription />
