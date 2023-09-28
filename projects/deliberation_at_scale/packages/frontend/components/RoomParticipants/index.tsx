@@ -35,7 +35,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
 
     return (
         <motion.div
-            className="max-h-[50vh] relative z-20 pb-2 mb-4"
+            className="max-h-[50vh] relative z-20"
         >
             <div
                 className={classNames(
@@ -90,7 +90,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
             <motion.div
                 className={classNames(
                     "flex justify-center gap-2 absolute w-1/5 bottom-0 bg-gray-100 z-20",
-                    variant === 'compact' && 'aspect-[3/4] left-1/2 translate-x-[-50%]',
+                    variant === 'compact' && 'aspect-[3/4] left-1/2 translate-x-[-50%] mb-[-12px]',
                     variant === 'spacious' && 'aspect-square right-2',
                 )}
                 variants={defaultFadeInVariants}
@@ -100,7 +100,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                 <button onClick={handleLocalParticipantClick}>
                     {(state.localStream && state.isVideoEnabled) ? (
                         <VideoView
-                            className="w-full h-full object-cover rounded"
+                            className="w-full h-full object-cover rounded border"
                             stream={state.localStream}
                         />
                     ) : (

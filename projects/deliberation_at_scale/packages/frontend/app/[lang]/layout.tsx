@@ -3,7 +3,6 @@ import { i18n } from '@lingui/core';
 import loadCatalog from '@/utilities/loadCatalog';
 import Language from '@/components/Language';
 import ColouredHeader from '@/components/ColouredHeader';
-import { MAIN_SCROLL_CONTAINER_ID } from '@/utilities/constants';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -24,13 +23,11 @@ export default async function Layout({
     return (
         <Language initialMessages={messages} locale={params.lang}>
             <article className="flex flex-col justify-between h-screen">
-                <section>
+                <section className="shrink-0">
                     <ColouredHeader />
                 </section>
-                <section id={MAIN_SCROLL_CONTAINER_ID} className="overflow-y-scroll overflow-x-hidden flex-auto flex flex-col">
-                    <section className="max-w-[768px] w-full min-h-full mx-auto flex flex-col">
-                        {children}
-                    </section>
+                <section id={MAIN_SCROLL_CONTAINER_ID} className="max-w-[768px] w-full h-full mx-auto flex flex-col grow shrink min-h-0">
+                    {children}
                 </section>
             </article>
         </Language>

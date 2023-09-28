@@ -11,6 +11,32 @@ export interface UseRoomOptions {
     roomId?: RoomId;
 }
 
+/**
+ * A convenience function that will only return the external room id, so we
+ * don't cause unnecessary re-renders in video outputs, leading to flickers.
+ */
+export function useExternalRoomId() {
+    // Parse the roomId from the params
+    const params = useParams();
+    const roomId = params?.roomId as RoomId;
+
+    // Retrieve the room from Supabase
+    const { data: roomData } = useRealtimeQuery(useGetRoomsQuery({
+        variables: {
+            roomId,
+        }
+    }));
+
+    // Find the correct node and room
+    const roomNode = roomData?.roomsCollection?.edges?.find((roomEdge) => {
+        return roomEdge?.node?.id === roomId;
+    });
+    const room = roomNode?.node;
+
+    // Return the room Id
+    return ENABLE_TEST_ROOM ? TEST_EXTERNAL_ROOM_ID : room?.external_room_id;
+}
+
 export default function useRoom(options?: UseRoomOptions) {
     const params = useParams();
     const paramsRoomId = params?.roomId as RoomId;

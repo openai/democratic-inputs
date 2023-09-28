@@ -17,7 +17,7 @@ export default function RoomMenu() {
 
     return (
         <motion.nav
-            className="sticky bottom-0 flex gap-4 p-4 border-t bg-white"
+            className="flex gap-4 p-4 border-t bg-white"
             variants={variants}
             initial="hidden"
             animate="visible"

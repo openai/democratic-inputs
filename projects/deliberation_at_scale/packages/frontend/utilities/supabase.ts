@@ -1,6 +1,7 @@
 import { supabaseClient } from "@/state/supabase";
 import { isEmpty } from "radash";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const sendMagicLink = async (email: string, lang = 'en') => {
     const formattedEmail = email.trim();
 

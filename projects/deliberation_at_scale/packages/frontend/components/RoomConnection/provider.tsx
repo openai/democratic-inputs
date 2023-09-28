@@ -4,7 +4,7 @@ import { PropsWithChildren, useMemo } from 'react';
 import { RoomConnectionContext } from './context';
 import { useRoomConnection } from '@whereby.com/browser-sdk';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
-import useRoom from '@/hooks/useRoom';
+import { useExternalRoomId } from '@/hooks/useRoom';
 import { ENABLE_WHEREBY } from '@/utilities/constants';
 
 /**
@@ -12,7 +12,7 @@ import { ENABLE_WHEREBY } from '@/utilities/constants';
  * output available via the RoomConnection context.
  */
 export default function RoomConnectionProvider({ children }: PropsWithChildren) {
-    const { externalRoomId } = useRoom();
+    const externalRoomId = useExternalRoomId();
 
     // Construct the room URL
     const roomUrl = useMemo(() => {
