@@ -5,6 +5,7 @@ import ChatInput from "./ChatInput";
 import { useCallback, useEffect } from "react";
 import { useSendRoomMessageMutation } from "@/generated/graphql";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
+import { ONE_SECOND_MS } from "@/utilities/constants";
 
 export default function RoomChatMessages() {
     const { messages, participantId, roomId, messagesLoading } = useRoom();
@@ -33,7 +34,9 @@ export default function RoomChatMessages() {
     // instantly scroll to the bottom when the messages are loaded
     useEffect(() => {
         if (!messagesLoading) {
-            scrollToBottom('instant');
+            setTimeout(() => {
+                scrollToBottom('instant');
+            }, ONE_SECOND_MS * 0.05);
         }
     }, [messagesLoading, scrollToBottom]);
 
