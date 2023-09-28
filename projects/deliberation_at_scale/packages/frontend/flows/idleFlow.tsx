@@ -1,3 +1,4 @@
+import { faHomeAlt, faRotate } from '@fortawesome/free-solid-svg-icons';
 import { ChatFlowConfig } from "./types";
 
 const idleFlow: ChatFlowConfig = {
@@ -9,6 +10,7 @@ const idleFlow: ChatFlowConfig = {
             quickReplies: [
                 {
                     id: 'retry',
+                    icon: faRotate,
                     content: 'Sorry, retry joining a room',
                     onClick: async (helpers) => {
                         helpers.postBotMessages([["Okay, pay attention! Moving you to the lobby once again..."]]);
@@ -18,6 +20,7 @@ const idleFlow: ChatFlowConfig = {
                 },
                 {
                     id: 'home',
+                    icon: faHomeAlt,
                     content: 'Go back to home page',
                     onClick: async (helpers) => {
                         helpers.goToPage('/proifle');

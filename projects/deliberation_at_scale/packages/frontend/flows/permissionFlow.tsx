@@ -2,7 +2,7 @@ import { ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_FOUND_ROO
 import { ChatFlowConfig, OnInputHelpers, QuickReply } from "./types";
 import { PermissionState } from "@/state/slices/room";
 import { isEmpty } from "radash";
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faHomeAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const askPermissionQuickReply: QuickReply = {
     id: "permission_ask_yes",
@@ -67,6 +67,7 @@ const permissionFlow: ChatFlowConfig = {
                 {
                     id: "to_existing_room",
                     content: "Continue to room",
+                    icon: faArrowRight,
                     hidden: (helpers) => {
                         return isEmpty(helpers?.searchParams?.get('redirect'));
                     },
@@ -113,6 +114,7 @@ const permissionFlow: ChatFlowConfig = {
                 {
                     id: "enter_room",
                     content: "Enter room",
+                    icon: faArrowRight,
                     onClick: (helpers) => {
                         if (ENABLE_TEST_ROOM) {
                             helpers.goToPage(`/room/${TEST_ROOM_ID}`);
@@ -126,6 +128,7 @@ const permissionFlow: ChatFlowConfig = {
                 {
                     id: "cancel_enter_room",
                     content: "No, go back to home page",
+                    icon: faHomeAlt,
                     onClick: (helpers) => {
                         helpers.goToPage(`/profile`);
                     }
