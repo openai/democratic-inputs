@@ -10,11 +10,13 @@ import {
 import { usePingParticipant } from "./usePingParticipant";
 import useProfile from "./useProfile";
 import useRealtimeQuery from "./useRealtimeQuery";
+import { useAppSelector } from "@/state/store";
 
 export default function useLobby() {
     const { user } = useProfile();
     const { id: userId } = user ?? {};
     const [confirmingParticipantId, setConfirmingParticipantId] = useState<string | null>(null);
+    const flowStateNickName = useAppSelector((state) => state.flow.flowStateLookup?.['lobby']?.['nickName']);
     const isConfirming = !!confirmingParticipantId;
     const { data: participantData,
         loading: participantsLoading,
@@ -70,11 +72,12 @@ export default function useLobby() {
         createParticipant({
             variables: {
                 userId,
+                nickName: flowStateNickName,
             },
         }).then(() => {
             refetchParticipants();
         });
-    }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, confirmingParticipantId]);
+    }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, confirmingParticipantId, flowStateNickName]);
 
     // store the the participant ID when a confirm is requested
     // this will help us redirect the user back to the timeed out flow when not responding quickly enough
