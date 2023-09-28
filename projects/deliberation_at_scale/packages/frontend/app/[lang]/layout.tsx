@@ -27,14 +27,12 @@ export default async function Layout({
                 <section>
                     <ColouredHeader />
                 </section>
-                <section className="overflow-y-scroll overflow-x-hidden flex-auto flex flex-col">
+                <section id={MAIN_SCROLL_CONTAINER_ID} className="overflow-y-scroll overflow-x-hidden flex-auto flex flex-col">
                     <section className="max-w-[768px] w-full min-h-full mx-auto flex flex-col">
                         {children}
                     </section>
                 </section>
             </article>
-            <section id="video-call-portal" className="sticky top-0 max-w-[768px] w-full mx-auto">
-            </section>
         </Language>
     );
 }
