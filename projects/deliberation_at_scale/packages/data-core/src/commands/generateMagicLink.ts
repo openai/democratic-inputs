@@ -7,7 +7,7 @@ const supabaseAdminClient = createClient(
 );
 
 async function main() {
-    const { data, error } = await supabaseAdminClient.auth.admin.generateLink({
+    const { data } = await supabaseAdminClient.auth.admin.generateLink({
         type: 'magiclink',
         email: 'hello@bmd.studio',
         options: {
