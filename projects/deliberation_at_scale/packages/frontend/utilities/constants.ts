@@ -25,7 +25,7 @@ export const ONE_SECOND_MS = 1000;
 /**
  * Element IDs
  */
-export const MAIN_SCROLL_CONTAINER_ID = 'main-scroll-container';
+export const MESSAGES_SCROLL_CONTAINER_ID = 'messages-scroll-container';
 
 /**
  * Chat flows
@@ -51,8 +51,8 @@ export const AUTO_QUERY_REFETCH_INTERVAL_MS = ONE_SECOND_MS * 2;
  */
 export const ENABLE_WHEREBY = true;
 export const ENABLE_TEST_ROOM = false;
-export const TEST_ROOM_ID = '0a323099-4c94-49f9-89ff-2bf11d4dfb21';
-export const TEST_EXTERNAL_ROOM_ID = 'demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a';
+export const TEST_ROOM_ID = 'ee440eef-3cbd-48fd-ab37-a0ea12a7c895'; // '0a323099-4c94-49f9-89ff-2bf11d4dfb21';
+export const TEST_EXTERNAL_ROOM_ID = 'https://deliberation-at-scale.whereby.com/demo-af3daa38-58ac-4ce6-a5d7-8b9fcb5a728a';
 
 /**
  * Transcriptions
