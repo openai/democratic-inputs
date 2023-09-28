@@ -10,6 +10,7 @@ import useRoom from "@/hooks/useRoom";
 import { useSendRoomMessageMutation } from '@/generated/graphql';
 import ChatInput from './ChatInput';
 import RoomOutcome from './RoomOutcome';
+import ReactMarkdown from 'react-markdown';
 
 const ENABLE_CHAT = false;
 
@@ -34,7 +35,7 @@ export default function RoomChatSummary() {
             {topicContent && (
                 <div className={`p-4 rounded gap-4 flex items-center ${topicColorBgMap[theme]}`}>
                     <Pill icon={topicSolid} className="border-green-700"><Trans>Topic</Trans></Pill>
-                    {topicContent}
+                    <ReactMarkdown>{topicContent}</ReactMarkdown>
                 </div>
             )}
             <AnimatePresence>
@@ -52,6 +53,7 @@ export default function RoomChatSummary() {
                     <AnimatePresence mode="wait" initial={false}>
                         {lastBotMessages.map((message) => {
                             const { id, content, name, nameIcon } = message;
+                            const formattedContent = content?.trim();
 
                             return (
                                 <motion.div
@@ -59,7 +61,7 @@ export default function RoomChatSummary() {
                                     layoutId={id}
                                 >
                                     <Pill icon={nameIcon} className="mb-4">{name}</Pill>
-                                    <p>{content}</p>
+                                    <ReactMarkdown>{formattedContent}</ReactMarkdown>
                                 </motion.div>
                             );
                         })}
@@ -74,6 +76,7 @@ export default function RoomChatSummary() {
                     <AnimatePresence mode="wait" initial={false}>
                         {lastParticipantMessages.map((message) => {
                             const { id, content, name } = message;
+                            const formattedContent = content?.trim();
 
                             return (
                                 <motion.div
@@ -84,7 +87,7 @@ export default function RoomChatSummary() {
                                     exit={{ opacity: 0, x: -100, transition: { duration: 0.15 } }}
                                 >
                                     <strong>{name}</strong>
-                                    <p>{content}</p>
+                                    <ReactMarkdown>{formattedContent}</ReactMarkdown>
                                 </motion.div>
                             );
                         })}
