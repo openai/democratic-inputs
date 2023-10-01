@@ -26,6 +26,7 @@ export default function useProfile() {
     });
     const user = usersData?.usersCollection?.edges?.[0]?.node;
     const rooms = roomsData?.roomsCollection?.edges;
+    const isLoggedIn = !!authUser && !!user;
 
     const updateAuthUser = useCallback(async () => {
         setLoading(true);
@@ -58,5 +59,6 @@ export default function useProfile() {
         user,
         rooms,
         loading,
+        isLoggedIn,
     };
 }

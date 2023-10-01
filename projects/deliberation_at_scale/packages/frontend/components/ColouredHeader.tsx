@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import useTheme, { ThemeColors } from "@/hooks/useTheme";
 import { usePathname } from "next/navigation";
 import classNames from 'classnames';
+import { NavLink } from "./NavLink";
+import useProfile from "@/hooks/useProfile";
 
 const bgColorMap: Record<ThemeColors, string> = {
     'blue': 'text-blue-600',
@@ -12,8 +14,10 @@ const bgColorMap: Record<ThemeColors, string> = {
 
 export default function ColouredHeader() {
     const theme = useTheme();
+    const { isLoggedIn } = useProfile();
     const pathname = usePathname();
     const isHidden = !!pathname?.includes('/room');
+    const navTo = isLoggedIn ? '/profile' : '/';
 
     return (
         <motion.header
@@ -26,7 +30,7 @@ export default function ColouredHeader() {
         >
             <div className="max-w-[768px] w-full mx-auto">
                 {!isHidden && (
-                    <p>
+                    <NavLink href={navTo}>
                         <motion.span
                             className="mr-3 translate-y-[-2px] inline-block text-xl"
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -42,7 +46,7 @@ export default function ColouredHeader() {
                         >
                         Deliberation at Scale
                         </motion.span>
-                    </p>
+                    </NavLink>
                 )}
             </div>
         </motion.header>
