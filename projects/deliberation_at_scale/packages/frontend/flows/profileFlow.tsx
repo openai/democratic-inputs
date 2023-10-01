@@ -1,6 +1,7 @@
 import { faChartBar, faMessage, faUser } from '@fortawesome/free-regular-svg-icons';
 import { ChatFlowConfig } from "./types";
 import { DEFAULT_BOT_MESSAGE_SPEED_MS } from '@/utilities/constants';
+import { t } from '@lingui/macro';
 
 const profileFlow: ChatFlowConfig = {
     id: "profile",
@@ -17,7 +18,7 @@ const profileFlow: ChatFlowConfig = {
                 {
                     id: 'join-room',
                     icon: faMessage,
-                    content: 'Join a conversation',
+                    content: t`Join a conversation`,
                     onClick: async (helpers) => {
                         helpers.postBotMessages([["Great! Moving you to the waiting lobby... Hold on tight!"]]);
                         await helpers.waitFor(2000);

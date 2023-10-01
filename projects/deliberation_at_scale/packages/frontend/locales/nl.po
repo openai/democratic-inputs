@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: components/RoomOutcome.tsx:69
+#: components/RoomOutcome.tsx:67
 msgid "{title}"
 msgstr ""
 
@@ -21,12 +21,16 @@ msgstr ""
 msgid "Anonymous"
 msgstr ""
 
-#: components/RoomOutcome.tsx:122
+#: components/RoomOutcome.tsx:117
 msgid "I agree with this consensus."
 msgstr ""
 
-#: components/RoomOutcome.tsx:127
+#: components/RoomOutcome.tsx:122
 msgid "I don't agree with this."
+msgstr ""
+
+#: flows/profileFlow.tsx:21
+msgid "Join a conversation"
 msgstr ""
 
 #: flows/quickReplies.tsx:6
@@ -37,7 +41,7 @@ msgstr ""
 msgid "Tap to type"
 msgstr ""
 
-#: components/RoomOutcome.tsx:132
+#: components/RoomOutcome.tsx:127
 msgid "This statement should be reformulated."
 msgstr ""
 

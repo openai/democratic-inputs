@@ -27,15 +27,15 @@ interface Props {
 
 export default function RoomOutcome(props: Props) {
     const { outcome, participantId } = props;
-    const { id: outcomeId, content, type } = outcome ?? {};
+    const { id: outcomeId, content = '', type } = outcome ?? {};
     const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ outcomes: [outcome], participantId });
     const existingOpinion = getExistingOpinion(outcomeId);
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
     const title = useMemo(() => {
         switch (type) {
-            case OutcomeType.Consensus: return 'Consensus Proposal';
-            case OutcomeType.Milestone: return 'Milestone';
-            case OutcomeType.OffTopic: return 'Off Topic';
+            case OutcomeType.Consensus: return t`Consensus Proposal`;
+            case OutcomeType.Milestone: return t`Milestone`;
+            case OutcomeType.OffTopic: return t`Off Topic`;
         }
     }, [type]);
     const timeoutMs = useMemo(() => {
@@ -63,10 +63,8 @@ export default function RoomOutcome(props: Props) {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
         >
-            <Pill icon={statementSolid} className="border-black">
-                <Trans>{title}</Trans>
-            </Pill>
-            <ReactMarkdown>{content ?? ''}</ReactMarkdown>
+            <Pill icon={statementSolid} className="border-black">{title}</Pill>
+            <ReactMarkdown>{content}</ReactMarkdown>
             {hasOpinionOptions && (
                 <div className="flex flex-col gap-2 w-full">
                     {opinionOptions.map((option) => {
