@@ -63,7 +63,7 @@ export default function ChatFlow(props: Props) {
     }, [inputDisabled, currentStep]);
     const inputPlaceholder = useMemo(() => {
         if (isTextInputDisabled) {
-            return hasQuickReplies ? "Select an option above..." : "Waiting...";
+            return hasQuickReplies ? t`Select an option above...` : t`Waiting...`;
         }
 
         return undefined;
@@ -140,7 +140,6 @@ export default function ChatFlow(props: Props) {
     }, [currentStep]);
     const postBotMessages = useCallback((messagesOptions: MessagesOptions) => {
         const messages = getMessageFromTemplate(messagesOptions, botMessageTemplate);
-
         postMessages(messages);
     }, [getMessageFromTemplate, postMessages, botMessageTemplate]);
     const postUserMessages = useCallback((messagesOptions: MessagesOptions) => {
@@ -168,7 +167,8 @@ export default function ChatFlow(props: Props) {
                 });
             }
         } satisfies OnInputHelpers;
-    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams, params]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams, JSON.stringify(params)]);
 
     /* Handler for any user input */
     const handleInput = useCallback(async (input: UserInput) => {
