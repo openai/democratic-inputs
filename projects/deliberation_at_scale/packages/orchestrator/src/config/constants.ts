@@ -53,7 +53,7 @@ export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
 export const ENABLE_TASK_TESTING = false && IS_DEVELOPMENT;
 export const ENABLE_SINGLE_ROOM_TESTING = true && IS_DEVELOPMENT;
-export const TEST_ROOM_ID_ALLOWLIST = ['4da54fa6-7c5a-45d5-99f9-79573a790ad6'];
+export const TEST_ROOM_ID_ALLOWLIST = ['ee440eef-3cbd-48fd-ab37-a0ea12a7c895'];
 export const ENABLE_ROOM_PROGRESSION = true || !IS_DEVELOPMENT;
 export const PRINT_JOBKEY = true && IS_DEVELOPMENT;
 export const PRINT_ROOM_PROGRESSION = true && IS_DEVELOPMENT;
@@ -73,7 +73,7 @@ export const PARTICIPANTS_PER_ROOM = IS_DEVELOPMENT ? DEVELOPMENT_PARTICIPANTS_P
 export const MAX_ROOM_DURATION_MS = 60 * ONE_MINUTE_MS;
 
 /* Lobby */
-export const PARTICIPANT_PING_EXPIRY_TIME_MS = 5 * ONE_SECOND_MS;
+export const PARTICIPANT_PING_EXPIRY_TIME_MS = 10 * ONE_SECOND_MS;
 export const PARTICIPANT_CONFIRM_EXPIRY_TIME_MS = 30 * ONE_SECOND_MS;
 
 /* Tasks */

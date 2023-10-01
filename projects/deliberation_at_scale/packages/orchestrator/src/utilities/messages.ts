@@ -7,6 +7,7 @@ import { draw } from "radash";
 
 export interface SendMessageOptions {
     active?: boolean;
+    participantId?: string;
     type: MessageType;
     roomId: string;
     content: string;
@@ -19,13 +20,21 @@ export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) 
     });
 }
 
+export async function sendParticipantMessage(options: Omit<SendMessageOptions, 'type'>) {
+    return sendMessage({
+        ...options,
+        type: 'chat',
+    });
+}
+
 export async function sendMessage(options: SendMessageOptions) {
-    const { active = true, type, roomId, content } = options;
+    const { active = true, type, roomId, content, participantId } = options;
 
     await supabaseClient.from("messages").insert({
         active,
         type,
         room_id: roomId,
+        participant_id: participantId,
         content,
     });
 }

@@ -4,14 +4,18 @@ import dayjs from "dayjs";
 import { HandleQueuedParticipantsPayload } from "./tasks/handleQueuedParticipants";
 
 export async function startScheduler() {
-    quickAddJob({}, "triggerRoomProgressionUpdates", {}, {
-        jobKey: "triggerRoomProgressionUpdates",
-    });
+    // quickAddJob({}, "triggerRoomProgressionUpdates", {}, {
+    //     jobKey: "triggerRoomProgressionUpdates",
+    // });
 
-    quickAddJob({}, "handleQueuedParticipants", {
-        jobKey: "handleQueuedParticipants",
-    } as HandleQueuedParticipantsPayload, {
-        jobKey: "handleQueuedParticipants",
+    // quickAddJob({}, "handleQueuedParticipants", {
+    //     jobKey: "handleQueuedParticipants",
+    // } as HandleQueuedParticipantsPayload, {
+    //     jobKey: "handleQueuedParticipants",
+    // });
+
+    quickAddJob({}, "screencast", {}, {
+        jobKey: "screencast",
     });
 }
 
