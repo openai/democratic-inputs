@@ -1,4 +1,5 @@
 import { OutcomeType } from "@/generated/graphql";
+import { t } from "@lingui/macro";
 
 /**
  * Environment variables from .env file
@@ -18,6 +19,11 @@ export const DELIBERATION_ROOM_BASE_COLOR = 'green';
 export const ANIMATION_DURATION_S = '0.3s';
 
 /**
+ * Language
+ */
+export const DEFAULT_LANGUAGE = 'en';
+
+/**
  * Time
  */
 export const ONE_SECOND_MS = 1000;
@@ -31,8 +37,8 @@ export const MESSAGES_SCROLL_CONTAINER_ID = 'messages-scroll-container';
  * Chat flows
  */
 export const DEFAULT_BOT_MESSAGE_SPEED_MS = ONE_SECOND_MS * 1.5;
-export const FIXED_CHAT_FLOW_BOT_NAME = "Deliberation at Scale";
-export const ROOM_CHAT_FLOW_BOT_NAME = "AI Moderator";
+export const FIXED_CHAT_FLOW_BOT_NAME = t`Deliberation at Scale`;
+export const ROOM_CHAT_FLOW_BOT_NAME = t`AI Moderator`;
 
 export const LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY = 'allowAskPermission';
 export const LOBBY_WAITING_FOR_ROOM_STATE_KEY = 'waitingForRoom';

@@ -6,6 +6,7 @@ import { draw, isEmpty } from "radash";
 import { AnimatePresence, motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
+import { t } from "@lingui/macro";
 
 import { ChatFlowConfig as FlowType, Message, UserInput, MessagesOptions, MessageTemplate, OnInputHelpers, FlowStep } from "../../flows/types";
 import sleep from "@/utilities/sleep";
@@ -167,7 +168,7 @@ export default function ChatFlow(props: Props) {
                 });
             }
         } satisfies OnInputHelpers;
-    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams]);
+    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams, params]);
 
     /* Handler for any user input */
     const handleInput = useCallback(async (input: UserInput) => {
@@ -185,7 +186,7 @@ export default function ChatFlow(props: Props) {
                 return onInputResult;
             }
         } catch (error) {
-            postBotMessages([["Something went wrong! Please try again."]]);
+            postBotMessages([[t`Something went wrong! Please try again.`]]);
             setInputDisabled(false);
             console.error('An error occurred when handling onInput: ', error);
             return false;
@@ -295,7 +296,7 @@ export default function ChatFlow(props: Props) {
                                                 postUserMessages([[ content ]]);
                                                 await onClick(onInputHelpers);
                                             } catch (error) {
-                                                postBotMessages([["Something went wrong! Please try again."]]);
+                                                postBotMessages([[t`Something went wrong! Please try again.`]]);
                                                 console.error(error);
                                             }
                                             setInputDisabled(false);

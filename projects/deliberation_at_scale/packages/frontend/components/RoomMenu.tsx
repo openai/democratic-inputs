@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { Trans } from '@lingui/macro';
 
 const LinkClassNames = "w-1/2 flex items-center justify-center";
 
@@ -34,7 +35,7 @@ export default function RoomMenu() {
                         )}
                     >
                         <FontAwesomeIcon icon={active ? aiSolid : aiRegular} />
-                        <span>Assistant</span>
+                        <span><Trans>Assistant</Trans></span>
                     </div>
                 )}
             </NavLink>
@@ -50,7 +51,7 @@ export default function RoomMenu() {
                         )}
                     >
                         <FontAwesomeIcon icon={active ? groupSolid : groupRegular} />
-                        <span>Conversation</span>
+                        <span><Trans>Conversation</Trans></span>
                     </div>
                 )}
             </NavLink>

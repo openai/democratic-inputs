@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Trans, t } from '@lingui/macro';
+import { t } from '@lingui/macro';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ReactMarkdown from 'react-markdown';
 

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import classNames from 'classnames';
 import { NavLink } from "./NavLink";
 import useProfile from "@/hooks/useProfile";
+import { Trans } from "@lingui/macro";
 
 const bgColorMap: Record<ThemeColors, string> = {
     'blue': 'text-blue-600',
@@ -44,7 +45,7 @@ export default function ColouredHeader() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.1 }}
                         >
-                        Deliberation at Scale
+                            <Trans>Deliberation at Scale</Trans>
                         </motion.span>
                     </NavLink>
                 )}

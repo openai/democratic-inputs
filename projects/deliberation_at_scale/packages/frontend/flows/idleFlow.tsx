@@ -1,4 +1,6 @@
 import { faHomeAlt, faRotate } from '@fortawesome/free-solid-svg-icons';
+import { t } from "@lingui/macro";
+
 import { ChatFlowConfig } from "./types";
 
 const idleFlow: ChatFlowConfig = {
@@ -6,14 +8,14 @@ const idleFlow: ChatFlowConfig = {
     steps: [
         {
             name: "intro",
-            messageOptions: [["Hi there {nickName}! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!"]],
+            messageOptions: [[t`Hi there {nickName}! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!`]],
             quickReplies: [
                 {
                     id: 'retry',
                     icon: faRotate,
-                    content: 'Sorry, retry joining a room',
+                    content: t`Sorry, retry joining a room`,
                     onClick: async (helpers) => {
-                        helpers.postBotMessages([["Okay, pay attention! Moving you to the lobby once again..."]]);
+                        helpers.postBotMessages([[t`Okay, pay attention! Moving you to the lobby once again...`]]);
                         await helpers.waitFor(2000);
                         helpers.goToPage('/lobby');
                     },
@@ -21,7 +23,7 @@ const idleFlow: ChatFlowConfig = {
                 {
                     id: 'home',
                     icon: faHomeAlt,
-                    content: 'Go back to home page',
+                    content: t`Go back to home page`,
                     onClick: async (helpers) => {
                         helpers.goToPage('/proifle');
                     },

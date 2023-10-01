@@ -1,4 +1,6 @@
 "use client";
+import { t } from "@lingui/macro";
+
 import { ChatFlowConfig, OnInputHelpers } from "@/flows/types";
 import ChatFlow from "./index";
 import { DEFAULT_BOT_MESSAGE_SPEED_MS } from "@/utilities/constants";
@@ -37,17 +39,17 @@ export default function EvaluateChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [["Hi there {nickName}! I hope you enjoyed the discussion you had with the group."]],
+                    messageOptions: [[t`Hi there {nickName}! I hope you enjoyed the discussion you had with the group.`]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
                     active: hasOutcomeType(OutcomeType.OverallImpression),
                     name: "overall_impression",
-                    messageOptions: [["Let's review what you all discussed. What was your general impression?"]],
+                    messageOptions: [[t`Let's review what you all discussed. What was your general impression?`]],
                     quickReplies: [
                         {
                             id: "review_great",
-                            content: "It was great!",
+                            content: t`It was great!`,
                             onClick: async (helpers) => {
                                 await handleOpinionClick(helpers, OutcomeType.OverallImpression, {
                                     type: OpinionType.Option,
@@ -57,7 +59,7 @@ export default function EvaluateChatFlow() {
                         },
                         {
                             id: "review_okay",
-                            content: "It was okay.",
+                            content: t`It was okay.`,
                             onClick: async (helpers) => {
                                 await handleOpinionClick(helpers, OutcomeType.OverallImpression, {
                                     type: OpinionType.Option,
@@ -67,7 +69,7 @@ export default function EvaluateChatFlow() {
                         },
                         {
                             id: "review_bad",
-                            content: "It was bad.",
+                            content: t`It was bad.`,
                             onClick: async (helpers) => {
                                 await handleOpinionClick(helpers, OutcomeType.OverallImpression, {
                                     type: OpinionType.Option,
@@ -80,23 +82,23 @@ export default function EvaluateChatFlow() {
                 {
                     active: hasOutcomeType(OutcomeType.OverallImpression),
                     name: "overall_impression_thanks",
-                    messageOptions: [["Thanks for the feedback {nickName}!"]],
+                    messageOptions: [[t`Thanks for the feedback {nickName}!`]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
                     name: "thank_you_1",
-                    messageOptions: [["What do you want to do next?"]],
+                    messageOptions: [[t`What do you want to do next?`]],
                     quickReplies: [
                         {
                             id: "join_another_room",
-                            content: "Join another room",
+                            content: t`Join another room`,
                             onClick: (helpers) => {
                                 helpers.goToPage("/lobby");
                             }
                         },
                         {
                             id: "go_to_profile",
-                            content: "Go back to the home page",
+                            content: t`Go back to the home page`,
                             onClick: (helpers) => {
                                 helpers.goToPage("/profile");
                             }
