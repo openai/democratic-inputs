@@ -13,20 +13,20 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: components/RoomOutcome.tsx:66
+#: components/RoomOutcome.tsx:69
 msgid "{title}"
 msgstr ""
 
-#: components/ChatMessage.tsx:74
+#: components/ChatMessage.tsx:76
 msgid "Anonymous"
 msgstr ""
 
-#: app/[lang]/tests/page.tsx:13
-msgid "Landing page"
-msgstr "Landingspagina"
+#: components/RoomOutcome.tsx:122
+msgid "I agree with this consensus."
+msgstr ""
 
-#: components/RoomOutcome.tsx:121
-msgid "No, this does not reflect our deliberation"
+#: components/RoomOutcome.tsx:127
+msgid "I don't agree with this."
 msgstr ""
 
 #: flows/quickReplies.tsx:6
@@ -37,14 +37,14 @@ msgstr ""
 msgid "Tap to type"
 msgstr ""
 
-#: components/RoomChatSummary.tsx:36
+#: components/RoomOutcome.tsx:132
+msgid "This statement should be reformulated."
+msgstr ""
+
+#: components/RoomChatSummary.tsx:44
 msgid "Topic"
 msgstr ""
 
-#: components/RoomOutcome.tsx:116
-msgid "Yes, this reflects our deliberation"
-msgstr ""
-
-#: components/ChatMessage.tsx:46
+#: components/ChatMessage.tsx:48
 msgid "You"
 msgstr ""
