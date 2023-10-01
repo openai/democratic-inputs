@@ -10,18 +10,8 @@ import { OpinionOptionType, OpinionType, OutcomeType } from "@/generated/graphql
 import useUpsertOpinion, { SetOpinionOptions } from "@/hooks/useUpsertOpinion";
 
 export default function EvaluateChatFlow() {
-    const { outcomes, participantId } = useRoom();
+    const { outcomes, participantId, getOutcomeByType, hasOutcomeType } = useRoom();
     const { setOpinion } = useUpsertOpinion({ outcomes, participantId });
-    const getOutcomeByType = useCallback((type: OutcomeType) => {
-        const outcome = outcomes?.find((outcome) => {
-            return outcome.type === type;
-        });
-
-        return outcome;
-    }, [outcomes]);
-    const hasOutcomeType = useCallback((type: OutcomeType) => {
-        return !!getOutcomeByType(type);
-    }, [getOutcomeByType]);
     const handleOpinionClick = useCallback(async (helpers: OnInputHelpers, outcomeType: OutcomeType.OverallImpression, options: Omit<SetOpinionOptions, 'outcomeId'>) => {
         const outcome = getOutcomeByType(outcomeType);
         const { id: outcomeId } = outcome ?? {};

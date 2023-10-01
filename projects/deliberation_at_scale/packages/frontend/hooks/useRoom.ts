@@ -1,11 +1,13 @@
 import { useParams } from 'next/navigation';
+import { alphabetical, sort } from 'radash';
 
-import { useGetRoomOutcomesQuery, useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
+import { OutcomeType, RoomStatusType, useGetRoomOutcomesQuery, useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
 import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 import useRoomMessages from "./useRoomMessages";
 import useProfile from './useProfile';
 import { ENABLE_TEST_ROOM, TEST_EXTERNAL_ROOM_ID } from '@/utilities/constants';
+import { useCallback, useMemo } from 'react';
 
 export interface UseRoomOptions {
     roomId?: RoomId;
@@ -67,10 +69,26 @@ export default function useRoom(options?: UseRoomOptions) {
     const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
     const participant = participants?.find(participant => participant.user_id === userId);
     const participantId = participant?.id;
-    const outcomes = outcomesData?.outcomesCollection?.edges?.map((outcome) => outcome.node);
+    const outcomes = useMemo(() => {
+        const outcomeNodes = outcomesData?.outcomesCollection?.edges?.map((outcome) => outcome.node) ?? [];
+        const sortedOutcomes = alphabetical(outcomeNodes, (outcome) => outcome.created_at, 'desc');
+
+        return sortedOutcomes;
+    }, [outcomesData]);
     const roomMessagesTuple = useRoomMessages({ roomId, participants, userId });
     const topic = room?.topics;
     const topicId = topic?.id;
+    const isRoomEnded = (RoomStatusType.End === roomStatus);
+    const getOutcomeByType = useCallback((type: OutcomeType) => {
+        const outcome = outcomes?.find((outcome) => {
+            return outcome.type === type;
+        });
+
+        return outcome;
+    }, [outcomes]);
+    const hasOutcomeType = useCallback((type: OutcomeType) => {
+        return !!getOutcomeByType(type);
+    }, [getOutcomeByType]);
 
     return {
 
@@ -81,6 +99,7 @@ export default function useRoom(options?: UseRoomOptions) {
         roomError,
         roomId,
         roomStatus,
+        isRoomEnded,
 
         // topic info
         topic,
@@ -95,6 +114,8 @@ export default function useRoom(options?: UseRoomOptions) {
 
         // outcomes info
         outcomes,
+        getOutcomeByType,
+        hasOutcomeType,
 
         // messages info
         ...roomMessagesTuple,

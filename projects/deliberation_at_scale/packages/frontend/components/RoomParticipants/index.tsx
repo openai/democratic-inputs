@@ -35,13 +35,13 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
 
     return (
         <motion.div
-            className="max-h-[50vh] relative z-20"
+            className="max-h-[40vh] relative z-20"
         >
             <div
                 className={classNames(
                     "flex",
                     variant === 'compact' && 'aspect-[16/9] bg-gray-100 rounded overflow-hidden border',
-                    variant === 'spacious' && 'h-[50vh] relative',
+                    variant === 'spacious' && 'h-[40vh] relative',
                 )}
             >
                 {remoteParticipants.map((participant, i) => {

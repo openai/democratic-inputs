@@ -17,7 +17,6 @@ export interface RoomAction {
 export default function useRoomActions() {
     const { roomId, isRoomEnded, getOutcomeByType } = useRoom();
     const lastOpenedAssistantAt = useAppSelector((state) => state.room.lastOpenedAssistantAt);
-    // const [referenceTime, setReferenceTime] = useState(dayjs());
     const { push } = useRouter();
     const actions: RoomAction[] = useMemo(() => {
         const newActions: RoomAction[] = [];
@@ -37,7 +36,7 @@ export default function useRoomActions() {
         if (isRoomEnded) {
             newActions.push({
                 id: 'end-room',
-                title: t`Go to evaluation`,
+                title: t`Leave room`,
                 onClick: () => {
                     push(`/evaluate/${roomId}`);
                 },
@@ -46,17 +45,6 @@ export default function useRoomActions() {
 
         return newActions;
     }, [getOutcomeByType, isRoomEnded, lastOpenedAssistantAt, push, roomId]);
-
-    // update the reference time so we can handle actions timing out automatically
-    // useEffect(() => {
-    //     const referenceTimeInterval = setInterval(() => {
-    //         setReferenceTime(dayjs());
-    //     }, ONE_SECOND_MS * 2);
-
-    //     return () => {
-    //         clearInterval(referenceTimeInterval);
-    //     };
-    // }, []);
 
     return {
         actions,

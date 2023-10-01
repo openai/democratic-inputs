@@ -6,10 +6,16 @@ import { useCallback, useEffect } from "react";
 import { useSendRoomMessageMutation } from "@/generated/graphql";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
 import { ONE_SECOND_MS } from "@/utilities/constants";
+import { openRoomChat } from "@/state/slices/room";
+import { useAppDispatch } from "@/state/store";
+import useRoomActions from "@/hooks/useRoomActions";
+import ChatActions from "./ChatActions";
 
 export default function RoomChatMessages() {
     const { messages, participantId, roomId, messagesLoading } = useRoom();
+    const { actions } = useRoomActions();
     const [sendRoomMessage, { loading: isSendingMessage }] = useSendRoomMessageMutation();
+    const dispatch = useAppDispatch();
     const chatInputDisabled = isSendingMessage;
     const sendMessage = useCallback(async (content: string) => {
         const formattedMessage = content?.trim?.();
@@ -40,9 +46,15 @@ export default function RoomChatMessages() {
         }
     }, [messagesLoading, scrollToBottom]);
 
+    // keep track of when this component was shown for the last time
+    useEffect(() => {
+        dispatch(openRoomChat());
+    }, [dispatch]);
+
     return (
-        <div className="flex flex-col shrink min-h-0 gap-2 pb-2 grow">
+        <div className="flex flex-col shrink min-h-0 gap-2 pb-2 px-4 grow">
             <ChatMessageList messages={messages} />
+            <ChatActions actions={actions} />
             <ChatInput
                 onSubmit={async (input) => {
                     return sendMessage(input.content);

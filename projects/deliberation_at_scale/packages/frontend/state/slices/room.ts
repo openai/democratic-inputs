@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import dayjs from "dayjs";
 
 export type RoomId = string | undefined;
 
@@ -12,24 +13,26 @@ export enum PermissionState {
 }
 
 export interface RoomState {
-    currentRoomId: RoomId;
     permission: PermissionState;
+    lastOpenedChatAt: string | null;
+    lastOpenedAssistantAt: string | null;
 }
 
 const initialState: RoomState = {
-    currentRoomId: undefined,
     permission: PermissionState.NONE,
+    lastOpenedChatAt: null,
+    lastOpenedAssistantAt: null,
 };
 
 const slice = createSlice({
     name: 'room',
     initialState,
     reducers: {
-        joinRoom: (state, action: PayloadAction<RoomId>) => {
-            state.currentRoomId = action.payload;
+        openRoomChat(state) {
+            state.lastOpenedChatAt = dayjs().toISOString();
         },
-        leaveRoom: (state) => {
-            state.currentRoomId = undefined;
+        openRoomAssistant(state) {
+            state.lastOpenedAssistantAt = dayjs().toISOString();
         },
         setPermissionState(state, action: PayloadAction<PermissionState>) {
             state.permission = action.payload;
@@ -39,4 +42,4 @@ const slice = createSlice({
 
 export default slice;
 
-export const { joinRoom, leaveRoom, setPermissionState } = slice.actions;
+export const { openRoomChat, openRoomAssistant, setPermissionState } = slice.actions;
