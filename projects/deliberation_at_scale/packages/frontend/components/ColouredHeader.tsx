@@ -25,23 +25,25 @@ export default function ColouredHeader() {
             )}
         >
             <div className="max-w-[768px] w-full mx-auto">
-                <p>
-                    <motion.span
-                        className="mr-3 translate-y-[-2px] inline-block text-xl"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                    >
+                {!isHidden && (
+                    <p>
+                        <motion.span
+                            className="mr-3 translate-y-[-2px] inline-block text-xl"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                        >
                         🦡
-                    </motion.span>
-                    <motion.span
-                        className="inline-block"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.1 }}
-                    >
+                        </motion.span>
+                        <motion.span
+                            className="inline-block"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.1 }}
+                        >
                         Deliberation at Scale
-                    </motion.span>
-                </p>
+                        </motion.span>
+                    </p>
+                )}
             </div>
         </motion.header>
     );

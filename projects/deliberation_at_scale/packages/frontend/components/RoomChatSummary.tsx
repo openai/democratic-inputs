@@ -20,6 +20,11 @@ const topicColorBgMap: Record<ThemeColors, string> = {
     'green': 'bg-green-400',
     'orange': 'bg-orange-400',
 };
+const messageAnimation = {
+    initial: { opacity: 0, x: 300 },
+    animate: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, x: -100, transition: { duration: 0.15 } },
+};
 
 export default function RoomChatSummary() {
     const { topic, lastBotMessages, lastParticipantMessages, participantId, roomId, outcomes } = useRoom();
@@ -49,53 +54,47 @@ export default function RoomChatSummary() {
                     );
                 })}
             </AnimatePresence>
-            <RoomOutcome />
-            {!isEmpty(lastBotMessages) && (
-                <div className="flex flex-col gap-2">
-                    <AnimatePresence mode="wait" initial={false}>
-                        {lastBotMessages.map((message) => {
-                            const { id, content, name, nameIcon } = message;
-                            const formattedContent = content?.trim();
+            <div className="flex flex-col gap-2">
+                <AnimatePresence mode="wait" initial={false}>
+                    {lastBotMessages.map((message) => {
+                        const { id, content, name, nameIcon } = message;
+                        const formattedContent = content?.trim();
 
-                            return (
-                                <motion.div
-                                    key={id}
-                                    layoutId={id}
-                                >
-                                    <Pill icon={nameIcon} className="mb-4">{name}</Pill>
-                                    <ReactMarkdown>{formattedContent}</ReactMarkdown>
-                                </motion.div>
-                            );
-                        })}
-                    </AnimatePresence>
-                </div>
-            )}
+                        return (
+                            <motion.div
+                                key={id}
+                                layoutId={id}
+                                {...messageAnimation}
+                            >
+                                <Pill icon={nameIcon} className="mb-4">{name}</Pill>
+                                <ReactMarkdown>{formattedContent}</ReactMarkdown>
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
+            </div>
             {!isEmpty(lastParticipantMessages) && !isEmpty(lastBotMessages) && (
                 <motion.hr layout />
             )}
-            {!isEmpty(lastParticipantMessages) && (
-                <div className="flex flex-col gap-2">
-                    <AnimatePresence mode="wait" initial={false}>
-                        {lastParticipantMessages.map((message) => {
-                            const { id, content, name } = message;
-                            const formattedContent = content?.trim();
+            <div className="flex flex-col gap-2">
+                <AnimatePresence mode="wait" initial={false}>
+                    {lastParticipantMessages.map((message) => {
+                        const { id, content, name } = message;
+                        const formattedContent = content?.trim();
 
-                            return (
-                                <motion.div
-                                    key={id}
-                                    layoutId={id}
-                                    initial={{ opacity: 0, x: 300 }}
-                                    animate={{ opacity: 1, x: 0, transition: { duration: 0.3 } }}
-                                    exit={{ opacity: 0, x: -100, transition: { duration: 0.15 } }}
-                                >
-                                    <strong>{name}</strong>
-                                    <ReactMarkdown>{formattedContent}</ReactMarkdown>
-                                </motion.div>
-                            );
-                        })}
-                    </AnimatePresence>
-                </div>
-            )}
+                        return (
+                            <motion.div
+                                key={id}
+                                layoutId={id}
+                                {...messageAnimation}
+                            >
+                                <strong>{name}</strong>
+                                <ReactMarkdown>{formattedContent}</ReactMarkdown>
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
+            </div>
             {ENABLE_CHAT && (
                 <ChatInput
                     onSubmit={async (input) => {

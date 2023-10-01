@@ -41,7 +41,7 @@ export default function LocalParticipantControls() {
         e.preventDefault();
         e.stopPropagation();
         await leaveRoom();
-        push(`/room/${roomId}/evaluate`);
+        push(`/evaluate/${roomId}`);
     }, [leaveRoom, push, roomId]);
 
     return (
