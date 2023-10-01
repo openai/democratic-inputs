@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { Trans, t } from '@lingui/macro';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import ReactMarkdown from 'react-markdown';
 
 import { statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
@@ -65,7 +66,7 @@ export default function RoomOutcome(props: Props) {
             <Pill icon={statementSolid} className="border-black">
                 <Trans>{title}</Trans>
             </Pill>
-            <span>{content}</span>
+            <ReactMarkdown>{content ?? ''}</ReactMarkdown>
             {hasOpinionOptions && (
                 <div className="flex flex-col gap-2 w-full">
                     {opinionOptions.map((option) => {
@@ -113,12 +114,17 @@ function getOpinionOptionsByOutcomeType(type?: OutcomeType): OpinionOption[] {
         case OutcomeType.Consensus:
             return [
                 {
-                    content: t`Yes, this reflects our deliberation`,
+                    content: t`I agree with this consensus.`,
                     icon: faCheck,
                     optionType: OpinionOptionType.AgreeConsensus,
                 },
                 {
-                    content: t`No, this does not reflect our deliberation`,
+                    content: t`I don't agree with this.`,
+                    icon: faTimes,
+                    optionType: OpinionOptionType.DisagreeConsensus,
+                },
+                {
+                    content: t`This statement should be reformulated.`,
                     icon: faTimes,
                     optionType: OpinionOptionType.DisagreeConsensus,
                 },
