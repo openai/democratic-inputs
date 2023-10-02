@@ -82,9 +82,9 @@ export default function RoomOutcome(props: Props) {
 
                         return (
                             <Button
+                                key={optionType}
                                 disabled={isDisabled}
                                 selected={isSelected}
-                                key={optionType}
                                 icon={icon}
                                 onClick={onOptionClick}
                             >
@@ -124,7 +124,7 @@ function getOpinionOptionsByOutcomeType(type?: OutcomeType): OpinionOption[] {
                 {
                     content: t`This statement should be reformulated.`,
                     icon: faTimes,
-                    optionType: OpinionOptionType.DisagreeConsensus,
+                    optionType: OpinionOptionType.Wrong,
                 },
             ];
     }
