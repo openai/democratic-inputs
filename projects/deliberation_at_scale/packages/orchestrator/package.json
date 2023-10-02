@@ -11,6 +11,7 @@
     "db:generate-types:worker": "cross-env SCHEMA_NAME=graphile_worker npm run db:generate-types-schema",
     "db:generate-types-schema": "dotenv -e .env -- sh -c 'supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema \"$SCHEMA_NAME\" > ./src/generated/database-$SCHEMA_NAME.types.ts'",
     "start": "npm run build && npm run start:dev",
+    "start:prod": "pm2 start ecosystem.config.js",
     "start:dev": "cross-env NODE_ENV=development ORCHESTRATOR_ROLE=all node dist/index.js",
     "start:runner": "cross-env ORCHESTRATOR_ROLE=runner node dist/index.js",
     "start:scheduler": "cross-env ORCHESTRATOR_ROLE=scheduler node dist/index.js",
@@ -30,6 +31,7 @@
     "graphile-worker": "^0.13.0",
     "object-hash": "3.0.0",
     "openai": "^4.0.0-beta.8",
+    "pm2": "5.3.0",
     "radash": "11.0.0"
   },
   "devDependencies": {
