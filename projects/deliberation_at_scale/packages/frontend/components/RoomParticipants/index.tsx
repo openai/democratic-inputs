@@ -7,20 +7,20 @@ import classNames from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import LocalParticipantControls from './controls';
+import { SHOW_VIDEO_CONTROLS_INITIALLY } from '@/utilities/constants';
 
 export interface ParticipantsProps {
     variant: 'compact' | 'spacious';
 }
 
 export default function RoomParticipants({ variant }: ParticipantsProps) {
-    const [showLocalControls, setShowLocalControls] = useState(false);
+    const [showLocalControls, setShowLocalControls] = useState(SHOW_VIDEO_CONTROLS_INITIALLY);
     const connection = useRoomConnection();
     const { state } = useLocalMedia();
 
     const handleLocalParticipantClick = useCallback(() => {
         setShowLocalControls((current) => !current);
     }, []);
-
 
     if (!connection) {
         return null;
@@ -97,7 +97,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                 initial="hidden"
                 animate="visible"
             >
-                <button onClick={handleLocalParticipantClick}>
+                <button className="grow" onClick={handleLocalParticipantClick}>
                     {(state.localStream && state.isVideoEnabled) ? (
                         <VideoView
                             className="w-full h-full object-cover rounded border"
