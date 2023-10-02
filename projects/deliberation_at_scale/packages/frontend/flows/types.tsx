@@ -4,6 +4,7 @@ import { Dayjs } from "dayjs";
 import { FlowId, FlowStateEntries } from "@/state/slices/flow";
 import { RoomState } from "@/state/slices/room";
 import { ReadonlyURLSearchParams } from "next/navigation";
+import { UseLocalMedia } from "@/hooks/useLocalMedia";
 
 export interface ChatFlowConfig {
     id: FlowId;
@@ -17,7 +18,7 @@ export type MessagesOptions = string[][];
 export interface FlowStep {
     active?: boolean;
     name: string;
-    messageOptions: MessagesOptions;
+    messageOptions: MessagesOptions | ((helpers: OnInputHelpers) => Promise<MessagesOptions>);
     quickReplies?: QuickReply[];
     skip?: (helpers: OnInputHelpers) => Promise<boolean> | boolean;
     onInput?: (input: UserInput, helpers: OnInputHelpers) => Promise<boolean | void>;
@@ -41,6 +42,7 @@ export interface OnInputHelpers {
     roomState: RoomState;
     searchParams: ReadonlyURLSearchParams | null;
     params: Record<string, string | string[]> | null;
+    mediaContext: UseLocalMedia;
     reset: () => void;
 }
 

@@ -43,9 +43,14 @@ const permissionFlow: ChatFlowConfig = {
         },
         {
             name: "permission_verify_working",
-            messageOptions: [[t`Everything seems to be working fine. Let's get started!`]],
+            messageOptions: async () => {
+                return [[t`Everything seems to be working fine. Let's get started!`]];
+            },
             skip: (helpers) => {
-                const hasGivenPermission = helpers.roomState.permission === PermissionState.REQUESTED;
+                const isVideoEnabled = helpers.mediaContext.state?.isVideoEnabled;
+                const isAudioEnabled = helpers.mediaContext.state?.isAudioEnabled;
+                const isRequested = helpers.roomState.permission === PermissionState.REQUESTED;
+                const hasGivenPermission = isRequested && isVideoEnabled && isAudioEnabled;
 
                 if (!hasGivenPermission) {
                     helpers.goToName("permission_not_working");

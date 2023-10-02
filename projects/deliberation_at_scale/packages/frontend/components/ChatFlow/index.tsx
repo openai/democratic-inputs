@@ -19,6 +19,7 @@ import { addFlowMessages, resetFlowMessages, resetFlowPosition, setCurrentFlow, 
 import useChatFlowMessages from "@/hooks/useChatFlowMessages";
 import { FIXED_CHAT_FLOW_BOT_NAME } from "@/utilities/constants";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
+import { useLocalMedia } from "@/hooks/useLocalMedia";
 
 interface Props {
     flow: FlowType;
@@ -46,8 +47,10 @@ export default function ChatFlow(props: Props) {
     const { push } = useRouter();
     const searchParams = useSearchParams();
     const params = useParams();
+    const mediaContext = useLocalMedia({ redirect: false, request: false });
     const flowStateEntries = useAppSelector((state) => state.flow.flowStateLookup[flowId]);
     const positionIndex = useAppSelector((state) => state.flow.flowPositionLookup[flowId] ?? 0);
+    const [lastHandledPositionIndex, setLastHandledPositionIndex] = useState<number>(-1);
     const roomState = useAppSelector((state) => state.room);
     const dispatch = useAppDispatch();
     const { flowMessages } = useChatFlowMessages({
@@ -161,6 +164,7 @@ export default function ChatFlow(props: Props) {
             reset,
             searchParams,
             params,
+            mediaContext,
             waitFor: async (timeoutMs: number) => {
                 return new Promise((resolve) => {
                     setTimeout(resolve, timeoutMs);
@@ -168,7 +172,7 @@ export default function ChatFlow(props: Props) {
             }
         } satisfies OnInputHelpers;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams, JSON.stringify(params)]);
+    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams, JSON.stringify(mediaContext), JSON.stringify(params)]);
 
     /* Handler for any user input */
     const handleInput = useCallback(async (input: UserInput) => {
@@ -242,8 +246,18 @@ export default function ChatFlow(props: Props) {
                 return;
             }
 
-            // If not, add the messages and potentially await a timeout
-            postBotMessages(currentStep?.messageOptions ?? []);
+            const { messageOptions } = currentStep ?? {};
+
+            // check if message options is a function
+            if (typeof messageOptions === 'function') {
+                // if so, await the result and post the messages
+                const messagesOptions = await messageOptions(onInputHelpers);
+                postBotMessages(messagesOptions);
+            } else {
+                // if not, post the messages
+                postBotMessages(messageOptions ?? []);
+            }
+
             await timeoutHandler();
         }
 
@@ -255,7 +269,7 @@ export default function ChatFlow(props: Props) {
             // we throw an abort signal so we don't trigger any resolving promises.
             controller.abort(); // abort timer functionality
         };
-    }, [currentStep, goToName, goToNext, onInputHelpers, onTimeout, postBotMessages, setInputDisabled, positionIndex, flowId]);
+    }, [currentStep, goToName, goToNext, onInputHelpers, onTimeout, postBotMessages, setInputDisabled, positionIndex, flowId, lastHandledPositionIndex, setLastHandledPositionIndex]);
 
     // scroll when new messages appear
     useScrollToBottom({ data: flowMessages });
@@ -263,7 +277,7 @@ export default function ChatFlow(props: Props) {
     return (
         <motion.div
             layoutId={`chat-flow-${flowId}`}
-            className="flex flex-col-reverse gap-2 pt-2 mt-auto h-full pb-2"
+            className="flex flex-col-reverse gap-2 pt-2 mt-auto h-full pb-2 px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >

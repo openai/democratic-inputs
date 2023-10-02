@@ -18,21 +18,21 @@ const defaultUseLocalMediaOptions: UseLocalMediaOptions = {
     redirect: true,
 };
 
+export type UseLocalMedia = LocalMediaContext | { state: null, actions: null, _ref: null };
+
 /**
  * Retrieve the state for the current local media.
  */
 export function useLocalMedia(): LocalMediaContext;
-export function useLocalMedia(options: Partial<UseLocalMediaOptions>): LocalMediaContext | { state: null, actions: null, _ref: null };
+export function useLocalMedia(options: Partial<UseLocalMediaOptions>): UseLocalMedia;
 export function useLocalMedia(options: Partial<UseLocalMediaOptions> = {}) {
     const {
         request, redirect,
     } = useMemo(() => Object.assign({}, defaultUseLocalMediaOptions, options), [options]);
-
     const ctx = useContext(LocalMediaContext);
-
     const permission = useAppSelector((state) => state.room.permission);
     const dispatch = useAppDispatch();
-    const { push  } = useRouter();
+    const { push } = useRouter();
     const pathname = usePathname();
 
     useEffect(() => {

@@ -53,10 +53,11 @@ export const ENABLE_AUTO_QUERY_REFETCH = false;
 export const AUTO_QUERY_REFETCH_INTERVAL_MS = ONE_SECOND_MS * 2;
 
 /**
- * External rooms
+ * Rooms
  */
-export const ENABLE_WHEREBY = false;
-export const ENABLE_TEST_ROOM = true;
+export const SHOW_VIDEO_CONTROLS_INITIALLY = true;
+export const ENABLE_WHEREBY = true;
+export const ENABLE_TEST_ROOM = false;
 // nice conversation: 5ab38de6-3516-4b9e-8b1a-67e80f3b38c2
 export const TEST_ROOM_ID = 'fab98755-ff11-4241-91c6-0b4da1ea2d02'; // '0a323099-4c94-49f9-89ff-2bf11d4dfb21'; ee440eef-3cbd-48fd-ab37-a0ea12a7c895
 export const TEST_EXTERNAL_ROOM_ID = 'https://deliberation-at-scale.whereby.com/das-c01b747d-b9b5-43d3-8b95-c8312ec6538f';
