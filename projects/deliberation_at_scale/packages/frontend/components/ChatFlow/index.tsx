@@ -272,7 +272,7 @@ export default function ChatFlow(props: Props) {
                     {!isEmpty(quickReplies) && (
                         <motion.div
                             key="quickReplies"
-                            className="flex flex-col gap-1 px-4"
+                            className="flex flex-col gap-1"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                         >

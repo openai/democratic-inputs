@@ -59,8 +59,8 @@ export default function RequestPermissions(props: Props) {
                             onClick={() => actions?.toggleMicrophoneEnabled()}
                         >
                             <FontAwesomeIcon
-                                icon={state?.isAudioEnabled ? faMicrophoneAlt : faMicrophoneAltSlash} 
-                                fixedWidth 
+                                icon={state?.isAudioEnabled ? faMicrophoneAlt : faMicrophoneAltSlash}
+                                fixedWidth
                             />
                         </button>
                         <button
@@ -73,8 +73,8 @@ export default function RequestPermissions(props: Props) {
                             onClick={() => actions?.toggleCameraEnabled()}
                         >
                             <FontAwesomeIcon
-                                icon={state?.isVideoEnabled ? faVideo : faVideoSlash} 
-                                fixedWidth 
+                                icon={state?.isVideoEnabled ? faVideo : faVideoSlash}
+                                fixedWidth
                             />
                         </button>
                     </motion.div>
