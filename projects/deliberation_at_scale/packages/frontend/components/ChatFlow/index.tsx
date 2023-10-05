@@ -51,6 +51,8 @@ export default function ChatFlow(props: Props) {
     const searchParams = useSearchParams();
     const params = useParams();
     const mediaContext = useLocalMedia({ redirect: false, request: false });
+    const isVideoEnabled = mediaContext?.state?.isVideoEnabled ?? false;
+    const isAudioEnabled = mediaContext?.state?.isAudioEnabled ?? false;
     const flowStateEntries = useAppSelector((state) => state.flow.flowStateLookup[flowId]);
     const positionIndex = useAppSelector((state) => state.flow.flowPositionLookup[flowId] ?? 0);
     const [lastHandledPositionIndex, setLastHandledPositionIndex] = useState<number>(-1);
@@ -167,7 +169,8 @@ export default function ChatFlow(props: Props) {
             reset,
             searchParams,
             params,
-            mediaContext,
+            isVideoEnabled,
+            isAudioEnabled,
             waitFor: async (timeoutMs: number) => {
                 return new Promise((resolve) => {
                     setTimeout(resolve, timeoutMs);
@@ -175,7 +178,7 @@ export default function ChatFlow(props: Props) {
             }
         } satisfies OnInputHelpers;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams, JSON.stringify(mediaContext), JSON.stringify(params)]);
+    }, [goToPage, goToName, goToPrevious, goToNext, postBotMessages, postUserMessages, setFlowStateEntry, flowStateEntries, roomState, reset, searchParams, isVideoEnabled, isAudioEnabled, JSON.stringify(params)]);
 
     /* Handler for any user input */
     const handleInput = useCallback(async (input: UserInput) => {

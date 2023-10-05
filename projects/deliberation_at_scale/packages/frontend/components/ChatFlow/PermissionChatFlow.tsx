@@ -39,10 +39,8 @@ export default function PermissionChatFlow() {
                         return [[_(msg`Everything seems to be working fine. Let's get started!`)]];
                     },
                     skip: (helpers) => {
-                        const isVideoEnabled = helpers.mediaContext.state?.isVideoEnabled;
-                        const isAudioEnabled = helpers.mediaContext.state?.isAudioEnabled;
                         const isRequested = helpers.roomState.permission === PermissionState.REQUESTED;
-                        const hasGivenPermission = isRequested && isVideoEnabled && isAudioEnabled;
+                        const hasGivenPermission = isRequested && helpers.isVideoEnabled && helpers.isAudioEnabled;
 
                         if (!hasGivenPermission) {
                             helpers.goToName("permission_not_working");

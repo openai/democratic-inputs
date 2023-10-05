@@ -42,7 +42,8 @@ export interface OnInputHelpers {
     roomState: RoomState;
     searchParams: ReadonlyURLSearchParams | null;
     params: Record<string, string | string[]> | null;
-    mediaContext: UseLocalMedia;
+    isVideoEnabled: boolean;
+    isAudioEnabled: boolean;
     reset: () => void;
 }
 
