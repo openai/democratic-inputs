@@ -1,5 +1,6 @@
 'use client';
-import { PropsWithChildren, useMemo } from 'react';
+import { PropsWithChildren, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 
 import RoomMenu from '@/components/RoomMenu';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
@@ -7,7 +8,7 @@ import { useRoomConnection } from '@/components/RoomConnection/context';
 import Loader from '@/components/Loader';
 import useRoom from '@/hooks/useRoom';
 import RoomTranscription from '@/components/RoomTranscription';
-import { ENABLE_WHEREBY } from '@/utilities/constants';
+import { ENABLE_WHEREBY, ROOM_JOINING_EXPIRY_TIME_MS } from '@/utilities/constants';
 
 /**
  * This is the layout for all room interfaces, i.e. all interfaces in which a
@@ -16,6 +17,7 @@ import { ENABLE_WHEREBY } from '@/utilities/constants';
 export default function RoomLayout({ children }: PropsWithChildren) {
     const localMedia = useLocalMedia();
     const connection = useRoomConnection();
+    const { push } = useRouter();
     const { room, roomId, loadingRooms } = useRoom();
 
     // Determine whether everything is ready to display the room
@@ -28,6 +30,21 @@ export default function RoomLayout({ children }: PropsWithChildren) {
             && (!ENABLE_WHEREBY || connection)
             && (!ENABLE_WHEREBY || connection?.state?.roomConnectionStatus !== 'connecting');
     }, [roomId, localMedia, connection, room, loadingRooms]);
+
+    // handle timeouts when going to an invalid room
+    useEffect(() => {
+        if (isReady) {
+            return;
+        }
+
+        const redirectTimeout = setTimeout(() => {
+            push('/lobby/invalid');
+        }, ROOM_JOINING_EXPIRY_TIME_MS);
+
+        return () => {
+            clearTimeout(redirectTimeout);
+        };
+    }, [isReady, push]);
 
     // GUARD: Display loader when everything is not ready yet
     if (!isReady) {
