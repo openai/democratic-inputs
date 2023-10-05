@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
+import { Buffer } from "https://deno.land/std/io/buffer.ts";
 import dayjs from "dayjs";
-import Deepgram from "npm:deepgram/sdk@2.4.0";
 
 const API_MODE: ApiMode = 'deepgram';
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
@@ -25,8 +25,6 @@ const supabaseAdminClient = createClient(
     SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY
 );
-
-const deepgramClient = new Deepgram(DEEPGRAM_API_KEY, "api.beta.deepgram.com");
 
 type ApiMode = 'whisper' | 'deepgram';
 
@@ -93,8 +91,7 @@ serve(async (req) => {
     result = await transcribeAtDeepgram({
         file,
     });
-    console.log('DEEPGRAM RESULT')
-    console.log(result);
+    console.log('DEEPGRAM RESULT', result);
     // TODO: handle results
   }
 
@@ -286,8 +283,6 @@ async function transcribeAtWhisper(options: TranscribeAtWhisperOptions) {
 
 interface TranscribeAtDeepgramOptions {
     file: File;
-    language?: string;
-    model?: string;
 }
 
 /**
@@ -297,12 +292,19 @@ async function transcribeAtDeepgram(options: TranscribeAtDeepgramOptions) {
     const {
         file,
     } = options;
-    const transcription = await deepgramClient.transcription.preRecorded({
-        buffer: Buffer.from(file),
-        mimetype: 'audio/mpeg',
+    const buffer = new Buffer(file);
+    const url = `${DEEPGRAM_API_URL}?filler_words=false&summarize=v2`;
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': ' ',
+          'Authorization': `Token ${DEEPGRAM_API_KEY}`,
+        },
+        body: buffer,
     });
+    console.log('buffer', buffer)
 
-    return transcription
+    return response.json();
 }
 
 /**
