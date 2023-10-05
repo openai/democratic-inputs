@@ -15,3 +15,7 @@ html, body {
 * {
     outline-color: #ddd;
 }
+
+#messages-scroll-container::-webkit-scrollbar {
+    display: none;
+}
