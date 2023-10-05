@@ -22,16 +22,16 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
         setShowLocalControls((current) => !current);
     }, []);
 
-    if (!connection) {
-        return null;
-    }
-
-    const { remoteParticipants } = connection.state;
-    const { VideoView } = connection.components;
+    const { remoteParticipants } = connection?.state ?? {};
+    const { VideoView } = connection?.components ?? {};
     const defaultFadeInVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1 },
     };
+
+    if (!connection || !VideoView) {
+        return null;
+    }
 
     return (
         <motion.div
@@ -44,7 +44,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                     variant === 'spacious' && 'h-[40vh] relative',
                 )}
             >
-                {remoteParticipants.map((participant, i) => {
+                {remoteParticipants?.map((participant, i) => {
                     if (!participant) {
                         return null;
                     }
