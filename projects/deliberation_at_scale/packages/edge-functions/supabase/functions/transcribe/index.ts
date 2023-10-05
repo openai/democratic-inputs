@@ -1,8 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import dayjs from "dayjs";
+import Deepgram from "npm:deepgram/sdk@2.4.0";
 
-const API_MODE: ApiMode = 'whisper';
+const API_MODE: ApiMode = 'deepgram';
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 const DEEPGRAM_API_KEY = Deno.env.get('DEEPGRAM_API_KEY');
 const WHISPER_API_URL = Deno.env.get('WHISPER_API_URL');
@@ -24,6 +25,8 @@ const supabaseAdminClient = createClient(
     SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY
 );
+
+const deepgramClient = new Deepgram(DEEPGRAM_API_KEY, "api.beta.deepgram.com");
 
 type ApiMode = 'whisper' | 'deepgram';
 
@@ -71,13 +74,13 @@ serve(async (req) => {
     });
   }
 
-  if (API_MODE === 'whisper') {
+  // convert base64 content to a file which is required by Whisper
+  // SOURCE: https://gist.github.com/AshikNesin/ca4ad1ff1d24c26cb228a3fb5c72e0d5
+  const fetchedContent = await fetch(content);
+  const blob = await fetchedContent.blob();
+  const file = new File([blob], 'speech.mp3', { type: 'audio/mpeg' });
 
-    // convert base64 content to a file which is required by Whisper
-    // SOURCE: https://gist.github.com/AshikNesin/ca4ad1ff1d24c26cb228a3fb5c72e0d5
-    const fetchedContent = await fetch(content);
-    const blob = await fetchedContent.blob();
-    const file = new File([blob], 'speech.mp3', { type: 'audio/mpeg' });
+  if (API_MODE === 'whisper') {
 
     // convert to text
     result = await transcribeAtWhisper({
@@ -88,8 +91,10 @@ serve(async (req) => {
     text = result.text;
   } else if (API_MODE === 'deepgram') {
     result = await transcribeAtDeepgram({
-        content,
+        file,
     });
+    console.log('DEEPGRAM RESULT')
+    console.log(result);
     // TODO: handle results
   }
 
@@ -248,8 +253,8 @@ async function getMessagesByContext(context: MessagesContext) {
 
 interface TranscribeAtWhisperOptions {
     file: File;
-    language: string;
-    model: string;
+    language?: string;
+    model?: string;
 }
 
 /**
@@ -280,7 +285,9 @@ async function transcribeAtWhisper(options: TranscribeAtWhisperOptions) {
 }
 
 interface TranscribeAtDeepgramOptions {
-    content: string;
+    file: File;
+    language?: string;
+    model?: string;
 }
 
 /**
@@ -288,19 +295,14 @@ interface TranscribeAtDeepgramOptions {
  */
 async function transcribeAtDeepgram(options: TranscribeAtDeepgramOptions) {
     const {
-        content,
+        file,
     } = options;
-    const url = `${DEEPGRAM_API_URL}?filler_words=false&summarize=v2`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': ' ', // force being empty
-          'Authorization': `Token ${DEEPGRAM_API_KEY}`,
-        },
-        body: content,
+    const transcription = await deepgramClient.transcription.preRecorded({
+        buffer: Buffer.from(file),
+        mimetype: 'audio/mpeg',
     });
 
-    return response.json();
+    return transcription
 }
 
 /**
