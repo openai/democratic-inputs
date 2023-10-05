@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: flows/permissionFlow.tsx:114
+#: flows/permissionFlow.tsx:119
 msgid "A room has been found! Do you want to enter now?"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Consensus Proposal"
 msgstr ""
 
-#: flows/permissionFlow.tsx:71
+#: flows/permissionFlow.tsx:76
 msgid "Continue to room"
 msgstr ""
 
@@ -58,11 +58,11 @@ msgstr ""
 msgid "Deliberation at Scale"
 msgstr ""
 
-#: flows/permissionFlow.tsx:118
+#: flows/permissionFlow.tsx:123
 msgid "Enter room"
 msgstr ""
 
-#: flows/permissionFlow.tsx:46
+#: flows/permissionFlow.tsx:47
 msgid "Everything seems to be working fine. Let's get started!"
 msgstr ""
 
@@ -71,11 +71,16 @@ msgid "First, I need to ask you a few questions."
 msgstr ""
 
 #: flows/idleFlow.tsx:26
+#: flows/invalidFlow.tsx:26
 msgid "Go back to home page"
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:101
+#: components/ChatFlow/EvaluateChatFlow.tsx:91
 msgid "Go back to the home page"
+msgstr ""
+
+#: hooks/useRoomActions.ts:29
+msgid "Go to voting"
 msgstr ""
 
 #: flows/lobbyFlow.tsx:49
@@ -95,7 +100,7 @@ msgstr ""
 msgid "Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute."
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:42
+#: components/ChatFlow/EvaluateChatFlow.tsx:32
 msgid "Hi there [nickName]! I hope you enjoyed the discussion you had with the group."
 msgstr ""
 
@@ -111,6 +116,10 @@ msgstr ""
 msgid "Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
 msgstr ""
 
+#: flows/invalidFlow.tsx:11
+msgid "Hmmm, it appears the room could not be joined or the other participants took to long to join."
+msgstr ""
+
 #: components/RoomOutcome.tsx:115
 msgid "I agree with this consensus."
 msgstr ""
@@ -123,19 +132,19 @@ msgstr ""
 msgid "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
 msgstr ""
 
-#: flows/permissionFlow.tsx:91
+#: flows/permissionFlow.tsx:96
 msgid "It appears that you have not given me permission to use your camera. Please click the button below to try again."
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:72
+#: components/ChatFlow/EvaluateChatFlow.tsx:62
 msgid "It was bad."
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:52
+#: components/ChatFlow/EvaluateChatFlow.tsx:42
 msgid "It was great!"
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:62
+#: components/ChatFlow/EvaluateChatFlow.tsx:52
 msgid "It was okay."
 msgstr ""
 
@@ -143,15 +152,19 @@ msgstr ""
 msgid "Join a conversation"
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:94
+#: components/ChatFlow/EvaluateChatFlow.tsx:84
 msgid "Join another room"
 msgstr ""
 
-#: flows/permissionFlow.tsx:59
+#: hooks/useRoomActions.ts:39
+msgid "Leave room"
+msgstr ""
+
+#: flows/permissionFlow.tsx:64
 msgid "Let's find a room to join!"
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:48
+#: components/ChatFlow/EvaluateChatFlow.tsx:38
 msgid "Let's review what you all discussed. What was your general impression?"
 msgstr ""
 
@@ -159,11 +172,11 @@ msgstr ""
 msgid "Milestone"
 msgstr ""
 
-#: flows/permissionFlow.tsx:127
+#: flows/permissionFlow.tsx:132
 msgid "Moving you to the room now..."
 msgstr ""
 
-#: flows/permissionFlow.tsx:132
+#: flows/permissionFlow.tsx:137
 msgid "No, go back to home page"
 msgstr ""
 
@@ -179,8 +192,20 @@ msgstr ""
 msgid "Okay, pay attention! Moving you to the lobby once again..."
 msgstr ""
 
-#: components/ChatFlow/index.tsx:189
-#: components/ChatFlow/index.tsx:299
+#: flows/invalidFlow.tsx:18
+msgid "Okay! Moving you to the lobby once again..."
+msgstr ""
+
+#: flows/invalidFlow.tsx:16
+msgid "Retry joining a room"
+msgstr ""
+
+#: components/ChatFlow/index.tsx:69
+msgid "Select an option above..."
+msgstr ""
+
+#: components/ChatFlow/index.tsx:193
+#: components/ChatFlow/index.tsx:313
 msgid "Something went wrong! Please try again."
 msgstr ""
 
@@ -208,7 +233,7 @@ msgstr ""
 msgid "Thank you! You will find a link to login to Deliberation at Scale in your inbox. Use this link to login."
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:85
+#: components/ChatFlow/EvaluateChatFlow.tsx:75
 msgid "Thanks for the feedback [nickName]!"
 msgstr ""
 
@@ -232,7 +257,7 @@ msgstr ""
 msgid "To get started, we need to send you a link for you to register with."
 msgstr ""
 
-#: components/RoomChatSummary.tsx:44
+#: components/RoomChatSummary.tsx:57
 msgid "Topic"
 msgstr ""
 
@@ -244,12 +269,16 @@ msgstr ""
 msgid "View results of previous conversations"
 msgstr ""
 
-#: flows/permissionFlow.tsx:98
-#: flows/permissionFlow.tsx:106
+#: flows/permissionFlow.tsx:103
+#: flows/permissionFlow.tsx:111
 msgid "Waiting for a room to be ready..."
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:90
+#: components/ChatFlow/index.tsx:69
+msgid "Waiting..."
+msgstr ""
+
+#: components/ChatFlow/EvaluateChatFlow.tsx:80
 msgid "What do you want to do next?"
 msgstr ""
 
