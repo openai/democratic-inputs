@@ -6,6 +6,7 @@ import useRoom from '@/hooks/useRoom';
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
 import { faMicrophoneAlt, faMicrophoneAltSlash, faVideo, faVideoSlash, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { t } from '@lingui/macro';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -59,6 +60,7 @@ export default function LocalParticipantControls() {
                         ? bgColorMap[theme]
                         : 'text-gray-200 bg-gray-600/50',
                 )}
+                title={state.isAudioEnabled ? t`Disable audio` : t`Enable audio`}
                 onClick={handleToggleMicrophone}
             >
                 <FontAwesomeIcon
@@ -73,6 +75,7 @@ export default function LocalParticipantControls() {
                         ? bgColorMap[theme]
                         : 'text-gray-200 bg-gray-600/50',
                 )}
+                title={state.isVideoEnabled ? t`Disable video` : t`Enable video`}
                 onClick={handleToggleCamera}
             >
                 <FontAwesomeIcon
@@ -84,6 +87,7 @@ export default function LocalParticipantControls() {
                 className={classNames(
                     "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-200/50 text-red-600",
                 )}
+                title={t`Leave conversation`}
                 onClick={handleLeaveRoomClick}
             >
                 <FontAwesomeIcon
