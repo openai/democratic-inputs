@@ -16,6 +16,7 @@ import {
 // NOTE: rename the variable name here and in the schema definition!
 export const USERS_TABLE_NAME = "users";
 export const TOPICS_TABLE_NAME = "topics";
+export const EVENTS_TABLE_NAME = "events";
 export const ROOMS_TABLE_NAME = "rooms";
 export const PARTICIPANTS_TABLE_NAME = "participants";
 export const MESSAGES_TABLE_NAME = "messages";
@@ -168,6 +169,22 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
     };
 });
 
+export const events = pgTable(EVENTS_TABLE_NAME, {
+    id: generateIdField(),
+    active: generateActiveField(),
+    name: text("name"),
+    startsAt: timestamp("starts_at", { withTimezone: true }),
+    endsAt: timestamp("ends_at", { withTimezone: true }),
+    ...generateTimestampFields(),
+}, (table) => {
+    return {
+        startsAtIndex: index("starts_at_index").on(table.startsAt),
+        endsAtIndex: index("starts_at_index").on(table.endsAt),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
+});
+
 export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     id: generateIdField(),
     active: generateActiveField(),
@@ -177,6 +194,7 @@ export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
     nickName: generateNickNameField(),
     participationScore: integer("participation_score").notNull().default(0),
+    demographics: json("demographics").notNull().default({}),
     lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
     ...generateTimestampFields(),
 }, (table) => {

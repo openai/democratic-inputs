@@ -439,8 +439,23 @@ BEGIN
 END;
 $$ SECURITY DEFINER;
 
-
 CREATE OR REPLACE TRIGGER message_insert_trigger
 BEFORE INSERT ON messages
 FOR EACH ROW
 EXECUTE PROCEDURE add_room_status_to_message();
+
+CREATE OR REPLACE FUNCTION add_demographics_to_participant() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF NEW.demographics IS NULL THEN
+    NEW.demographics := (SELECT demographics FROM users WHERE id = NEW.user_id);
+  END IF;
+  RETURN NEW;
+END;
+$$ SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER participant_insert_trigger
+BEFORE INSERT ON participants
+FOR EACH ROW
+EXECUTE PROCEDURE add_demographics_to_participant();
