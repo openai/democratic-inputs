@@ -2,7 +2,7 @@ import { Helpers, Job } from "graphile-worker";
 import { flat, isEmpty, isObject } from "radash";
 import dayjs from "dayjs";
 
-import { progressionTopology } from "../config/toplogy";
+import { progressionTopology } from "../config/test-0-topology";
 import { supabaseClient, Moderation } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
 import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionEnrichmentTask, ProgressionLayer, ProgressionLayerId, ProgressionTask, RoomStatus } from "../types";
