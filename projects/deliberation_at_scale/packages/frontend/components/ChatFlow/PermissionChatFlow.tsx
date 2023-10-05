@@ -83,7 +83,7 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: "permission_not_working",
-                    messageOptions: [[_(msg`It appears that you have not given me permission to use your camera. Please click the button below to try again.`)]],
+                    messageOptions: [[_(msg`It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above.`)]],
                     quickReplies: [
                         askPermissionQuickReply,
                     ],
