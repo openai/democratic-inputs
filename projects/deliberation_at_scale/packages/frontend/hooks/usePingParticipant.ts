@@ -32,7 +32,7 @@ export function usePingParticipant(candidateParticipant?: FullParticipantFragmen
 
             // reload the pge when the participant got deactivated somehow
             if (affectedCount <= 0) {
-                // document.location.reload();
+                document.location.reload();
             }
         }, PARTICIPANT_PING_INTERVAL_DELAY_MS);
 
