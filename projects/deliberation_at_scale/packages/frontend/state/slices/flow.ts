@@ -97,6 +97,9 @@ const slice = createSlice({
             const { flowId } = action.payload;
             delete state.flowPositionLookup[flowId];
         },
+        resetFlowStates: (state) => {
+            state.flowStateLookup = {};
+        },
         addFlowMessages: (state, action: AddFlowMessagesAction) => {
             const { flowId, messages: incomingFlowMessages } = action.payload;
             const currentFlowMessages = state.flowMessagesLookup?.[flowId] ?? [];
@@ -147,4 +150,4 @@ const slice = createSlice({
 
 export default slice;
 
-export const { setFlowPosition, resetFlowPosition, addFlowMessages, resetFlowMessages, setFlowStateEntry, resetFlowState, setCurrentFlow } = slice.actions;
+export const { resetFlowStates, setFlowPosition, resetFlowPosition, addFlowMessages, resetFlowMessages, setFlowStateEntry, resetFlowState, setCurrentFlow } = slice.actions;

@@ -9,6 +9,8 @@ import Loader from '@/components/Loader';
 import useRoom from '@/hooks/useRoom';
 import RoomTranscription from '@/components/RoomTranscription';
 import { ENABLE_WHEREBY, ROOM_JOINING_EXPIRY_TIME_MS } from '@/utilities/constants';
+import { useDispatch } from 'react-redux';
+import { resetFlowStates } from '@/state/slices/flow';
 
 /**
  * This is the layout for all room interfaces, i.e. all interfaces in which a
@@ -19,6 +21,7 @@ export default function RoomLayout({ children }: PropsWithChildren) {
     const connection = useRoomConnection();
     const { push } = useRouter();
     const { room, roomId, loadingRooms } = useRoom();
+    const dispatch = useDispatch();
 
     // Determine whether everything is ready to display the room
     const isReady = useMemo(() => {
@@ -45,6 +48,16 @@ export default function RoomLayout({ children }: PropsWithChildren) {
             clearTimeout(redirectTimeout);
         };
     }, [isReady, push]);
+
+    // once in the room reset all the flow states
+    // this is so that any previous flow state is not carried over to new rooms
+    useEffect(() => {
+        if (!isReady) {
+            return;
+        }
+
+        dispatch(resetFlowStates());
+    }, [dispatch, isReady, localMedia]);
 
     // GUARD: Display loader when everything is not ready yet
     if (!isReady) {
