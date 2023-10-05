@@ -4,7 +4,7 @@ import { Helpers } from "graphile-worker";
 
 import { supabaseClient } from "../lib/supabase";
 import { createExternalRoom } from "../lib/whereby";
-import { MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_CONFIRM_EXPIRY_TIME_MS, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
+import { MAX_ROOM_AMOUNT_PER_JOB, MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_CONFIRM_EXPIRY_TIME_MS, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
 import { reschedule } from "../scheduler";
 
 export interface HandleQueuedParticipantsPayload {
@@ -143,9 +143,9 @@ async function performDynamicGroupSlicing(helpers: Helpers) {
     }
 
     // group queued participants in different rooms
-    // TODO: this is where we can add the logic for the dynamic group slicing algorithm from the Sortition Foundation
+    // TODO: this is where we can add the logic for the dynamic group slicing algorithm
     const assignRoomPromises: Promise<boolean>[] = [];
-    while (shuffledParticipants.length >= PARTICIPANTS_PER_ROOM) {
+    while (shuffledParticipants.length >= PARTICIPANTS_PER_ROOM && assignRoomPromises.length < MAX_ROOM_AMOUNT_PER_JOB) {
         const newRoomParticipantIds: string[] = [];
         for (let i = 0; i < PARTICIPANTS_PER_ROOM; i++) {
             const participantCandidate = shuffledParticipants.pop();
@@ -233,7 +233,6 @@ async function assignParticipantsToRoom(options: AssignParticipantsToRoomOptions
     helpers.logger.info(`Successfully created a new room with ID ${roomId}, with external room: ${JSON.stringify(externalRoom)}`);
 
     // TODO: consider checking whether everyone is still queued
-
     const assignParticipantsResult = await supabaseClient.from('participants').update({
         room_id: roomId,
         status: 'waiting_for_confirmation',
