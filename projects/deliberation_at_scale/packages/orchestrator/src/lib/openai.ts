@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { OpenAI } from "openai";
 import { ONE_SECOND_MS, OPENAI_API_KEY } from "../config/constants";
 import { ChatCompletionCreateParams } from "openai/resources/chat";

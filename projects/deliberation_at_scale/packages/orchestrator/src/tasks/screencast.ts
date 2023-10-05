@@ -140,7 +140,7 @@ export default async function screencast() {
         `,
     });
 
-    const { data: outcomeData } = await supabaseClient
+    await supabaseClient
         .from("outcomes")
         .insert({
             content: 'What do you think about: **Medical advice should not be documented because of privacy concerns and overburdening the GP.**',
