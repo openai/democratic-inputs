@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { OutcomeType } from "@/generated/graphql";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/macro";
 
 export interface RoomAction {
     id: string;
@@ -27,7 +28,7 @@ export default function useRoomActions() {
         if (shouldNotifyConsensus) {
             newActions.push({
                 id: 'vote-for-consensus',
-                title: _(`Go to voting`),
+                title: _(msg`Go to voting`),
                 onClick: () => {
                     push(`/room/${roomId}/ai`);
                 },
@@ -37,7 +38,7 @@ export default function useRoomActions() {
         if (isRoomEnded) {
             newActions.push({
                 id: 'end-room',
-                title: _(`Leave room`),
+                title: _(msg`Leave room`),
                 onClick: () => {
                     push(`/evaluate/${roomId}`);
                 },

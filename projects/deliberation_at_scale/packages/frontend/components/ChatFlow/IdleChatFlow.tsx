@@ -4,6 +4,7 @@ import { faRotate, faHomeAlt } from "@fortawesome/free-solid-svg-icons";
 import { useLingui } from "@lingui/react";
 import { useMemo } from "react";
 import ChatFlow from "./index";
+import { msg } from "@lingui/macro";
 
 export default function IdleChatFlow() {
     const { _ } = useLingui();
@@ -13,14 +14,14 @@ export default function IdleChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[_(`Hi there [nickName]! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!`)]],
+                    messageOptions: [[_(msg`Hi there [nickName]! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!`)]],
                     quickReplies: [
                         {
                             id: 'retry',
                             icon: faRotate,
-                            content: _(`Sorry, retry joining a room`),
+                            content: _(msg`Sorry, retry joining a room`),
                             onClick: async (helpers) => {
-                                helpers.postBotMessages([[_(`Okay, pay attention! Moving you to the lobby once again...`)]]);
+                                helpers.postBotMessages([[_(msg`Okay, pay attention! Moving you to the lobby once again...`)]]);
                                 await helpers.waitFor(2000);
                                 helpers.goToPage('/lobby');
                             },
@@ -28,7 +29,7 @@ export default function IdleChatFlow() {
                         {
                             id: 'home',
                             icon: faHomeAlt,
-                            content: _(`Go back to home page`),
+                            content: _(msg`Go back to home page`),
                             onClick: async (helpers) => {
                                 helpers.goToPage('/proifle');
                             },

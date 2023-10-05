@@ -12,13 +12,12 @@ module.exports = {
         {
             path: 'locales/{locale}',
             include: [
-                './app',
-                './components',
-                './flows',
-                './hooks',
-                './pages',
-                './state',
-                './utilities',
+                './app/',
+                './components/',
+                './hooks/',
+                './pages/',
+                './state/',
+                './utilities/',
             ]
         }
     ]

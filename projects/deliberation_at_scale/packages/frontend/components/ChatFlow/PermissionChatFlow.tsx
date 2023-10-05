@@ -10,13 +10,14 @@ import { faSearch, faArrowRight, faHomeAlt } from "@fortawesome/free-solid-svg-i
 import { useLingui } from "@lingui/react";
 import { isEmpty } from "radash";
 import { useMemo } from "react";
+import { msg } from "@lingui/macro";
 
 export default function PermissionChatFlow() {
     const { _ } = useLingui();
     const askPermissionQuickReply = useMemo(() => {
         return {
             id: "permission_ask_yes",
-            content: _(`Ask for permissions now`),
+            content: _(msg`Ask for permissions now`),
             onClick: (helpers) => {
                 helpers.setFlowStateEntry(LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, true);
                 helpers.goToName('permission_verify_working');
@@ -29,13 +30,13 @@ export default function PermissionChatFlow() {
             steps: [
                 {
                     name: "permission_ask",
-                    messageOptions: [[_(`Before we continue, you will need to give permission to use your camera and microphone. We recommend giving those permissions because we prefer face-to-face discussions.`)]],
+                    messageOptions: [[_(msg`Before we continue, you will need to give permission to use your camera and microphone. We recommend giving those permissions because we prefer face-to-face discussions.`)]],
                     timeoutMs: 2000, // keep this fixed to give devices time to initialize
                 },
                 {
                     name: "permission_verify_working",
                     messageOptions: async () => {
-                        return [[_(`Everything seems to be working fine. Let's get started!`)]];
+                        return [[_(msg`Everything seems to be working fine. Let's get started!`)]];
                     },
                     skip: (helpers) => {
                         const isVideoEnabled = helpers.mediaContext.state?.isVideoEnabled;
@@ -52,7 +53,7 @@ export default function PermissionChatFlow() {
                     quickReplies: [
                         {
                             id: "find_room",
-                            content: _(`Let's find a room to join!`),
+                            content: _(msg`Let's find a room to join!`),
                             icon: faSearch,
                             hidden: (helpers) => {
                                 return !isEmpty(helpers?.searchParams?.get('redirect'));
@@ -64,7 +65,7 @@ export default function PermissionChatFlow() {
                         },
                         {
                             id: "to_existing_room",
-                            content: _(`Continue to room`),
+                            content: _(msg`Continue to room`),
                             icon: faArrowRight,
                             hidden: (helpers) => {
                                 return isEmpty(helpers?.searchParams?.get('redirect'));
@@ -84,14 +85,14 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: "permission_not_working",
-                    messageOptions: [[_(`It appears that you have not given me permission to use your camera. Please click the button below to try again.`)]],
+                    messageOptions: [[_(msg`It appears that you have not given me permission to use your camera. Please click the button below to try again.`)]],
                     quickReplies: [
                         askPermissionQuickReply,
                     ],
                 },
                 {
                     name: `waiting_for_room_1`,
-                    messageOptions: [[_(`Waiting for a room to be ready...`)]],
+                    messageOptions: [[_(msg`Waiting for a room to be ready...`)]],
                     timeoutMs: ONE_SECOND_MS * 5,
                     onTimeout: (helpers) => {
                         return waitingForRoomOnTimeout(helpers, 'waiting_for_room_2');
@@ -99,7 +100,7 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: `waiting_for_room_2`,
-                    messageOptions: [[_(`Waiting for a room to be ready...`)]],
+                    messageOptions: [[_(msg`Waiting for a room to be ready...`)]],
                     timeoutMs: ONE_SECOND_MS * 5,
                     onTimeout: (helpers) => {
                         return waitingForRoomOnTimeout(helpers, 'waiting_for_room_1');
@@ -107,11 +108,11 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: "ask_to_enter_room",
-                    messageOptions: [[_(`A room has been found! Do you want to enter now?`)]],
+                    messageOptions: [[_(msg`A room has been found! Do you want to enter now?`)]],
                     quickReplies: [
                         {
                             id: "enter_room",
-                            content: _(`Enter room`),
+                            content: _(msg`Enter room`),
                             icon: faArrowRight,
                             onClick: (helpers) => {
                                 if (ENABLE_TEST_ROOM) {
@@ -120,12 +121,12 @@ export default function PermissionChatFlow() {
                                 }
 
                                 helpers.setFlowStateEntry(LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, true);
-                                helpers.postBotMessages([[_(`Moving you to the room now...`)]]);
+                                helpers.postBotMessages([[_(msg`Moving you to the room now...`)]]);
                             }
                         },
                         {
                             id: "cancel_enter_room",
-                            content: _(`No, go back to home page`),
+                            content: _(msg`No, go back to home page`),
                             icon: faHomeAlt,
                             onClick: (helpers) => {
                                 helpers.goToPage(`/profile`);

@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { UserInput } from "@/types/flows";
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
 import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/macro";
 
 const submitBgColorMap: Record<ThemeColors, string> = {
     'blue': 'bg-blue-500',
@@ -35,7 +36,7 @@ export interface ChatInputProps {
 
 export default function ChatInput(props: ChatInputProps) {
     const { _ } = useLingui();
-    const defaultPlaceholder = _(`Tap to type`);
+    const defaultPlaceholder = _(msg`Tap to type`);
     const { onSubmit, disabled = false, placeholder = defaultPlaceholder} = props;
     const theme = useTheme();
     const inputRef = useRef<HTMLInputElement>(null);

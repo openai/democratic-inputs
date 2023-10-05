@@ -8,6 +8,7 @@ import { Message } from "@/types/flows";
 import dayjs from "dayjs";
 import { useCallback } from "react";
 import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/macro";
 
 export interface UseMessagesOptions {
     roomId: RoomId;
@@ -48,7 +49,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         const { id, active, content, visibility_type: visibilityType, created_at: createdAt, type, participant_id: participantId } = databaseMessage ?? {};
         const isBot = (type === MessageType.Bot);
         const participant = participants?.find((participant) => participant.id === participantId);
-        const nickName = isBot ? _(`Moderator`) : (participant?.nick_name ?? _(`Anonymous`));
+        const nickName = isBot ? _(msg`Moderator`) : (participant?.nick_name ?? _(msg`Anonymous`));
         const isCurrentParticipant = (!!userId && participant?.user_id === userId);
         const nameIcon = getIconByMessageType(type);
         const highlighted = isBot;

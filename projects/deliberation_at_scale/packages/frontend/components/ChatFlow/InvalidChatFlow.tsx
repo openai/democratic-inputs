@@ -4,6 +4,7 @@ import { faRotate, faHomeAlt } from "@fortawesome/free-solid-svg-icons";
 import { useLingui } from "@lingui/react";
 import { useMemo } from "react";
 import ChatFlow from "./index";
+import { msg } from "@lingui/macro";
 
 export default function InvalidChatFlow() {
     const { _ } = useLingui();
@@ -13,14 +14,14 @@ export default function InvalidChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[_(`Hmmm, it appears the room could not be joined or the other participants took to long to join.`)]],
+                    messageOptions: [[_(msg`Hmmm, it appears the room could not be joined or the other participants took to long to join.`)]],
                     quickReplies: [
                         {
                             id: 'retry',
                             icon: faRotate,
-                            content: _(`Retry joining a room`),
+                            content: _(msg`Retry joining a room`),
                             onClick: async (helpers) => {
-                                helpers.postBotMessages([[_(`Okay! Moving you to the lobby once again...`)]]);
+                                helpers.postBotMessages([[_(msg`Okay! Moving you to the lobby once again...`)]]);
                                 await helpers.waitFor(2000);
                                 helpers.goToPage('/lobby');
                             },
@@ -28,7 +29,7 @@ export default function InvalidChatFlow() {
                         {
                             id: 'home',
                             icon: faHomeAlt,
-                            content: _(`Go back to home page`),
+                            content: _(msg`Go back to home page`),
                             onClick: async (helpers) => {
                                 helpers.goToPage('/proifle');
                             },

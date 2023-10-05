@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
+import { msg } from "@lingui/macro";
 
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
 import { Message } from '@/types/flows';
@@ -46,7 +47,7 @@ export default function ChatMessage(props: Props) {
     const theme = useTheme();
     const { user } = useProfile();
     const flowStateNickName = useAppSelector((state) => state.flow.flowStateLookup?.['lobby']?.['nickName']);
-    const nickName = flowStateNickName ?? user?.nick_name ?? _(`You`);
+    const nickName = flowStateNickName ?? user?.nick_name ?? _(msg`You`);
     const hasDate = !!date;
     const parsedDate = dayjs(date);
     const isToday = parsedDate.isSame(dayjs(), 'day');
@@ -74,7 +75,7 @@ export default function ChatMessage(props: Props) {
         return replaceMessageVariables(content).trim();
     }, [content, replaceMessageVariables]);
     const formattedName = useMemo(() => {
-        return replaceMessageVariables(name ?? _(`Anonymous`));
+        return replaceMessageVariables(name ?? _(msg`Anonymous`));
     }, [_, name, replaceMessageVariables]);
 
     return (

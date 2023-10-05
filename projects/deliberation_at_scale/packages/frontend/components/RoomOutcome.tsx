@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ReactMarkdown from 'react-markdown';
+import { msg } from "@lingui/macro";
 
 import { statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
@@ -34,9 +35,9 @@ export default function RoomOutcome(props: Props) {
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
     const title = useMemo(() => {
         switch (type) {
-            case OutcomeType.Consensus: return _(`Consensus Proposal`);
-            case OutcomeType.Milestone: return _(`Milestone`);
-            case OutcomeType.OffTopic: return _(`Off Topic`);
+            case OutcomeType.Consensus: return _(msg`Consensus Proposal`);
+            case OutcomeType.Milestone: return _(msg`Milestone`);
+            case OutcomeType.OffTopic: return _(msg`Off Topic`);
         }
     }, [type, _]);
     const timeoutMs = useMemo(() => {
@@ -52,17 +53,17 @@ export default function RoomOutcome(props: Props) {
             case OutcomeType.Consensus:
                 return [
                     {
-                        content: _(`I agree with this consensus.`),
+                        content: _(msg`I agree with this consensus.`),
                         icon: faCheck,
                         optionType: OpinionOptionType.AgreeConsensus,
                     },
                     {
-                        content: _(`I don't agree with this.`),
+                        content: _(msg`I don't agree with this.`),
                         icon: faTimes,
                         optionType: OpinionOptionType.DisagreeConsensus,
                     },
                     {
-                        content: _(`This statement should be reformulated.`),
+                        content: _(msg`This statement should be reformulated.`),
                         icon: faTimes,
                         optionType: OpinionOptionType.Wrong,
                     },

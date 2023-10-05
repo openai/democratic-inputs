@@ -6,6 +6,7 @@ import { draw, isEmpty } from "radash";
 import { AnimatePresence, motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
+import { msg } from "@lingui/macro";
 
 import { ChatFlowConfig as FlowType, Message, UserInput, MessagesOptions, MessageTemplate, OnInputHelpers, FlowStep } from "../../types/flows";
 import sleep from "@/utilities/sleep";
@@ -31,7 +32,7 @@ export default function ChatFlow(props: Props) {
     const { _ } = useLingui();
     const defaultBotMessageTemplate: MessageTemplate = useMemo(() => {
         return {
-            name: _(`Moderator`),
+            name: _(msg`Moderator`),
             nameIcon: aiSolid,
             highlighted: true,
         } satisfies MessageTemplate;
@@ -68,7 +69,7 @@ export default function ChatFlow(props: Props) {
     }, [inputDisabled, currentStep]);
     const inputPlaceholder = useMemo(() => {
         if (isTextInputDisabled) {
-            return hasQuickReplies ? _(`Select an option above...`) : _(`Waiting...`);
+            return hasQuickReplies ? _(msg`Select an option above...`) : _(msg`Waiting...`);
         }
 
         return undefined;
@@ -192,7 +193,7 @@ export default function ChatFlow(props: Props) {
                 return onInputResult;
             }
         } catch (error) {
-            postBotMessages([[_(`Something went wrong! Please try again.`)]]);
+            postBotMessages([[_(msg`Something went wrong! Please try again.`)]]);
             setInputDisabled(false);
             // eslint-disable-next-line no-console
             console.error('An error occurred when handling onInput: ', error);
@@ -313,7 +314,7 @@ export default function ChatFlow(props: Props) {
                                                 postUserMessages([[ content ]]);
                                                 await onClick(onInputHelpers);
                                             } catch (error) {
-                                                postBotMessages([[_(`Something went wrong! Please try again.`)]]);
+                                                postBotMessages([[_(msg`Something went wrong! Please try again.`)]]);
                                                 // eslint-disable-next-line no-console
                                                 console.error(error);
                                             }

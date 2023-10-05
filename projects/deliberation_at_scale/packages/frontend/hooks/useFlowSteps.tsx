@@ -2,13 +2,14 @@ import { FlowStep } from "../types/flows";
 import { useMemo } from "react";
 import { useLingui } from "@lingui/react";
 import { sendMagicLink } from "@/utilities/supabase";
+import { msg } from "@lingui/macro";
 
 export default function useFlowSteps() {
     const { _ } = useLingui();
     const askForEmailStep = useMemo(() => {
         return {
             name: "ask_for_email_address",
-            messageOptions: [[_(`Will you please enter your e-mail address below?`)]],
+            messageOptions: [[_(msg`Will you please enter your e-mail address below?`)]],
             onInput: async (input, helpers) => {
                 const { content } = input;
                 // eslint-disable-next-line no-useless-escape
@@ -19,16 +20,16 @@ export default function useFlowSteps() {
 
                 // guard: regex to check if a string is just numbers
                 if(!isEmailAddress) {
-                    helpers.postBotMessages([[_(`That is not a valid email address!`)]]);
+                    helpers.postBotMessages([[_(msg`That is not a valid email address!`)]]);
                     return false;
                 }
 
-                helpers.postBotMessages([[_(`That looks like a valid e-mail. We're sending you an email now...`)]]);
+                helpers.postBotMessages([[_(msg`That looks like a valid e-mail. We're sending you an email now...`)]]);
                 try {
                     const lang = helpers.params?.lang;
                     await sendMagicLink(content, (typeof lang === 'string') ? lang : undefined);
                 } catch (error) {
-                    helpers.postBotMessages([[_(`There was an error sending you an email. Please try again!`)]]);
+                    helpers.postBotMessages([[_(msg`There was an error sending you an email. Please try again!`)]]);
 
                     // dont clear the chat input field!
                     return false;

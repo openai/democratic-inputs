@@ -6,6 +6,7 @@ import { useLingui } from "@lingui/react";
 import { useMemo } from "react";
 import useQuickReplies from "@/hooks/useQuickReplies";
 import useFlowSteps from "@/hooks/useFlowSteps";
+import { msg } from "@lingui/macro";
 
 export default function RegisterChatFlow() {
     const { _ } = useLingui();
@@ -20,18 +21,18 @@ export default function RegisterChatFlow() {
             steps: [
                 {
                     name: "greeting",
-                    messageOptions: [[_(`Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute.`)]],
+                    messageOptions: [[_(msg`Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
                     name: "get_started",
-                    messageOptions: [[_(`To get started, we need to send you a link for you to register with.`)]],
+                    messageOptions: [[_(msg`To get started, we need to send you a link for you to register with.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 askForEmailStep,
                 {
                     name: "thank_you",
-                    messageOptions: [[_(`Thank you! An email has been sent with a link to register with!`)]],
+                    messageOptions: [[_(msg`Thank you! An email has been sent with a link to register with!`)]],
                     quickReplies: [resetQuickReply],
                 }
             ]

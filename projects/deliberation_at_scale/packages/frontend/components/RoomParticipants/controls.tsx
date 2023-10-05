@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback } from 'react';
+import { msg } from "@lingui/macro";
 
 const bgColorMap: Record<ThemeColors, string> = {
     'blue': 'text-blue-400 bg-blue-800/50',
@@ -61,7 +62,7 @@ export default function LocalParticipantControls() {
                         ? bgColorMap[theme]
                         : 'text-gray-200 bg-gray-600/50',
                 )}
-                title={state.isAudioEnabled ? _(`Disable audio`) : _(`Enable audio`)}
+                title={state.isAudioEnabled ? _(msg`Disable audio`) : _(msg`Enable audio`)}
                 onClick={handleToggleMicrophone}
             >
                 <FontAwesomeIcon
@@ -76,7 +77,7 @@ export default function LocalParticipantControls() {
                         ? bgColorMap[theme]
                         : 'text-gray-200 bg-gray-600/50',
                 )}
-                title={state.isVideoEnabled ? _(`Disable video`) : _(`Enable video`)}
+                title={state.isVideoEnabled ? _(msg`Disable video`) : _(msg`Enable video`)}
                 onClick={handleToggleCamera}
             >
                 <FontAwesomeIcon
@@ -88,7 +89,7 @@ export default function LocalParticipantControls() {
                 className={classNames(
                     "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-200/50 text-red-600",
                 )}
-                title={_(`Leave conversation`)}
+                title={_(msg`Leave conversation`)}
                 onClick={handleLeaveRoomClick}
             >
                 <FontAwesomeIcon
