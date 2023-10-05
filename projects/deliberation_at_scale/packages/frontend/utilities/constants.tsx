@@ -1,5 +1,4 @@
 import { OutcomeType } from "@/generated/graphql";
-import { t } from "@lingui/macro";
 
 /**
  * Environment variables from .env file
@@ -37,8 +36,6 @@ export const MESSAGES_SCROLL_CONTAINER_ID = 'messages-scroll-container';
  * Chat flows
  */
 export const DEFAULT_BOT_MESSAGE_SPEED_MS = ONE_SECOND_MS * 1.5;
-export const FIXED_CHAT_FLOW_BOT_NAME = t`Deliberation at Scale`;
-export const ROOM_CHAT_FLOW_BOT_NAME = t`AI Moderator`;
 
 export const LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY = 'allowAskPermission';
 export const LOBBY_WAITING_FOR_ROOM_STATE_KEY = 'waitingForRoom';
@@ -66,7 +63,7 @@ export const ROOM_JOINING_EXPIRY_TIME_MS = ONE_SECOND_MS * 20;
 /**
  * Transcriptions
  */
-export const ENABLE_AUTO_START_TRANSCRIPTION = false;
+export const ENABLE_AUTO_START_TRANSCRIPTION = true;
 export const DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS = ONE_SECOND_MS * 60 * 2;
 export const TRANSCRIBE_VALID_MIN_TEXT_LENGTH = 30;
 

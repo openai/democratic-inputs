@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isEmpty } from "radash";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { motion } from 'framer-motion';
-import { t } from "@lingui/macro";
 
-import { UserInput } from "@/flows/types";
+import { UserInput } from "@/types/flows";
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
+import { useLingui } from "@lingui/react";
 
 const submitBgColorMap: Record<ThemeColors, string> = {
     'blue': 'bg-blue-500',
@@ -34,7 +34,8 @@ export interface ChatInputProps {
 }
 
 export default function ChatInput(props: ChatInputProps) {
-    const defaultPlaceholder = t`Tap to type`;
+    const { _ } = useLingui();
+    const defaultPlaceholder = _(`Tap to type`);
     const { onSubmit, disabled = false, placeholder = defaultPlaceholder} = props;
     const theme = useTheme();
     const inputRef = useRef<HTMLInputElement>(null);

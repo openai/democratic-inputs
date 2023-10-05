@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { QueryResult, gql } from "@apollo/client";
 import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";

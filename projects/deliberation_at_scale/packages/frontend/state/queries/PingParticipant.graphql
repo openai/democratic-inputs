@@ -1,6 +1,6 @@
 
 mutation PingParticipant($participantId: UUID!, $lastSeenAt: Datetime!) {
-    updateparticipantsCollection(filter: {id: {eq: $participantId} }, set: {last_seen_at: $lastSeenAt}) {
+    updateparticipantsCollection(filter: {id: {eq: $participantId}, active: {eq: true}}, set: {last_seen_at: $lastSeenAt}) {
         affectedCount
     }
 }

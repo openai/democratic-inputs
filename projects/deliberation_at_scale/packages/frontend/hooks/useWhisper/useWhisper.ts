@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffectAsync, useMemoAsync } from '@chengsokdara/react-hooks-async';
 import type { RawAxiosRequestHeaders } from 'axios';
@@ -122,6 +123,7 @@ export const useWhisper: UseWhisperHook = (config) => {
                 stream.current = undefined;
             }
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /**

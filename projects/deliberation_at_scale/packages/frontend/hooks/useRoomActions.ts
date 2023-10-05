@@ -3,9 +3,9 @@ import useRoom from "./useRoom";
 import { useMemo } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { t } from "@lingui/macro";
 import { OutcomeType } from "@/generated/graphql";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { useLingui } from "@lingui/react";
 
 export interface RoomAction {
     id: string;
@@ -15,6 +15,7 @@ export interface RoomAction {
 }
 
 export default function useRoomActions() {
+    const { _ } = useLingui();
     const { roomId, isRoomEnded, getOutcomeByType } = useRoom();
     const lastOpenedAssistantAt = useAppSelector((state) => state.room.lastOpenedAssistantAt);
     const { push } = useRouter();
@@ -26,7 +27,7 @@ export default function useRoomActions() {
         if (shouldNotifyConsensus) {
             newActions.push({
                 id: 'vote-for-consensus',
-                title: t`Go to voting`,
+                title: _(`Go to voting`),
                 onClick: () => {
                     push(`/room/${roomId}/ai`);
                 },
@@ -36,7 +37,7 @@ export default function useRoomActions() {
         if (isRoomEnded) {
             newActions.push({
                 id: 'end-room',
-                title: t`Leave room`,
+                title: _(`Leave room`),
                 onClick: () => {
                     push(`/evaluate/${roomId}`);
                 },
@@ -44,7 +45,7 @@ export default function useRoomActions() {
         }
 
         return newActions;
-    }, [getOutcomeByType, isRoomEnded, lastOpenedAssistantAt, push, roomId]);
+    }, [getOutcomeByType, isRoomEnded, lastOpenedAssistantAt, push, roomId, _]);
 
     return {
         actions,

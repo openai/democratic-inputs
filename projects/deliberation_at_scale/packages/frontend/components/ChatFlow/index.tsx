@@ -6,9 +6,8 @@ import { draw, isEmpty } from "radash";
 import { AnimatePresence, motion } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
-import { t } from "@lingui/macro";
 
-import { ChatFlowConfig as FlowType, Message, UserInput, MessagesOptions, MessageTemplate, OnInputHelpers, FlowStep } from "../../flows/types";
+import { ChatFlowConfig as FlowType, Message, UserInput, MessagesOptions, MessageTemplate, OnInputHelpers, FlowStep } from "../../types/flows";
 import sleep from "@/utilities/sleep";
 import ChatInput from "../ChatInput";
 import ChatMessageList from "../ChatMessageList";
@@ -17,9 +16,9 @@ import { aiSolid } from "../EntityIcons";
 import { useAppDispatch, useAppSelector } from "@/state/store";
 import { addFlowMessages, resetFlowMessages, resetFlowPosition, setCurrentFlow, setFlowPosition, setFlowStateEntry as setFlowStateEntryAction } from "@/state/slices/flow";
 import useChatFlowMessages from "@/hooks/useChatFlowMessages";
-import { FIXED_CHAT_FLOW_BOT_NAME } from "@/utilities/constants";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
 import { useLocalMedia } from "@/hooks/useLocalMedia";
+import { useLingui } from "@lingui/react";
 
 interface Props {
     flow: FlowType;
@@ -27,13 +26,16 @@ interface Props {
 const defaultUserMessageTemplate: MessageTemplate = {
     name: "[nickName]",
 };
-const defaultBotMessageTemplate: MessageTemplate = {
-    name: FIXED_CHAT_FLOW_BOT_NAME,
-    nameIcon: aiSolid,
-    highlighted: true,
-};
 
 export default function ChatFlow(props: Props) {
+    const { _ } = useLingui();
+    const defaultBotMessageTemplate: MessageTemplate = useMemo(() => {
+        return {
+            name: _(`Moderator`),
+            nameIcon: aiSolid,
+            highlighted: true,
+        } satisfies MessageTemplate;
+    }, [_]);
     const { flow } = props;
     const {
         id: flowId,
@@ -66,11 +68,11 @@ export default function ChatFlow(props: Props) {
     }, [inputDisabled, currentStep]);
     const inputPlaceholder = useMemo(() => {
         if (isTextInputDisabled) {
-            return hasQuickReplies ? t`Select an option above...` : t`Waiting...`;
+            return hasQuickReplies ? _(`Select an option above...`) : _(`Waiting...`);
         }
 
         return undefined;
-    }, [hasQuickReplies, isTextInputDisabled]);
+    }, [hasQuickReplies, isTextInputDisabled, _]);
 
     /** State helpers */
     const reset = useCallback(() => {
@@ -190,14 +192,15 @@ export default function ChatFlow(props: Props) {
                 return onInputResult;
             }
         } catch (error) {
-            postBotMessages([[t`Something went wrong! Please try again.`]]);
+            postBotMessages([[_(`Something went wrong! Please try again.`)]]);
             setInputDisabled(false);
+            // eslint-disable-next-line no-console
             console.error('An error occurred when handling onInput: ', error);
             return false;
         }
         setInputDisabled(false);
         return true;
-    }, [currentStep, onInputHelpers, postBotMessages]);
+    }, [currentStep, onInputHelpers, postBotMessages, _]);
 
     // on initial render set the current flow ID
     useEffect(() => {
@@ -277,7 +280,7 @@ export default function ChatFlow(props: Props) {
     return (
         <motion.div
             layoutId={`chat-flow-${flowId}`}
-            className="flex flex-col-reverse gap-2 pt-2 mt-auto h-full pb-2 px-4"
+            className="flex flex-col-reverse gap-2 pt-2 mt-auto h-full pb-2 px-4 pt-20"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
@@ -310,7 +313,8 @@ export default function ChatFlow(props: Props) {
                                                 postUserMessages([[ content ]]);
                                                 await onClick(onInputHelpers);
                                             } catch (error) {
-                                                postBotMessages([[t`Something went wrong! Please try again.`]]);
+                                                postBotMessages([[_(`Something went wrong! Please try again.`)]]);
+                                                // eslint-disable-next-line no-console
                                                 console.error(error);
                                             }
                                             setInputDisabled(false);

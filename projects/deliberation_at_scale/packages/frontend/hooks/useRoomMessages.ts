@@ -4,10 +4,10 @@ import { MessageType, RoomMessageFragment, RoomParticipantFragment, useGetRoomMe
 import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 import { getIconByMessageType } from "@/components/EntityIcons";
-import { Message } from "@/flows/types";
+import { Message } from "@/types/flows";
 import dayjs from "dayjs";
-import { ROOM_CHAT_FLOW_BOT_NAME } from "@/utilities/constants";
 import { useCallback } from "react";
+import { useLingui } from "@lingui/react";
 
 export interface UseMessagesOptions {
     roomId: RoomId;
@@ -25,6 +25,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         participantMessageHistoryAmount = 1,
         botMessageHistoryAmount = 1,
     } = options ?? {};
+    const { _ } = useLingui();
     const insertFilter = `room_id=eq.${roomId}`;
     const { data: messagesData, loading: messagesLoading } = useRealtimeQuery(useGetRoomMessagesQuery({
         variables: {
@@ -47,7 +48,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         const { id, active, content, visibility_type: visibilityType, created_at: createdAt, type, participant_id: participantId } = databaseMessage ?? {};
         const isBot = (type === MessageType.Bot);
         const participant = participants?.find((participant) => participant.id === participantId);
-        const nickName = isBot ? ROOM_CHAT_FLOW_BOT_NAME : (participant?.nick_name ?? 'Anonymous');
+        const nickName = isBot ? _(`Moderator`) : (participant?.nick_name ?? _(`Anonymous`));
         const isCurrentParticipant = (!!userId && participant?.user_id === userId);
         const nameIcon = getIconByMessageType(type);
         const highlighted = isBot;
@@ -70,7 +71,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
             content,
             highlighted,
         } satisfies Message;
-    }, [participants, userId]);
+    }, [_, participants, userId]);
     const convertMessages = useCallback((messages: RoomMessageFragment[], types?: MessageType[]) => {
         return messages.filter((message) => !types || types.includes(message.type)).map(convertMessage).filter((message) => message !== null) as Message[];
     }, [convertMessage]);

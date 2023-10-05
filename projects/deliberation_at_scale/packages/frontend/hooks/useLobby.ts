@@ -51,6 +51,7 @@ export default function useLobby() {
 
         if (!isEntered || !roomId) {
             // TODO: handle not being able to enter room?
+            // eslint-disable-next-line no-console
             console.error('Could not enter room for participant ID: ', candidateParticipantId);
             return;
         }

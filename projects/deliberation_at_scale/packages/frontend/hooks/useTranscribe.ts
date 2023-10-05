@@ -5,12 +5,12 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useWhisper } from "@/hooks/useWhisper";
 import { DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS, ENABLE_AUTO_START_TRANSCRIPTION, NEXT_PUBLIC_TRANSCRIBE_API_URL, ONE_SECOND_MS } from '@/utilities/constants';
-import { UseWhisperHook, UseWhisperTranscript } from './useWhisper/types';
+import { UseWhisperConfig, UseWhisperTranscript } from './useWhisper/types';
 import useRoom from './useRoom';
 import useProfile from './useProfile';
 
 interface UseTranscribeOptions {
-    whisperOptions?: UseWhisperHook;
+    whisperOptions?: UseWhisperConfig;
     chunkDurationMs?: number;
 }
 
@@ -100,6 +100,7 @@ export default function useTranscribe(options?: UseTranscribeOptions) {
             } = await response.data;
 
             if (error) {
+                // eslint-disable-next-line no-console
                 console.error(`An error occurred while transcribing:`, error);
             }
 

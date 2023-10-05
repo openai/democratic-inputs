@@ -6,7 +6,7 @@ import useRoom from '@/hooks/useRoom';
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
 import { faMicrophoneAlt, faMicrophoneAltSlash, faVideo, faVideoSlash, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -21,6 +21,7 @@ const bgColorMap: Record<ThemeColors, string> = {
 export default function LocalParticipantControls() {
     const { actions, state } = useLocalMedia();
     const theme = useTheme();
+    const { _ } = useLingui();
 
     const { push } = useRouter();
     const { participantId, roomId } = useRoom();
@@ -60,7 +61,7 @@ export default function LocalParticipantControls() {
                         ? bgColorMap[theme]
                         : 'text-gray-200 bg-gray-600/50',
                 )}
-                title={state.isAudioEnabled ? t`Disable audio` : t`Enable audio`}
+                title={state.isAudioEnabled ? _(`Disable audio`) : _(`Enable audio`)}
                 onClick={handleToggleMicrophone}
             >
                 <FontAwesomeIcon
@@ -75,7 +76,7 @@ export default function LocalParticipantControls() {
                         ? bgColorMap[theme]
                         : 'text-gray-200 bg-gray-600/50',
                 )}
-                title={state.isVideoEnabled ? t`Disable video` : t`Enable video`}
+                title={state.isVideoEnabled ? _(`Disable video`) : _(`Enable video`)}
                 onClick={handleToggleCamera}
             >
                 <FontAwesomeIcon
@@ -87,7 +88,7 @@ export default function LocalParticipantControls() {
                 className={classNames(
                     "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-200/50 text-red-600",
                 )}
-                title={t`Leave conversation`}
+                title={_(`Leave conversation`)}
                 onClick={handleLeaveRoomClick}
             >
                 <FontAwesomeIcon

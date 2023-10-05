@@ -146,6 +146,17 @@ type Mutation {
     filter: cross_pollinationsFilter
   ): cross_pollinationsDeleteResponse!
 
+  """Deletes zero or more records from the `events` collection"""
+  deleteFromeventsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: eventsFilter
+  ): eventsDeleteResponse!
+
   """Deletes zero or more records from the `messages` collection"""
   deleteFrommessagesCollection(
     """
@@ -251,6 +262,9 @@ type Mutation {
   """Adds one or more `cross_pollinations` records to the collection"""
   insertIntocross_pollinationsCollection(objects: [cross_pollinationsInsertInput!]!): cross_pollinationsInsertResponse
 
+  """Adds one or more `events` records to the collection"""
+  insertIntoeventsCollection(objects: [eventsInsertInput!]!): eventsInsertResponse
+
   """Adds one or more `messages` records to the collection"""
   insertIntomessagesCollection(objects: [messagesInsertInput!]!): messagesInsertResponse
 
@@ -309,6 +323,22 @@ type Mutation {
     """
     set: cross_pollinationsUpdateInput!
   ): cross_pollinationsUpdateResponse!
+
+  """Updates zero or more records in the `events` collection"""
+  updateeventsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: eventsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: eventsUpdateInput!
+  ): eventsUpdateResponse!
 
   """Updates zero or more records in the `messages` collection"""
   updatemessagesCollection(
@@ -536,6 +566,27 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [cross_pollinationsOrderBy!]
   ): cross_pollinationsConnection
+
+  """A pagable collection of type `events`"""
+  eventsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: eventsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [eventsOrderBy!]
+  ): eventsConnection
 
   """A pagable collection of type `messages`"""
   messagesCollection(
@@ -990,9 +1041,8 @@ type completionsUpdateResponse {
 }
 
 enum crossPollinationType {
-  afterwards
-  closing
-  discussion
+  outcome
+  topic
 }
 
 """
@@ -1156,20 +1206,92 @@ type cross_pollinationsUpdateResponse {
   records: [cross_pollinations!]!
 }
 
-enum discussionType {
-  bot
-  chat
-  voice
+type events implements Node {
+  active: Boolean!
+  created_at: Datetime!
+  ends_at: Datetime
+  id: UUID!
+  name: String
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  starts_at: Datetime
+  updated_at: Datetime!
 }
 
-"""
-Boolean expression comparing fields on type "discussionType"
-"""
-input discussionTypeFilter {
-  eq: discussionType
-  in: [discussionType!]
-  is: FilterIs
-  neq: discussionType
+type eventsConnection {
+  edges: [eventsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type eventsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [events!]!
+}
+
+type eventsEdge {
+  cursor: String!
+  node: events!
+}
+
+input eventsFilter {
+  active: BooleanFilter
+  created_at: DatetimeFilter
+  ends_at: DatetimeFilter
+  id: UUIDFilter
+  name: StringFilter
+  nodeId: IDFilter
+  starts_at: DatetimeFilter
+  updated_at: DatetimeFilter
+}
+
+input eventsInsertInput {
+  active: Boolean
+  created_at: Datetime
+  ends_at: Datetime
+  id: UUID
+  name: String
+  starts_at: Datetime
+  updated_at: Datetime
+}
+
+type eventsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [events!]!
+}
+
+input eventsOrderBy {
+  active: OrderByDirection
+  created_at: OrderByDirection
+  ends_at: OrderByDirection
+  id: OrderByDirection
+  name: OrderByDirection
+  starts_at: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input eventsUpdateInput {
+  active: Boolean
+  created_at: Datetime
+  ends_at: Datetime
+  id: UUID
+  name: String
+  starts_at: Datetime
+  updated_at: Datetime
+}
+
+type eventsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [events!]!
 }
 
 enum messageType {
@@ -2154,6 +2276,7 @@ type participants implements Node {
     """Sort order to apply to the collection"""
     orderBy: [cross_pollinationsOrderBy!]
   ): cross_pollinationsConnection
+  demographics: JSON!
   id: UUID!
   last_seen_at: Datetime!
   messagesCollection(
@@ -2261,6 +2384,7 @@ input participantsFilter {
 input participantsInsertInput {
   active: Boolean
   created_at: Datetime
+  demographics: JSON
   id: UUID
   last_seen_at: Datetime
   nick_name: String
@@ -2295,6 +2419,7 @@ input participantsOrderBy {
 input participantsUpdateInput {
   active: Boolean
   created_at: Datetime
+  demographics: JSON
   id: UUID
   last_seen_at: Datetime
   nick_name: String

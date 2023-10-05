@@ -3,15 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
-import { t } from '@lingui/macro';
 
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
-import { Message } from '@/flows/types';
+import { Message } from '@/types/flows';
 import useProfile from '@/hooks/useProfile';
 import { useCallback, useMemo } from 'react';
 import { replaceTextVariables } from '@/utilities/text';
 import classNames from 'classnames';
 import { useAppSelector } from '@/state/store';
+import { useLingui } from '@lingui/react';
 
 const highlightedBgColorMap: Record<ThemeColors, string> = {
     'blue': 'bg-blue-100',
@@ -40,12 +40,13 @@ interface Props {
 }
 
 export default function ChatMessage(props: Props) {
+    const { _ } = useLingui();
     const { message, enablePadding = true, first = false, last = false, className } = props;
     const { content, name, nameIcon, date, highlighted = false} = message;
     const theme = useTheme();
     const { user } = useProfile();
     const flowStateNickName = useAppSelector((state) => state.flow.flowStateLookup?.['lobby']?.['nickName']);
-    const nickName = flowStateNickName ?? user?.nick_name ?? t`You`;
+    const nickName = flowStateNickName ?? user?.nick_name ?? _(`You`);
     const hasDate = !!date;
     const parsedDate = dayjs(date);
     const isToday = parsedDate.isSame(dayjs(), 'day');
@@ -73,8 +74,8 @@ export default function ChatMessage(props: Props) {
         return replaceMessageVariables(content).trim();
     }, [content, replaceMessageVariables]);
     const formattedName = useMemo(() => {
-        return replaceMessageVariables(name ?? t`Anonymous`);
-    }, [name, replaceMessageVariables]);
+        return replaceMessageVariables(name ?? _(`Anonymous`));
+    }, [_, name, replaceMessageVariables]);
 
     return (
         <motion.div

@@ -1,6 +1,5 @@
 'use client';
 import { motion } from 'framer-motion';
-import { t } from '@lingui/macro';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ReactMarkdown from 'react-markdown';
 
@@ -13,6 +12,7 @@ import Button from './Button';
 import { DISABLE_OPINION_INPUT_WHEN_TIMED_OUT, OUTCOME_OPINION_TIMEOUT_MS_LOOKUP } from '@/utilities/constants';
 import TimeProgressBar from './TimeProgressBar';
 import useUpsertOpinion from '@/hooks/useUpsertOpinion';
+import { useLingui } from '@lingui/react';
 
 export interface OpinionOption {
     content: string;
@@ -26,6 +26,7 @@ interface Props {
 }
 
 export default function RoomOutcome(props: Props) {
+    const { _ } = useLingui();
     const { outcome, participantId } = props;
     const { id: outcomeId, content = '', type } = outcome ?? {};
     const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ outcomes: [outcome], participantId });
@@ -33,11 +34,11 @@ export default function RoomOutcome(props: Props) {
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
     const title = useMemo(() => {
         switch (type) {
-            case OutcomeType.Consensus: return t`Consensus Proposal`;
-            case OutcomeType.Milestone: return t`Milestone`;
-            case OutcomeType.OffTopic: return t`Off Topic`;
+            case OutcomeType.Consensus: return _(`Consensus Proposal`);
+            case OutcomeType.Milestone: return _(`Milestone`);
+            case OutcomeType.OffTopic: return _(`Off Topic`);
         }
-    }, [type]);
+    }, [type, _]);
     const timeoutMs = useMemo(() => {
         if (!type || !!existingOpinion) {
             return 0;
@@ -46,10 +47,30 @@ export default function RoomOutcome(props: Props) {
         return OUTCOME_OPINION_TIMEOUT_MS_LOOKUP[type];
     }, [type, existingOpinion]);
     const hasTimeout = timeoutMs > 0;
-
     const opinionOptions = useMemo(() => {
-        return getOpinionOptionsByOutcomeType(type);
-    }, [type]);
+        switch (type) {
+            case OutcomeType.Consensus:
+                return [
+                    {
+                        content: _(`I agree with this consensus.`),
+                        icon: faCheck,
+                        optionType: OpinionOptionType.AgreeConsensus,
+                    },
+                    {
+                        content: _(`I don't agree with this.`),
+                        icon: faTimes,
+                        optionType: OpinionOptionType.DisagreeConsensus,
+                    },
+                    {
+                        content: _(`This statement should be reformulated.`),
+                        icon: faTimes,
+                        optionType: OpinionOptionType.Wrong,
+                    },
+                ];
+        }
+
+        return [];
+    }, [type, _]);
     const hasOpinionOptions = (opinionOptions.length > 0);
 
     if (!outcome) {
@@ -105,31 +126,6 @@ export default function RoomOutcome(props: Props) {
             )}
         </motion.div>
     );
-}
-
-function getOpinionOptionsByOutcomeType(type?: OutcomeType): OpinionOption[] {
-    switch (type) {
-        case OutcomeType.Consensus:
-            return [
-                {
-                    content: t`I agree with this consensus.`,
-                    icon: faCheck,
-                    optionType: OpinionOptionType.AgreeConsensus,
-                },
-                {
-                    content: t`I don't agree with this.`,
-                    icon: faTimes,
-                    optionType: OpinionOptionType.DisagreeConsensus,
-                },
-                {
-                    content: t`This statement should be reformulated.`,
-                    icon: faTimes,
-                    optionType: OpinionOptionType.Wrong,
-                },
-            ];
-    }
-
-    return [];
 }
 
 

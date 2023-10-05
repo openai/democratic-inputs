@@ -122,6 +122,8 @@ export type Mutation = {
   deleteFromcompletionsCollection: CompletionsDeleteResponse;
   /** Deletes zero or more records from the `cross_pollinations` collection */
   deleteFromcross_pollinationsCollection: Cross_PollinationsDeleteResponse;
+  /** Deletes zero or more records from the `events` collection */
+  deleteFromeventsCollection: EventsDeleteResponse;
   /** Deletes zero or more records from the `messages` collection */
   deleteFrommessagesCollection: MessagesDeleteResponse;
   /** Deletes zero or more records from the `moderations` collection */
@@ -144,6 +146,8 @@ export type Mutation = {
   insertIntocompletionsCollection?: Maybe<CompletionsInsertResponse>;
   /** Adds one or more `cross_pollinations` records to the collection */
   insertIntocross_pollinationsCollection?: Maybe<Cross_PollinationsInsertResponse>;
+  /** Adds one or more `events` records to the collection */
+  insertIntoeventsCollection?: Maybe<EventsInsertResponse>;
   /** Adds one or more `messages` records to the collection */
   insertIntomessagesCollection?: Maybe<MessagesInsertResponse>;
   /** Adds one or more `moderations` records to the collection */
@@ -166,6 +170,8 @@ export type Mutation = {
   updatecompletionsCollection: CompletionsUpdateResponse;
   /** Updates zero or more records in the `cross_pollinations` collection */
   updatecross_pollinationsCollection: Cross_PollinationsUpdateResponse;
+  /** Updates zero or more records in the `events` collection */
+  updateeventsCollection: EventsUpdateResponse;
   /** Updates zero or more records in the `messages` collection */
   updatemessagesCollection: MessagesUpdateResponse;
   /** Updates zero or more records in the `moderations` collection */
@@ -198,6 +204,13 @@ export type MutationDeleteFromcompletionsCollectionArgs = {
 export type MutationDeleteFromcross_PollinationsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
   filter?: InputMaybe<Cross_PollinationsFilter>;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationDeleteFromeventsCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<EventsFilter>;
 };
 
 
@@ -277,6 +290,12 @@ export type MutationInsertIntocross_PollinationsCollectionArgs = {
 
 
 /** The root type for creating and mutating data */
+export type MutationInsertIntoeventsCollectionArgs = {
+  objects: Array<EventsInsertInput>;
+};
+
+
+/** The root type for creating and mutating data */
 export type MutationInsertIntomessagesCollectionArgs = {
   objects: Array<MessagesInsertInput>;
 };
@@ -343,6 +362,14 @@ export type MutationUpdatecross_PollinationsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
   filter?: InputMaybe<Cross_PollinationsFilter>;
   set: Cross_PollinationsUpdateInput;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationUpdateeventsCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<EventsFilter>;
+  set: EventsUpdateInput;
 };
 
 
@@ -455,6 +482,8 @@ export type Query = {
   completionsCollection?: Maybe<CompletionsConnection>;
   /** A pagable collection of type `cross_pollinations` */
   cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
+  /** A pagable collection of type `events` */
+  eventsCollection?: Maybe<EventsConnection>;
   /** A pagable collection of type `messages` */
   messagesCollection?: Maybe<MessagesConnection>;
   /** A pagable collection of type `moderations` */
@@ -497,6 +526,17 @@ export type QueryCross_PollinationsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
+};
+
+
+/** The root type for querying data */
+export type QueryEventsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<EventsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
 
@@ -833,9 +873,8 @@ export type CompletionsUpdateResponse = {
 };
 
 export enum CrossPollinationType {
-  Afterwards = 'afterwards',
-  Closing = 'closing',
-  Discussion = 'discussion'
+  Outcome = 'outcome',
+  Topic = 'topic'
 }
 
 /** Boolean expression comparing fields on type "crossPollinationType" */
@@ -983,18 +1022,94 @@ export type Cross_PollinationsUpdateResponse = {
   records: Array<Cross_Pollinations>;
 };
 
-export enum DiscussionType {
-  Bot = 'bot',
-  Chat = 'chat',
-  Voice = 'voice'
-}
+export type Events = Node & {
+  __typename?: 'events';
+  active: Scalars['Boolean']['output'];
+  created_at: Scalars['Datetime']['output'];
+  ends_at?: Maybe<Scalars['Datetime']['output']>;
+  id: Scalars['UUID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  /** Globally Unique Record Identifier */
+  nodeId: Scalars['ID']['output'];
+  starts_at?: Maybe<Scalars['Datetime']['output']>;
+  updated_at: Scalars['Datetime']['output'];
+};
 
-/** Boolean expression comparing fields on type "discussionType" */
-export type DiscussionTypeFilter = {
-  eq?: InputMaybe<DiscussionType>;
-  in?: InputMaybe<Array<DiscussionType>>;
-  is?: InputMaybe<FilterIs>;
-  neq?: InputMaybe<DiscussionType>;
+export type EventsConnection = {
+  __typename?: 'eventsConnection';
+  edges: Array<EventsEdge>;
+  pageInfo: PageInfo;
+};
+
+export type EventsDeleteResponse = {
+  __typename?: 'eventsDeleteResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<Events>;
+};
+
+export type EventsEdge = {
+  __typename?: 'eventsEdge';
+  cursor: Scalars['String']['output'];
+  node: Events;
+};
+
+export type EventsFilter = {
+  active?: InputMaybe<BooleanFilter>;
+  created_at?: InputMaybe<DatetimeFilter>;
+  ends_at?: InputMaybe<DatetimeFilter>;
+  id?: InputMaybe<UuidFilter>;
+  name?: InputMaybe<StringFilter>;
+  nodeId?: InputMaybe<IdFilter>;
+  starts_at?: InputMaybe<DatetimeFilter>;
+  updated_at?: InputMaybe<DatetimeFilter>;
+};
+
+export type EventsInsertInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  ends_at?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  starts_at?: InputMaybe<Scalars['Datetime']['input']>;
+  updated_at?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type EventsInsertResponse = {
+  __typename?: 'eventsInsertResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<Events>;
+};
+
+export type EventsOrderBy = {
+  active?: InputMaybe<OrderByDirection>;
+  created_at?: InputMaybe<OrderByDirection>;
+  ends_at?: InputMaybe<OrderByDirection>;
+  id?: InputMaybe<OrderByDirection>;
+  name?: InputMaybe<OrderByDirection>;
+  starts_at?: InputMaybe<OrderByDirection>;
+  updated_at?: InputMaybe<OrderByDirection>;
+};
+
+export type EventsUpdateInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  ends_at?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  starts_at?: InputMaybe<Scalars['Datetime']['input']>;
+  updated_at?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type EventsUpdateResponse = {
+  __typename?: 'eventsUpdateResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<Events>;
 };
 
 export enum MessageType {
@@ -1830,6 +1945,7 @@ export type Participants = Node & {
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
   cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
+  demographics: Scalars['JSON']['output'];
   id: Scalars['UUID']['output'];
   last_seen_at: Scalars['Datetime']['output'];
   messagesCollection?: Maybe<MessagesConnection>;
@@ -1934,6 +2050,7 @@ export type ParticipantsFilter = {
 export type ParticipantsInsertInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  demographics?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   last_seen_at?: InputMaybe<Scalars['Datetime']['input']>;
   nick_name?: InputMaybe<Scalars['String']['input']>;
@@ -1968,6 +2085,7 @@ export type ParticipantsOrderBy = {
 export type ParticipantsUpdateInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  demographics?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   last_seen_at?: InputMaybe<Scalars['Datetime']['input']>;
   nick_name?: InputMaybe<Scalars['String']['input']>;
@@ -3393,7 +3511,7 @@ export type LeaveRoomMutationOptions = Apollo.BaseMutationOptions<LeaveRoomMutat
 export const PingParticipantDocument = gql`
     mutation PingParticipant($participantId: UUID!, $lastSeenAt: Datetime!) {
   updateparticipantsCollection(
-    filter: {id: {eq: $participantId}}
+    filter: {id: {eq: $participantId}, active: {eq: true}}
     set: {last_seen_at: $lastSeenAt}
   ) {
     affectedCount

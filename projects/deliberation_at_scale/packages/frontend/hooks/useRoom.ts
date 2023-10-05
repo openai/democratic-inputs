@@ -1,5 +1,5 @@
 import { useParams } from 'next/navigation';
-import { alphabetical, sort } from 'radash';
+import { alphabetical } from 'radash';
 
 import { OutcomeType, RoomStatusType, useGetRoomOutcomesQuery, useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
 import useRealtimeQuery from "./useRealtimeQuery";

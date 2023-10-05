@@ -1,4 +1,4 @@
-import { Message } from "@/flows/types";
+import { Message } from "@/types/flows";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type PartialRecord<K extends keyof any, T> =  Partial<Record<K, T>>;

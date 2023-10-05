@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { Message } from '@/flows/types';
+import { Message } from '@/types/flows';
 import ChatMessage from './ChatMessage';
 import { MESSAGES_SCROLL_CONTAINER_ID } from '@/utilities/constants';
 import classNames from 'classnames';
