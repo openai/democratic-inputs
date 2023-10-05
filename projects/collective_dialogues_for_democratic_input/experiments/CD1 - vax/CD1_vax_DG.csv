@@ -1,0 +1,111 @@
+﻿"Name","CD1 - vax"
+"Title","Technology Policy"
+"Date","October 04, 2023 at 06:35 PM (GMT)"
+"Duration","20:58:23"
+"Participants","300"
+"Participant Limit","300"
+"Total Screener Polls","10"
+"Total Conversation Questions","14"
+
+
+
+
+
+"Notes","Section","Cross Conversation Tag - Polls and Opinions only (Optional)","Item type (dropdown)","Content","Duration in minutes (dropdown)","","Randomize poll options for each participant","Add 'Other' as an option","Add 'None of the above' as an option","Poll or Category Option 1","Poll or Category Option 2","Poll or Category Option 3","Poll or Category Option 4","Poll or Category Option 5","Poll or Category Option 6","Poll or Category Option 7","Poll or Category Option 8","Poll or Category Option 9","Poll or Category Option 10","Poll or Category Option 11","Poll or Category Option 12","Poll or Category Option 13","Poll or Category Option 14","Poll or Category Option 15","Poll or Category Option 16","Poll or Category Option 17","Poll or Category Option 18","Poll or Category Option 19","Poll or Category Option 20"
+"","","Merge 352","onboarding single select","What is your age?","","","","","","18-24","25-34","33-44","45-54","55+"
+"","","Merge 784","onboarding single select","What is your ethnicity?","","","","","","Asian","Black","Hispanic","White","Mixed","Other"
+"","","Merge 612","onboarding single select","What gender do you identify with?","","","","","","Male","Female","Other","Prefer not to say"
+"","","Merge 823","onboarding single select","What political party do you most identify with?","","","","","","Democrat","Republican","Independant","Other"
+"","","Merge 143","onboarding single select","What is your highest level of education?","","","","","","No formal education","Elementary school","Middle school","High school or GED","College / Bachelors degree","Masters/ PhD or equivalent"
+"","","Merge 675","onboarding single select","How much have you heard or read about AI (Artificial Intelligence)?","","","","","","A lot","A little","Nothing at all"
+"","","Merge 440","onboarding single select","How often do you use an AI assistant such as ChatGPT, Claud, and Bard?","","","","","","Almost every day","Once or twice a week","Once or twice a month","Only once or twice ever","Never","Do not know what an AI assistant is"
+"","","Merge 32","onboarding single select","Overall, do you think the public has insights useful to guide how AI Assistants answer difficult questions??","","","Randomize","","","Yes, the public should help to decide how AI assistants answer difficult questions","No, I doubt the public has insight useful to guide how AI Assistants answer difficult questions"
+"","","Merge 376","onboarding single select","Overall, would you say the increased use of artificial intelligence (AI) in daily life makes you feel…","","","Randomize","","","More excited than concerned","Equally concerned and excited","More concerned than excited"
+"","","Merge 698","onboarding single select","What religious group or faith do you most identify with?","","","","","","Christian - Protestant","Christian - Catholic","Christian - Mormon","Jewish","Muslim","Hindu","Other","None - I do not identify with any religious group or faith"
+"","Context set","","speak","Lets begin!","00:10"
+"","Context set","","speak","We are working to develop policies that will govern the next generation of AI. We believe policies governing AI should be determined by democratic inputs, not just the people in power. Our hope is that through this conversation we can learn your views and use them to shape such policies.","00:10"
+"","Context set","","speak","Your responses and votes today could have real impact on how the AI systems behave, so please be thoughtful and honest in your participation.","00:10"
+"","Context set","","speak","The specific issue we want to discuss today is: How should an AI assistant handle requests for information or questions on vaccines?","00:10"
+"","Education on AI assistants & censorship","","speak","So what is an AI assistant?","00:10"
+"","Education on AI assistants & censorship","","speak","Modern AI assistants are powerful chatbots trained on nearly everything on the internet. This enables them to understand human language, and gives them knowledge of basically everything that can be found on the internet. You can think of them sort of like extremely knowledgeable and creative chatbots.","00:10"
+"","Education on AI assistants & censorship","","speak","A few examples of modern AI assistants are ChatGPT , Claud, and Bard.","00:10"
+"","Education on AI assistants & censorship","","speak","AI assistants can answer questions about nearly any topic. For example:","00:10"
+"","Education on AI assistants & censorship","","image placeholder","","00:10"
+"","Education on AI assistants & censorship","","speak","They can give instructions on how to do something.","00:10"
+"","Education on AI assistants & censorship","","image placeholder","","00:10"
+"","Education on AI assistants & censorship","","speak","They can write a computer program for you.","00:10"
+"","Education on AI assistants & censorship","","image placeholder","","00:10"
+"","Education on AI assistants & censorship","","speak","They can even write poetry.","00:10"
+"","Education on AI assistants & censorship","","image placeholder","","00:10"
+"","Education on AI assistants & censorship","","speak","They are good enough at conversation that people even treat them like friends or romantic partners!","00:10"
+"","Education on AI assistants & censorship","","speak","Overall modern AI assistants are extremely powerful and capable conversational assistants. However, they can also randomly provide inaccurate information about people, places, or facts.","00:10"
+"","Education on AI assistants & censorship","","speak","So what is the challenge of deciding how an AI assistant should handle requests for information or questions about vaccines?","00:10"
+"","Education on AI assistants & censorship","","speak","Sometimes the AI might give information that is accurrate, or slightly off, or even totally wrong. Or sometimes it may provide information whose truthfulness is disputed.","00:10"
+"","Education on AI assistants & censorship","","speak","And sometimes being wrong may have no real consequences (like if it recommends you get a safe vaccine against a disease you are unlikely to catch), yet other times being wrong could kill a person (like if it suggests you get a vaccine you may have a fatal alergic reaction to).","00:10"
+"","Education on AI assistants & censorship","","speak","On the other hand, for people who don't have good access to trusted information, the vaccine information an AI might provide could be really helpful in deciding whether a person wants to get vaccinated or not. In some cases, an AI assistant could convince someone to take a vaccine that prevents them from contracting a life-threatening disease. Or in other cases, the AI assistant could provide vaccine information that leads someone to decide not to get a vaccine that isn't necessary yet would put them at risk.","00:10"
+"","Education on AI assistants & censorship","","speak","So how should an AI assistant handle requests for vaccine information?","00:10"
+"","Education on AI assistants & censorship","","speak","Now it's your turn to think! We will ask you a series of questions to get you thinking about vaccine information  and the role of AI. At the end, based on what you learned in the previous questions, you will come up with potential policies for how AI should handle requests for information about vaccines.","00:10"
+"","Motivate deliberation","","speak","To help you start thinking about how an AI assistant handles requests for vaccine information, I want you to think about what personal experiences that you or people you know personally have with vaccine information which might inform your views.","00:10"
+"","Motivate deliberation","Merge 611","ask opinion","Can you share a positive experience involving vaccine information which you think is relevant to this discussion? (Please do not share any personally identifiable information!)","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Motivate deliberation","Merge 570","ask opinion","Can you share a negative experience about vaccine information that you think is relevant to this discussion? (Please do not share any personally identifiable information!)","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Motivate deliberation","","speak","Now, to help you start thinking about how an AI assistant handles requests for information on vaccines,  please imagine the types of situations where it might be hard to decide how an AI assistant should respond. 
+For example, imagine these four scenarios: 
+Information about a vaccine that leads someone to get a vaccine could help save a person's life.
+Information about a vaccine that leads someone to get a vaccine that could harm someone's health or endanger their life.
+Information could lead someone to get a vaccine that is not needed.
+Information could lead someone not to get a vaccine that could protect their health.
+You can be creative! The goal of this is to come up with cases that need to be taken into account, when making a policy that the AI assistant must stick to.","00:10"
+"","Motivate deliberation","Merge 173","ask opinion","What is an example of a situation involving vaccine information where it is unclear how an AI assistant should handle the request?","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Motivate deliberation","","speak","Now I want you to think about what factors the AI should take into account when determining how to handle requests for vaccine information. 
+For example:
+Whether there is a debate among mainstream medical professionals
+What the risks are of giving the wrong advice
+Whether the information comes from peer-reviewed publications or not
+The intention of the person asking","00:10"
+"","Motivate deliberation","Merge 747","ask opinion","What factors should an AI consider when dealing with vaccine information inquiries?","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Motivate deliberation","","speak","Now I want you to think about the different ways an AI assistant could respond to a request about vaccines. 
+For example:
+Refuse to give an answer
+Give a range of different advice for the user to assess themselves
+Give an answer but clarify how confident it is in that answer 
+Offer relevant knowledge with scientific consensus but don't give advice","00:10"
+"","Motivate deliberation","Merge 914","ask opinion","What is a good option for how an AI assistant could respond to a tricky request related to vaccine information?","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Elicit views and judgements","","speak","Now I want you to think about specific policies you think an AI assistant should follow when responding to a medical advice request. 
+A good policy should be in the form of: ""If [situation] then [what AI should do]""
+For example: 
+If there is no scientific consensus on an issue related to vaccines, then the AI should give a range of information so the user can make their own decision
+If someone's life is at stake, then the AI should only give advice if it comes from a reputable medical journal.
+If there is widespread debate on information about a vaccine, then the AI should acknowledge the public debate while providing information from medical authorities.","00:10"
+"","Elicit views and judgements","","speak","In the next question we're going to ask you to provide a specific policy an AI assistant should follow when responding to vaccine information. 
+(We will ask you the same question again, to come up with another policy after this, so you don't need to include everything in one policy!)","00:10"
+"","Elicit views and judgements","Merge 512","ask opinion","What is one specific policy you think an AI assistant should follow when responding to a request for information about vaccines?
+Use the same format as above: ""If [situation] then [what AI should do].""","02:00"
+"","Elicit views and judgements","","speak","Now we'll ask the same question again so you can contribute another policy.","00:10"
+"","Elicit views and judgements","Merge 1000","ask opinion","What is a specific policy you think an AI assistant should follow when responding to a request for information about vaccines?
+Use the same format as above: ""If [situation] then [what AI should do].""","02:00"
+"","Elicit views and judgements","","speak","Now, I want you to think about situations where an AI assistant should always refuse to provide an answer related to vaccine information. Be creative, and remember the experiences that people mentioned earlier!","00:10"
+"","Elicit views and judgements","Merge 817","ask opinion","Can you describe a situation where an AI assistant should not provide an answer to vaccine-related inquiries?","02:00"
+"","Elicit views and judgements","","speak","Now, I want you to think about situations where an AI assistant should never refuse to provide information from medical authorities about specific vaccines.","00:10"
+"","Elicit views and judgements","Merge 818","ask opinion","What is one situation where the AI assistant should never refuse to provide information on a specific vaccine?","02:00"
+"","Elicit views and judgements","","speak","Many of you may be split on what to do in a situation where there are mainstream disagreements about vaccine information. 
+For example, imagine the world experiencing a pandemic, and medical authorities and political leaders and even a minority of doctors disagree on whether the vaccine is safe and necessary. How should the AI assistant respond to specific requests for information about the safety and necessity of that vaccine?","00:10"
+"","Elicit views and judgements","Merge 87","ask opinion","How do you think the AI should handle requests for vaccine information when there is no medical consensus and/or there are widespread debates related to vaccine information?","02:00"
+"","Process eval","","speak","Thank you all so much for your participation and responses.","00:10"
+"","Process eval","","speak","Before we conclude, we'd like to get your input on how you think this sessino went.","00:10"
+"","Process eval","","speak","For context, the purpose of this section was to learn the public's informed views related to AI assistants and providing information and advice related to vaccines. This is just one part of a larger process to create AI policy that reflects the informed consensus of the public. After this session is complete we will be using the data gathered here to help generate an initial policy which will then be itterated on: first by experts, and then again with the input of the public through another session like this.","00:10"
+"","Process eval","","speak","With this in mind, we have a few quick poll questions for you. Each will be a statement, and you will be asked to choose the degree to which you agree with it.","00:10"
+"","Process eval","","poll single select","""This experience was enjoyable or meaningful.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly Disagree"
+"","Process eval","","poll single select","""I would trust this process to create a policy which reflects informed public consensus on AI assistants and vaccine information.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly Disagree"
+"","Process eval","","poll single select","""I believe my contributions will find their way to the appropriate place in the final output, and be used appropriately to create a policy which reflects informed public consensus on AI assistants and vaccine information.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly Disagree"
+"","Thank you and goodby","Merge 145","poll single select","So now that you have had a chance to think about what AI can do and how it can be regulated, do you think that the public has insights useful to guide how AI Assistants answer difficult questions?","00:30","","","","","Yes, I think the public has insight useful to guide how AI Assistants answer difficult questions","No, I doubt that the public has insights useful to guide how AI Assistants answer difficult questions."
+"","Thank you and goodby","","speak","Thanks again, and hope you have a great rest of your day. Click here to return to Prolific and redeem your reward .","00:10"
