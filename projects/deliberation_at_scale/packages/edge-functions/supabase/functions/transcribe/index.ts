@@ -1,9 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from '@supabase/supabase-js';
-import { Buffer } from "https://deno.land/std/io/buffer.ts";
+import { Deepgram } from "https://esm.sh/@deepgram/sdk@v2.4.0";
 import dayjs from "dayjs";
+import base64 from "https://deno.land/x/b64@1.1.28/src/base64.js";
 
-const API_MODE: ApiMode = 'deepgram';
+const API_MODE: ApiMode = 'whisper';
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 const DEEPGRAM_API_KEY = Deno.env.get('DEEPGRAM_API_KEY');
 const WHISPER_API_URL = Deno.env.get('WHISPER_API_URL');
@@ -25,6 +26,8 @@ const supabaseAdminClient = createClient(
     SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY
 );
+
+const deepgramClient = new Deepgram(DEEPGRAM_API_KEY);
 
 type ApiMode = 'whisper' | 'deepgram';
 
@@ -90,8 +93,10 @@ serve(async (req) => {
   } else if (API_MODE === 'deepgram') {
     result = await transcribeAtDeepgram({
         file,
+        content,
     });
-    console.log('DEEPGRAM RESULT', result);
+    console.log('DEEPGRAM RESULT')
+    console.log(result);
     // TODO: handle results
   }
 
@@ -282,7 +287,10 @@ async function transcribeAtWhisper(options: TranscribeAtWhisperOptions) {
 }
 
 interface TranscribeAtDeepgramOptions {
-    file: File;
+    file?: File;
+    content?: string;
+    language?: string;
+    model?: string;
 }
 
 /**
@@ -290,21 +298,15 @@ interface TranscribeAtDeepgramOptions {
  */
 async function transcribeAtDeepgram(options: TranscribeAtDeepgramOptions) {
     const {
+        content,
         file,
     } = options;
-    const buffer = new Buffer(file);
-    const url = `${DEEPGRAM_API_URL}?filler_words=false&summarize=v2`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': ' ',
-          'Authorization': `Token ${DEEPGRAM_API_KEY}`,
-        },
-        body: buffer,
+    const transcription = await deepgramClient.transcription.preRecorded({
+        buffer: new Uint8Array(base64.toArrayBuffer(content, true)),
+        mimetype: 'audio/mpeg',
     });
-    console.log('buffer', buffer)
 
-    return response.json();
+    return transcription
 }
 
 /**
