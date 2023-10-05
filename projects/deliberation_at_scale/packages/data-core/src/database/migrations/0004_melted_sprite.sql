@@ -1,5 +1,5 @@
 DO $$ BEGIN
- CREATE TYPE "roomStatusType" AS ENUM('safe', 'informed', 'debate', 'results');
+ CREATE TYPE "roomStatusType" AS ENUM('group_intro', 'safe', 'informed', 'debate', 'results');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
