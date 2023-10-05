@@ -14,7 +14,7 @@ export default function InvalidChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[_(msg`Hmmm, it appears the room could not be joined or the other participants took to long to join.`)]],
+                    messageOptions: [[_(msg`Hmmm, it appears the room could not be joined or the other participants took too long to join.`)]],
                     quickReplies: [
                         {
                             id: 'retry',
