@@ -17,7 +17,8 @@
     "start:scheduler": "cross-env ORCHESTRATOR_ROLE=scheduler node dist/index.js",
     "start:listener": "cross-env ORCHESTRATOR_ROLE=listener node dist/index.js",
     "lint": "eslint src --ext .ts",
-    "clean": "rimraf ./node_modules"
+    "clean": "rimraf ./node_modules",
+    "ssh": "dotenv -e .env -- sh -c 'ssh -o \"IdentitiesOnly=yes\" -i ~/.ssh/id_rsa_das_production root@\"$VPS_HOST_NAME\"'"
   },
   "keywords": [],
   "author": "Lei Nelissen <lei@bmd.studio>",
