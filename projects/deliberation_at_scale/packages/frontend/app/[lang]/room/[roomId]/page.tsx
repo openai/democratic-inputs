@@ -1,7 +1,3 @@
-import useAuth from '@/hooks/useAuth';
-import { redirect } from 'next/navigation';
+import AI from './ai/page';
 
-export default async function Room({ params }: { params: { roomId: string } }) {
-    await useAuth();
-    redirect(`/room/${params.roomId}/ai`);
-}
+export default AI;

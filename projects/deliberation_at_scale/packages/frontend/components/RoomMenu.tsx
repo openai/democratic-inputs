@@ -2,7 +2,7 @@ import { aiRegular, aiSolid, groupRegular, groupSolid } from '@/components/Entit
 import { NavLink } from '@/components/NavLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Trans } from '@lingui/macro';
 
@@ -15,6 +15,8 @@ export default function RoomMenu() {
         hidden: { opacity: 0 },
         visible: { opacity: 1 },
     };
+    const pathname = usePathname();
+    const isInChat = pathname?.includes('chat');
 
     return (
         <motion.nav
@@ -25,35 +27,31 @@ export default function RoomMenu() {
         >
             <NavLink
                 className={LinkClassNames}
-                href={`/${params?.lang}/room/${currentRoomId}/ai`}
+                href={`/${params?.lang}/room/${currentRoomId}`}
             >
-                {(active) => (
-                    <div
-                        className={classNames(
-                            "flex items-center gap-2",
-                            active ? 'opacity-100' : 'opacity-50 hover:opacity-70',
-                        )}
-                    >
-                        <FontAwesomeIcon icon={active ? aiSolid : aiRegular} />
-                        <span><Trans>Assistant</Trans></span>
-                    </div>
-                )}
+                <div
+                    className={classNames(
+                        "flex items-center gap-2",
+                        !isInChat ? 'opacity-100' : 'opacity-50 hover:opacity-70',
+                    )}
+                >
+                    <FontAwesomeIcon icon={!isInChat ? aiSolid : aiRegular} />
+                    <span><Trans>Assistant</Trans></span>
+                </div>
             </NavLink>
             <NavLink
                 className={LinkClassNames}
                 href={`/${params?.lang}/room/${currentRoomId}/chat`}
             >
-                {(active) => (
-                    <div
-                        className={classNames(
-                            "flex items-center gap-2",
-                            active ? 'opacity-100' : 'opacity-50 hover:opacity-70',
-                        )}
-                    >
-                        <FontAwesomeIcon icon={active ? groupSolid : groupRegular} />
-                        <span><Trans>Conversation</Trans></span>
-                    </div>
-                )}
+                <div
+                    className={classNames(
+                        "flex items-center gap-2",
+                        isInChat ? 'opacity-100' : 'opacity-50 hover:opacity-70',
+                    )}
+                >
+                    <FontAwesomeIcon icon={isInChat ? groupSolid : groupRegular} />
+                    <span><Trans>Conversation</Trans></span>
+                </div>
             </NavLink>
         </motion.nav>
     );

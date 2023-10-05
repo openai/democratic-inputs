@@ -30,7 +30,7 @@ export default function useRoomActions() {
                 id: 'vote-for-consensus',
                 title: _(msg`Go to voting`),
                 onClick: () => {
-                    push(`/room/${roomId}/ai`);
+                    push(`/room/${roomId}`);
                 },
             });
         }
