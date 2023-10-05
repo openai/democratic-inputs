@@ -6,6 +6,7 @@ import { supabaseClient } from "../lib/supabase";
 import { createExternalRoom } from "../lib/whereby";
 import { MAX_ROOM_AMOUNT_PER_JOB, MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_CONFIRM_EXPIRY_TIME_MS, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
 import { reschedule } from "../scheduler";
+import { captureEvent } from "src/lib/sentry";
 
 export interface HandleQueuedParticipantsPayload {
     jobKey: string;
@@ -23,7 +24,11 @@ export default async function handleQueuedParticipants(payload: HandleQueuedPart
         await deactivateExpiredRooms(helpers);
         await performDynamicGroupSlicing(helpers);
     } catch (error) {
-        helpers.logger.error(`An error occured when handling queued participants: ${error}`);
+        captureEvent({
+            message: `An error occured when handling queued participants: ${error}`,
+            level: 'error',
+            helpers,
+        });
     }
 
     await reschedule<HandleQueuedParticipantsPayload>({
@@ -63,7 +68,7 @@ async function deactivateInactiveParticipants(helpers: Helpers) {
         return;
     }
 
-    helpers.logger.error(`Deactivated ${deactivatedParticipants.length} queued participants.`);
+    helpers.logger.info(`Deactivated ${deactivatedParticipants.length} queued participants.`);
 }
 
 /**
@@ -91,7 +96,7 @@ async function deactivateExpiredRooms(helpers: Helpers) {
         return;
     }
 
-    helpers.logger.error(`Deactivated ${deactivatedParticipants.length} confirming participants. Now also deactivating the rooms...`);
+    helpers.logger.info(`Deactivated ${deactivatedParticipants.length} confirming participants. Now also deactivating the rooms...`);
 
     const roomIds = deactivatedParticipants.map((participant) => {
         return participant.room_id;
@@ -103,7 +108,7 @@ async function deactivateExpiredRooms(helpers: Helpers) {
         .in('id', roomIds)
         .select();
 
-    helpers.logger.error(`Deactivated ${deactivatedRooms?.length ?? 0} rooms. Participants should be automatically notified: ${JSON.stringify(deactivatedRooms)}`);
+    helpers.logger.info(`Deactivated ${deactivatedRooms?.length ?? 0} rooms. Participants should be automatically notified: ${JSON.stringify(deactivatedRooms)}`);
 }
 
 /**
@@ -162,7 +167,7 @@ async function performDynamicGroupSlicing(helpers: Helpers) {
 
         // guard: make sure there are enough participants
         if (newRoomParticipantIds.length < PARTICIPANTS_PER_ROOM) {
-            helpers.logger.error(`Not enough participants were found to assign to a room: ${JSON.stringify(newRoomParticipantIds)}`);
+            helpers.logger.info(`Not enough participants were found to assign to a room: ${JSON.stringify(newRoomParticipantIds)}`);
             continue;
         }
 

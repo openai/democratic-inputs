@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/node";
 import { ProfilingIntegration } from "@sentry/profiling-node";
+import { Helpers } from "graphile-worker";
 
 import { SENTRY_DSN } from "../config/constants";
 
@@ -27,17 +28,22 @@ export function wrapInErrorCatcher(f: Function) {
 }
 
 export interface LogEventOptions {
-    message: string,
-    level: Sentry.SeverityLevel,
+    message: string;
+    level: Sentry.SeverityLevel;
+    helpers?: Helpers;
 }
 
 export function captureEvent(options: LogEventOptions) {
-    const { message, level } = options;
+    const { message, level, helpers } = options;
 
     Sentry.captureEvent({
         message,
         level,
     });
+
+    if (helpers && level !== 'fatal' && level !== 'warning') {
+        helpers.logger?.[level]?.(message);
+    }
 }
 
 
