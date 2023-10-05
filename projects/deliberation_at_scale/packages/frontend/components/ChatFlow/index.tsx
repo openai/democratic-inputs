@@ -25,7 +25,7 @@ interface Props {
     flow: FlowType;
 }
 const defaultUserMessageTemplate: MessageTemplate = {
-    name: "{nickName}",
+    name: "[nickName]",
 };
 const defaultBotMessageTemplate: MessageTemplate = {
     name: FIXED_CHAT_FLOW_BOT_NAME,

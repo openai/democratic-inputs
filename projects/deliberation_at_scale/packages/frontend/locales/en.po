@@ -79,12 +79,12 @@ msgid "Go back to the home page"
 msgstr "Go back to the home page"
 
 #: flows/lobbyFlow.tsx:49
-msgid "Great, we'll call you \\\"{nickName}\\\"."
-msgstr "Great, we'll call you \\\"{nickName}\\\"."
+msgid "Great, we'll call you \\\"[nickName]\\\"."
+msgstr "Great, we'll call you \\\"[nickName]\\\"."
 
 #: flows/lobbyFlow.tsx:41
-msgid "Great, we'll keep calling you \\\"{nickName}\\\"."
-msgstr "Great, we'll keep calling you \\\"{nickName}\\\"."
+msgid "Great, we'll keep calling you \\\"[nickName]\\\"."
+msgstr "Great, we'll keep calling you \\\"[nickName]\\\"."
 
 #: flows/profileFlow.tsx:23
 msgid "Great! Moving you to the waiting lobby... Hold on tight!"
@@ -96,20 +96,20 @@ msgid "Hey there, welcome to Deliberation at Scale. We appreciate that you're ta
 msgstr "Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:42
-msgid "Hi there {nickName}! I hope you enjoyed the discussion you had with the group."
-msgstr "Hi there {nickName}! I hope you enjoyed the discussion you had with the group."
+msgid "Hi there [nickName]! I hope you enjoyed the discussion you had with the group."
+msgstr "Hi there [nickName]! I hope you enjoyed the discussion you had with the group."
 
 #: flows/lobbyFlow.tsx:13
-msgid "Hi there {nickName}! I hope you're ready to get started discussing the future of AI."
-msgstr "Hi there {nickName}! I hope you're ready to get started discussing the future of AI."
+msgid "Hi there [nickName]! I hope you're ready to get started discussing the future of AI."
+msgstr "Hi there [nickName]! I hope you're ready to get started discussing the future of AI."
 
 #: flows/idleFlow.tsx:11
-msgid "Hi there {nickName}! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!"
-msgstr "Hi there {nickName}! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!"
+msgid "Hi there [nickName]! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!"
+msgstr "Hi there [nickName]! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!"
 
 #: flows/profileFlow.tsx:11
-msgid "Hi there {nickName}! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
-msgstr "Hi there {nickName}! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
+msgid "Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
+msgstr "Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
 
 #: components/RoomOutcome.tsx:115
 msgid "I agree with this consensus."
@@ -209,8 +209,8 @@ msgid "Thank you! You will find a link to login to Deliberation at Scale in your
 msgstr "Thank you! You will find a link to login to Deliberation at Scale in your inbox. Use this link to login."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:85
-msgid "Thanks for the feedback {nickName}!"
-msgstr "Thanks for the feedback {nickName}!"
+msgid "Thanks for the feedback [nickName]!"
+msgstr "Thanks for the feedback [nickName]!"
 
 #: flows/steps.tsx:19
 msgid "That is not a valid email address!"
@@ -254,8 +254,8 @@ msgid "What do you want to do next?"
 msgstr "What do you want to do next?"
 
 #: flows/lobbyFlow.tsx:23
-msgid "What nickname would you like to use? You can also choose your current name \\\"{nickName}\\\"."
-msgstr "What nickname would you like to use? You can also choose your current name \\\"{nickName}\\\"."
+msgid "What nickname would you like to use? You can also choose your current name \\\"[nickName]\\\"."
+msgstr "What nickname would you like to use? You can also choose your current name \\\"[nickName]\\\"."
 
 #: flows/profileFlow.tsx:16
 msgid "What would you like to do?"

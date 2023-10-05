@@ -8,7 +8,7 @@ const profileFlow: ChatFlowConfig = {
     steps: [
         {
             name: "welcome",
-            messageOptions: [[t`Hi there {nickName}! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants.`]],
+            messageOptions: [[t`Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants.`]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         {

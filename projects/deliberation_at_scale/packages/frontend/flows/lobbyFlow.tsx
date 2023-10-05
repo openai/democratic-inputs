@@ -10,7 +10,7 @@ const lobbyFlow: ChatFlowConfig = {
     steps: [
         {
             name: "greeting_1",
-            messageOptions: [[t`Hi there {nickName}! I hope you're ready to get started discussing the future of AI.`]],
+            messageOptions: [[t`Hi there [nickName]! I hope you're ready to get started discussing the future of AI.`]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         {
@@ -20,7 +20,7 @@ const lobbyFlow: ChatFlowConfig = {
         },
         {
             name: "greeting_2",
-            messageOptions: [[t`What nickname would you like to use? You can also choose your current name \"{nickName}\".`]],
+            messageOptions: [[t`What nickname would you like to use? You can also choose your current name \"[nickName]\".`]],
             quickReplies: [
                 {
                     id: "use_current_nickname",
@@ -38,7 +38,7 @@ const lobbyFlow: ChatFlowConfig = {
         },
         {
             name: "use_current_nickname",
-            messageOptions: [[t`Great, we'll keep calling you \"{nickName}\".`]],
+            messageOptions: [[t`Great, we'll keep calling you \"[nickName]\".`]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
             onTimeout: async (helpers) => {
                 helpers.goToName("ask_go_to_permission_flow");
@@ -46,7 +46,7 @@ const lobbyFlow: ChatFlowConfig = {
         },
         {
             name: "use_new_nickname",
-            messageOptions: [[t`Great, we'll call you \"{nickName}\".`]],
+            messageOptions: [[t`Great, we'll call you \"[nickName]\".`]],
             timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
         },
         {

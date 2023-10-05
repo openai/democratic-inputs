@@ -29,7 +29,7 @@ export default function EvaluateChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[t`Hi there {nickName}! I hope you enjoyed the discussion you had with the group.`]],
+                    messageOptions: [[t`Hi there [nickName]! I hope you enjoyed the discussion you had with the group.`]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
@@ -72,7 +72,7 @@ export default function EvaluateChatFlow() {
                 {
                     active: hasOutcomeType(OutcomeType.OverallImpression),
                     name: "overall_impression_thanks",
-                    messageOptions: [[t`Thanks for the feedback {nickName}!`]],
+                    messageOptions: [[t`Thanks for the feedback [nickName]!`]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {

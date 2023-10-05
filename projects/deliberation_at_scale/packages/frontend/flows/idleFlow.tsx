@@ -8,7 +8,7 @@ const idleFlow: ChatFlowConfig = {
     steps: [
         {
             name: "intro",
-            messageOptions: [[t`Hi there {nickName}! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!`]],
+            messageOptions: [[t`Hi there [nickName]! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!`]],
             quickReplies: [
                 {
                     id: 'retry',

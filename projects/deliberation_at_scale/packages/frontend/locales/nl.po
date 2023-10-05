@@ -79,11 +79,11 @@ msgid "Go back to the home page"
 msgstr ""
 
 #: flows/lobbyFlow.tsx:49
-msgid "Great, we'll call you \\\"{nickName}\\\"."
+msgid "Great, we'll call you \\\"[nickName]\\\"."
 msgstr ""
 
 #: flows/lobbyFlow.tsx:41
-msgid "Great, we'll keep calling you \\\"{nickName}\\\"."
+msgid "Great, we'll keep calling you \\\"[nickName]\\\"."
 msgstr ""
 
 #: flows/profileFlow.tsx:23
@@ -96,19 +96,19 @@ msgid "Hey there, welcome to Deliberation at Scale. We appreciate that you're ta
 msgstr ""
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:42
-msgid "Hi there {nickName}! I hope you enjoyed the discussion you had with the group."
+msgid "Hi there [nickName]! I hope you enjoyed the discussion you had with the group."
 msgstr ""
 
 #: flows/lobbyFlow.tsx:13
-msgid "Hi there {nickName}! I hope you're ready to get started discussing the future of AI."
+msgid "Hi there [nickName]! I hope you're ready to get started discussing the future of AI."
 msgstr ""
 
 #: flows/idleFlow.tsx:11
-msgid "Hi there {nickName}! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!"
+msgid "Hi there [nickName]! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!"
 msgstr ""
 
 #: flows/profileFlow.tsx:11
-msgid "Hi there {nickName}! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
+msgid "Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
 msgstr ""
 
 #: components/RoomOutcome.tsx:115
@@ -209,7 +209,7 @@ msgid "Thank you! You will find a link to login to Deliberation at Scale in your
 msgstr ""
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:85
-msgid "Thanks for the feedback {nickName}!"
+msgid "Thanks for the feedback [nickName]!"
 msgstr ""
 
 #: flows/steps.tsx:19
@@ -254,7 +254,7 @@ msgid "What do you want to do next?"
 msgstr ""
 
 #: flows/lobbyFlow.tsx:23
-msgid "What nickname would you like to use? You can also choose your current name \\\"{nickName}\\\"."
+msgid "What nickname would you like to use? You can also choose your current name \\\"[nickName]\\\"."
 msgstr ""
 
 #: flows/profileFlow.tsx:16
