@@ -6,7 +6,7 @@ import { supabaseClient } from "../lib/supabase";
 import { createExternalRoom } from "../lib/whereby";
 import { MAX_ROOM_AMOUNT_PER_JOB, MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_CONFIRM_EXPIRY_TIME_MS, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
 import { reschedule } from "../scheduler";
-import { captureEvent } from "src/lib/sentry";
+import { captureEvent } from "../lib/sentry";
 
 export interface HandleQueuedParticipantsPayload {
     jobKey: string;
