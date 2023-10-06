@@ -109,6 +109,12 @@ AS PERMISSIVE FOR SELECT
 TO authenticated
 USING (id IN (SELECT room_id FROM participants WHERE user_id = current_user_id()::uuid))
 
+CREATE POLICY "Enable update for service key" ON "public"."rooms"
+AS PERMISSIVE FOR UPDATE
+TO service_role
+USING (TRUE)
+WITH CHECK (TRUE)
+
 --> topics
 CREATE POLICY "Enable read access for all authenticated users" ON "public"."topics"
 AS PERMISSIVE FOR SELECT
