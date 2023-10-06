@@ -57,7 +57,7 @@ export const TEST_ROOM_ID_ALLOWLIST = ['ee440eef-3cbd-48fd-ab37-a0ea12a7c895'];
 export const ENABLE_ROOM_PROGRESSION = true || !IS_DEVELOPMENT;
 export const PRINT_JOBKEY = true && IS_DEVELOPMENT;
 export const PRINT_ROOM_PROGRESSION = true && IS_DEVELOPMENT;
-export const ENABLE_TEST_WHEREBY_ROOM = false || !IS_DEVELOPMENT;
+export const ENABLE_TEST_WHEREBY_ROOM = false && IS_DEVELOPMENT;
 export const TEST_WHEREBY_ROOM: ValidCreateExternalRoomResult = {
     endDate: dayjs().add(1, 'hour').toISOString(),
     hostRoomUrl: '',
@@ -67,7 +67,7 @@ export const TEST_WHEREBY_ROOM: ValidCreateExternalRoomResult = {
 };
 
 /* Deliberation */
-export const DEVELOPMENT_PARTICIPANTS_PER_ROOM = 1;
+export const DEVELOPMENT_PARTICIPANTS_PER_ROOM = 2;
 export const PRODUCTION_PARTICIPANTS_PER_ROOM = 3;
 export const PARTICIPANTS_PER_ROOM = IS_DEVELOPMENT ? DEVELOPMENT_PARTICIPANTS_PER_ROOM : PRODUCTION_PARTICIPANTS_PER_ROOM;
 export const MAX_ROOM_DURATION_MS = 60 * ONE_MINUTE_MS;
