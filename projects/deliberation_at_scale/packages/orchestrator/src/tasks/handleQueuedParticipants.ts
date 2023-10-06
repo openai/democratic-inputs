@@ -84,6 +84,7 @@ async function deactivateExpiredRooms(helpers: Helpers) {
         .eq('status', "waiting_for_confirmation")
         .eq("active", true)
         .lt('updated_at', minimumUpdatedAt.toISOString())
+        .lt('last_seen_at', minimumUpdatedAt.toISOString())
         .select();
 
     if (error) {
