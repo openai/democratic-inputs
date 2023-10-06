@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:109
+#: components/ChatFlow/PermissionChatFlow.tsx:112
 msgid "A room has been found! Do you want to enter now?"
 msgstr "A room has been found! Do you want to enter now?"
 
@@ -22,7 +22,7 @@ msgstr "A room has been found! Do you want to enter now?"
 msgid "Anonymous"
 msgstr "Anonymous"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:20
+#: components/ChatFlow/PermissionChatFlow.tsx:23
 msgid "Ask for permissions now"
 msgstr "Ask for permissions now"
 
@@ -30,7 +30,7 @@ msgstr "Ask for permissions now"
 msgid "Assistant"
 msgstr "Assistant"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:33
+#: components/ChatFlow/PermissionChatFlow.tsx:36
 msgid "Before we continue, you will need to give permission to use your camera and microphone. We recommend giving those permissions because we prefer face-to-face discussions."
 msgstr "Before we continue, you will need to give permission to use your camera and microphone. We recommend giving those permissions because we prefer face-to-face discussions."
 
@@ -42,7 +42,7 @@ msgstr "Change my profile"
 msgid "Consensus Proposal"
 msgstr "Consensus Proposal"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:66
+#: components/ChatFlow/PermissionChatFlow.tsx:69
 msgid "Continue to room"
 msgstr "Continue to room"
 
@@ -70,11 +70,11 @@ msgstr "Enable audio"
 msgid "Enable video"
 msgstr "Enable video"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:113
+#: components/ChatFlow/PermissionChatFlow.tsx:116
 msgid "Enter room"
 msgstr "Enter room"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:39
+#: components/ChatFlow/PermissionChatFlow.tsx:42
 msgid "Everything seems to be working fine. Let's get started!"
 msgstr "Everything seems to be working fine. Let's get started!"
 
@@ -144,7 +144,7 @@ msgstr "I don't agree with this."
 msgid "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
 msgstr "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:86
+#: components/ChatFlow/PermissionChatFlow.tsx:89
 msgid "It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above."
 msgstr "It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above."
 
@@ -176,7 +176,7 @@ msgstr "Leave conversation"
 msgid "Leave room"
 msgstr "Leave room"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:54
+#: components/ChatFlow/PermissionChatFlow.tsx:57
 msgid "Let's find a room to join!"
 msgstr "Let's find a room to join!"
 
@@ -193,11 +193,11 @@ msgstr "Milestone"
 msgid "Moderator"
 msgstr "Moderator"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:122
+#: components/ChatFlow/PermissionChatFlow.tsx:125
 msgid "Moving you to the room now..."
 msgstr "Moving you to the room now..."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:127
+#: components/ChatFlow/PermissionChatFlow.tsx:130
 msgid "No, go back to home page"
 msgstr "No, go back to home page"
 
@@ -290,8 +290,8 @@ msgstr "Use my current nickname"
 msgid "View results of previous conversations"
 msgstr "View results of previous conversations"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:93
-#: components/ChatFlow/PermissionChatFlow.tsx:101
+#: components/ChatFlow/PermissionChatFlow.tsx:96
+#: components/ChatFlow/PermissionChatFlow.tsx:104
 msgid "Waiting for a room to be ready..."
 msgstr "Waiting for a room to be ready..."
 
