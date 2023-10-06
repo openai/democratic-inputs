@@ -9,11 +9,14 @@ import { PermissionState } from "@/state/slices/room";
 import { faSearch, faArrowRight, faHomeAlt } from "@fortawesome/free-solid-svg-icons";
 import { useLingui } from "@lingui/react";
 import { isEmpty } from "radash";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { msg } from "@lingui/macro";
+import { useDispatch } from "react-redux";
+import { setFlowStateEntry } from "@/state/slices/flow";
 
 export default function PermissionChatFlow() {
     const { _ } = useLingui();
+    const dispatch = useDispatch();
     const askPermissionQuickReply = useMemo(() => {
         return {
             id: "permission_ask_yes",
@@ -139,6 +142,25 @@ export default function PermissionChatFlow() {
         flowId: 'permission',
         stateKey: LOBBY_WAITING_FOR_ROOM_STATE_KEY,
     });
+
+    // on mount reset the state
+    useEffect(() => {
+        dispatch(setFlowStateEntry({
+            flowId: 'permission',
+            key: LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY,
+            value: false,
+        }));
+        dispatch(setFlowStateEntry({
+            flowId: 'permission',
+            key: LOBBY_WAITING_FOR_ROOM_STATE_KEY,
+            value: false,
+        }));
+        dispatch(setFlowStateEntry({
+            flowId: 'permission',
+            key: LOBBY_FOUND_ROOM_STATE_KEY,
+            value: false,
+        }));
+    }, [dispatch]);
 
     return (
         <>
