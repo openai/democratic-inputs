@@ -3,6 +3,7 @@ import { useExternalRoomId } from '@/hooks/useRoom';
 import { PermissionState } from '@/state/slices/room';
 import { useAppSelector } from '@/state/store';
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 import { PropsWithChildren, createContext, useContext } from 'react';
 
 // FFS: https://github.com/vercel/next.js/issues/7906
@@ -30,7 +31,12 @@ export default function ConditionalRoomConnectionProvider({ children }: PropsWit
     const hasRequested = useAppSelector((state) => state.room.permission === PermissionState.REQUESTED);
     const externalRoomId = useExternalRoomId();
 
-    return externalRoomId && hasRequested ? (
+    // only show connection when really in the room
+    // otherwise it can still activate the camera when for example in the evaluation screen
+    const pathname = usePathname();
+    const isInRoom = pathname?.includes('/room');
+
+    return isInRoom && externalRoomId && hasRequested ? (
         <LoadingValueContext.Provider value={children as JSX.Element}>
             <DynamicRoomConnectionProvider>
                 {children}
