@@ -2,6 +2,7 @@ import { Helpers, Job } from "graphile-worker";
 import { flat, isEmpty, isObject } from "radash";
 import dayjs from "dayjs";
 
+// TODO: make mechanism to automatically switch between different topologies
 import { progressionTopology } from "../config/test-0-topology";
 import { supabaseClient, Moderation } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
@@ -10,7 +11,7 @@ import { Database } from "../generated/database-public.types";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
 import { ENABLE_ROOM_PROGRESSION, PRINT_ROOM_PROGRESSION } from "../config/constants";
 import { getMessagesAfter, sendBotMessage } from "../utilities/messages";
-import { getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey } from "../utilities/moderations";
+import { getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey, getModerationsByJobKey } from "../utilities/moderations";
 import { getRoomById, updateRoomStatus } from "../utilities/rooms";
 
 export interface UpdateRoomProgressionPayload {
@@ -109,6 +110,18 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         return;
     }
 
+    const hasFailedMinAttemptTasks = await checkTasksForMinAttempts({
+        roomId,
+        layer: currentLayer,
+        helpers,
+    });
+
+    // guard: skip when not all tasks were done a minimum amount of times
+    if (hasFailedMinAttemptTasks) {
+        helpers.logger.info(`Not all progression tasks in layer ${currentLayerId} were done a minimum amount of times ${roomId}!`);
+        return;
+    }
+
     const nextLayerId = nextLayer.id;
     helpers.logger.info(`The next progression layer is ${nextLayerId} for room ${roomId}.`);
 
@@ -144,6 +157,58 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
     } else {
         helpers.logger.info('Skipping progression, because we are in testing mode.');
     }
+}
+
+interface CheckTasksForMinAttemptsOptions {
+    roomId: string;
+    layer: ProgressionLayer;
+    helpers: Helpers;
+}
+
+async function checkTasksForMinAttempts(options: CheckTasksForMinAttemptsOptions) {
+    const { roomId, layer, helpers } = options;
+    const verifications = layer?.verifications?.filter((verification) => {
+        const { minAttempts } = verification;
+        return minAttempts !== undefined;
+    }) ?? [];
+    const enrichments = layer?.enrichments?.filter((enrichment) => {
+        const { minAttempts } = enrichment;
+        return minAttempts !== undefined;
+    }) ?? [];
+    const tasks = [...verifications, ...enrichments];
+    const taskModerationAmounts = await Promise.allSettled(tasks.map(async (task) => {
+        const { id: taskId } = task;
+        const jobKey = generateProgressionJobKey(roomId, taskId);
+        const moderations = await getModerationsByJobKey(jobKey);
+        const amount = moderations?.length ?? 0;
+
+        return {
+            taskId,
+            amount,
+        };
+    }));
+    const failedMinAttemptTaskResults = taskModerationAmounts.map((taskModerationAmount) => {
+        if (taskModerationAmount.status !== 'fulfilled') {
+            helpers.logger.error(`Coult not check the amount of moderations for a task, because of the following error: ${taskModerationAmount.reason}`);
+            return false;
+        }
+
+        const { taskId, amount } = taskModerationAmount.value;
+        const task = tasks.find((task) => {
+            return task.id === taskId;
+        });
+
+        if (!task) {
+            helpers.logger.error(`Could not find the task for the following task ID when checking minimum attempts: ${taskId}`);
+            return false;
+        }
+        // console.log(task, amount);
+        // process.exit(1);
+        return amount >= (task?.minAttempts ?? 0);
+    });
+    const hasFailedMinAttemptTasks = failedMinAttemptTaskResults.includes(false);
+
+    return hasFailedMinAttemptTasks;
 }
 
 interface TriggerVerificationsOptions {
@@ -456,8 +521,8 @@ async function filterProgressionTasks(options: ProgressionTasksContext) {
 
             // check if we need to delay the first time this moderation ever runs
             // NOTE: first check this, because no fetching of messages is required
-            if (startDelayMs && !roomProgressionModeration) {
-                const delayRemainder = dayjs().diff(startDelayReferenceDate, 'ms');
+            if (startDelayMs) {
+                const delayRemainder = Math.abs(dayjs().diff(startDelayReferenceDate, 'ms'));
                 const isDelaying = delayRemainder < startDelayMs;
 
                 // guard: check if the delay is valid

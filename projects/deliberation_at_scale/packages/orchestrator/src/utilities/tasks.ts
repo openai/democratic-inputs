@@ -256,17 +256,20 @@ interface SendHardCodedEnrichMessage extends BaseProgressionWorkerTaskPayload {
 }
 
 export async function sendHardCodedEnrichMessage(options: SendHardCodedEnrichMessage) {
-    const { roomId, jobKey, progressionTask, contentOptions, helpers } = options;
+    const { roomId, jobKey, progressionTask, contentOptions } = options;
     const { id: progressionTaskId, workerTaskId } = progressionTask;
     const selectedContent = draw(contentOptions);
 
     if (!selectedContent) {
-        helpers.logger.error(``);
         return;
     }
 
     // run inserting the moderations and sending the bot message in parallel
     await Promise.allSettled([
+        sendBotMessage({
+            content: selectedContent,
+            roomId,
+        }),
         supabaseClient.from("moderations").insert({
             type: progressionTaskId,
             job_key: jobKey,
@@ -277,10 +280,6 @@ export async function sendHardCodedEnrichMessage(options: SendHardCodedEnrichMes
             }),
             target_type: 'room',
             room_id: roomId,
-        }),
-        sendBotMessage({
-            content: selectedContent,
-            roomId,
         }),
     ]);
 }

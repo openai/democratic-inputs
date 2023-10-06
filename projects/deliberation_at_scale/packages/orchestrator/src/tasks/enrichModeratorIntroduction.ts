@@ -1,42 +1,44 @@
 import { sendHardCodedEnrichMessage } from "../utilities/tasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { Helpers } from "graphile-worker";
+import { ONE_SECOND_MS } from "../config/constants";
+import { waitFor } from "../utilities/time";
 
 export default async function enrichModeratorIntroduction(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers) {
     const contentOptions = [
         `
         Hello everyone!
-        I'm ChatGPT, here to moderate our conversation.
+        I'm here to moderate our conversation.
         Before we delve into our discussion, let's take a brief moment for introductions.
-        Could each of you please provide a quick 20-second intro?
+        May I suggest saying hi to eachother briefly?
         `,
         `
         Greetings to all!
-        I'm ChatGPT, your moderator for today's conversation.
+        I'm your moderator for today's conversation.
         Before we get started, let's take a moment for everyone to introduce themselves.
-        I'd suggest a quick 20-second introduction from each participant.
+        I'd suggest a quick introduction from each participant.
         `,
         `
         Hello everyone!
-        I'm ChatGPT, here to moderate our conversation today.
+        I'm here to moderate our conversation today.
         Before we get started, let's take a brief moment for everyone to introduce themselves.
-        I'd appreciate if each participant could give a quick 20-second intro. Let's begin!
+        I'd appreciate a quick intro from each participant. Let's begin!
         `,
         `
         Greetings everyone!
-        I'm ChatGPT, your conversation moderator for today.
+        I'm your conversation moderator for today.
         Before we get started, let's take a quick moment for everyone to introduce themselves.
-        I'd suggest a concise 20-second introduction from each participant.
+        I'd suggest a quick introduction from each participant.
         `,
         `
         Greetings to all!
-        I'm ChatGPT, the moderator for today's conversation.
+        I'm the moderator for today's conversation.
         Before we get started, let's take a brief moment for everyone to introduce themselves.
-        May I suggest a quick 20-second intro from each participant?
+        May I suggest saying hi to eachother briefly?
         `,
     ];
 
-    sendHardCodedEnrichMessage({
+    await sendHardCodedEnrichMessage({
         contentOptions,
         ...payload,
         helpers

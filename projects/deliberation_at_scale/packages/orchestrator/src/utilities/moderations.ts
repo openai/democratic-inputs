@@ -27,16 +27,31 @@ export async function storeModerationResult(options: StoreModerationResultOption
 }
 
 /**
- * Get x amount of moderations for a specific job key.
+ * Get x amount of completec moderations for a specific job key.
  */
 export async function getCompletedModerationsByJobKey(jobKey: string, limit = 100) {
-
     const moderationsData = await supabaseClient
         .from('moderations')
         .select()
         .eq('active', true)
         .eq('job_key', jobKey)
         .not('completed_at', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+    const moderations = moderationsData?.data ?? [];
+
+    return moderations;
+}
+
+/**
+ * Get x amount of moderations for a specific job key.
+ */
+export async function getModerationsByJobKey(jobKey: string, limit = 100) {
+    const moderationsData = await supabaseClient
+        .from('moderations')
+        .select()
+        .eq('active', true)
+        .eq('job_key', jobKey)
         .order('created_at', { ascending: false })
         .limit(limit);
     const moderations = moderationsData?.data ?? [];

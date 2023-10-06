@@ -1,4 +1,5 @@
 import { Helpers } from "graphile-worker";
+import dayjs from "dayjs";
 
 import { supabaseClient } from "../lib/supabase";
 import { UpdateRoomProgressionPayload } from "./updateRoomProgression";
@@ -14,11 +15,14 @@ export interface TriggerRoomProgressionUpdatesPayload {
  */
 export default async function triggerRoomProgressionUpdates(payload: TriggerRoomProgressionUpdatesPayload, helpers: Helpers) {
     try {
+        // TODO: refine this query to only select rooms that are actually active
+        const minCreatedAt = dayjs().subtract(1, "hour").toISOString();
         const activeRoomsData = await supabaseClient
             .from('rooms')
             .select()
             .eq('active', true)
-            .not('starts_at', 'is', null);
+            .not('starts_at', 'is', null)
+            .gt('created_at', minCreatedAt);
         const activeRooms = activeRoomsData?.data ?? [];
         const activeRoomsAmount = activeRooms.length;
 

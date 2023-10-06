@@ -1,6 +1,7 @@
 import { ONE_SECOND_MS } from "../config/constants";
 import { sendBotMessage, sendParticipantMessage } from "../utilities/messages";
 import { supabaseClient } from "../lib/supabase";
+import { waitFor } from "../utilities/time";
 
 const defaultBotMessageDelay = ONE_SECOND_MS * 2.2;
 const roomId = 'ee440eef-3cbd-48fd-ab37-a0ea12a7c895';
@@ -148,10 +149,4 @@ export default async function screencast() {
             room_id: roomId,
         })
         .select();
-}
-
-async function waitFor(timeoutMs: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, timeoutMs);
-    });
 }

@@ -13,7 +13,7 @@ const crontab: ToggleableCronItem[] = [
         identifier: 'triggerRoomProgressionUpdates',
     },
     {
-        active: true,
+        active: false,
         pattern: '* * * * *',
         task: 'handleQueuedParticipants',
         identifier: 'handleQueuedParticipants',

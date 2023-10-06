@@ -88,7 +88,9 @@ export interface ProgressionTask {
     context?: ProgressionContext;
     /** An optional minimum cooldown in terms of time before checking this task again. */
     cooldown?: ProgressionTaskCooldown;
-    /** The maximum amount of attempts this verification should be done */
+    /** The minimum amount of attempts this task should be done */
+    minAttempts?: number;
+    /** The maximum amount of attempts this task should be done */
     maxAttempts?: number;
 }
 

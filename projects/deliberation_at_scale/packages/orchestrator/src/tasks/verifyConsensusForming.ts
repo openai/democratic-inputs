@@ -14,11 +14,17 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
         const { roomId } = payload;
         const topicContent = await getTopicContentByRoomId(roomId);
 
+        // return `
+        //     You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants on the topic:
+        //     "${topicContent}"?
+
+        //     You have to evaluate whether they have found a consensus on the topic.
+        // `;
         return `
             You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants on the topic:
             "${topicContent}"?
 
-            You have to evaluate whether they have found a consensus on the topic.
+            You have to evaluate whether it is possible to make a summary of the discussion.
         `;
     },
     getTaskContent: (helpers) => {

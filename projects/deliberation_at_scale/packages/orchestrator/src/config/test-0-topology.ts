@@ -10,23 +10,12 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'groupIntro-enrichModeratorIntroduction',
                     workerTaskId: 'enrichModeratorIntroduction',
+                    minAttempts: 1,
                     maxAttempts: 1,
                     executionType: 'alwaysBeforeVerification',
                     waitFor: true,
-                    context: {
-                        messages: {
-                            roomStatuses: ["group_intro"]
-                        },
-                    },
-                },
-                {
-                    id: 'groupIntro-enrichGroupIntroduction',
-                    workerTaskId: 'enrichGroupIntroduction',
-                    maxAttempts: 3,
-                    executionType: 'onNotVerified',
                     cooldown: {
-                        startDelayMs: 90 * ONE_SECOND_MS,
-                        durationMs: 60 * ONE_SECOND_MS,
+                        startDelayMs: 5 * ONE_SECOND_MS,
                     },
                     context: {
                         messages: {
@@ -34,7 +23,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                         },
                     },
                 },
-            ]
+            ],
         },
         {
             id: 'topicIntro',
@@ -43,11 +32,45 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'topicIntro-enrichTopicIntroduction',
                     workerTaskId: 'enrichTopicIntroduction',
+                    minAttempts: 1,
                     maxAttempts: 1,
                     executionType: 'alwaysBeforeVerification',
                     waitFor: true,
+                    cooldown: {
+                        startDelayMs: 20 * ONE_SECOND_MS,
+                    },
                 },
-            ]
+            ],
+        },
+        {
+            id: 'results',
+            roomStatus: 'results',
+            verifications: [
+                {
+                    id: 'results-verifyConsensusForming',
+                    workerTaskId: 'verifyConsensusForming',
+                    cooldown: {
+                        startDelayMs: 60 * ONE_SECOND_MS,
+                        durationMs: 10 * ONE_SECOND_MS,
+                    },
+                }
+            ],
+            enrichments: [
+                {
+                    id: 'close-enrichConsensusProposal',
+                    workerTaskId: 'enrichConsensusProposal',
+                    minAttempts: 1,
+                    conditions: [{
+                        progressionTaskId: 'results-verifyConsensusForming',
+                        isVerified: true,
+                    }],
+                    executionType: 'alwaysBeforeVerification',
+                    cooldown: {
+                        startDelayMs: 10 * ONE_SECOND_MS,
+                        durationMs: 20 * ONE_SECOND_MS,
+                    },
+                },
+            ],
         },
         {
             id: 'end',
@@ -57,13 +80,12 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                 {
                     id: 'close-enrichClosure',
                     workerTaskId: 'enrichClosure',
+                    minAttempts: 1,
                     maxAttempts: 1,
                     executionType: 'alwaysBeforeVerification',
-                    context: {
-                        messages: {
-                            roomStatuses: ['informed', 'debate', 'results', 'close'],
-                        }
-                    }
+                    cooldown: {
+                        startDelayMs: 30 * ONE_SECOND_MS,
+                    },
                 },
             ],
         },

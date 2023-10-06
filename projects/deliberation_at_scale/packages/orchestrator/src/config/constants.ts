@@ -52,7 +52,7 @@ export const ONE_MINUTE_MS = 60 * ONE_SECOND_MS;
 export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
 export const ENABLE_TASK_TESTING = false && IS_DEVELOPMENT;
-export const ENABLE_SINGLE_ROOM_TESTING = true && IS_DEVELOPMENT;
+export const ENABLE_SINGLE_ROOM_TESTING = false && IS_DEVELOPMENT;
 export const TEST_ROOM_ID_ALLOWLIST = ['ee440eef-3cbd-48fd-ab37-a0ea12a7c895'];
 export const ENABLE_ROOM_PROGRESSION = true || !IS_DEVELOPMENT;
 export const PRINT_JOBKEY = true && IS_DEVELOPMENT;
