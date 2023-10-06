@@ -18,7 +18,7 @@ msgid "A room has been found! Do you want to enter now?"
 msgstr ""
 
 #: components/ChatMessage.tsx:78
-#: hooks/useRoomMessages.ts:52
+#: hooks/useRoomMessages.ts:55
 msgid "Anonymous"
 msgstr ""
 
@@ -189,7 +189,7 @@ msgid "Milestone"
 msgstr ""
 
 #: components/ChatFlow/index.tsx:35
-#: hooks/useRoomMessages.ts:52
+#: hooks/useRoomMessages.ts:55
 msgid "Moderator"
 msgstr ""
 

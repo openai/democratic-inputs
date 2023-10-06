@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { useCallback } from "react";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/macro";
+import { ONE_SECOND_MS } from "@/utilities/constants";
 
 export interface UseMessagesOptions {
     roomId: RoomId;
@@ -35,6 +36,8 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
             participantMessageHistoryAmount
         }
     }), {
+        autoRefetch: true,
+        autoRefetchIntervalMs: ONE_SECOND_MS * 3,
         tableEventsLookup: {
             messages: {
                 refetchOperations: [],

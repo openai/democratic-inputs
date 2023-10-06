@@ -1,6 +1,7 @@
 'use client';
 import { useLocalMedia } from "@/hooks/useLocalMedia";
 import useTranscribe from "@/hooks/useTranscribe";
+import { ENABLE_TRANSCRIPTION } from "@/utilities/constants";
 import { useEffect } from "react";
 
 export default function RoomTranscription() {
@@ -13,6 +14,10 @@ export default function RoomTranscription() {
     });
 
     useEffect(() => {
+        if (!ENABLE_TRANSCRIPTION) {
+            return;
+        }
+
         if (isAudioEnabled) {
             startRecording();
         } else {
