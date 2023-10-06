@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:111
+#: components/ChatFlow/PermissionChatFlow.tsx:109
 msgid "A room has been found! Do you want to enter now?"
 msgstr "A room has been found! Do you want to enter now?"
 
@@ -26,7 +26,7 @@ msgstr "Anonymous"
 msgid "Ask for permissions now"
 msgstr "Ask for permissions now"
 
-#: components/RoomMenu.tsx:38
+#: components/RoomMenu.tsx:39
 msgid "Assistant"
 msgstr "Assistant"
 
@@ -42,11 +42,11 @@ msgstr "Change my profile"
 msgid "Consensus Proposal"
 msgstr "Consensus Proposal"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:68
+#: components/ChatFlow/PermissionChatFlow.tsx:66
 msgid "Continue to room"
 msgstr "Continue to room"
 
-#: components/RoomMenu.tsx:54
+#: components/RoomMenu.tsx:53
 msgid "Conversation"
 msgstr "Conversation"
 
@@ -70,7 +70,7 @@ msgstr "Enable audio"
 msgid "Enable video"
 msgstr "Enable video"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:115
+#: components/ChatFlow/PermissionChatFlow.tsx:113
 msgid "Enter room"
 msgstr "Enter room"
 
@@ -129,8 +129,8 @@ msgid "Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready 
 msgstr "Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
 
 #: components/ChatFlow/InvalidChatFlow.tsx:17
-msgid "Hmmm, it appears the room could not be joined or the other participants took to long to join."
-msgstr "Hmmm, it appears the room could not be joined or the other participants took to long to join."
+msgid "Hmmm, it appears the room could not be joined or the other participants took too long to join."
+msgstr "Hmmm, it appears the room could not be joined or the other participants took too long to join."
 
 #: components/RoomOutcome.tsx:56
 msgid "I agree with this consensus."
@@ -144,9 +144,9 @@ msgstr "I don't agree with this."
 msgid "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
 msgstr "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:88
-msgid "It appears that you have not given me permission to use your camera. Please click the button below to try again."
-msgstr "It appears that you have not given me permission to use your camera. Please click the button below to try again."
+#: components/ChatFlow/PermissionChatFlow.tsx:86
+msgid "It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above."
+msgstr "It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:63
 msgid "It was bad."
@@ -176,7 +176,7 @@ msgstr "Leave conversation"
 msgid "Leave room"
 msgstr "Leave room"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:56
+#: components/ChatFlow/PermissionChatFlow.tsx:54
 msgid "Let's find a room to join!"
 msgstr "Let's find a room to join!"
 
@@ -193,11 +193,11 @@ msgstr "Milestone"
 msgid "Moderator"
 msgstr "Moderator"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:124
+#: components/ChatFlow/PermissionChatFlow.tsx:122
 msgid "Moving you to the room now..."
 msgstr "Moving you to the room now..."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:129
+#: components/ChatFlow/PermissionChatFlow.tsx:127
 msgid "No, go back to home page"
 msgstr "No, go back to home page"
 
@@ -221,12 +221,12 @@ msgstr "Okay! Moving you to the lobby once again..."
 msgid "Retry joining a room"
 msgstr "Retry joining a room"
 
-#: components/ChatFlow/index.tsx:72
+#: components/ChatFlow/index.tsx:74
 msgid "Select an option above..."
 msgstr "Select an option above..."
 
-#: components/ChatFlow/index.tsx:196
-#: components/ChatFlow/index.tsx:317
+#: components/ChatFlow/index.tsx:199
+#: components/ChatFlow/index.tsx:320
 msgid "Something went wrong! Please try again."
 msgstr "Something went wrong! Please try again."
 
@@ -290,12 +290,12 @@ msgstr "Use my current nickname"
 msgid "View results of previous conversations"
 msgstr "View results of previous conversations"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:95
-#: components/ChatFlow/PermissionChatFlow.tsx:103
+#: components/ChatFlow/PermissionChatFlow.tsx:93
+#: components/ChatFlow/PermissionChatFlow.tsx:101
 msgid "Waiting for a room to be ready..."
 msgstr "Waiting for a room to be ready..."
 
-#: components/ChatFlow/index.tsx:72
+#: components/ChatFlow/index.tsx:74
 msgid "Waiting..."
 msgstr "Waiting..."
 
