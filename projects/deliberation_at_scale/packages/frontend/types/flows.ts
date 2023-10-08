@@ -4,7 +4,6 @@ import { Dayjs } from "dayjs";
 import { FlowId, FlowStateEntries } from "@/state/slices/flow";
 import { RoomState } from "@/state/slices/room";
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { UseLocalMedia } from "@/hooks/useLocalMedia";
 
 export interface ChatFlowConfig {
     id: FlowId;
