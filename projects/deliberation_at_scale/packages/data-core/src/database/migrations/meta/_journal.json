@@ -197,6 +197,20 @@
       "when": 1696497366888,
       "tag": "0027_spooky_sentinels",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "5",
+      "when": 1696793877251,
+      "tag": "0028_shiny_roulette",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "5",
+      "when": 1696793988097,
+      "tag": "0029_open_cerise",
+      "breakpoints": true
     }
   ]
 }

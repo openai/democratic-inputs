@@ -224,6 +224,8 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
     roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id), // can be null to send messages to specific participants outside of room
     roomStatusType: roomStatusType("room_status_type"),
     content: text("content").notNull().default(""),
+    safeLanguage: boolean("safe_language"),
+    easyLanguage: boolean("easy_language"),
     embeddings: json("embeddings").notNull().default({}),
     ...generateTimestampFields(),
 }, (table) => {
@@ -234,6 +236,8 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
         originalMessageIdIndex: index("original_message_id_index").on(table.originalMessageId),
         participantIdIndex: index("participant_id_index").on(table.participantId),
         roomIdIndex: index("room_id_index").on(table.roomId),
+        safeLanguageIndex: index("safe_language_index").on(table.safeLanguage),
+        easyLanguageIndex: index("easy_language_index").on(table.easyLanguage),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
