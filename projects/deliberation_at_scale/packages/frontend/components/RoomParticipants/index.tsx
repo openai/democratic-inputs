@@ -17,17 +17,15 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
     const [showLocalControls, setShowLocalControls] = useState(SHOW_VIDEO_CONTROLS_INITIALLY);
     const connection = useRoomConnection();
     const { state } = useLocalMedia();
-
-    const handleLocalParticipantClick = useCallback(() => {
-        setShowLocalControls((current) => !current);
-    }, []);
-
     const { remoteParticipants } = connection?.state ?? {};
     const { VideoView } = connection?.components ?? {};
     const defaultFadeInVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1 },
     };
+    const handleLocalParticipantClick = useCallback(() => {
+        setShowLocalControls((current) => !current);
+    }, []);
 
     if (!connection || !VideoView) {
         return null;
@@ -100,6 +98,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                 <button className="grow" onClick={handleLocalParticipantClick}>
                     {(state.localStream && state.isVideoEnabled) ? (
                         <VideoView
+                            muted={true}
                             className="w-full h-full object-cover rounded border"
                             stream={state.localStream}
                         />
