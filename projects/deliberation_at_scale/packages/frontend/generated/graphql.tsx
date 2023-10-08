@@ -1132,6 +1132,7 @@ export type Messages = Node & {
   completionsCollection?: Maybe<CompletionsConnection>;
   content: Scalars['String']['output'];
   created_at: Scalars['Datetime']['output'];
+  easy_language?: Maybe<Scalars['Boolean']['output']>;
   embeddings: Scalars['JSON']['output'];
   id: Scalars['UUID']['output'];
   messages?: Maybe<Messages>;
@@ -1146,6 +1147,7 @@ export type Messages = Node & {
   room_id?: Maybe<Scalars['UUID']['output']>;
   room_status_type?: Maybe<RoomStatusType>;
   rooms?: Maybe<Rooms>;
+  safe_language?: Maybe<Scalars['Boolean']['output']>;
   timing_type: TimingType;
   type: MessageType;
   updated_at: Scalars['Datetime']['output'];
@@ -1216,12 +1218,14 @@ export type MessagesFilter = {
   active?: InputMaybe<BooleanFilter>;
   content?: InputMaybe<StringFilter>;
   created_at?: InputMaybe<DatetimeFilter>;
+  easy_language?: InputMaybe<BooleanFilter>;
   id?: InputMaybe<UuidFilter>;
   nodeId?: InputMaybe<IdFilter>;
   original_message_id?: InputMaybe<UuidFilter>;
   participant_id?: InputMaybe<UuidFilter>;
   room_id?: InputMaybe<UuidFilter>;
   room_status_type?: InputMaybe<RoomStatusTypeFilter>;
+  safe_language?: InputMaybe<BooleanFilter>;
   timing_type?: InputMaybe<TimingTypeFilter>;
   type?: InputMaybe<MessageTypeFilter>;
   updated_at?: InputMaybe<DatetimeFilter>;
@@ -1232,12 +1236,14 @@ export type MessagesInsertInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   content?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  easy_language?: InputMaybe<Scalars['Boolean']['input']>;
   embeddings?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   original_message_id?: InputMaybe<Scalars['UUID']['input']>;
   participant_id?: InputMaybe<Scalars['UUID']['input']>;
   room_id?: InputMaybe<Scalars['UUID']['input']>;
   room_status_type?: InputMaybe<RoomStatusType>;
+  safe_language?: InputMaybe<Scalars['Boolean']['input']>;
   timing_type?: InputMaybe<TimingType>;
   type?: InputMaybe<MessageType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1256,11 +1262,13 @@ export type MessagesOrderBy = {
   active?: InputMaybe<OrderByDirection>;
   content?: InputMaybe<OrderByDirection>;
   created_at?: InputMaybe<OrderByDirection>;
+  easy_language?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
   original_message_id?: InputMaybe<OrderByDirection>;
   participant_id?: InputMaybe<OrderByDirection>;
   room_id?: InputMaybe<OrderByDirection>;
   room_status_type?: InputMaybe<OrderByDirection>;
+  safe_language?: InputMaybe<OrderByDirection>;
   timing_type?: InputMaybe<OrderByDirection>;
   type?: InputMaybe<OrderByDirection>;
   updated_at?: InputMaybe<OrderByDirection>;
@@ -1271,12 +1279,14 @@ export type MessagesUpdateInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   content?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  easy_language?: InputMaybe<Scalars['Boolean']['input']>;
   embeddings?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   original_message_id?: InputMaybe<Scalars['UUID']['input']>;
   participant_id?: InputMaybe<Scalars['UUID']['input']>;
   room_id?: InputMaybe<Scalars['UUID']['input']>;
   room_status_type?: InputMaybe<RoomStatusType>;
+  safe_language?: InputMaybe<Scalars['Boolean']['input']>;
   timing_type?: InputMaybe<TimingType>;
   type?: InputMaybe<MessageType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -2691,7 +2701,7 @@ export type GetRoomIdFromParticipantQueryVariables = Exact<{
 
 export type GetRoomIdFromParticipantQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', room_id?: any | null } }> } | null };
 
-export type RoomMessageFragment = { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any };
+export type RoomMessageFragment = { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, easy_language?: boolean | null, safe_language?: boolean | null, created_at: any };
 
 export type GetRoomMessagesQueryVariables = Exact<{
   roomId?: InputMaybe<Scalars['UUID']['input']>;
@@ -2700,7 +2710,7 @@ export type GetRoomMessagesQueryVariables = Exact<{
 }>;
 
 
-export type GetRoomMessagesQuery = { __typename?: 'Query', messagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, botMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null, participantMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, created_at: any } }> } | null };
+export type GetRoomMessagesQuery = { __typename?: 'Query', messagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, easy_language?: boolean | null, safe_language?: boolean | null, created_at: any } }> } | null, botMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, easy_language?: boolean | null, safe_language?: boolean | null, created_at: any } }> } | null, participantMessagesCollection?: { __typename?: 'messagesConnection', edges: Array<{ __typename?: 'messagesEdge', node: { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, easy_language?: boolean | null, safe_language?: boolean | null, created_at: any } }> } | null };
 
 export type GetRoomOutcomesQueryVariables = Exact<{
   roomId?: InputMaybe<Scalars['UUID']['input']>;
@@ -2841,6 +2851,8 @@ export const RoomMessageFragmentDoc = gql`
   participant_id
   room_id
   room_status_type
+  easy_language
+  safe_language
   created_at
   type
 }

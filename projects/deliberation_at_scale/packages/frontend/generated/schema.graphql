@@ -1333,6 +1333,7 @@ type messages implements Node {
   ): completionsConnection
   content: String!
   created_at: Datetime!
+  easy_language: Boolean
   embeddings: JSON!
   id: UUID!
   messages: messages
@@ -1402,6 +1403,7 @@ type messages implements Node {
   room_id: UUID
   room_status_type: roomStatusType
   rooms: rooms
+  safe_language: Boolean
   timing_type: timingType!
   type: messageType!
   updated_at: Datetime!
@@ -1430,12 +1432,14 @@ input messagesFilter {
   active: BooleanFilter
   content: StringFilter
   created_at: DatetimeFilter
+  easy_language: BooleanFilter
   id: UUIDFilter
   nodeId: IDFilter
   original_message_id: UUIDFilter
   participant_id: UUIDFilter
   room_id: UUIDFilter
   room_status_type: roomStatusTypeFilter
+  safe_language: BooleanFilter
   timing_type: timingTypeFilter
   type: messageTypeFilter
   updated_at: DatetimeFilter
@@ -1446,12 +1450,14 @@ input messagesInsertInput {
   active: Boolean
   content: String
   created_at: Datetime
+  easy_language: Boolean
   embeddings: JSON
   id: UUID
   original_message_id: UUID
   participant_id: UUID
   room_id: UUID
   room_status_type: roomStatusType
+  safe_language: Boolean
   timing_type: timingType
   type: messageType
   updated_at: Datetime
@@ -1470,11 +1476,13 @@ input messagesOrderBy {
   active: OrderByDirection
   content: OrderByDirection
   created_at: OrderByDirection
+  easy_language: OrderByDirection
   id: OrderByDirection
   original_message_id: OrderByDirection
   participant_id: OrderByDirection
   room_id: OrderByDirection
   room_status_type: OrderByDirection
+  safe_language: OrderByDirection
   timing_type: OrderByDirection
   type: OrderByDirection
   updated_at: OrderByDirection
@@ -1485,12 +1493,14 @@ input messagesUpdateInput {
   active: Boolean
   content: String
   created_at: Datetime
+  easy_language: Boolean
   embeddings: JSON
   id: UUID
   original_message_id: UUID
   participant_id: UUID
   room_id: UUID
   room_status_type: roomStatusType
+  safe_language: Boolean
   timing_type: timingType
   type: messageType
   updated_at: Datetime

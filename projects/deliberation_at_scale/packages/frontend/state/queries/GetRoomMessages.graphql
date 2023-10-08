@@ -8,6 +8,8 @@ fragment RoomMessage on messages {
   participant_id
   room_id
   room_status_type
+  easy_language
+  safe_language
   created_at
   type
 }

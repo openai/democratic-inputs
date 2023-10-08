@@ -209,17 +209,49 @@ export interface Database {
                     }
                 ]
             }
+            events: {
+                Row: {
+                    active: boolean
+                    created_at: string
+                    ends_at: string | null
+                    id: string
+                    name: string | null
+                    starts_at: string | null
+                    updated_at: string
+                }
+                Insert: {
+                    active?: boolean
+                    created_at?: string
+                    ends_at?: string | null
+                    id?: string
+                    name?: string | null
+                    starts_at?: string | null
+                    updated_at?: string
+                }
+                Update: {
+                    active?: boolean
+                    created_at?: string
+                    ends_at?: string | null
+                    id?: string
+                    name?: string | null
+                    starts_at?: string | null
+                    updated_at?: string
+                }
+                Relationships: []
+            }
             messages: {
                 Row: {
                     active: boolean
                     content: string
                     created_at: string
+                    easy_language: boolean | null
                     embeddings: Json
                     id: string
                     original_message_id: string | null
                     participant_id: string | null
                     room_id: string | null
                     room_status_type: Database["public"]["Enums"]["roomStatusType"] | null
+                    safe_language: boolean | null
                     timing_type: Database["public"]["Enums"]["timingType"]
                     type: Database["public"]["Enums"]["messageType"]
                     updated_at: string
@@ -229,6 +261,7 @@ export interface Database {
                     active?: boolean
                     content?: string
                     created_at?: string
+                    easy_language?: boolean | null
                     embeddings?: Json
                     id?: string
                     original_message_id?: string | null
@@ -237,6 +270,7 @@ export interface Database {
                     room_status_type?:
                     | Database["public"]["Enums"]["roomStatusType"]
                     | null
+                    safe_language?: boolean | null
                     timing_type?: Database["public"]["Enums"]["timingType"]
                     type?: Database["public"]["Enums"]["messageType"]
                     updated_at?: string
@@ -246,6 +280,7 @@ export interface Database {
                     active?: boolean
                     content?: string
                     created_at?: string
+                    easy_language?: boolean | null
                     embeddings?: Json
                     id?: string
                     original_message_id?: string | null
@@ -254,6 +289,7 @@ export interface Database {
                     room_status_type?:
                     | Database["public"]["Enums"]["roomStatusType"]
                     | null
+                    safe_language?: boolean | null
                     timing_type?: Database["public"]["Enums"]["timingType"]
                     type?: Database["public"]["Enums"]["messageType"]
                     updated_at?: string
@@ -552,6 +588,7 @@ export interface Database {
                 Row: {
                     active: boolean
                     created_at: string
+                    demographics: Json
                     id: string
                     last_seen_at: string
                     nick_name: string
@@ -564,6 +601,7 @@ export interface Database {
                 Insert: {
                     active?: boolean
                     created_at?: string
+                    demographics?: Json
                     id?: string
                     last_seen_at?: string
                     nick_name?: string
@@ -576,6 +614,7 @@ export interface Database {
                 Update: {
                     active?: boolean
                     created_at?: string
+                    demographics?: Json
                     id?: string
                     last_seen_at?: string
                     nick_name?: string
@@ -719,15 +758,14 @@ export interface Database {
         }
         Enums: {
             completionType: "gpt4" | "gpt"
-            crossPollinationType: "discussion" | "closing" | "afterwards"
-            discussionType: "chat" | "voice" | "bot"
+            crossPollinationType: "outcome" | "topic"
             messageType: "chat" | "voice" | "bot"
             moderationType:
             | "harrashment"
+            | "consensus"
             | "spam"
             | "off_topic"
             | "other"
-            | "consensus"
             | "unequal"
             | "clarification"
             opinionOptionType:
@@ -757,11 +795,11 @@ export interface Database {
             | "in_room"
             | "end_of_session"
             roomStatusType:
+            | "group_intro"
             | "safe"
             | "informed"
             | "debate"
             | "results"
-            | "group_intro"
             | "topic_intro"
             | "close"
             | "end"
