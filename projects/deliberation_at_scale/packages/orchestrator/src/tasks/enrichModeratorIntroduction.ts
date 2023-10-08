@@ -1,10 +1,8 @@
-import { sendHardCodedEnrichMessage } from "../utilities/tasks";
+import { ModeratorTaskTuple, sendHardCodedEnrichMessage } from "../utilities/tasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { Helpers } from "graphile-worker";
-import { ONE_SECOND_MS } from "../config/constants";
-import { waitFor } from "../utilities/time";
 
-export default async function enrichModeratorIntroduction(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers) {
+export default async function enrichModeratorIntroduction(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers): Promise<ModeratorTaskTuple> {
     const contentOptions = [
         `
         Hello everyone!
@@ -38,9 +36,13 @@ export default async function enrichModeratorIntroduction(payload: BaseProgressi
         `,
     ];
 
-    await sendHardCodedEnrichMessage({
+    const { moderation } = await sendHardCodedEnrichMessage({
         contentOptions,
         ...payload,
         helpers
     });
+
+    return {
+        moderation,
+    };
 }

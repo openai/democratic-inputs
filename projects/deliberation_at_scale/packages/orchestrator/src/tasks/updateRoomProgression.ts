@@ -9,10 +9,12 @@ import { waitForAllModerationCompletions } from "../lib/graphileWorker";
 import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionEnrichmentTask, ProgressionLayer, ProgressionLayerId, ProgressionTask, RoomStatus } from "../types";
 import { Database } from "../generated/database-public.types";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
-import { ENABLE_ROOM_PROGRESSION, PRINT_ROOM_PROGRESSION } from "../config/constants";
+import { ENABLE_ROOM_PROGRESSION, PRINT_ROOM_PROGRESSION, ROOM_PROGRESSION_WITH_JOBS } from "../config/constants";
 import { getMessagesAfter, sendBotMessage } from "../utilities/messages";
 import { getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey, getModerationsByJobKey } from "../utilities/moderations";
 import { getRoomById, updateRoomStatus } from "../utilities/rooms";
+import { ModeratorTaskTuple } from "../utilities/tasks";
+import { progressionTaskExecutorLookup } from "../utilities/progression";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -202,8 +204,7 @@ async function checkTasksForMinAttempts(options: CheckTasksForMinAttemptsOptions
             helpers.logger.error(`Could not find the task for the following task ID when checking minimum attempts: ${taskId}`);
             return false;
         }
-        // console.log(task, amount);
-        // process.exit(1);
+
         return amount >= (task?.minAttempts ?? 0);
     });
     const hasFailedMinAttemptTasks = failedMinAttemptTaskResults.includes(false);
@@ -219,9 +220,47 @@ interface TriggerVerificationsOptions {
 }
 
 async function triggerVerifications(options: TriggerVerificationsOptions) {
-    const { currentLayer, currentLayerIndex, progressionTaskBaseContext, helpers } = options;
-    const { id: currentLayerId } = currentLayer;
+    if (ROOM_PROGRESSION_WITH_JOBS) {
+        return addVerificationTaskJobs(options);
+    }
+
+    return executeVerificationTasks(options);
+}
+
+async function addVerificationTaskJobs(options: TriggerVerificationsOptions) {
+    const { helpers, progressionTaskBaseContext } = options;
     const { roomId } = progressionTaskBaseContext;
+    const handledVerifications = await filterVerifications(options);
+
+    try {
+        return await waitForAllProgressionTasks({
+            progressionTasks: handledVerifications,
+            ...progressionTaskBaseContext,
+        });
+    } catch (error) {
+        helpers.logger.error(`Could not update progression, because some of the verification task jobs failed. Room ID: ${roomId}, Reason: ${error}`);
+    }
+}
+
+async function executeVerificationTasks(options: TriggerVerificationsOptions) {
+    const { helpers, progressionTaskBaseContext } = options;
+    const { roomId } = progressionTaskBaseContext;
+    const handledVerifications = await filterVerifications(options);
+
+    try {
+        return await handleProgressionTasks({
+            progressionTasks: handledVerifications,
+            ...progressionTaskBaseContext,
+        });
+    } catch (error) {
+        helpers.logger.error(`Could not update progression, because some of the verifications failed. Room ID: ${roomId}, Reason: ${error}`);
+    }
+}
+
+async function filterVerifications(options: TriggerVerificationsOptions) {
+    const { currentLayer, currentLayerIndex, helpers, progressionTaskBaseContext } = options;
+    const { roomId } = progressionTaskBaseContext;
+    const currentLayerId = currentLayer?.id;
     const currentLayerVerifications = currentLayer?.verifications ?? [];
     const activeVerifications = currentLayerVerifications.filter((verification) => verification.active ?? true);
     const persistentVerifications = progressionTopology.layers.slice(0, currentLayerIndex).flatMap((topologyLayer) => {
@@ -234,18 +273,9 @@ async function triggerVerifications(options: TriggerVerificationsOptions) {
     });
     const handledVerifications = [...activeVerifications, ...persistentVerifications];
 
-    helpers.logger.info(`Running ${activeVerifications.length} active verifications and ${persistentVerifications.length} persistent verifications for room ${roomId} in progression layer ${currentLayerId}.`);
+    helpers.logger.info(`Filtered ${activeVerifications.length} active verifications and ${persistentVerifications.length} persistent verifications for room ${roomId} in progression layer ${currentLayerId}.`);
 
-    try {
-        const verificationResults = await waitForAllProgressionTasks({
-            progressionTasks: handledVerifications,
-            ...progressionTaskBaseContext,
-        });
-
-        return verificationResults;
-    } catch (error) {
-        helpers.logger.error(`Could not update progression, because some of the verifications failed. Room ID: ${roomId}, Reason: ${error}`);
-    }
+    return handledVerifications;
 }
 
 export function getModerationJobKeyForRoomProgression(roomId: string, layerId: ProgressionLayerId) {
@@ -325,7 +355,7 @@ async function triggerEnrichments(options: TriggerEnrichmentsOptions) {
 
     // NOTE: catch errors here, because we want to continue with the other enrichments
     // try-catch clause only works with awaiting promises.
-    addProgressionTaskJobs({
+    handleProgressionTasks({
         progressionTasks: nonBlockingEnrichments,
         ...progressionTaskBaseContext,
     }).catch((error) => {
@@ -333,7 +363,7 @@ async function triggerEnrichments(options: TriggerEnrichmentsOptions) {
     });
 
     try {
-        await addProgressionTaskJobs({
+        await handleProgressionTasks({
             progressionTasks: blockingEnrichments,
             ...progressionTaskBaseContext,
         });
@@ -355,7 +385,7 @@ interface WaitForAllProgressionTasksOptions {
  */
 async function waitForAllProgressionTasks(options: WaitForAllProgressionTasksOptions) {
     const { helpers } = options;
-    const settledJobs = await addProgressionTaskJobs(options);
+    const { settledJobs = [] } = await handleProgressionTasks(options);
     const jobs = settledJobs.map((job) => {
         if (job.status !== 'fulfilled') {
             return;
@@ -422,36 +452,33 @@ interface ProgressionTasksContext {
 
 type ProgressionTasksBaseContext = Omit<ProgressionTasksContext, 'progressionTasks'>;
 
+interface ProgressionTaskHandlerResult {
+    completedModeratorTaskTuples?: ModeratorTaskTuple[];
+    failedProgressionTaskIds?: string[];
+    settledJobs?: PromiseSettledResult<Job>[];
+}
+
 /**
- * Helper to add all progression tasks as jobs to the job system. Along with this it also adds a moderation to the database.
- * This allows us to track which progression tasks are triggered in the past to filter them for cooldowns and maximum attempts.
+ * Helper to handle all progression tasks. This can either be done by directly executing them or by adding them to the job system.
  */
-async function addProgressionTaskJobs(options: ProgressionTasksContext) {
-    const { roomId, helpers, progressionLayerId } = options;
+async function handleProgressionTasks(options: ProgressionTasksContext): Promise<ProgressionTaskHandlerResult> {
+    const { roomId } = options;
     const { hasErroredProgressionTasks, validProgressionTasks, erroredProgressionTasks } = await filterProgressionTasks(options);
 
     if (hasErroredProgressionTasks) {
         return Promise.reject(`Could not add progression task jobs for room ${roomId} because one of the verifications failed before executing the jobs. Failed verifications: ${JSON.stringify(erroredProgressionTasks)}`);
     }
 
-    // run in parallel to optimize speed of these tasks
-    const [jobsResult, moderationsInsertResult] = await Promise.allSettled([
-        Promise.allSettled(validProgressionTasks.map((progressionTask) => {
-            const { id: progressionTaskId, workerTaskId } = progressionTask;
-            const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
-
-            helpers.logger.info(`Adding worker task ${workerTaskId} via progression task with job key: ${jobKey}`);
-
-            return helpers.addJob(workerTaskId, {
-                progressionTask,
-                progressionLayerId,
-                jobKey,
-                roomId,
-            } satisfies BaseProgressionWorkerTaskPayload, {
-                jobKey,
-            });
-        })),
-
+    const [tasksResult, moderationsInsertResult] = await Promise.allSettled([
+        ROOM_PROGRESSION_WITH_JOBS ?
+            addProgressionTaskJobs({
+                ...options,
+                progressionTasks: validProgressionTasks,
+            }) :
+            executeProgressionTasks({
+                ...options,
+                progressionTasks: validProgressionTasks,
+            }),
         supabaseClient.from("moderations").insert(validProgressionTasks.map((progressionTask) => {
             const { id: progressionTaskId, workerTaskId } = progressionTask;
             const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
@@ -467,17 +494,93 @@ async function addProgressionTaskJobs(options: ProgressionTasksContext) {
     ]);
 
     // guard: check if the results are valid
-    if (jobsResult.status === 'rejected') {
-        return Promise.reject(`Could not add progression task jobs for room ${roomId}: ${jobsResult.reason}`);
+    if (tasksResult.status === 'rejected') {
+        return Promise.reject(`Could not handle progression tasks for room ${roomId}: ${tasksResult.reason}`);
     }
 
     if (moderationsInsertResult.status === 'rejected') {
         return Promise.reject(`Could not insert moderations when logging progression tasks for room ${roomId}: ${moderationsInsertResult.reason}`);
     }
 
-    const jobs = jobsResult.value;
+    return tasksResult.value;
+}
 
-    return jobs;
+/**
+ * Helper to add all progression tasks as jobs to the job system. Along with this it also adds a moderation to the database.
+ * This allows us to track which progression tasks are triggered in the past to filter them for cooldowns and maximum attempts.
+ */
+async function addProgressionTaskJobs(options: ProgressionTasksContext) {
+    const { roomId, helpers, progressionLayerId, progressionTasks } = options;
+    const settledJobs = await Promise.allSettled(progressionTasks.map((progressionTask) => {
+        const { id: progressionTaskId, workerTaskId } = progressionTask;
+        const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
+
+        helpers.logger.info(`Adding worker task ${workerTaskId} via progression task with job key: ${jobKey}`);
+
+        return helpers.addJob(workerTaskId, {
+            progressionTask,
+            progressionLayerId,
+            jobKey,
+            roomId,
+        } satisfies BaseProgressionWorkerTaskPayload, {
+            jobKey,
+        });
+    }));
+
+    return {
+        settledJobs,
+    };
+}
+
+/**
+ * Directly exectute all progression tasks without adding them to the job system.
+ */
+async function executeProgressionTasks(options: ProgressionTasksContext) {
+    const { roomId, helpers, progressionLayerId, progressionTasks } = options;
+
+    // run in parallel to optimize speed of these tasks
+    const settledProgressionTasks = await Promise.allSettled(progressionTasks.map(async (progressionTask) => {
+        const { id: progressionTaskId, workerTaskId } = progressionTask;
+        const jobKey = generateProgressionJobKey(roomId, progressionTaskId);
+        const progressionTaskExecutor = progressionTaskExecutorLookup[workerTaskId];
+        const payload: BaseProgressionWorkerTaskPayload = {
+            progressionTask,
+            progressionLayerId,
+            jobKey,
+            roomId,
+        };
+
+        return progressionTaskExecutor(payload, helpers);
+    }));
+
+    const completedModeratorTaskTuples: ModeratorTaskTuple[] = [];
+    const failedProgressionTaskIds: string[] = [];
+
+    settledProgressionTasks.map((settledProgressionTask, taskIndex) => {
+        const progressionTask = progressionTasks[taskIndex];
+        const { id: progressionTaskId } = progressionTask;
+
+        // guard: set failed when the task failed
+        if (settledProgressionTask.status === 'rejected') {
+            failedProgressionTaskIds.push(progressionTaskId);
+            return;
+        }
+
+        const moderatorTaskTuple = settledProgressionTask.value;
+
+        // guard: set failed when there was no moderation record made
+        if (!moderatorTaskTuple || !moderatorTaskTuple.moderation) {
+            failedProgressionTaskIds.push(progressionTaskId);
+            return;
+        }
+
+        completedModeratorTaskTuples.push(moderatorTaskTuple);
+    });
+
+    return {
+        completedModeratorTaskTuples,
+        failedProgressionTaskIds,
+    };
 }
 
 async function filterProgressionTasks(options: ProgressionTasksContext) {

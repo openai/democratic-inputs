@@ -39,7 +39,7 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
             `,
         ];
 
-        const selectedOption = await getContentForHardCodedEnrichMessage({contentOptions});
+        const selectedOption = getContentForHardCodedEnrichMessage({contentOptions});
 
         return `${selectedOption} **${consensus}**`;
 

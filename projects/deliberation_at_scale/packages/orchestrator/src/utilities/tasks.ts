@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 import { Json } from "../generated/database-public.types";
 import { EnrichCompletionResult, VerificationFunctionCompletionResult, createEnrichFunctionCompletion, createEnrichPromptCompletion, createVerificationFunctionCompletion } from "../lib/openai";
-import { supabaseClient, OutcomeType } from "../lib/supabase";
+import { supabaseClient, OutcomeType, Moderation, Outcome } from "../lib/supabase";
 import { BaseProgressionWorkerTaskPayload, BaseRoomWorkerTaskPayload } from "../types";
 import { getDefaultOutsomeSourcesMessageIds, storeOutcome } from "./outcomes";
 import { sendBotMessage } from "./messages";
@@ -40,6 +40,12 @@ export interface CreateModeratorTaskOptions<PayloadType, ResultType> {
 
 type CreateVerifyTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, VerificationFunctionCompletionResult>, 'performTask'>;
 type CreateEnrichTaskOptions<PayloadType> = Omit<CreateModeratorTaskOptions<PayloadType, EnrichCompletionResult>, 'performTask'>;
+
+export interface ModeratorTaskTuple {
+    moderation?: Moderation;
+    outcome?: Outcome;
+}
+
 
 export function createModeratedVerifyTask<PayloadType extends BaseRoomWorkerTaskPayload>(options: CreateVerifyTaskOptions<PayloadType>) {
     return createModeratorTask<PayloadType, VerificationFunctionCompletionResult>({
@@ -135,7 +141,7 @@ export function createModeratedEnrichPromptTask<PayloadType extends BaseProgress
 }
 
 export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayload, ResultType>(options: CreateModeratorTaskOptions<PayloadType, ResultType>) {
-    return async (payload: PayloadType, helpers: Helpers) => {
+    return async (payload: PayloadType, helpers: Helpers): Promise<ModeratorTaskTuple> => {
         const {
             getTaskInstruction,
             getTaskContent,
@@ -157,7 +163,7 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
         // guard: skip task when there is no task instruction
         if (!jobKey || !roomId) {
             helpers.logger.error(`No valid job key or room ID is found for the moderator task with payload: ${payload}.`);
-            return;
+            return {};
         }
 
         // get these in parallel to each other to optimize speed
@@ -178,7 +184,7 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
         // guard: skip task when there is no task instruction or content
         if (isEmpty(taskInstruction) || isEmpty(taskContent)) {
             helpers.logger.error(`The task instruction or content is invalid for the moderator task with key ${jobKey}`);
-            return;
+            return {};
         }
 
         const performTaskHelpers: PerformTaskHelpers<PayloadType> = {
@@ -204,10 +210,13 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
         helpers.logger.info(JSON.stringify(taskResult, null, 2));
 
         // execute these in parallel to each other
-        await Promise.allSettled([
+        const results = await Promise.allSettled([
 
-            // execute the the callback when it is defined
-            !!onTaskCompleted && onTaskCompleted(resultTaskHelpers),
+            // always store the result of this verification in the database for logging purposes
+            storeModerationResult({
+                jobKey,
+                result: (taskResult as unknown as Json),
+            }),
 
             // store the outcome only when requested
             shouldStoreOutcome && storeOutcome({
@@ -217,11 +226,8 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
                 getOutcomeType,
             }),
 
-            // always store the result of this verification in the database for logging purposes
-            storeModerationResult({
-                jobKey,
-                result: (taskResult as unknown as Json),
-            }),
+            // execute the the callback when it is defined
+            !!onTaskCompleted && onTaskCompleted(resultTaskHelpers),
 
             // send a message to the room only when there is no safe language
             shouldSendBotMessage && sendBotMessage({
@@ -229,23 +235,25 @@ export function createModeratorTask<PayloadType extends BaseRoomWorkerTaskPayloa
                 roomId,
             }),
         ]);
+        const moderationResult = results?.[0];
+        const outcomeResult = results?.[1];
+        const moderation = moderationResult.status === 'fulfilled' ? moderationResult?.value : undefined;
+        const outcome = outcomeResult.status === 'fulfilled' && outcomeResult?.value !== false ? outcomeResult?.value : undefined;
+
+        return {
+            moderation,
+            outcome,
+        };
     };
 }
 
 interface GetContentForHardCodedEnrichMessageOptions {
     contentOptions: string[];
-    helpers: Helpers,
 }
 
-export async function getContentForHardCodedEnrichMessage(payload: GetContentForHardCodedEnrichMessageOptions) {
-    const { contentOptions, helpers } = payload;
-
+export function getContentForHardCodedEnrichMessage(payload: GetContentForHardCodedEnrichMessageOptions) {
+    const { contentOptions } = payload;
     const selectedContent = draw(contentOptions);
-
-    if (!selectedContent) {
-        helpers.logger.error(``);
-        return;
-    }
 
     return selectedContent;
 }
@@ -258,14 +266,14 @@ interface SendHardCodedEnrichMessage extends BaseProgressionWorkerTaskPayload {
 export async function sendHardCodedEnrichMessage(options: SendHardCodedEnrichMessage) {
     const { roomId, jobKey, progressionTask, contentOptions } = options;
     const { id: progressionTaskId, workerTaskId } = progressionTask;
-    const selectedContent = draw(contentOptions);
+    const selectedContent = getContentForHardCodedEnrichMessage({ contentOptions });
 
     if (!selectedContent) {
-        return;
+        return {};
     }
 
     // run inserting the moderations and sending the bot message in parallel
-    await Promise.allSettled([
+    const results = await Promise.allSettled([
         sendBotMessage({
             content: selectedContent,
             roomId,
@@ -280,6 +288,13 @@ export async function sendHardCodedEnrichMessage(options: SendHardCodedEnrichMes
             }),
             target_type: 'room',
             room_id: roomId,
-        }),
+        }).select(),
     ]);
+
+    const moderationResult = results?.[1];
+    const moderation = moderationResult.status === 'fulfilled' ? moderationResult?.value.data?.[0] : undefined;
+
+    return {
+        moderation,
+    };
 }

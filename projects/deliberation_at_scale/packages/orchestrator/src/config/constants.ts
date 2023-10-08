@@ -49,6 +49,7 @@ export const ONE_SECOND_MS = 1000;
 export const ONE_MINUTE_MS = 60 * ONE_SECOND_MS;
 
 /* Progression */
+export const ROOM_PROGRESSION_WITH_JOBS = false;
 export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
 export const ENABLE_TASK_TESTING = false && IS_DEVELOPMENT;
@@ -67,7 +68,7 @@ export const TEST_WHEREBY_ROOM: ValidCreateExternalRoomResult = {
 };
 
 /* Deliberation */
-export const DEVELOPMENT_PARTICIPANTS_PER_ROOM = 2;
+export const DEVELOPMENT_PARTICIPANTS_PER_ROOM = 1;
 export const PRODUCTION_PARTICIPANTS_PER_ROOM = 3;
 export const PARTICIPANTS_PER_ROOM = IS_DEVELOPMENT ? DEVELOPMENT_PARTICIPANTS_PER_ROOM : PRODUCTION_PARTICIPANTS_PER_ROOM;
 export const MAX_ROOM_DURATION_MS = 60 * ONE_MINUTE_MS;

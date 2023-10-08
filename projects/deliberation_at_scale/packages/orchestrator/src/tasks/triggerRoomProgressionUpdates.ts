@@ -5,8 +5,10 @@ import { supabaseClient } from "../lib/supabase";
 import { UpdateRoomProgressionPayload } from "./updateRoomProgression";
 import { ENABLE_SINGLE_ROOM_TESTING, ONE_SECOND_MS, TEST_ROOM_ID_ALLOWLIST } from "../config/constants";
 import { reschedule } from "../scheduler";
+import { captureEvent } from "../lib/sentry";
 
 export interface TriggerRoomProgressionUpdatesPayload {
+    // empty
 }
 
 /**
@@ -47,7 +49,11 @@ export default async function triggerRoomProgressionUpdates(payload: TriggerRoom
             });
         });
     } catch (error) {
-        helpers.logger.error(`Error while scheduling progression updates: ${JSON.stringify(error)}`);
+        captureEvent({
+            message: `Error while scheduling progression updates: ${JSON.stringify(error)}`,
+            level: 'error',
+            helpers,
+        });
     }
 
     await reschedule<TriggerRoomProgressionUpdatesPayload>({

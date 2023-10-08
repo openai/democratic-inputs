@@ -13,17 +13,24 @@ export interface StoreModerationResultOptions {
 export async function storeModerationResult(options: StoreModerationResultOptions) {
     const { jobKey, result, messageId, roomId, participantId } = options;
 
-    const { error } = await supabaseClient.from("moderations").update({
+    const { data, error } = await supabaseClient.from("moderations").update({
         result,
         completed_at: dayjs().toISOString(),
         message_id: messageId,
         room_id: roomId,
         participant_id: participantId,
-    }).eq("job_key", jobKey);
+    })
+        .is("completed_at", null)
+        .eq("job_key", jobKey)
+        .select()
+        .order('created_at', { ascending: false })
+        .limit(1);
 
     if (error) {
         throw Error(`Could not store moderation result due to error: ${JSON.stringify(error)}`);
     }
+
+    return data?.[0];
 }
 
 /**

@@ -34,7 +34,7 @@ export default async function handleQueuedParticipants(payload: HandleQueuedPart
     await reschedule<HandleQueuedParticipantsPayload>({
         workerTaskId: "handleQueuedParticipants",
         jobKey: "handleQueuedParticipants",
-        intervalMs: ONE_SECOND_MS * 2,
+        intervalMs: ONE_SECOND_MS * 3,
         payload: {
             jobKey: "handleQueuedParticipants",
         },

@@ -131,7 +131,7 @@ interface GetContentForHardCodedEnrichMessageOptions {
     contentOptions: string[];
 }
 
-export async function getContentForHardCodedEnrichMessage(payload: GetContentForHardCodedEnrichMessageOptions) {
+export function getContentForHardCodedEnrichMessage(payload: GetContentForHardCodedEnrichMessageOptions) {
     const { contentOptions } = payload;
     const selectedContent = draw(contentOptions);
 

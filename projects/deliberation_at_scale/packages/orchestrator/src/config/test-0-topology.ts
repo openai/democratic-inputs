@@ -57,7 +57,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
             ],
             enrichments: [
                 {
-                    id: 'close-enrichConsensusProposal',
+                    id: 'results-enrichConsensusProposal',
                     workerTaskId: 'enrichConsensusProposal',
                     minAttempts: 1,
                     conditions: [{

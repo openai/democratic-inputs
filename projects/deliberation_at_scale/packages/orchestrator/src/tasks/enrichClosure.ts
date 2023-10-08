@@ -24,12 +24,10 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
         const roomId = helpers.payload.roomId;
         const enrichtment = helpers.result.enrichment;
 
-        await waitFor(ONE_SECOND_MS * 3);
         await sendBotMessage({
             roomId,
             content: enrichtment,
         });
-
         await waitFor(ONE_SECOND_MS * 3);
         await sendBotMessage({
             roomId,
