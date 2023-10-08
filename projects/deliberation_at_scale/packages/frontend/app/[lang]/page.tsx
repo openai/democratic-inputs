@@ -20,7 +20,7 @@ export default function Index() {
     const logout = useCallback(() => supabaseClient.auth.signOut(), []);
 
     return (
-        <section className="p-4 flex flex-col gap-3 overflow-y-scroll pt-24">
+        <section id="main-scroll-container" className="p-4 flex flex-col gap-3 overflow-y-scroll pt-24">
             <motion.div layout>
                 <h1 className="mb-4 text-lg font-medium">Welcome to Deliberation at Scale</h1>
                 <p className="mb-4 text-gray-600">The development of artificial intelligence (AI) affects all of us. With Deliberation at Scale, we want to ensure that guidelines and rules that will come to guide artifical intelligence development are <span className="font-semibold">well-sourced</span>, <span className="font-semibold">representative</span> and <span className="font-semibold">fair</span>.</p>
