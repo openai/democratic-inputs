@@ -25,7 +25,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
     };
     const handleLocalParticipantClick = useCallback(() => {
         setShowLocalControls((current) => !current);
-    }, []);
+    }, [setShowLocalControls]);
 
     if (!connection || !VideoView) {
         return null;
