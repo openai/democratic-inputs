@@ -71,7 +71,7 @@ export default function ChatFlow(props: Props) {
     }, [inputDisabled, currentStep]);
     const inputPlaceholder = useMemo(() => {
         if (isTextInputDisabled) {
-            return hasQuickReplies ? _(msg`Select an option above...`) : _(msg`Waiting...`);
+            return hasQuickReplies ? _(msg`Select an button above...`) : _(msg`Waiting...`);
         }
 
         return undefined;
