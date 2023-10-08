@@ -6,7 +6,7 @@ import { ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_FOUND_ROO
 import WaitingForRoom from "../RoomConnection/WaitingForRoom";
 import { ChatFlowConfig, OnInputHelpers, QuickReply } from "@/types/flows";
 import { PermissionState } from "@/state/slices/room";
-import { faSearch, faArrowRight, faHomeAlt } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faArrowRight, faHomeAlt, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { useLingui } from "@lingui/react";
 import { isEmpty } from "radash";
 import { useEffect, useMemo } from "react";
@@ -24,7 +24,19 @@ export default function PermissionChatFlow() {
             onClick: (helpers) => {
                 helpers.setFlowStateEntry(LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, true);
                 helpers.goToName('permission_verify_working');
-            }
+            },
+        } satisfies QuickReply;
+    }, [_]);
+    const cancelWaitingForRoomQuickReply = useMemo(() => {
+        return {
+            id: "cancel_waiting_for_room",
+            content: _(msg`Cancel`),
+            icon: faCancel,
+            onClick: async (helpers) => {
+                helpers.postBotMessages([[_(msg`Okay, cancelling...`)]]);
+                await helpers.waitFor(ONE_SECOND_MS);
+                helpers.goToPage(`/profile`);
+            },
         } satisfies QuickReply;
     }, [_]);
     const flow = useMemo(() => {
@@ -54,7 +66,7 @@ export default function PermissionChatFlow() {
                     quickReplies: [
                         {
                             id: "find_room",
-                            content: _(msg`Let's find a room to join!`),
+                            content: _(msg`Let's find a conversation to join!`),
                             icon: faSearch,
                             hidden: (helpers) => {
                                 return !isEmpty(helpers?.searchParams?.get('redirect'));
@@ -95,6 +107,9 @@ export default function PermissionChatFlow() {
                     name: `waiting_for_room_1`,
                     messageOptions: [[_(msg`Waiting for a room to be ready...`)]],
                     timeoutMs: ONE_SECOND_MS * 5,
+                    quickReplies: [
+                        cancelWaitingForRoomQuickReply,
+                    ],
                     onTimeout: (helpers) => {
                         return waitingForRoomOnTimeout(helpers, 'waiting_for_room_2');
                     },
@@ -103,6 +118,9 @@ export default function PermissionChatFlow() {
                     name: `waiting_for_room_2`,
                     messageOptions: [[_(msg`Waiting for a room to be ready...`)]],
                     timeoutMs: ONE_SECOND_MS * 5,
+                    quickReplies: [
+                        cancelWaitingForRoomQuickReply,
+                    ],
                     onTimeout: (helpers) => {
                         return waitingForRoomOnTimeout(helpers, 'waiting_for_room_1');
                     },
@@ -137,7 +155,7 @@ export default function PermissionChatFlow() {
                 },
             ]
         } satisfies ChatFlowConfig;
-    }, [_, askPermissionQuickReply]);
+    }, [_, askPermissionQuickReply, cancelWaitingForRoomQuickReply]);
     const waitingForRoom = useChatFlowState<boolean>({
         flowId: 'permission',
         stateKey: LOBBY_WAITING_FOR_ROOM_STATE_KEY,
