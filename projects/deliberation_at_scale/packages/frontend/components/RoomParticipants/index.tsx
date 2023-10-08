@@ -40,7 +40,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
             <div
                 className={classNames(
                     "flex",
-                    variant === 'compact' && 'aspect-[16/9] bg-gray-100 rounded overflow-hidden border',
+                    variant === 'compact' && 'aspect-[16/9] h-full mx-auto bg-gray-100 rounded overflow-hidden border',
                     variant === 'spacious' && 'h-[40vh] relative',
                 )}
             >

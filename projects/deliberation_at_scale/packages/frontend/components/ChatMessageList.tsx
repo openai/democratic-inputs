@@ -38,7 +38,7 @@ export default function ChatMessageList(props: Props) {
         <motion.div
             id={MESSAGES_SCROLL_CONTAINER_ID}
             className={classNames(
-                "flex flex-col gap-1 overflow-y-scroll pt-4 min-h-0 shrink grow",
+                "flex flex-col gap-1 overflow-y-scroll min-h-0 shrink grow",
                 className
             )}
             variants={variants}

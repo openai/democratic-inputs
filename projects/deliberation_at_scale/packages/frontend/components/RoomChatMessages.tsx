@@ -10,6 +10,7 @@ import { openRoomChat } from "@/state/slices/room";
 import { useAppDispatch } from "@/state/store";
 import useRoomActions from "@/hooks/useRoomActions";
 import ChatActions from "./ChatActions";
+import RoomTopic from "./RoomTopic";
 
 export default function RoomChatMessages() {
     const { messages, participantId, roomId, messagesLoading } = useRoom();
@@ -52,7 +53,8 @@ export default function RoomChatMessages() {
     }, [dispatch]);
 
     return (
-        <div className="flex flex-col shrink min-h-0 gap-2 pb-2 px-4 grow">
+        <div className="flex flex-col shrink min-h-0 gap-2 pb-2 pt-2 px-4 grow">
+            <RoomTopic />
             <ChatMessageList messages={messages} />
             <ChatActions actions={actions} />
             <ChatInput

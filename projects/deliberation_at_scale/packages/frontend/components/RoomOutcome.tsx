@@ -81,7 +81,7 @@ export default function RoomOutcome(props: Props) {
     return (
         <motion.div
             layoutId={outcomeId}
-            className="p-4 gap-4 flex flex-col items-start"
+            className="py-4 gap-4 flex flex-col items-start"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
         >

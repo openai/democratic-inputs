@@ -1,10 +1,8 @@
 'use client';
 import { AnimatePresence, motion } from 'framer-motion';
 import { isEmpty } from 'radash';
-import { Trans } from '@lingui/macro';
 
-import useTheme, { ThemeColors } from "@/hooks/useTheme";
-import { topicSolid } from "./EntityIcons";
+import RoomTopic from './RoomTopic';
 import Pill from "./Pill";
 import useRoom from "@/hooks/useRoom";
 import { useSendRoomMessageMutation } from '@/generated/graphql';
@@ -19,12 +17,6 @@ import useRoomActions from '@/hooks/useRoomActions';
 import ChatActions from './ChatActions';
 
 const ENABLE_CHAT = false;
-
-const topicColorBgMap: Record<ThemeColors, string> = {
-    'blue': 'bg-blue-400',
-    'green': 'bg-green-400',
-    'orange': 'bg-orange-400',
-};
 const messageAnimation = {
     initial: { opacity: 0, x: 300 },
     animate: { opacity: 1, x: 0, transition: { duration: 0.3 } },
@@ -32,10 +24,8 @@ const messageAnimation = {
 };
 
 export default function RoomChatSummary() {
-    const { topic, lastBotMessages, lastParticipantMessages, participantId, roomId, outcomes } = useRoom();
-    const { content: topicContent } = topic ?? {};
+    const { lastBotMessages, lastParticipantMessages, participantId, roomId, outcomes } = useRoom();
     const { actions } = useRoomActions();
-    const theme = useTheme();
     const [sendRoomMessage] = useSendRoomMessageMutation();
     const dispatch = useAppDispatch();
 
@@ -45,19 +35,14 @@ export default function RoomChatSummary() {
     }, [dispatch]);
 
     return (
-        <div className="flex flex-col gap-2 py-4 justify-between h-full">
+        <div className="flex flex-col gap-2 pb-4 justify-between min-h-0">
+            <RoomTopic />
             <motion.div
                 id={MESSAGES_SCROLL_CONTAINER_ID}
                 className="flex flex-col gap-4 overflow-y-scroll"
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
             >
-                {topicContent && (
-                    <div className={`p-4 rounded gap-4 flex items-center ${topicColorBgMap[theme]}`}>
-                        <Pill icon={topicSolid} className="border-green-700"><Trans>Topic</Trans></Pill>
-                        <ReactMarkdown>{topicContent}</ReactMarkdown>
-                    </div>
-                )}
                 <AnimatePresence>
                     {outcomes?.map((outcome) => {
                         const { id: outcomeId } = outcome;
@@ -110,6 +95,9 @@ export default function RoomChatSummary() {
                 </div>
             </motion.div>
             <div className="flex flex-col gap-4">
+                {!isEmpty(actions) && (
+                    <motion.hr layout />
+                )}
                 <ChatActions actions={actions} />
                 {ENABLE_CHAT && (
                     <ChatInput
