@@ -1,0 +1,17 @@
+query GetRoomCrossPollinations($roomId: UUID) {
+  cross_pollinationsCollection(
+    filter: {
+        active: { eq: true },
+        room_id: { eq: $roomId },
+    }
+    orderBy: {
+        created_at: DescNullsLast
+    }
+  ) {
+    edges {
+        node {
+            ...FullCrossPollination
+        }
+    }
+  }
+}

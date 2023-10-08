@@ -1,0 +1,22 @@
+fragment FullCrossPollination on cross_pollinations {
+    id
+    active
+    type
+    timing_type
+    outcome_id
+    topic_id
+    participant_id
+    user_id
+    room_id
+    created_at
+    updated_at
+
+    # Don't filter on active flag, because up the custom upsert behaviour
+    opinionsCollection(orderBy: { created_at: DescNullsLast }) {
+        edges {
+            node {
+                ...FullOpinion
+            }
+        }
+    }
+}

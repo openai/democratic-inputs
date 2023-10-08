@@ -13,14 +13,14 @@ import useUpsertOpinion, { SetOpinionOptions } from "@/hooks/useUpsertOpinion";
 export default function EvaluateChatFlow() {
     const { _ } = useLingui();
     const { outcomes, participantId, getOutcomeByType, hasOutcomeType } = useRoom();
-    const { setOpinion } = useUpsertOpinion({ outcomes, participantId });
-    const handleOpinionClick = useCallback(async (helpers: OnInputHelpers, outcomeType: OutcomeType.OverallImpression, options: Omit<SetOpinionOptions, 'outcomeId'>) => {
+    const { setOpinion } = useUpsertOpinion({ subjects: outcomes, participantId });
+    const handleOpinionClick = useCallback(async (helpers: OnInputHelpers, outcomeType: OutcomeType.OverallImpression, options: Omit<SetOpinionOptions, 'subjectId'>) => {
         const outcome = getOutcomeByType(outcomeType);
         const { id: outcomeId } = outcome ?? {};
 
         await setOpinion({
-            outcomeId,
             ...options,
+            subjectId: outcomeId,
         });
         helpers.goToNext();
     }, [getOutcomeByType, setOpinion]);

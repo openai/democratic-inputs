@@ -1,6 +1,7 @@
-mutation CreateOpinion($outcomeId: UUID!, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
+mutation CreateOpinion($outcomeId: UUID, $crossPollinationId: UUID, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
   insertIntoopinionsCollection(objects: {
     outcome_id: $outcomeId,
+    cross_pollination_id: $crossPollinationId,
     participant_id: $participantId,
     type: $type,
     range_value: $rangeValue,

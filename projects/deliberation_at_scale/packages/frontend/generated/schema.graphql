@@ -1100,6 +1100,25 @@ type cross_pollinations implements Node {
 
   """Globally Unique Record Identifier"""
   nodeId: ID!
+  opinionsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: opinionsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [opinionsOrderBy!]
+  ): opinionsConnection
   outcome_id: UUID
   outcomes: outcomes
   participant_id: UUID
@@ -1794,6 +1813,8 @@ type opinions implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
+  cross_pollination_id: UUID
+  cross_pollinations: cross_pollinations
   id: UUID!
   moderationsCollection(
     """Query values in the collection after the provided cursor"""
@@ -1849,6 +1870,7 @@ type opinionsEdge {
 input opinionsFilter {
   active: BooleanFilter
   created_at: DatetimeFilter
+  cross_pollination_id: UUIDFilter
   id: UUIDFilter
   nodeId: IDFilter
   option_type: opinionOptionTypeFilter
@@ -1863,6 +1885,7 @@ input opinionsFilter {
 input opinionsInsertInput {
   active: Boolean
   created_at: Datetime
+  cross_pollination_id: UUID
   id: UUID
   option_type: opinionOptionType
   outcome_id: UUID
@@ -1884,6 +1907,7 @@ type opinionsInsertResponse {
 input opinionsOrderBy {
   active: OrderByDirection
   created_at: OrderByDirection
+  cross_pollination_id: OrderByDirection
   id: OrderByDirection
   option_type: OrderByDirection
   outcome_id: OrderByDirection
@@ -1897,6 +1921,7 @@ input opinionsOrderBy {
 input opinionsUpdateInput {
   active: Boolean
   created_at: Datetime
+  cross_pollination_id: UUID
   id: UUID
   option_type: opinionOptionType
   outcome_id: UUID

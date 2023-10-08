@@ -1,13 +1,15 @@
-import { FullOpinionFragment, FullOutcomeFragment, OpinionOptionType, OpinionType, useChangeOpinionMutation, useCreateOpinionMutation } from "@/generated/graphql";
+import { FullCrossPollinationFragment, FullOpinionFragment, FullOutcomeFragment, OpinionOptionType, OpinionType, useChangeOpinionMutation, useCreateOpinionMutation } from "@/generated/graphql";
 import { useCallback, useMemo } from "react";
 
+export type Subject = FullOutcomeFragment | FullCrossPollinationFragment;
+
 export interface UseUpsertOpinionOptions {
-    outcomes?: (FullOutcomeFragment | undefined)[];
+    subjects?: (Subject | undefined)[];
     participantId?: string;
 }
 
 export interface SetOpinionOptions {
-    outcomeId: string;
+    subjectId: string;
     type: OpinionType;
     optionType?: OpinionOptionType
     statement?: string;
@@ -15,38 +17,38 @@ export interface SetOpinionOptions {
 }
 
 export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
-    const { outcomes, participantId } = options;
+    const { subjects, participantId } = options;
     const opinions = useMemo(() => {
         const opinions: FullOpinionFragment[] = [];
 
-        outcomes?.map((outcome) => {
-            outcome?.opinionsCollection?.edges.map((opinion) => {
+        subjects?.map((subject) => {
+            subject?.opinionsCollection?.edges.map((opinion) => {
                 opinions.push(opinion.node);
             });
         });
 
         return opinions;
-    }, [outcomes]);
-    const getExistingOpinion = useCallback((outcomeId: string) => {
+    }, [subjects]);
+    const getExistingOpinion = useCallback((subjectId: string) => {
         return opinions.find((opinion) => {
-            return opinion.outcome_id === outcomeId && opinion.participant_id === participantId;
+            return (opinion.outcome_id === subjectId || opinion.cross_pollination_id === subjectId) && opinion.participant_id === participantId;
         });
     }, [opinions, participantId]);
-    const hasExistingOpinion = useCallback((outcomeId: string) => {
-        return !!getExistingOpinion(outcomeId);
+    const hasExistingOpinion = useCallback((subjectId: string) => {
+        return !!getExistingOpinion(subjectId);
     }, [getExistingOpinion]);
     const [createOpinion, { loading: isCreatingOpinion }] = useCreateOpinionMutation();
     const [changeOpinion, { loading: isChangingOpinion }] = useChangeOpinionMutation();
     const isGivingOpinion = isCreatingOpinion || isChangingOpinion;
     const setOpinion = useCallback((options: SetOpinionOptions) => {
-        const { outcomeId } = options;
+        const { subjectId } = options;
         const mutationVariables = {
             ...options,
             participantId,
         };
 
         // guard: update an existing opinion when already given one
-        if (hasExistingOpinion(outcomeId)) {
+        if (hasExistingOpinion(subjectId)) {
             changeOpinion({
                 variables: mutationVariables,
             });

@@ -30,7 +30,7 @@ export default function RoomOutcome(props: Props) {
     const { _ } = useLingui();
     const { outcome, participantId } = props;
     const { id: outcomeId, content = '', type } = outcome ?? {};
-    const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ outcomes: [outcome], participantId });
+    const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ subjects: [outcome], participantId });
     const existingOpinion = getExistingOpinion(outcomeId);
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
     const title = useMemo(() => {
@@ -96,7 +96,7 @@ export default function RoomOutcome(props: Props) {
                         const isDisabled = isGivingOpinion || (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
                         const onOptionClick = () => {
                             setOpinion({
-                                outcomeId,
+                                subjectId: outcomeId,
                                 type: OpinionType.Option,
                                 optionType,
                             });
