@@ -13,6 +13,9 @@ export async function startScheduler() {
     } as HandleQueuedParticipantsPayload, {
         jobKey: "handleQueuedParticipants",
     });
+
+    // never finish this job as it should do the above once
+    await new Promise(() => {});
 }
 
 export async function stopScheduler() {
