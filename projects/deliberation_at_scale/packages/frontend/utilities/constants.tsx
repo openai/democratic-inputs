@@ -44,14 +44,15 @@ export const LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY = 'wantToJoinRoom';
 export const PARTICIPANT_PING_INTERVAL_DELAY_MS = ONE_SECOND_MS;
 
 /**
- * Enable when you want all the `useRealtimeQuery` wrappers to automaticlly refetch periodically
+ * Enable when you want all the `useRealtimeQuery` wrappers to automatically refetch periodically
  */
 export const ENABLE_AUTO_QUERY_REFETCH = false;
-export const AUTO_QUERY_REFETCH_INTERVAL_MS = ONE_SECOND_MS * 2;
+export const AUTO_QUERY_REFETCH_INTERVAL_MS = ONE_SECOND_MS * 5;
 
 /**
  * Rooms
  */
+export const PARTICIPANTS_PER_ROOM = 3;
 export const SHOW_VIDEO_CONTROLS_INITIALLY = true;
 export const ENABLE_WHEREBY = true;
 export const ENABLE_TEST_ROOM = false;
