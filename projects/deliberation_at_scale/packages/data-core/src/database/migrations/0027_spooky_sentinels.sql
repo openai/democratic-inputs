@@ -161,6 +161,11 @@ CREATE OR REPLACE TRIGGER opinions_update_cls
   FOR EACH ROW
   EXECUTE FUNCTION allow_updating_only('type', 'range_value', 'statement', 'option_type');
 
+BEGIN;
+  ALTER POLICY "Enable update for users" ON "public"."opinions" USING (participant_id IN ( SELECT participants.id FROM participants));
+  ALTER POLICY "Enable update for users" ON "public"."opinions" WITH CHECK (participant_id IN ( SELECT participants.id FROM participants));
+COMMIT;
+
 --> outcome sources
 CREATE POLICY "Enable read access for authenticated" ON "public"."outcome_sources"
 AS PERMISSIVE FOR SELECT

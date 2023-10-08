@@ -10,6 +10,7 @@ import {
     json,
     AnyPgColumn,
     index,
+    unique,
 } from "drizzle-orm/pg-core";
 
 // table names to make it easy to rename them
@@ -287,6 +288,7 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
     active: generateActiveField(),
     type: opinionType("type").notNull().default("statement"),
     outcomeId: uuid(OUTCOME_ID_FIELD_NAME).references(() => outcomes.id),
+    crossPollinationId: uuid(CROSS_POLLINATION_ID_FIELD_NAME).references(() => crossPollinations.id),
     participantId: uuid(PARTICIPANT_ID_FIELD_NAME).notNull().references(() => participants.id),
     rangeValue: integer("range_value").notNull().default(0),
     statement: text("statement").notNull().default(""),
@@ -294,12 +296,13 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        // TODO: add contraint here where only one is allowed per outcome and participant
         typeIndex: index("type_index").on(table.type),
         outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
+        crossPollinationIdIndex: index("cross_pollination_id_index").on(table.crossPollinationId),
         participantIdIndex: index("participant_id_index").on(table.participantId),
         rangeValueIndex: index("range_value_index").on(table.rangeValue),
         optionTypeIndex: index("option_type_index").on(table.optionType),
+        uniqueOpinion: unique("unique_opinion").on(table.outcomeId, table.crossPollinationId, table.participantId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
