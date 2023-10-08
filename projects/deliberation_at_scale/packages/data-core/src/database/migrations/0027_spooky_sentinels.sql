@@ -87,6 +87,14 @@ CREATE OR REPLACE TRIGGER participants_update_cls
   FOR EACH ROW
   EXECUTE FUNCTION allow_updating_only('last_seen_at', 'status');
 
+BEGIN;
+  ALTER POLICY "Enable update for users based on logged in user" ON "public"."participants" RENAME TO "Enable update for users based on logged in user";
+COMMIT;
+
+BEGIN;
+  ALTER POLICY "Enable read access to owning users and peer users" ON "public"."participants" USING (((user_id = (current_user_id())::uuid OR room_id = ANY(get_room_ids_by_user_ids(ARRAY[current_user_id()::uuid])))));
+COMMIT;
+
 --> users
 CREATE POLICY "Enable read access for all users" ON "public"."users"
 AS PERMISSIVE FOR SELECT
@@ -164,6 +172,10 @@ CREATE OR REPLACE TRIGGER opinions_update_cls
 BEGIN;
   ALTER POLICY "Enable update for users" ON "public"."opinions" USING (participant_id IN ( SELECT participants.id FROM participants));
   ALTER POLICY "Enable update for users" ON "public"."opinions" WITH CHECK (participant_id IN ( SELECT participants.id FROM participants));
+COMMIT;
+
+BEGIN;
+  ALTER POLICY "Enable insert for authenticated users only" ON "public"."opinions" WITH CHECK (((participant_id IN ( SELECT participants.id FROM participants)) AND ( (outcome_id IN (SELECT id FROM outcomes)) OR (cross_pollination_id IN (SELECT id FROM cross_pollinations)) ) ));
 COMMIT;
 
 --> outcome sources
