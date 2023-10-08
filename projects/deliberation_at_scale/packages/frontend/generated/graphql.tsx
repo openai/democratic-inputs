@@ -2652,7 +2652,7 @@ export type VisibilityTypeFilter = {
   neq?: InputMaybe<VisibilityType>;
 };
 
-export type FullCrossPollinationFragment = { __typename?: 'cross_pollinations', id: any, active: boolean, type: CrossPollinationType, timing_type: TimingType, outcome_id?: any | null, topic_id?: any | null, participant_id?: any | null, user_id?: any | null, room_id?: any | null, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null };
+export type FullCrossPollinationFragment = { __typename?: 'cross_pollinations', id: any, active: boolean, type: CrossPollinationType, timing_type: TimingType, outcome_id?: any | null, topic_id?: any | null, participant_id?: any | null, user_id?: any | null, room_id?: any | null, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null, outcome?: { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null } | null, topic?: { __typename?: 'topics', id: any, active: boolean, type: TopicType, content: string, original_topic_id?: any | null, updated_at: any, created_at: any } | null };
 
 export type FullOpinionFragment = { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any };
 
@@ -2720,7 +2720,7 @@ export type GetRoomCrossPollinationsQueryVariables = Exact<{
 }>;
 
 
-export type GetRoomCrossPollinationsQuery = { __typename?: 'Query', cross_pollinationsCollection?: { __typename?: 'cross_pollinationsConnection', edges: Array<{ __typename?: 'cross_pollinationsEdge', node: { __typename?: 'cross_pollinations', id: any, active: boolean, type: CrossPollinationType, timing_type: TimingType, outcome_id?: any | null, topic_id?: any | null, participant_id?: any | null, user_id?: any | null, room_id?: any | null, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null } }> } | null };
+export type GetRoomCrossPollinationsQuery = { __typename?: 'Query', cross_pollinationsCollection?: { __typename?: 'cross_pollinationsConnection', edges: Array<{ __typename?: 'cross_pollinationsEdge', node: { __typename?: 'cross_pollinations', id: any, active: boolean, type: CrossPollinationType, timing_type: TimingType, outcome_id?: any | null, topic_id?: any | null, participant_id?: any | null, user_id?: any | null, room_id?: any | null, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null, outcome?: { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null } | null, topic?: { __typename?: 'topics', id: any, active: boolean, type: TopicType, content: string, original_topic_id?: any | null, updated_at: any, created_at: any } | null } }> } | null };
 
 export type GetRoomIdFromParticipantQueryVariables = Exact<{
   participantID: Scalars['UUID']['input'];
@@ -2837,6 +2837,35 @@ export const FullOpinionFragmentDoc = gql`
   updated_at
 }
     `;
+export const FullOutcomeFragmentDoc = gql`
+    fragment FullOutcome on outcomes {
+  id
+  active
+  type
+  room_id
+  content
+  created_at
+  updated_at
+  opinionsCollection(orderBy: {created_at: DescNullsLast}) {
+    edges {
+      node {
+        ...FullOpinion
+      }
+    }
+  }
+}
+    ${FullOpinionFragmentDoc}`;
+export const FullTopicFragmentDoc = gql`
+    fragment FullTopic on topics {
+  id
+  active
+  type
+  content
+  original_topic_id
+  updated_at
+  created_at
+}
+    `;
 export const FullCrossPollinationFragmentDoc = gql`
     fragment FullCrossPollination on cross_pollinations {
   id
@@ -2857,26 +2886,16 @@ export const FullCrossPollinationFragmentDoc = gql`
       }
     }
   }
-}
-    ${FullOpinionFragmentDoc}`;
-export const FullOutcomeFragmentDoc = gql`
-    fragment FullOutcome on outcomes {
-  id
-  active
-  type
-  room_id
-  content
-  created_at
-  updated_at
-  opinionsCollection(orderBy: {created_at: DescNullsLast}) {
-    edges {
-      node {
-        ...FullOpinion
-      }
-    }
+  outcome: outcomes {
+    ...FullOutcome
+  }
+  topic: topics {
+    ...FullTopic
   }
 }
-    ${FullOpinionFragmentDoc}`;
+    ${FullOpinionFragmentDoc}
+${FullOutcomeFragmentDoc}
+${FullTopicFragmentDoc}`;
 export const FullParticipantFragmentDoc = gql`
     fragment FullParticipant on participants {
   id
@@ -2942,17 +2961,6 @@ export const SimpleRoomFragmentDoc = gql`
   created_at
 }
     ${SimpleRoomTopicFragmentDoc}`;
-export const FullTopicFragmentDoc = gql`
-    fragment FullTopic on topics {
-  id
-  active
-  type
-  content
-  original_topic_id
-  updated_at
-  created_at
-}
-    `;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on users {
   id
@@ -3414,9 +3422,7 @@ export type GetRoomOutcomesLazyQueryHookResult = ReturnType<typeof useGetRoomOut
 export type GetRoomOutcomesQueryResult = Apollo.QueryResult<GetRoomOutcomesQuery, GetRoomOutcomesQueryVariables>;
 export const GetRoomParticipantsDocument = gql`
     query GetRoomParticipants($roomId: UUID!) {
-  participantsCollection(
-    filter: {active: {eq: true}, status: {in: [in_room]}, room_id: {eq: $roomId}}
-  ) {
+  participantsCollection(filter: {active: {eq: true}, room_id: {eq: $roomId}}) {
     edges {
       node {
         ...RoomParticipant

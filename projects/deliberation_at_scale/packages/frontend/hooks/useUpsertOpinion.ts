@@ -42,9 +42,14 @@ export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
     const isGivingOpinion = isCreatingOpinion || isChangingOpinion;
     const setOpinion = useCallback((options: SetOpinionOptions) => {
         const { subjectId } = options;
+        const subject = subjects?.find((subject) => {
+            return subject?.id === subjectId;
+        });
+        const subjectIdMutationKey = (subject?.__typename === 'outcomes' ? 'outcomeId' : 'crossPollinationId');
         const mutationVariables = {
             ...options,
             participantId,
+            [subjectIdMutationKey]: subjectId,
         };
 
         // guard: update an existing opinion when already given one

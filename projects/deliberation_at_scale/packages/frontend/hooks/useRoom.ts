@@ -1,12 +1,12 @@
 import { useParams } from 'next/navigation';
 import { alphabetical } from 'radash';
 
-import { OutcomeType, RoomStatusType, useGetRoomOutcomesQuery, useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
+import { OutcomeType, ParticipantStatusType, RoomStatusType, useGetRoomCrossPollinationsQuery, useGetRoomOutcomesQuery, useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
 import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 import useRoomMessages from "./useRoomMessages";
 import useProfile from './useProfile';
-import { ENABLE_TEST_ROOM, TEST_EXTERNAL_ROOM_ID } from '@/utilities/constants';
+import { ENABLE_TEST_ROOM, ONE_SECOND_MS, TEST_EXTERNAL_ROOM_ID } from '@/utilities/constants';
 import { useCallback, useMemo } from 'react';
 
 export interface UseRoomOptions {
@@ -46,14 +46,22 @@ export default function useRoom(options?: UseRoomOptions) {
     const { data: roomData, loading: loadingRooms, error: roomError } = useRealtimeQuery(useGetRoomsQuery({
         variables: {
             roomId,
-        }
+        },
     }));
     const { data: participantsData, loading: loadingParticipants, error: participantsError } = useRealtimeQuery(useGetRoomParticipantsQuery({
         variables: {
             roomId,
         },
-    }));
+    }), {
+        autoRefetch: !!roomId,
+        autoRefetchIntervalMs: ONE_SECOND_MS * 30,
+    });
     const { data: outcomesData } = useRealtimeQuery(useGetRoomOutcomesQuery({
+        variables: {
+            roomId,
+        },
+    }));
+    const { data: crossPollinationData } = useRealtimeQuery(useGetRoomCrossPollinationsQuery({
         variables: {
             roomId,
         },
@@ -67,14 +75,22 @@ export default function useRoom(options?: UseRoomOptions) {
     const roomStatus = room?.status_type;
     const externalRoomId = ENABLE_TEST_ROOM ? TEST_EXTERNAL_ROOM_ID : room?.external_room_id;
     const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
+    const departedParticipants = participants?.filter(participant => participant.status === ParticipantStatusType.EndOfSession) ?? [];
+    const joiningParticipants = participants?.filter(participant => participant.status === ParticipantStatusType.WaitingForConfirmation) ?? [];
     const participant = participants?.find(participant => participant.user_id === userId);
     const participantId = participant?.id;
     const outcomes = useMemo(() => {
-        const outcomeNodes = outcomesData?.outcomesCollection?.edges?.map((outcome) => outcome.node) ?? [];
-        const sortedOutcomes = alphabetical(outcomeNodes, (outcome) => outcome.created_at, 'desc');
+        const nodes = outcomesData?.outcomesCollection?.edges?.map((outcome) => outcome.node) ?? [];
+        const sortedNodes = alphabetical(nodes, (outcome) => outcome.created_at, 'desc');
 
-        return sortedOutcomes;
+        return sortedNodes;
     }, [outcomesData]);
+    const crossPollinations = useMemo(() => {
+        const nodes = crossPollinationData?.cross_pollinationsCollection?.edges?.map((crossPollination) => crossPollination.node) ?? [];
+        const sortedNodes = alphabetical(nodes, (outcome) => outcome.created_at, 'desc');
+
+        return sortedNodes;
+    }, [crossPollinationData]);
     const roomMessagesTuple = useRoomMessages({ roomId, participants, userId });
     const topic = room?.topics;
     const topicId = topic?.id;
@@ -92,7 +108,7 @@ export default function useRoom(options?: UseRoomOptions) {
 
     return {
 
-        // room info
+        // room
         room,
         externalRoomId,
         loadingRooms,
@@ -101,23 +117,28 @@ export default function useRoom(options?: UseRoomOptions) {
         roomStatus,
         isRoomEnded,
 
-        // topic info
+        // topic
         topic,
         topicId,
 
-        // participants info
+        // participants
         participants,
         participant,
+        departedParticipants,
+        joiningParticipants,
         participantId,
         loadingParticipants,
         participantsError,
 
-        // outcomes info
+        // outcomes
         outcomes,
         getOutcomeByType,
         hasOutcomeType,
 
-        // messages info
+        // cross pollination
+        crossPollinations,
+
+        // messages
         ...roomMessagesTuple,
     };
 }

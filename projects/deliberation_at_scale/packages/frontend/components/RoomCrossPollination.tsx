@@ -6,12 +6,10 @@ import { msg } from "@lingui/macro";
 
 import { statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
-import { FullOutcomeFragment, OpinionOptionType, OpinionType, OutcomeType } from '@/generated/graphql';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { useMemo, useState } from 'react';
+import { CrossPollinationType, FullCrossPollinationFragment, OpinionOptionType, OpinionType } from '@/generated/graphql';
+import { faCheck, faQuestion, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useMemo } from 'react';
 import Button from './Button';
-import { DISABLE_OPINION_INPUT_WHEN_TIMED_OUT, OUTCOME_OPINION_TIMEOUT_MS_LOOKUP } from '@/utilities/constants';
-import TimeProgressBar from './TimeProgressBar';
 import useUpsertOpinion from '@/hooks/useUpsertOpinion';
 import { useLingui } from '@lingui/react';
 
@@ -22,50 +20,66 @@ export interface OpinionOption {
 }
 
 interface Props {
-    outcome?: FullOutcomeFragment;
+    crossPollination?: FullCrossPollinationFragment;
     participantId?: string;
 }
 
-export default function RoomOutcome(props: Props) {
+export default function RoomCrossPollination(props: Props) {
     const { _ } = useLingui();
-    const { outcome, participantId } = props;
-    const { id: outcomeId, content = '', type } = outcome ?? {};
-    const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ subjects: [outcome], participantId });
-    const existingOpinion = getExistingOpinion(outcomeId);
-    const [timeoutCompleted, setTimeoutCompleted] = useState(false);
+    const { crossPollination, participantId } = props;
+    const { id: crossPollinationId, type } = crossPollination ?? {};
+    const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ subjects: [crossPollination], participantId });
+    const existingOpinion = getExistingOpinion(crossPollinationId);
+    const outcome = crossPollination?.outcome;
+    const topic = crossPollination?.topic;
     const title = useMemo(() => {
         switch (type) {
-            case OutcomeType.Consensus: return _(msg`Consensus Proposal`);
-            case OutcomeType.Milestone: return _(msg`Milestone`);
-            case OutcomeType.OffTopic: return _(msg`Off Topic`);
+            case CrossPollinationType.Outcome: return _(msg`Enticing Statement`);
+            case CrossPollinationType.Topic: return _(msg`New Topic`);
         }
     }, [type, _]);
-    const timeoutMs = useMemo(() => {
-        if (!type || !!existingOpinion) {
-            return 0;
+    const content = useMemo(() => {
+        switch (type) {
+            case CrossPollinationType.Outcome: return outcome?.content;
+            case CrossPollinationType.Topic: return topic?.content;
         }
-
-        return OUTCOME_OPINION_TIMEOUT_MS_LOOKUP[type];
-    }, [type, existingOpinion]);
-    const hasTimeout = timeoutMs > 0;
+    }, [outcome, topic, type]);
     const opinionOptions = useMemo(() => {
         switch (type) {
-            case OutcomeType.Consensus:
+            case CrossPollinationType.Topic:
                 return [
                     {
-                        content: _(msg`I agree with this consensus.`),
+                        content: _(msg`Great new topic!`),
                         icon: faCheck,
-                        optionType: OpinionOptionType.AgreeConsensus,
+                        optionType: OpinionOptionType.Positive,
+                    },
+                    {
+                        content: _(msg`Not sure what to think...`),
+                        icon: faQuestion,
+                        optionType: OpinionOptionType.Neutral,
+                    },
+                    {
+                        content: _(msg`No thanks!`),
+                        icon: faTimes,
+                        optionType: OpinionOptionType.Negative,
+                    },
+                ];
+            case CrossPollinationType.Outcome:
+                return [
+                    {
+                        content: _(msg`I agree with the statement!`),
+                        icon: faCheck,
+                        optionType: OpinionOptionType.Agree,
+                    },
+                    {
+                        content: _(msg`I'm not sure what to think...`),
+                        icon: faQuestion,
+                        optionType: OpinionOptionType.Neutral,
                     },
                     {
                         content: _(msg`I don't agree with this.`),
                         icon: faTimes,
-                        optionType: OpinionOptionType.DisagreeConsensus,
-                    },
-                    {
-                        content: _(msg`This statement should be reformulated.`),
-                        icon: faTimes,
-                        optionType: OpinionOptionType.Wrong,
+                        optionType: OpinionOptionType.Disagree,
                     },
                 ];
         }
@@ -74,13 +88,13 @@ export default function RoomOutcome(props: Props) {
     }, [type, _]);
     const hasOpinionOptions = (opinionOptions.length > 0);
 
-    if (!outcome) {
+    if (!crossPollination || !content) {
         return null;
     }
 
     return (
         <motion.div
-            layoutId={outcomeId}
+            layoutId={crossPollinationId}
             className="py-4 gap-4 flex flex-col items-start"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -92,10 +106,10 @@ export default function RoomOutcome(props: Props) {
                     {opinionOptions.map((option) => {
                         const { content, icon, optionType } = option;
                         const isSelected = (existingOpinion?.option_type === optionType);
-                        const isDisabled = isGivingOpinion || (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
+                        const isDisabled = isGivingOpinion;
                         const onOptionClick = () => {
                             setOpinion({
-                                subjectId: outcomeId,
+                                subjectId: crossPollinationId,
                                 type: OpinionType.Option,
                                 optionType,
                             });
@@ -114,15 +128,6 @@ export default function RoomOutcome(props: Props) {
                         );
                     })}
                 </div>
-            )}
-            {hasTimeout && (
-                <TimeProgressBar
-                    durationMs={timeoutMs}
-                    startReferenceTime={outcome.created_at}
-                    onIsCompleted={(isCompleted) => {
-                        setTimeoutCompleted(isCompleted);
-                    }}
-                />
             )}
         </motion.div>
     );

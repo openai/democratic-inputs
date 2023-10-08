@@ -16,6 +16,7 @@ import { openRoomAssistant } from '@/state/slices/room';
 import useRoomActions from '@/hooks/useRoomActions';
 import ChatActions from './ChatActions';
 import Divider from './Divider';
+import RoomCrossPollination from './RoomCrossPollination';
 
 const ENABLE_CHAT = false;
 const messageAnimation = {
@@ -25,7 +26,7 @@ const messageAnimation = {
 };
 
 export default function RoomChatSummary() {
-    const { lastBotMessages, lastParticipantMessages, participantId, roomId, outcomes } = useRoom();
+    const { lastBotMessages, lastParticipantMessages, participantId, roomId, outcomes, crossPollinations } = useRoom();
     const { actions } = useRoomActions();
     const [sendRoomMessage] = useSendRoomMessageMutation();
     const dispatch = useAppDispatch();
@@ -44,6 +45,15 @@ export default function RoomChatSummary() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
             >
+                <AnimatePresence>
+                    {crossPollinations?.map((crossPollination) => {
+                        const { id: crossPollinationId } = crossPollination;
+
+                        return (
+                            <RoomCrossPollination key={crossPollinationId} crossPollination={crossPollination} participantId={participantId} />
+                        );
+                    })}
+                </AnimatePresence>
                 <AnimatePresence>
                     {outcomes?.map((outcome) => {
                         const { id: outcomeId } = outcome;

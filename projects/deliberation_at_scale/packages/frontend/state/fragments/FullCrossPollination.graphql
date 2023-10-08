@@ -19,4 +19,10 @@ fragment FullCrossPollination on cross_pollinations {
             }
         }
     }
+    outcome: outcomes {
+        ...FullOutcome
+    }
+    topic: topics {
+        ...FullTopic
+    }
 }
