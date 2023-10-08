@@ -62,7 +62,7 @@ export default function useRoomActions() {
         }
 
         return newActions;
-    }, [getOutcomeByType, isRoomEnded, lastOpenedAssistantAt, push, roomId, _]);
+    }, [getOutcomeByType, crossPollinations, isRoomEnded, lastOpenedAssistantAt, _, push, roomId]);
 
     return {
         actions,
