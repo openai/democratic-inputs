@@ -11,6 +11,9 @@ import RoomTranscription from '@/components/RoomTranscription';
 import { ENABLE_WHEREBY, ROOM_JOINING_EXPIRY_TIME_MS } from '@/utilities/constants';
 import { useDispatch } from 'react-redux';
 import { resetFlowStates } from '@/state/slices/flow';
+import { isEmpty } from 'radash';
+import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 
 /**
  * This is the layout for all room interfaces, i.e. all interfaces in which a
@@ -20,19 +23,33 @@ export default function RoomLayout({ children }: PropsWithChildren) {
     const localMedia = useLocalMedia();
     const connection = useRoomConnection();
     const { push } = useRouter();
-    const { room, roomId, loadingRooms } = useRoom();
+    const { room, roomId, loadingRooms, joiningParticipants } = useRoom();
     const dispatch = useDispatch();
+    const { _ } = useLingui();
 
     // Determine whether everything is ready to display the room
-    const isReady = useMemo(() => {
-        return roomId
-            && room
-            && !loadingRooms
-            && localMedia
-            && localMedia.state?.localStream
-            && (!ENABLE_WHEREBY || connection)
-            && (!ENABLE_WHEREBY || connection?.state?.roomConnectionStatus !== 'connecting');
-    }, [roomId, localMedia, connection, room, loadingRooms]);
+    const notReadyMessage = useMemo(() => {
+        if (!roomId) {
+            return _(msg`Finding room...`);
+        }
+
+        if (!room || loadingRooms) {
+            return  _(msg`Loading room...`);
+        }
+
+        if (!localMedia || !localMedia.state?.localStream) {
+            return  _(msg`Loading media...`);
+        }
+
+        if (ENABLE_WHEREBY && (!connection || connection.state?.roomConnectionStatus === 'connecting')) {
+            return  _(msg`Connecting to video call...`);
+        }
+
+        if (joiningParticipants.length > 0) {
+            return  _(msg`Waiting for all participants to join...`);
+        }
+    }, [roomId, room, loadingRooms, localMedia, connection, joiningParticipants.length, _]);
+    const isReady = isEmpty(notReadyMessage);
 
     // handle timeouts when going to an invalid room
     useEffect(() => {
@@ -61,7 +78,9 @@ export default function RoomLayout({ children }: PropsWithChildren) {
 
     // GUARD: Display loader when everything is not ready yet
     if (!isReady) {
-        return <Loader />;
+        return (
+            <Loader title={notReadyMessage} />
+        );
     }
 
     return (
