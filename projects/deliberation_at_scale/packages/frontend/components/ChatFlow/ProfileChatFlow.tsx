@@ -33,6 +33,7 @@ export default function ProfileChatFlow() {
                             },
                         },
                         {
+                            hidden: () => true,
                             id: 'previous-rooms',
                             content: _(msg`View results of previous conversations`),
                             icon: faChartBar,
@@ -41,6 +42,7 @@ export default function ProfileChatFlow() {
                             },
                         },
                         {
+                            hidden: () => true,
                             id: 'change-profile',
                             content: _(msg`Change my profile`),
                             icon: faUser,
