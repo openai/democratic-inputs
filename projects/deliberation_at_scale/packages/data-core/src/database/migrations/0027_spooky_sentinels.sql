@@ -77,7 +77,7 @@ USING (user_id = current_user_id()::uuid)
 
 CREATE POLICY "Enable update for users based on email" ON "public"."participants"
 AS PERMISSIVE FOR UPDATE
-TO public
+TO authenticated
 USING (user_id = current_user_id()::uuid)
 WITH CHECK (user_id = current_user_id()::uuid)
 
@@ -131,5 +131,52 @@ CREATE POLICY "Enable insert for authenticated users only" ON "public"."messages
 AS PERMISSIVE FOR INSERT
 TO authenticated
 WITH CHECK (participant_id IN (SELECT id FROM participants) AND room_id IN (SELECT id FROM rooms))
+
+--> outcomes
+CREATE POLICY "Enable read access for authenticated" ON "public"."outcomes"
+AS PERMISSIVE FOR SELECT
+TO authenticated
+USING (room_id IN (SELECT id FROM rooms))
+
+--> opinions
+CREATE POLICY "Enable read access for authenticated" ON "public"."opinions"
+AS PERMISSIVE FOR SELECT
+TO authenticated
+USING (participant_id IN (SELECT id FROM participants))
+
+CREATE POLICY "Enable update for users" ON "public"."opinions"
+AS PERMISSIVE FOR UPDATE
+TO authenticated
+USING (participant_id IN (SELECT id from participants) AND outcome_id IN (SELECT id from outcomes))
+WITH CHECK (participant_id IN (SELECT id from participants) AND outcome_id IN (SELECT id from outcomes))
+
+CREATE POLICY "Enable insert for authenticated users only" ON "public"."opinions"
+AS PERMISSIVE FOR INSERT
+TO authenticated
+WITH CHECK (participant_id IN (SELECT id FROM participants) AND outcome_id IN (SELECT id FROM outcomes))
+
+CREATE OR REPLACE TRIGGER opinions_update_cls
+  BEFORE UPDATE
+  ON public.opinions
+  FOR EACH ROW
+  EXECUTE FUNCTION allow_updating_only('type', 'range_value', 'statement', 'option_type');
+
+--> outcome sources
+CREATE POLICY "Enable read access for authenticated" ON "public"."outcome_sources"
+AS PERMISSIVE FOR SELECT
+TO authenticated
+USING (outcome_id IN (SELECT id FROM outcomes))
+
+--> cross pollinations
+CREATE POLICY "Enable read access for authenticated" ON "public"."cross_pollinations"
+AS PERMISSIVE FOR SELECT
+TO authenticated
+USING (room_id IN (SELECT id FROM rooms))
+
+--> events
+CREATE POLICY "Enable read access for all users" ON "public"."events"
+AS PERMISSIVE FOR SELECT
+TO public
+USING (true)
 
 
