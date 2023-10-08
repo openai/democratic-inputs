@@ -15,6 +15,7 @@ import { useAppDispatch } from '@/state/store';
 import { openRoomAssistant } from '@/state/slices/room';
 import useRoomActions from '@/hooks/useRoomActions';
 import ChatActions from './ChatActions';
+import Divider from './Divider';
 
 const ENABLE_CHAT = false;
 const messageAnimation = {
@@ -72,7 +73,7 @@ export default function RoomChatSummary() {
                     </AnimatePresence>
                 </div>
                 {!isEmpty(lastParticipantMessages) && !isEmpty(lastBotMessages) && (
-                    <motion.hr layout />
+                    <Divider />
                 )}
                 <div className="flex flex-col gap-2">
                     <AnimatePresence mode="wait" initial={false}>
@@ -96,7 +97,7 @@ export default function RoomChatSummary() {
             </motion.div>
             <div className="flex flex-col gap-4">
                 {!isEmpty(actions) && (
-                    <motion.hr layout />
+                    <Divider />
                 )}
                 <ChatActions actions={actions} />
                 {ENABLE_CHAT && (
