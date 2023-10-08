@@ -49,13 +49,21 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         },
     });
     const convertMessage = useCallback((databaseMessage: RoomMessageFragment) => {
-        const { id, active, content, visibility_type: visibilityType, created_at: createdAt, type, participant_id: participantId } = databaseMessage ?? {};
+        const { id, active, content, visibility_type: visibilityType, created_at: createdAt, type, participant_id: participantId, easy_language: easyLanguage, safe_language: safeLanguage } = databaseMessage ?? {};
         const isBot = (type === MessageType.Bot);
         const participant = participants?.find((participant) => participant.id === participantId);
         const nickName = isBot ? _(msg`Moderator`) : (participant?.nick_name ?? _(msg`Anonymous`));
         const isCurrentParticipant = (!!userId && participant?.user_id === userId);
         const nameIcon = getIconByMessageType(type);
         const highlighted = isBot;
+        const flagged = easyLanguage === false || safeLanguage === false;
+        let flaggedReason = '';
+
+        if (safeLanguage === false) {
+            flaggedReason = _(msg`This message has been flagged as inappropriate.`);
+        } else if (easyLanguage === false) {
+            flaggedReason = _(msg`This message has been flagged as difficult to understand.`);
+        }
 
         // guard: skip any inactive messages
         if (!active) {
@@ -73,6 +81,8 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
             date: dayjs(createdAt).toISOString(),
             nameIcon,
             content,
+            flagged,
+            flaggedReason,
             highlighted,
         } satisfies Message;
     }, [_, participants, userId]);

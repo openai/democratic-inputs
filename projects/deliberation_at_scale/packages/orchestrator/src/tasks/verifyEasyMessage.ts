@@ -23,18 +23,19 @@ export default createModeratedVerifyTask<BaseMessageWorkerTaskPayload>({
         const { message } = payload;
 
         const { verified, moderatedReason } = result;
-        const { id: messageId, content: messageContent } = message;
+        const { id: messageId } = message;
 
         // guard: only update the message when it is not verified
-        if (verified || isEmpty(moderatedReason)) {
+        if (isEmpty(moderatedReason)) {
             return;
         }
 
         // update the message to be moderated
+        helpers.helpers.logger.info(`Message ${messageId} was checked for easy language: ${verified}`);
         await supabaseClient
             .from("messages")
             .update({
-                content: `${messageContent}. **This message was flagged because:** ${moderatedReason}`,
+                easy_language: verified,
             })
             .eq('id', messageId);
     },

@@ -49,8 +49,8 @@ export default function ChatMessageList(props: Props) {
                 {messages.map((message, index) => {
                     const { id = index, date } = message ?? {};
                     const key = `${id}-${date}`;
-                    const previousMessage = messages[index - 1];
-                    const nextMessage = messages[index + 1];
+                    const previousMessage = messages?.[index - 1];
+                    const nextMessage = messages?.[index + 1];
 
                     // guard: check if message is valid
                     if (!message) {

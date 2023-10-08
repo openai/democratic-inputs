@@ -33,20 +33,13 @@ export default async function verifySafeMessage(payload: BaseMessageWorkerTaskPa
         });
     };
 
-    // guard: skip when there is no flagged content
-    if (!hasFlaggedContent) {
-        await storeModeration();
-        return;
-    }
-
-    // flag the message
-    helpers.logger.info(`Message ${messageId} has flagged content: ${content}`);
+    helpers.logger.info(`Message ${messageId} was checked for safe language: ${hasFlaggedContent}`);
     await Promise.allSettled([
         storeModeration(),
         await supabaseClient
             .from("messages")
             .update({
-                content: "**This message has been flagged as inappropiate.**",
+                safe_language: !hasFlaggedContent,
             })
             .eq('id', messageId)
     ]);

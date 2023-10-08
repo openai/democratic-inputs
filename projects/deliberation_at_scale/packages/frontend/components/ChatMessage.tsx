@@ -43,7 +43,7 @@ interface Props {
 export default function ChatMessage(props: Props) {
     const { _ } = useLingui();
     const { message, enablePadding = true, first = false, last = false, className } = props;
-    const { content, name, nameIcon, date, highlighted = false} = message;
+    const { content, name, nameIcon, date, highlighted = false, flagged = false, flaggedReason } = message;
     const theme = useTheme();
     const { user } = useProfile();
     const flowStateNickName = useAppSelector((state) => state.flow.flowStateLookup?.['lobby']?.['nickName']);
@@ -72,8 +72,9 @@ export default function ChatMessage(props: Props) {
         });
     }, [nickName]);
     const formattedContent = useMemo(() => {
-        return replaceMessageVariables(content).trim();
-    }, [content, replaceMessageVariables]);
+        const flaggedContent = (!flagged || !flaggedReason) ? content : flaggedReason;
+        return replaceMessageVariables(flaggedContent).trim();
+    }, [content, flaggedReason, flagged, replaceMessageVariables]);
     const formattedName = useMemo(() => {
         return replaceMessageVariables(name ?? _(msg`Anonymous`));
     }, [_, name, replaceMessageVariables]);
@@ -88,7 +89,7 @@ export default function ChatMessage(props: Props) {
             transition={{ duration: 0.15, bounce: 1 }}
         >
             {first && (
-                <div className={`flex justify-between text-sm uppercase opacity-50 ${highlighted ? headerTextColorMap[theme] : 'opacity-[.30]'} group-hover:opacity-90 transition-opacity`}>
+                <div className={`flex justify-between text-sm uppercase opacity-70 ${highlighted ? headerTextColorMap[theme] : 'opacity-[.70]'} group-hover:opacity-90 transition-opacity`}>
                     <div className="self-start inline-flex content-center items-center gap-2">
                         {nameIcon && (
                             <span><FontAwesomeIcon icon={nameIcon} /></span>

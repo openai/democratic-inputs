@@ -64,6 +64,8 @@ export interface Message {
     nameIcon?: IconProp;
     date?: string | Date | Dayjs;
     highlighted?: boolean;
+    flagged?: boolean;
+    flaggedReason?: string;
 }
 
 export interface UserInput {
