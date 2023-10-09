@@ -1,7 +1,7 @@
-import { FullCrossPollinationFragment, FullOpinionFragment, FullOutcomeFragment, OpinionOptionType, OpinionType, useChangeOpinionMutation, useCreateOpinionMutation } from "@/generated/graphql";
+import { FullOpinionFragment, FullOutcomeFragment, OpinionOptionType, OpinionType, useChangeOpinionMutation, useCreateOpinionMutation } from "@/generated/graphql";
 import { useCallback, useMemo } from "react";
 
-export type Subject = FullOutcomeFragment | FullCrossPollinationFragment;
+export type Subject = FullOutcomeFragment;
 
 export interface UseUpsertOpinionOptions {
     subjects?: (Subject | undefined)[];
@@ -45,7 +45,7 @@ export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
         const subject = subjects?.find((subject) => {
             return subject?.id === subjectId;
         });
-        const subjectIdMutationKey = (subject?.__typename === 'outcomes' ? 'outcomeId' : 'crossPollinationId');
+        const subjectIdMutationKey = (subject?.__typename === 'outcomes' ? 'outcomeId' : 'unknownId');
         const mutationVariables = {
             ...options,
             participantId,
@@ -63,7 +63,7 @@ export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
         createOpinion({
             variables: mutationVariables,
         });
-    }, [changeOpinion, createOpinion, hasExistingOpinion, participantId]);
+    }, [changeOpinion, createOpinion, hasExistingOpinion, participantId, subjects]);
 
     return {
         getExistingOpinion,

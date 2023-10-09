@@ -872,8 +872,6 @@ type completions implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
-  cross_pollination_id: UUID
-  cross_pollinations: cross_pollinations
   id: UUID!
   message_id: UUID
   messages: messages
@@ -943,7 +941,6 @@ input completionsFilter {
   active: BooleanFilter
   completion_id: UUIDFilter
   created_at: DatetimeFilter
-  cross_pollination_id: UUIDFilter
   id: UUIDFilter
   message_id: UUIDFilter
   moderation_id: UUIDFilter
@@ -964,7 +961,6 @@ input completionsInsertInput {
   active: Boolean
   completion_id: UUID
   created_at: Datetime
-  cross_pollination_id: UUID
   id: UUID
   message_id: UUID
   model: JSON
@@ -994,7 +990,6 @@ input completionsOrderBy {
   active: OrderByDirection
   completion_id: OrderByDirection
   created_at: OrderByDirection
-  cross_pollination_id: OrderByDirection
   id: OrderByDirection
   message_id: OrderByDirection
   moderation_id: OrderByDirection
@@ -1014,7 +1009,6 @@ input completionsUpdateInput {
   active: Boolean
   completion_id: UUID
   created_at: Datetime
-  cross_pollination_id: UUID
   id: UUID
   message_id: UUID
   model: JSON
@@ -1057,68 +1051,11 @@ input crossPollinationTypeFilter {
 
 type cross_pollinations implements Node {
   active: Boolean!
-  completionsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: completionsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [completionsOrderBy!]
-  ): completionsConnection
   created_at: Datetime!
   id: UUID!
-  moderationsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: moderationsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [moderationsOrderBy!]
-  ): moderationsConnection
 
   """Globally Unique Record Identifier"""
   nodeId: ID!
-  opinionsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: opinionsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [opinionsOrderBy!]
-  ): opinionsConnection
   outcome_id: UUID
   outcomes: outcomes
   participant_id: UUID
@@ -1579,8 +1516,6 @@ type moderations implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
-  cross_pollination_id: UUID
-  cross_pollinations: cross_pollinations
   id: UUID!
   job_key: String
   message_id: UUID
@@ -1651,7 +1586,6 @@ input moderationsFilter {
   completed_at: DatetimeFilter
   completion_id: UUIDFilter
   created_at: DatetimeFilter
-  cross_pollination_id: UUIDFilter
   id: UUIDFilter
   job_key: StringFilter
   message_id: UUIDFilter
@@ -1674,7 +1608,6 @@ input moderationsInsertInput {
   completed_at: Datetime
   completion_id: UUID
   created_at: Datetime
-  cross_pollination_id: UUID
   id: UUID
   job_key: String
   message_id: UUID
@@ -1705,7 +1638,6 @@ input moderationsOrderBy {
   completed_at: OrderByDirection
   completion_id: OrderByDirection
   created_at: OrderByDirection
-  cross_pollination_id: OrderByDirection
   id: OrderByDirection
   job_key: OrderByDirection
   message_id: OrderByDirection
@@ -1727,7 +1659,6 @@ input moderationsUpdateInput {
   completed_at: Datetime
   completion_id: UUID
   created_at: Datetime
-  cross_pollination_id: UUID
   id: UUID
   job_key: String
   message_id: UUID
@@ -1758,6 +1689,7 @@ enum opinionOptionType {
   agree_consensus
   disagree
   disagree_consensus
+  maybe
   negative
   neutral
   positive
@@ -1814,7 +1746,6 @@ type opinions implements Node {
   ): completionsConnection
   created_at: Datetime!
   cross_pollination_id: UUID
-  cross_pollinations: cross_pollinations
   id: UUID!
   moderationsCollection(
     """Query values in the collection after the provided cursor"""
@@ -2169,6 +2100,8 @@ type outcomes implements Node {
   ): outcomesConnection
   room_id: UUID
   rooms: rooms
+  topic_id: UUID
+  topics: topics
   type: outcomeType!
   updated_at: Datetime!
 }
@@ -2199,6 +2132,7 @@ input outcomesFilter {
   nodeId: IDFilter
   original_outcome_id: UUIDFilter
   room_id: UUIDFilter
+  topic_id: UUIDFilter
   type: outcomeTypeFilter
   updated_at: DatetimeFilter
 }
@@ -2210,6 +2144,7 @@ input outcomesInsertInput {
   id: UUID
   original_outcome_id: UUID
   room_id: UUID
+  topic_id: UUID
   type: outcomeType
   updated_at: Datetime
 }
@@ -2229,6 +2164,7 @@ input outcomesOrderBy {
   id: OrderByDirection
   original_outcome_id: OrderByDirection
   room_id: OrderByDirection
+  topic_id: OrderByDirection
   type: OrderByDirection
   updated_at: OrderByDirection
 }
@@ -2240,6 +2176,7 @@ input outcomesUpdateInput {
   id: UUID
   original_outcome_id: UUID
   room_id: UUID
+  topic_id: UUID
   type: outcomeType
   updated_at: Datetime
 }
@@ -2823,6 +2760,25 @@ type topics implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
   original_topic_id: UUID
+  outcomesCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: outcomesFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [outcomesOrderBy!]
+  ): outcomesConnection
   roomsCollection(
     """Query values in the collection after the provided cursor"""
     after: Cursor

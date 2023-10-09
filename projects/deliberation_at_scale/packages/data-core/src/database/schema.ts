@@ -10,7 +10,6 @@ import {
     json,
     AnyPgColumn,
     index,
-    unique,
 } from "drizzle-orm/pg-core";
 
 // table names to make it easy to rename them
@@ -24,7 +23,6 @@ export const MESSAGES_TABLE_NAME = "messages";
 export const OUTCOMES_TABLE_NAME = "outcomes";
 export const OUTCOME_SOURCES_TABLE_NAME = "outcome_sources";
 export const OPINIONS_TABLE_NAME = "opinions";
-export const CROSS_POLLINATIONS_TABLE_NAME = "cross_pollinations";
 export const COMPLETIONS_TABLE_NAME = "completions";
 export const MODERATIONS_TABLE_NAME = "moderations";
 export const JOB_RESULTS_TABLE_NAME = "job_results";
@@ -42,7 +40,6 @@ export const MESSAGE_ID_FIELD_NAME = "message_id";
 export const OUTCOME_ID_FIELD_NAME = "outcome_id";
 export const ORIGINAL_OUTCOME_ID_FIELD_NAME = "original_outcome_id";
 export const OPINION_ID_FIELD_NAME = "opinion_id";
-export const CROSS_POLLINATION_ID_FIELD_NAME = "cross_pollination_id";
 export const COMPLETION_ID_FIELD_NAME = "completion_id";
 export const MODERATION_ID_FIELD_NAME = "moderation_id";
 
@@ -75,16 +72,13 @@ export const opinionType = pgEnum("opinionType", [
 ]);
 export const opinionOptionType = pgEnum("opinionOptionType", [
     "agree",
+    "maybe",
     "disagree",
     "wrong",
 
     "positive",
     "negative",
     "neutral",
-]);
-export const crossPollinationType = pgEnum("crossPollinationType", [
-    "outcome",
-    "topic",
 ]);
 export const completionType = pgEnum("completionType", ["gpt"]);
 export const targetType = pgEnum("targetType", [
@@ -95,7 +89,6 @@ export const targetType = pgEnum("targetType", [
     "message",
     "outcome",
     "opinion",
-    "cross_pollination",
     "completion",
     "moderation",
 ]);
@@ -249,15 +242,15 @@ export const outcomes = pgTable(OUTCOMES_TABLE_NAME, {
     active: generateActiveField(),
     type: outcomeType("type").notNull().default("milestone"),
     roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id),
-    originalOutcomeId: uuid(ORIGINAL_OUTCOME_ID_FIELD_NAME).references(
-        (): AnyPgColumn => outcomes.id
-    ),
+    topicId: uuid(TOPIC_ID_FIELD_NAME).references(() => topics.id),
+    originalOutcomeId: uuid(ORIGINAL_OUTCOME_ID_FIELD_NAME).references(() => outcomes.id),
     content: text("content").notNull().default(""),
     ...generateTimestampFields(),
 }, (table) => {
     return {
         typeIndex: index("type_index").on(table.type),
         roomIdIndex: index("room_id_index").on(table.roomId),
+        topicIdIndex: index("topic_id_index").on(table.topicId),
         originalOutcomeIdIndex: index("original_outcome_id_index").on(table.originalOutcomeId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
@@ -288,7 +281,6 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
     active: generateActiveField(),
     type: opinionType("type").notNull().default("statement"),
     outcomeId: uuid(OUTCOME_ID_FIELD_NAME).references(() => outcomes.id),
-    crossPollinationId: uuid(CROSS_POLLINATION_ID_FIELD_NAME).references(() => crossPollinations.id),
     participantId: uuid(PARTICIPANT_ID_FIELD_NAME).notNull().references(() => participants.id),
     rangeValue: integer("range_value").notNull().default(0),
     statement: text("statement").notNull().default(""),
@@ -298,41 +290,9 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
     return {
         typeIndex: index("type_index").on(table.type),
         outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
-        crossPollinationIdIndex: index("cross_pollination_id_index").on(table.crossPollinationId),
         participantIdIndex: index("participant_id_index").on(table.participantId),
         rangeValueIndex: index("range_value_index").on(table.rangeValue),
         optionTypeIndex: index("option_type_index").on(table.optionType),
-        uniqueOpinion: unique("unique_opinion").on(table.outcomeId, table.crossPollinationId, table.participantId),
-        ...generateActiveFieldIndex(table),
-        ...generateTimestampFieldIndexes(table),
-    };
-});
-
-export const crossPollinations = pgTable(CROSS_POLLINATIONS_TABLE_NAME, {
-    id: generateIdField(),
-    active: generateActiveField(),
-    type: crossPollinationType("type").notNull(),
-    timingType: timingType("timing_type").notNull().default("during_room"),
-
-    // an outcome or topic can be cross-pollinated
-    outcomeId: uuid(OUTCOME_ID_FIELD_NAME).references(() => outcomes.id),
-    topicId: uuid(TOPIC_ID_FIELD_NAME).references(() => topics.id),
-
-    // an outcome can be cross-pollinated to a room, participant, or user
-    roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id),
-    participantId: uuid(PARTICIPANT_ID_FIELD_NAME).references(() => participants.id),
-    userId: uuid(USER_ID_FIELD_NAME).references(() => users.id),
-
-    ...generateTimestampFields(),
-}, (table) => {
-    return {
-        typeIndex: index("type_index").on(table.type),
-        timingTypeIndex: index("timing_type_index").on(table.timingType),
-        outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
-        topicIdIndex: index("topic_id_index").on(table.topicId),
-        roomIdIndex: index("room_id_index").on(table.roomId),
-        participantIdIndex: index("participant_id_index").on(table.participantId),
-        userIdIndex: index("user_id_index").on(table.userId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -421,9 +381,6 @@ function generateTargetFields() {
         messageId: uuid(MESSAGE_ID_FIELD_NAME).references(() => messages.id),
         outcomeId: uuid(OUTCOME_ID_FIELD_NAME).references(() => outcomes.id),
         opinionId: uuid(OPINION_ID_FIELD_NAME).references(() => opinions.id),
-        crossPollinationId: uuid(CROSS_POLLINATION_ID_FIELD_NAME).references(
-            () => crossPollinations.id
-        ),
         completionId: uuid(COMPLETION_ID_FIELD_NAME).references(
             () => completions.id
         ),
@@ -443,7 +400,6 @@ function generateTargetFieldIndexes(table) {
         messageIdIndex: index(`${MESSAGE_ID_FIELD_NAME}_index`).on(table.messageId),
         outcomeIdIndex: index(`${OUTCOME_ID_FIELD_NAME}_index`).on(table.outcomeId),
         opinionIdIndex: index(`${OPINION_ID_FIELD_NAME}_index`).on(table.opinionId),
-        crossPollinationIdIndex: index(`${CROSS_POLLINATION_ID_FIELD_NAME}_index`).on(table.crossPollinationId),
         completionIdIndex: index(`${COMPLETION_ID_FIELD_NAME}_index`).on(table.completionId),
         moderationIdIndex: index(`${MODERATION_ID_FIELD_NAME}_index`).on(table.moderationId),
     };

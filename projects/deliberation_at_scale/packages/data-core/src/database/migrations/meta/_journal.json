@@ -218,6 +218,20 @@
       "when": 1696797230124,
       "tag": "0030_colorful_patriot",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1696846926664,
+      "tag": "0031_yielding_nemesis",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "5",
+      "when": 1696847298417,
+      "tag": "0032_plain_sway",
+      "breakpoints": true
     }
   ]
 }

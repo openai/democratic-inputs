@@ -14,7 +14,6 @@ export interface Database {
                     active: boolean
                     completion_id: string | null
                     created_at: string
-                    cross_pollination_id: string | null
                     id: string
                     message_id: string | null
                     model: Json
@@ -35,7 +34,6 @@ export interface Database {
                     active?: boolean
                     completion_id?: string | null
                     created_at?: string
-                    cross_pollination_id?: string | null
                     id?: string
                     message_id?: string | null
                     model?: Json
@@ -56,7 +54,6 @@ export interface Database {
                     active?: boolean
                     completion_id?: string | null
                     created_at?: string
-                    cross_pollination_id?: string | null
                     id?: string
                     message_id?: string | null
                     model?: Json
@@ -78,12 +75,6 @@ export interface Database {
                         foreignKeyName: "completions_completion_id_completions_id_fk"
                         columns: ["completion_id"]
                         referencedRelation: "completions"
-                        referencedColumns: ["id"]
-                    },
-                    {
-                        foreignKeyName: "completions_cross_pollination_id_cross_pollinations_id_fk"
-                        columns: ["cross_pollination_id"]
-                        referencedRelation: "cross_pollinations"
                         referencedColumns: ["id"]
                     },
                     {
@@ -322,7 +313,6 @@ export interface Database {
                     completed_at: string | null
                     completion_id: string | null
                     created_at: string
-                    cross_pollination_id: string | null
                     id: string
                     job_key: string | null
                     message_id: string | null
@@ -344,7 +334,6 @@ export interface Database {
                     completed_at?: string | null
                     completion_id?: string | null
                     created_at?: string
-                    cross_pollination_id?: string | null
                     id?: string
                     job_key?: string | null
                     message_id?: string | null
@@ -366,7 +355,6 @@ export interface Database {
                     completed_at?: string | null
                     completion_id?: string | null
                     created_at?: string
-                    cross_pollination_id?: string | null
                     id?: string
                     job_key?: string | null
                     message_id?: string | null
@@ -388,12 +376,6 @@ export interface Database {
                         foreignKeyName: "moderations_completion_id_completions_id_fk"
                         columns: ["completion_id"]
                         referencedRelation: "completions"
-                        referencedColumns: ["id"]
-                    },
-                    {
-                        foreignKeyName: "moderations_cross_pollination_id_cross_pollinations_id_fk"
-                        columns: ["cross_pollination_id"]
-                        referencedRelation: "cross_pollinations"
                         referencedColumns: ["id"]
                     },
                     {
@@ -450,6 +432,7 @@ export interface Database {
                 Row: {
                     active: boolean
                     created_at: string
+                    cross_pollination_id: string | null
                     id: string
                     option_type: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id: string | null
@@ -462,6 +445,7 @@ export interface Database {
                 Insert: {
                     active?: boolean
                     created_at?: string
+                    cross_pollination_id?: string | null
                     id?: string
                     option_type?: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id?: string | null
@@ -474,6 +458,7 @@ export interface Database {
                 Update: {
                     active?: boolean
                     created_at?: string
+                    cross_pollination_id?: string | null
                     id?: string
                     option_type?: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id?: string | null
@@ -546,6 +531,7 @@ export interface Database {
                     id: string
                     original_outcome_id: string | null
                     room_id: string | null
+                    topic_id: string | null
                     type: Database["public"]["Enums"]["outcomeType"]
                     updated_at: string
                 }
@@ -556,6 +542,7 @@ export interface Database {
                     id?: string
                     original_outcome_id?: string | null
                     room_id?: string | null
+                    topic_id?: string | null
                     type?: Database["public"]["Enums"]["outcomeType"]
                     updated_at?: string
                 }
@@ -566,6 +553,7 @@ export interface Database {
                     id?: string
                     original_outcome_id?: string | null
                     room_id?: string | null
+                    topic_id?: string | null
                     type?: Database["public"]["Enums"]["outcomeType"]
                     updated_at?: string
                 }
@@ -580,6 +568,12 @@ export interface Database {
                         foreignKeyName: "outcomes_room_id_rooms_id_fk"
                         columns: ["room_id"]
                         referencedRelation: "rooms"
+                        referencedColumns: ["id"]
+                    },
+                    {
+                        foreignKeyName: "outcomes_topic_id_topics_id_fk"
+                        columns: ["topic_id"]
+                        referencedRelation: "topics"
                         referencedColumns: ["id"]
                     }
                 ]
@@ -755,6 +749,12 @@ export interface Database {
                 Args: Record<PropertyKey, never>
                 Returns: string
             }
+            get_room_ids_by_user_ids: {
+                Args: {
+                    user_ids: string[]
+                }
+                Returns: unknown
+            }
         }
         Enums: {
             completionType: "gpt4" | "gpt"
@@ -777,6 +777,7 @@ export interface Database {
             | "positive"
             | "negative"
             | "neutral"
+            | "maybe"
             opinionType:
             | "relevance_range"
             | "agreement_range"

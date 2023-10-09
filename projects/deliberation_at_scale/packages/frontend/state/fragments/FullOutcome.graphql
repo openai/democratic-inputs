@@ -3,6 +3,8 @@ fragment FullOutcome on outcomes {
   active
   type
   room_id
+  topic_id
+  original_outcome_id
   content
   created_at
   updated_at

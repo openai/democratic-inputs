@@ -1,8 +1,7 @@
-mutation ChangeOpinion($outcomeId: UUID, $crossPollinationId: UUID, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
+mutation ChangeOpinion($outcomeId: UUID, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
   updateopinionsCollection(
     filter: {
         outcome_id: { eq: $outcomeId },
-        cross_pollination_id: { eq: $crossPollinationId },
         participant_id: { eq: $participantId }
     },
     set: {

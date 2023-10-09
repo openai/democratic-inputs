@@ -1,7 +1,7 @@
 import { useParams } from 'next/navigation';
 import { alphabetical } from 'radash';
 
-import { OutcomeType, ParticipantStatusType, RoomStatusType, useGetRoomCrossPollinationsQuery, useGetRoomOutcomesQuery, useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
+import { OutcomeType, ParticipantStatusType, RoomStatusType, useGetRoomOutcomesQuery, useGetRoomParticipantsQuery, useGetRoomsQuery } from "@/generated/graphql";
 import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 import useRoomMessages from "./useRoomMessages";
@@ -62,11 +62,6 @@ export default function useRoom(options?: UseRoomOptions) {
             roomId,
         },
     }));
-    const { data: crossPollinationData } = useRealtimeQuery(useGetRoomCrossPollinationsQuery({
-        variables: {
-            roomId,
-        },
-    }));
     const { user } = useProfile();
     const userId = user?.id;
     const roomNode = roomData?.roomsCollection?.edges?.find((roomEdge) => {
@@ -86,12 +81,6 @@ export default function useRoom(options?: UseRoomOptions) {
 
         return sortedNodes;
     }, [outcomesData]);
-    const crossPollinations = useMemo(() => {
-        const nodes = crossPollinationData?.cross_pollinationsCollection?.edges?.map((crossPollination) => crossPollination.node) ?? [];
-        const sortedNodes = alphabetical(nodes, (outcome) => outcome.created_at, 'desc');
-
-        return sortedNodes;
-    }, [crossPollinationData]);
     const roomMessagesTuple = useRoomMessages({ roomId, participants, userId });
     const topic = room?.topics;
     const topicId = topic?.id;
@@ -135,9 +124,6 @@ export default function useRoom(options?: UseRoomOptions) {
         outcomes,
         getOutcomeByType,
         hasOutcomeType,
-
-        // cross pollination
-        crossPollinations,
 
         // messages
         ...roomMessagesTuple,
