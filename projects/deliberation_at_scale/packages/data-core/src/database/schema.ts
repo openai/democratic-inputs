@@ -60,6 +60,7 @@ export const outcomeType = pgEnum("outcomeType", [
     "milestone",
     "consensus",
     "off_topic",
+    "cross_pollination",
 
     "overall_impression",
     "topic_interest",
@@ -212,14 +213,13 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
     originalMessageId: uuid(ORIGINAL_MESSAGE_ID_FIELD_NAME).references(
         (): AnyPgColumn => messages.id
     ),
-    participantId: uuid(PARTICIPANT_ID_FIELD_NAME).references(
-        () => participants.id
-    ), // can be null to track bot messages
+    participantId: uuid(PARTICIPANT_ID_FIELD_NAME).references(() => participants.id), // can be null to track bot messages
     roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id), // can be null to send messages to specific participants outside of room
     roomStatusType: roomStatusType("room_status_type"),
     content: text("content").notNull().default(""),
     safeLanguage: boolean("safe_language"),
     easyLanguage: boolean("easy_language"),
+    tags: text("tags").notNull().default(""), // comma separated list of tags
     embeddings: json("embeddings").notNull().default({}),
     ...generateTimestampFields(),
 }, (table) => {

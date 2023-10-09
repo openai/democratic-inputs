@@ -1,0 +1,1 @@
+ALTER TYPE "outcomeType" ADD VALUE 'cross_pollination';
