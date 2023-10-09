@@ -111,7 +111,7 @@ msgstr ""
 msgid "Go back to the home page"
 msgstr ""
 
-#: hooks/useRoomActions.ts:37
+#: hooks/useRoomActions.ts:35
 msgid "Go to voting"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgstr ""
 msgid "Leave conversation"
 msgstr ""
 
-#: hooks/useRoomActions.ts:57
+#: hooks/useRoomActions.ts:45
 msgid "Leave room"
 msgstr ""
 
@@ -320,10 +320,6 @@ msgstr ""
 
 #: components/ChatFlow/LobbyChatFlow.tsx:33
 msgid "Use my current nickname"
-msgstr ""
-
-#: hooks/useRoomActions.ts:47
-msgid "View inspiration"
 msgstr ""
 
 #: components/ChatFlow/ProfileChatFlow.tsx:38
