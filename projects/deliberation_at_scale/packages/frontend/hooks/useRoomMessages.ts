@@ -78,6 +78,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         return {
             id,
             name: nickName,
+            nameId: participant?.id,
             date: dayjs(createdAt).toISOString(),
             nameIcon,
             content,

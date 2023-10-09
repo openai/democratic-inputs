@@ -60,6 +60,7 @@ export type MessageTemplate = Omit<Message, 'content' | 'id'>;
 export interface Message {
     id: string;
     content: string;
+    nameId?: string;
     name?: string;
     nameIcon?: IconProp;
     date?: string | Date | Dayjs;

@@ -47,23 +47,27 @@ export default function ChatMessageList(props: Props) {
         >
             <AnimatePresence>
                 {messages.map((message, index) => {
-                    const { id = index, date } = message ?? {};
+                    const { id = index, date, nameId } = message ?? {};
                     const key = `${id}-${date}`;
                     const previousMessage = messages?.[index - 1];
                     const nextMessage = messages?.[index + 1];
+                    const nameKey = nameId ? 'nameId' : 'name';
 
                     // guard: check if message is valid
                     if (!message) {
                         return null;
                     }
 
+                    const isFirst = previousMessage?.[nameKey] !== message?.[nameKey];
+                    const isLast = nextMessage?.[nameKey] !== message?.[nameKey];
+
                     return (
                         <ChatMessage
                             className={index === 0 ? 'mt-auto' : ''}
                             key={key}
                             message={message}
-                            first={previousMessage?.name !== message.name}
-                            last={nextMessage?.name !== message.name}
+                            first={isFirst}
+                            last={isLast}
                         />
                     );
                 })}
