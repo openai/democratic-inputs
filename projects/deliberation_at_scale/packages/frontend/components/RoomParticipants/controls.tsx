@@ -57,7 +57,7 @@ export default function LocalParticipantControls() {
         >
             <button
                 className={classNames(
-                    "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-600/50",
+                    "w-8 md:w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-600/50",
                     state.isAudioEnabled
                         ? bgColorMap[theme]
                         : 'text-gray-200 bg-gray-600/50',
@@ -72,7 +72,7 @@ export default function LocalParticipantControls() {
             </button>
             <button
                 className={classNames(
-                    "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none",
+                    "w-8 md:w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none",
                     state.isVideoEnabled
                         ? bgColorMap[theme]
                         : 'text-gray-200 bg-gray-600/50',
@@ -87,7 +87,7 @@ export default function LocalParticipantControls() {
             </button>
             <button
                 className={classNames(
-                    "w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-200/50 text-red-600",
+                    "w-8 md:w-12 rounded-lg aspect-square flex justify-center items-center backdrop-blur-lg border-none bg-gray-200/50 text-red-600",
                 )}
                 title={_(msg`Leave conversation`)}
                 onClick={handleLeaveRoomClick}

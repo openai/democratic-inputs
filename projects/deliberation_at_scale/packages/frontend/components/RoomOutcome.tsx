@@ -14,6 +14,7 @@ import { DISABLE_OPINION_INPUT_WHEN_TIMED_OUT, OUTCOME_OPINION_TIMEOUT_MS_LOOKUP
 import TimeProgressBar from './TimeProgressBar';
 import useUpsertOpinion from '@/hooks/useUpsertOpinion';
 import { useLingui } from '@lingui/react';
+import classNames from 'classnames';
 
 export interface OpinionOption {
     content: string;
@@ -24,11 +25,12 @@ export interface OpinionOption {
 interface Props {
     outcome?: FullOutcomeFragment;
     participantId?: string;
+    variant?: "compact" | "spacious"
 }
 
 export default function RoomOutcome(props: Props) {
     const { _ } = useLingui();
-    const { outcome, participantId } = props;
+    const { outcome, participantId, variant } = props;
     const { id: outcomeId, content = '', type } = outcome ?? {};
     const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ subjects: [outcome], participantId });
     const existingOpinion = getExistingOpinion(outcomeId);
@@ -48,9 +50,11 @@ export default function RoomOutcome(props: Props) {
         return OUTCOME_OPINION_TIMEOUT_MS_LOOKUP[type];
     }, [type, existingOpinion]);
     const hasTimeout = timeoutMs > 0;
+    console.log(`${type}-${variant}`);
+
     const opinionOptions = useMemo(() => {
-        switch (type) {
-            case OutcomeType.Consensus:
+        switch (`${type}-${variant}`) {
+            case `${OutcomeType.Consensus}-undefined`:
                 return [
                     {
                         content: _(msg`I agree with this consensus.`),
@@ -68,10 +72,29 @@ export default function RoomOutcome(props: Props) {
                         optionType: OpinionOptionType.Wrong,
                     },
                 ];
+            case `${OutcomeType.Consensus}-compact`:
+                return [
+                    {
+                        content: _(msg`Agree`),
+                        icon: faCheck,
+                        optionType: OpinionOptionType.AgreeConsensus,
+                    },
+                    {
+                        content: _(msg`Disagree`),
+                        icon: faTimes,
+                        optionType: OpinionOptionType.DisagreeConsensus,
+                    },
+                    {
+                        content: _(msg`Pass`),
+                        icon: faTimes,
+                        optionType: OpinionOptionType.Wrong,
+                    },
+                ];
         }
 
         return [];
-    }, [type, _]);
+    }, [type,variant, _]);
+    
     const hasOpinionOptions = (opinionOptions.length > 0);
 
     if (!outcome) {
@@ -88,7 +111,7 @@ export default function RoomOutcome(props: Props) {
             <Pill icon={statementSolid} className="border-black">{title}</Pill>
             <ReactMarkdown>{content}</ReactMarkdown>
             {hasOpinionOptions && (
-                <div className="flex flex-col gap-2 w-full">
+                <div className={classNames("flex gap-2 w-full flex-wrap", variant === "compact" && "flex-row", variant === "spacious" && "flex-col", variant === "spacious" && "flex-col" )}>
                     {opinionOptions.map((option) => {
                         const { content, icon, optionType } = option;
                         const isSelected = (existingOpinion?.option_type === optionType);
@@ -108,6 +131,7 @@ export default function RoomOutcome(props: Props) {
                                 selected={isSelected}
                                 icon={icon}
                                 onClick={onOptionClick}
+                                className="flex-1"
                             >
                                 {content}
                             </Button>

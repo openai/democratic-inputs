@@ -23,15 +23,16 @@ interface Props {
     widthVariant?: WidthVariant;
     disabled?: boolean;
     selected?: boolean;
+    className?: string;
 }
 
 type WidthVariant = 'w-full' | 'w-auto';
 
 export default function Button(props: Props) {
-    const { children, icon, onClick, widthVariant = 'w-full', disabled = false, selected = false } = props;
+    const { children, icon, onClick, widthVariant = 'w-full', disabled = false, selected = false, className } = props;
     const theme = useTheme();
 
-    const className = `
+    const defaultClasses = `
         transition-colors
         rounded-md py-3 px-4
         ${textColorMap[theme]} ${widthVariant} font-semibold
@@ -39,12 +40,13 @@ export default function Button(props: Props) {
         flex items-center justify-center gap-2
         ${disabled ? 'grayscale cursor-not-allowed' : ''}
         ${selected ? selectedBorderMap[theme] : ''}
+        ${className}
     `;
 
     return (
         <button
             onClick={onClick}
-            className={className}
+            className={defaultClasses}
             disabled={disabled}
         >
             {icon && (
