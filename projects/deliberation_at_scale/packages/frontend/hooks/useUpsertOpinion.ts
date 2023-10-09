@@ -31,7 +31,7 @@ export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
     }, [subjects]);
     const getExistingOpinion = useCallback((subjectId: string) => {
         return opinions.find((opinion) => {
-            return (opinion.outcome_id === subjectId || opinion.cross_pollination_id === subjectId) && opinion.participant_id === participantId;
+            return opinion.outcome_id === subjectId && opinion.participant_id === participantId;
         });
     }, [opinions, participantId]);
     const hasExistingOpinion = useCallback((subjectId: string) => {
