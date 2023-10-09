@@ -33,12 +33,12 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
 
     return (
         <motion.div
-            className="max-h-[40vh] relative z-20"
+            className={classNames("relative z-20", variant === 'compact' && "max-h-[30vh]")}
         >
             <div
                 className={classNames(
                     "flex",
-                    variant === 'compact' && 'aspect-[16/9] h-full mx-auto bg-gray-100 rounded overflow-hidden border',
+                    variant === 'compact' && 'h-[30vh] bg-gray-100 overflow-hidden border md:mx-4 gap-1 mx-1',
                     variant === 'spacious' && 'h-[40vh] relative',
                 )}
             >
@@ -63,8 +63,9 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                         >
                             {(participant.stream && participant.isVideoEnabled) ? (
                                 <VideoView
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover rounded"
                                     stream={participant.stream}
+                                    disablePictureInPicture
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center border">
@@ -87,7 +88,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
             </div>
             <motion.div
                 className={classNames(
-                    "flex justify-center gap-2 absolute w-1/5 bottom-0 bg-gray-100 z-20",
+                    "flex justify-center gap-2 absolute w-1/5 bottom-0 z-20",
                     variant === 'compact' && 'aspect-[3/4] left-1/2 translate-x-[-50%] mb-[-12px]',
                     variant === 'spacious' && 'aspect-square right-2',
                 )}
@@ -99,8 +100,9 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                     {(state.localStream && state.isVideoEnabled) ? (
                         <VideoView
                             muted={true}
-                            className="w-full h-full object-cover rounded border"
+                            className="w-full h-full object-cover border-4 rounded-full hover:scale-105 shadow"
                             stream={state.localStream}
+                            disablePictureInPicture
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center border rounded text-gray-300">
