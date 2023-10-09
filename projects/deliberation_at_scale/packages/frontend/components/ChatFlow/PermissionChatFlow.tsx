@@ -163,7 +163,7 @@ export default function PermissionChatFlow() {
                 },
             ]
         } satisfies ChatFlowConfig;
-    }, [_, askPermissionQuickReply, cancelWaitingForRoomQuickReply]);
+    }, [_, askPermissionQuickReply, cancelWaitingForRoomQuickReply, waitingForRoomMessageOptions]);
     const waitingForRoom = useChatFlowState<boolean>({
         flowId: 'permission',
         stateKey: LOBBY_WAITING_FOR_ROOM_STATE_KEY,

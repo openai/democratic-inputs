@@ -7,7 +7,6 @@ import { OutcomeType } from "@/generated/graphql";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/macro";
-import { sort } from "radash";
 
 export interface RoomAction {
     id: string;
