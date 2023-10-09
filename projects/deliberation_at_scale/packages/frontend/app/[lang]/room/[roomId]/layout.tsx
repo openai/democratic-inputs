@@ -2,7 +2,7 @@
 import { PropsWithChildren, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
-import RoomMenu from '@/components/RoomMenu';
+// import RoomMenu from '@/components/RoomMenu';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
 import { useRoomConnection } from '@/components/RoomConnection/context';
 import Loader from '@/components/Loader';
@@ -96,7 +96,7 @@ export default function RoomLayout({ children }: PropsWithChildren) {
                 {children}
             </div>
             <RoomTranscription />
-            <RoomMenu />
+            {/* <RoomMenu /> */}
         </div>
     );
 }
