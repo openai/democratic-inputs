@@ -43,6 +43,7 @@ export default function useRoom(options?: UseRoomOptions) {
     const params = useParams();
     const paramsRoomId = params?.roomId as RoomId;
     const { roomId = paramsRoomId } = options ?? {};
+
     const { data: roomData, loading: loadingRooms, error: roomError } = useRealtimeQuery(useGetRoomsQuery({
         variables: {
             roomId,
@@ -54,7 +55,7 @@ export default function useRoom(options?: UseRoomOptions) {
         },
     }), {
         autoRefetch: !!roomId,
-        autoRefetchIntervalMs: ONE_SECOND_MS * 30,
+        autoRefetchIntervalMs: ONE_SECOND_MS * 10,
     });
     const { data: outcomesData } = useRealtimeQuery(useGetRoomOutcomesQuery({
         variables: {

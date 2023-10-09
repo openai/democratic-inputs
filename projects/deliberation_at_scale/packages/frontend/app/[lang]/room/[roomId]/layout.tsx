@@ -66,6 +66,13 @@ export default function RoomLayout({ children }: PropsWithChildren) {
         };
     }, [isReady, push]);
 
+    // handle inactive rooms
+    useEffect(() => {
+        if (!room && !loadingRooms) {
+            push('/lobby/invalid');
+        }
+    }, [loadingRooms, push, room]);
+
     // once in the room reset all the flow states
     // this is so that any previous flow state is not carried over to new rooms
     useEffect(() => {
