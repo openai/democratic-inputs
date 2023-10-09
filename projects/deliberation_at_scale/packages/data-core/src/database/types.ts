@@ -127,79 +127,6 @@ export interface Database {
                     }
                 ]
             }
-            cross_pollinations: {
-                Row: {
-                    active: boolean
-                    created_at: string
-                    id: string
-                    outcome_id: string | null
-                    participant_id: string | null
-                    room_id: string | null
-                    timing_type: Database["public"]["Enums"]["timingType"]
-                    topic_id: string | null
-                    type: Database["public"]["Enums"]["crossPollinationType"]
-                    updated_at: string
-                    user_id: string | null
-                }
-                Insert: {
-                    active?: boolean
-                    created_at?: string
-                    id?: string
-                    outcome_id?: string | null
-                    participant_id?: string | null
-                    room_id?: string | null
-                    timing_type?: Database["public"]["Enums"]["timingType"]
-                    topic_id?: string | null
-                    type: Database["public"]["Enums"]["crossPollinationType"]
-                    updated_at?: string
-                    user_id?: string | null
-                }
-                Update: {
-                    active?: boolean
-                    created_at?: string
-                    id?: string
-                    outcome_id?: string | null
-                    participant_id?: string | null
-                    room_id?: string | null
-                    timing_type?: Database["public"]["Enums"]["timingType"]
-                    topic_id?: string | null
-                    type?: Database["public"]["Enums"]["crossPollinationType"]
-                    updated_at?: string
-                    user_id?: string | null
-                }
-                Relationships: [
-                    {
-                        foreignKeyName: "cross_pollinations_outcome_id_outcomes_id_fk"
-                        columns: ["outcome_id"]
-                        referencedRelation: "outcomes"
-                        referencedColumns: ["id"]
-                    },
-                    {
-                        foreignKeyName: "cross_pollinations_participant_id_participants_id_fk"
-                        columns: ["participant_id"]
-                        referencedRelation: "participants"
-                        referencedColumns: ["id"]
-                    },
-                    {
-                        foreignKeyName: "cross_pollinations_room_id_rooms_id_fk"
-                        columns: ["room_id"]
-                        referencedRelation: "rooms"
-                        referencedColumns: ["id"]
-                    },
-                    {
-                        foreignKeyName: "cross_pollinations_topic_id_topics_id_fk"
-                        columns: ["topic_id"]
-                        referencedRelation: "topics"
-                        referencedColumns: ["id"]
-                    },
-                    {
-                        foreignKeyName: "cross_pollinations_user_id_users_id_fk"
-                        columns: ["user_id"]
-                        referencedRelation: "users"
-                        referencedColumns: ["id"]
-                    }
-                ]
-            }
             events: {
                 Row: {
                     active: boolean
@@ -435,7 +362,6 @@ export interface Database {
                 Row: {
                     active: boolean
                     created_at: string
-                    cross_pollination_id: string | null
                     id: string
                     option_type: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id: string | null
@@ -448,7 +374,6 @@ export interface Database {
                 Insert: {
                     active?: boolean
                     created_at?: string
-                    cross_pollination_id?: string | null
                     id?: string
                     option_type?: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id?: string | null
@@ -461,7 +386,6 @@ export interface Database {
                 Update: {
                     active?: boolean
                     created_at?: string
-                    cross_pollination_id?: string | null
                     id?: string
                     option_type?: Database["public"]["Enums"]["opinionOptionType"] | null
                     outcome_id?: string | null

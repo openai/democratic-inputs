@@ -135,17 +135,6 @@ type Mutation {
     filter: completionsFilter
   ): completionsDeleteResponse!
 
-  """Deletes zero or more records from the `cross_pollinations` collection"""
-  deleteFromcross_pollinationsCollection(
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: cross_pollinationsFilter
-  ): cross_pollinationsDeleteResponse!
-
   """Deletes zero or more records from the `events` collection"""
   deleteFromeventsCollection(
     """
@@ -259,9 +248,6 @@ type Mutation {
   """Adds one or more `completions` records to the collection"""
   insertIntocompletionsCollection(objects: [completionsInsertInput!]!): completionsInsertResponse
 
-  """Adds one or more `cross_pollinations` records to the collection"""
-  insertIntocross_pollinationsCollection(objects: [cross_pollinationsInsertInput!]!): cross_pollinationsInsertResponse
-
   """Adds one or more `events` records to the collection"""
   insertIntoeventsCollection(objects: [eventsInsertInput!]!): eventsInsertResponse
 
@@ -307,22 +293,6 @@ type Mutation {
     """
     set: completionsUpdateInput!
   ): completionsUpdateResponse!
-
-  """Updates zero or more records in the `cross_pollinations` collection"""
-  updatecross_pollinationsCollection(
-    """
-    The maximum number of records in the collection permitted to be affected
-    """
-    atMost: Int! = 1
-
-    """Restricts the mutation's impact to records matching the criteria"""
-    filter: cross_pollinationsFilter
-
-    """
-    Fields that are set will be updated for all records matching the `filter`
-    """
-    set: cross_pollinationsUpdateInput!
-  ): cross_pollinationsUpdateResponse!
 
   """Updates zero or more records in the `events` collection"""
   updateeventsCollection(
@@ -545,27 +515,6 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [completionsOrderBy!]
   ): completionsConnection
-
-  """A pagable collection of type `cross_pollinations`"""
-  cross_pollinationsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: cross_pollinationsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [cross_pollinationsOrderBy!]
-  ): cross_pollinationsConnection
 
   """A pagable collection of type `events`"""
   eventsCollection(
@@ -1047,119 +996,6 @@ input crossPollinationTypeFilter {
   in: [crossPollinationType!]
   is: FilterIs
   neq: crossPollinationType
-}
-
-type cross_pollinations implements Node {
-  active: Boolean!
-  created_at: Datetime!
-  id: UUID!
-
-  """Globally Unique Record Identifier"""
-  nodeId: ID!
-  outcome_id: UUID
-  outcomes: outcomes
-  participant_id: UUID
-  participants: participants
-  room_id: UUID
-  rooms: rooms
-  timing_type: timingType!
-  topic_id: UUID
-  topics: topics
-  type: crossPollinationType!
-  updated_at: Datetime!
-  user_id: UUID
-  users: users
-}
-
-type cross_pollinationsConnection {
-  edges: [cross_pollinationsEdge!]!
-  pageInfo: PageInfo!
-}
-
-type cross_pollinationsDeleteResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [cross_pollinations!]!
-}
-
-type cross_pollinationsEdge {
-  cursor: String!
-  node: cross_pollinations!
-}
-
-input cross_pollinationsFilter {
-  active: BooleanFilter
-  created_at: DatetimeFilter
-  id: UUIDFilter
-  nodeId: IDFilter
-  outcome_id: UUIDFilter
-  participant_id: UUIDFilter
-  room_id: UUIDFilter
-  timing_type: timingTypeFilter
-  topic_id: UUIDFilter
-  type: crossPollinationTypeFilter
-  updated_at: DatetimeFilter
-  user_id: UUIDFilter
-}
-
-input cross_pollinationsInsertInput {
-  active: Boolean
-  created_at: Datetime
-  id: UUID
-  outcome_id: UUID
-  participant_id: UUID
-  room_id: UUID
-  timing_type: timingType
-  topic_id: UUID
-  type: crossPollinationType
-  updated_at: Datetime
-  user_id: UUID
-}
-
-type cross_pollinationsInsertResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [cross_pollinations!]!
-}
-
-input cross_pollinationsOrderBy {
-  active: OrderByDirection
-  created_at: OrderByDirection
-  id: OrderByDirection
-  outcome_id: OrderByDirection
-  participant_id: OrderByDirection
-  room_id: OrderByDirection
-  timing_type: OrderByDirection
-  topic_id: OrderByDirection
-  type: OrderByDirection
-  updated_at: OrderByDirection
-  user_id: OrderByDirection
-}
-
-input cross_pollinationsUpdateInput {
-  active: Boolean
-  created_at: Datetime
-  id: UUID
-  outcome_id: UUID
-  participant_id: UUID
-  room_id: UUID
-  timing_type: timingType
-  topic_id: UUID
-  type: crossPollinationType
-  updated_at: Datetime
-  user_id: UUID
-}
-
-type cross_pollinationsUpdateResponse {
-  """Count of the records impacted by the mutation"""
-  affectedCount: Int!
-
-  """Array of records impacted by the mutation"""
-  records: [cross_pollinations!]!
 }
 
 type events implements Node {
@@ -1750,7 +1586,6 @@ type opinions implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
-  cross_pollination_id: UUID
   id: UUID!
   moderationsCollection(
     """Query values in the collection after the provided cursor"""
@@ -1806,7 +1641,6 @@ type opinionsEdge {
 input opinionsFilter {
   active: BooleanFilter
   created_at: DatetimeFilter
-  cross_pollination_id: UUIDFilter
   id: UUIDFilter
   nodeId: IDFilter
   option_type: opinionOptionTypeFilter
@@ -1821,7 +1655,6 @@ input opinionsFilter {
 input opinionsInsertInput {
   active: Boolean
   created_at: Datetime
-  cross_pollination_id: UUID
   id: UUID
   option_type: opinionOptionType
   outcome_id: UUID
@@ -1843,7 +1676,6 @@ type opinionsInsertResponse {
 input opinionsOrderBy {
   active: OrderByDirection
   created_at: OrderByDirection
-  cross_pollination_id: OrderByDirection
   id: OrderByDirection
   option_type: OrderByDirection
   outcome_id: OrderByDirection
@@ -1857,7 +1689,6 @@ input opinionsOrderBy {
 input opinionsUpdateInput {
   active: Boolean
   created_at: Datetime
-  cross_pollination_id: UUID
   id: UUID
   option_type: opinionOptionType
   outcome_id: UUID
@@ -2003,25 +1834,6 @@ type outcomes implements Node {
   ): completionsConnection
   content: String!
   created_at: Datetime!
-  cross_pollinationsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: cross_pollinationsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [cross_pollinationsOrderBy!]
-  ): cross_pollinationsConnection
   id: UUID!
   moderationsCollection(
     """Query values in the collection after the provided cursor"""
@@ -2235,25 +2047,6 @@ type participants implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
-  cross_pollinationsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: cross_pollinationsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [cross_pollinationsOrderBy!]
-  ): cross_pollinationsConnection
   demographics: JSON!
   id: UUID!
   last_seen_at: Datetime!
@@ -2459,25 +2252,6 @@ type rooms implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
-  cross_pollinationsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: cross_pollinationsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [cross_pollinationsOrderBy!]
-  ): cross_pollinationsConnection
   external_room_id: String
   id: UUID!
   messagesCollection(
@@ -2723,25 +2497,6 @@ type topics implements Node {
   ): completionsConnection
   content: String!
   created_at: Datetime!
-  cross_pollinationsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: cross_pollinationsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [cross_pollinationsOrderBy!]
-  ): cross_pollinationsConnection
   id: UUID!
   moderationsCollection(
     """Query values in the collection after the provided cursor"""
@@ -2926,25 +2681,6 @@ type users implements Node {
     orderBy: [completionsOrderBy!]
   ): completionsConnection
   created_at: Datetime!
-  cross_pollinationsCollection(
-    """Query values in the collection after the provided cursor"""
-    after: Cursor
-
-    """Query values in the collection before the provided cursor"""
-    before: Cursor
-
-    """Filters to apply to the results set when querying from the collection"""
-    filter: cross_pollinationsFilter
-
-    """Query the first `n` records in the collection"""
-    first: Int
-
-    """Query the last `n` records in the collection"""
-    last: Int
-
-    """Sort order to apply to the collection"""
-    orderBy: [cross_pollinationsOrderBy!]
-  ): cross_pollinationsConnection
   demographics: JSON!
   id: UUID!
   moderationsCollection(

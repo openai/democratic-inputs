@@ -3,7 +3,6 @@ fragment FullOpinion on opinions {
     active
     type
     outcome_id
-    cross_pollination_id
     participant_id
     range_value
     statement

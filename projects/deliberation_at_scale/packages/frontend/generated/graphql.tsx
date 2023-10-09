@@ -120,8 +120,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Deletes zero or more records from the `completions` collection */
   deleteFromcompletionsCollection: CompletionsDeleteResponse;
-  /** Deletes zero or more records from the `cross_pollinations` collection */
-  deleteFromcross_pollinationsCollection: Cross_PollinationsDeleteResponse;
   /** Deletes zero or more records from the `events` collection */
   deleteFromeventsCollection: EventsDeleteResponse;
   /** Deletes zero or more records from the `messages` collection */
@@ -144,8 +142,6 @@ export type Mutation = {
   deleteFromusersCollection: UsersDeleteResponse;
   /** Adds one or more `completions` records to the collection */
   insertIntocompletionsCollection?: Maybe<CompletionsInsertResponse>;
-  /** Adds one or more `cross_pollinations` records to the collection */
-  insertIntocross_pollinationsCollection?: Maybe<Cross_PollinationsInsertResponse>;
   /** Adds one or more `events` records to the collection */
   insertIntoeventsCollection?: Maybe<EventsInsertResponse>;
   /** Adds one or more `messages` records to the collection */
@@ -168,8 +164,6 @@ export type Mutation = {
   insertIntousersCollection?: Maybe<UsersInsertResponse>;
   /** Updates zero or more records in the `completions` collection */
   updatecompletionsCollection: CompletionsUpdateResponse;
-  /** Updates zero or more records in the `cross_pollinations` collection */
-  updatecross_pollinationsCollection: Cross_PollinationsUpdateResponse;
   /** Updates zero or more records in the `events` collection */
   updateeventsCollection: EventsUpdateResponse;
   /** Updates zero or more records in the `messages` collection */
@@ -197,13 +191,6 @@ export type Mutation = {
 export type MutationDeleteFromcompletionsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
   filter?: InputMaybe<CompletionsFilter>;
-};
-
-
-/** The root type for creating and mutating data */
-export type MutationDeleteFromcross_PollinationsCollectionArgs = {
-  atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<Cross_PollinationsFilter>;
 };
 
 
@@ -284,12 +271,6 @@ export type MutationInsertIntocompletionsCollectionArgs = {
 
 
 /** The root type for creating and mutating data */
-export type MutationInsertIntocross_PollinationsCollectionArgs = {
-  objects: Array<Cross_PollinationsInsertInput>;
-};
-
-
-/** The root type for creating and mutating data */
 export type MutationInsertIntoeventsCollectionArgs = {
   objects: Array<EventsInsertInput>;
 };
@@ -354,14 +335,6 @@ export type MutationUpdatecompletionsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
   filter?: InputMaybe<CompletionsFilter>;
   set: CompletionsUpdateInput;
-};
-
-
-/** The root type for creating and mutating data */
-export type MutationUpdatecross_PollinationsCollectionArgs = {
-  atMost?: Scalars['Int']['input'];
-  filter?: InputMaybe<Cross_PollinationsFilter>;
-  set: Cross_PollinationsUpdateInput;
 };
 
 
@@ -480,8 +453,6 @@ export type Query = {
   __typename?: 'Query';
   /** A pagable collection of type `completions` */
   completionsCollection?: Maybe<CompletionsConnection>;
-  /** A pagable collection of type `cross_pollinations` */
-  cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
   /** A pagable collection of type `events` */
   eventsCollection?: Maybe<EventsConnection>;
   /** A pagable collection of type `messages` */
@@ -515,17 +486,6 @@ export type QueryCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
-};
-
-
-/** The root type for querying data */
-export type QueryCross_PollinationsCollectionArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<Cross_PollinationsFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
 };
 
 
@@ -877,121 +837,6 @@ export type CrossPollinationTypeFilter = {
   in?: InputMaybe<Array<CrossPollinationType>>;
   is?: InputMaybe<FilterIs>;
   neq?: InputMaybe<CrossPollinationType>;
-};
-
-export type Cross_Pollinations = Node & {
-  __typename?: 'cross_pollinations';
-  active: Scalars['Boolean']['output'];
-  created_at: Scalars['Datetime']['output'];
-  id: Scalars['UUID']['output'];
-  /** Globally Unique Record Identifier */
-  nodeId: Scalars['ID']['output'];
-  outcome_id?: Maybe<Scalars['UUID']['output']>;
-  outcomes?: Maybe<Outcomes>;
-  participant_id?: Maybe<Scalars['UUID']['output']>;
-  participants?: Maybe<Participants>;
-  room_id?: Maybe<Scalars['UUID']['output']>;
-  rooms?: Maybe<Rooms>;
-  timing_type: TimingType;
-  topic_id?: Maybe<Scalars['UUID']['output']>;
-  topics?: Maybe<Topics>;
-  type: CrossPollinationType;
-  updated_at: Scalars['Datetime']['output'];
-  user_id?: Maybe<Scalars['UUID']['output']>;
-  users?: Maybe<Users>;
-};
-
-export type Cross_PollinationsConnection = {
-  __typename?: 'cross_pollinationsConnection';
-  edges: Array<Cross_PollinationsEdge>;
-  pageInfo: PageInfo;
-};
-
-export type Cross_PollinationsDeleteResponse = {
-  __typename?: 'cross_pollinationsDeleteResponse';
-  /** Count of the records impacted by the mutation */
-  affectedCount: Scalars['Int']['output'];
-  /** Array of records impacted by the mutation */
-  records: Array<Cross_Pollinations>;
-};
-
-export type Cross_PollinationsEdge = {
-  __typename?: 'cross_pollinationsEdge';
-  cursor: Scalars['String']['output'];
-  node: Cross_Pollinations;
-};
-
-export type Cross_PollinationsFilter = {
-  active?: InputMaybe<BooleanFilter>;
-  created_at?: InputMaybe<DatetimeFilter>;
-  id?: InputMaybe<UuidFilter>;
-  nodeId?: InputMaybe<IdFilter>;
-  outcome_id?: InputMaybe<UuidFilter>;
-  participant_id?: InputMaybe<UuidFilter>;
-  room_id?: InputMaybe<UuidFilter>;
-  timing_type?: InputMaybe<TimingTypeFilter>;
-  topic_id?: InputMaybe<UuidFilter>;
-  type?: InputMaybe<CrossPollinationTypeFilter>;
-  updated_at?: InputMaybe<DatetimeFilter>;
-  user_id?: InputMaybe<UuidFilter>;
-};
-
-export type Cross_PollinationsInsertInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  created_at?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['UUID']['input']>;
-  outcome_id?: InputMaybe<Scalars['UUID']['input']>;
-  participant_id?: InputMaybe<Scalars['UUID']['input']>;
-  room_id?: InputMaybe<Scalars['UUID']['input']>;
-  timing_type?: InputMaybe<TimingType>;
-  topic_id?: InputMaybe<Scalars['UUID']['input']>;
-  type?: InputMaybe<CrossPollinationType>;
-  updated_at?: InputMaybe<Scalars['Datetime']['input']>;
-  user_id?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-export type Cross_PollinationsInsertResponse = {
-  __typename?: 'cross_pollinationsInsertResponse';
-  /** Count of the records impacted by the mutation */
-  affectedCount: Scalars['Int']['output'];
-  /** Array of records impacted by the mutation */
-  records: Array<Cross_Pollinations>;
-};
-
-export type Cross_PollinationsOrderBy = {
-  active?: InputMaybe<OrderByDirection>;
-  created_at?: InputMaybe<OrderByDirection>;
-  id?: InputMaybe<OrderByDirection>;
-  outcome_id?: InputMaybe<OrderByDirection>;
-  participant_id?: InputMaybe<OrderByDirection>;
-  room_id?: InputMaybe<OrderByDirection>;
-  timing_type?: InputMaybe<OrderByDirection>;
-  topic_id?: InputMaybe<OrderByDirection>;
-  type?: InputMaybe<OrderByDirection>;
-  updated_at?: InputMaybe<OrderByDirection>;
-  user_id?: InputMaybe<OrderByDirection>;
-};
-
-export type Cross_PollinationsUpdateInput = {
-  active?: InputMaybe<Scalars['Boolean']['input']>;
-  created_at?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['UUID']['input']>;
-  outcome_id?: InputMaybe<Scalars['UUID']['input']>;
-  participant_id?: InputMaybe<Scalars['UUID']['input']>;
-  room_id?: InputMaybe<Scalars['UUID']['input']>;
-  timing_type?: InputMaybe<TimingType>;
-  topic_id?: InputMaybe<Scalars['UUID']['input']>;
-  type?: InputMaybe<CrossPollinationType>;
-  updated_at?: InputMaybe<Scalars['Datetime']['input']>;
-  user_id?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-export type Cross_PollinationsUpdateResponse = {
-  __typename?: 'cross_pollinationsUpdateResponse';
-  /** Count of the records impacted by the mutation */
-  affectedCount: Scalars['Int']['output'];
-  /** Array of records impacted by the mutation */
-  records: Array<Cross_Pollinations>;
 };
 
 export type Events = Node & {
@@ -1515,7 +1360,6 @@ export type Opinions = Node & {
   active: Scalars['Boolean']['output'];
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
-  cross_pollination_id?: Maybe<Scalars['UUID']['output']>;
   id: Scalars['UUID']['output'];
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
@@ -1574,7 +1418,6 @@ export type OpinionsEdge = {
 export type OpinionsFilter = {
   active?: InputMaybe<BooleanFilter>;
   created_at?: InputMaybe<DatetimeFilter>;
-  cross_pollination_id?: InputMaybe<UuidFilter>;
   id?: InputMaybe<UuidFilter>;
   nodeId?: InputMaybe<IdFilter>;
   option_type?: InputMaybe<OpinionOptionTypeFilter>;
@@ -1589,7 +1432,6 @@ export type OpinionsFilter = {
 export type OpinionsInsertInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
-  cross_pollination_id?: InputMaybe<Scalars['UUID']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   option_type?: InputMaybe<OpinionOptionType>;
   outcome_id?: InputMaybe<Scalars['UUID']['input']>;
@@ -1611,7 +1453,6 @@ export type OpinionsInsertResponse = {
 export type OpinionsOrderBy = {
   active?: InputMaybe<OrderByDirection>;
   created_at?: InputMaybe<OrderByDirection>;
-  cross_pollination_id?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
   option_type?: InputMaybe<OrderByDirection>;
   outcome_id?: InputMaybe<OrderByDirection>;
@@ -1625,7 +1466,6 @@ export type OpinionsOrderBy = {
 export type OpinionsUpdateInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
-  cross_pollination_id?: InputMaybe<Scalars['UUID']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   option_type?: InputMaybe<OpinionOptionType>;
   outcome_id?: InputMaybe<Scalars['UUID']['input']>;
@@ -1754,7 +1594,6 @@ export type Outcomes = Node & {
   completionsCollection?: Maybe<CompletionsConnection>;
   content: Scalars['String']['output'];
   created_at: Scalars['Datetime']['output'];
-  cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
   id: Scalars['UUID']['output'];
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
@@ -1780,16 +1619,6 @@ export type OutcomesCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
-};
-
-
-export type OutcomesCross_PollinationsCollectionArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<Cross_PollinationsFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
 };
 
 
@@ -1938,7 +1767,6 @@ export type Participants = Node & {
   active: Scalars['Boolean']['output'];
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
-  cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
   demographics: Scalars['JSON']['output'];
   id: Scalars['UUID']['output'];
   last_seen_at: Scalars['Datetime']['output'];
@@ -1965,16 +1793,6 @@ export type ParticipantsCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
-};
-
-
-export type ParticipantsCross_PollinationsCollectionArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<Cross_PollinationsFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
 };
 
 
@@ -2122,7 +1940,6 @@ export type Rooms = Node & {
   active: Scalars['Boolean']['output'];
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
-  cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
   external_room_id?: Maybe<Scalars['String']['output']>;
   id: Scalars['UUID']['output'];
   messagesCollection?: Maybe<MessagesConnection>;
@@ -2146,16 +1963,6 @@ export type RoomsCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
-};
-
-
-export type RoomsCross_PollinationsCollectionArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<Cross_PollinationsFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
 };
 
 
@@ -2334,7 +2141,6 @@ export type Topics = Node & {
   completionsCollection?: Maybe<CompletionsConnection>;
   content: Scalars['String']['output'];
   created_at: Scalars['Datetime']['output'];
-  cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
   id: Scalars['UUID']['output'];
   moderationsCollection?: Maybe<ModerationsConnection>;
   /** Globally Unique Record Identifier */
@@ -2356,16 +2162,6 @@ export type TopicsCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
-};
-
-
-export type TopicsCross_PollinationsCollectionArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<Cross_PollinationsFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
 };
 
 
@@ -2491,7 +2287,6 @@ export type Users = Node & {
   auth_user_id?: Maybe<Scalars['UUID']['output']>;
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
-  cross_pollinationsCollection?: Maybe<Cross_PollinationsConnection>;
   demographics: Scalars['JSON']['output'];
   id: Scalars['UUID']['output'];
   moderationsCollection?: Maybe<ModerationsConnection>;
@@ -2510,16 +2305,6 @@ export type UsersCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
-};
-
-
-export type UsersCross_PollinationsCollectionArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  filter?: InputMaybe<Cross_PollinationsFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<Cross_PollinationsOrderBy>>;
 };
 
 
@@ -2630,9 +2415,9 @@ export type VisibilityTypeFilter = {
   neq?: InputMaybe<VisibilityType>;
 };
 
-export type FullOpinionFragment = { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any };
+export type FullOpinionFragment = { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any };
 
-export type FullOutcomeFragment = { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, topic_id?: any | null, original_outcome_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null };
+export type FullOutcomeFragment = { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, topic_id?: any | null, original_outcome_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null };
 
 export type FullParticipantFragment = { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any };
 
@@ -2646,7 +2431,7 @@ export type ChangeOpinionMutationVariables = Exact<{
 }>;
 
 
-export type ChangeOpinionMutation = { __typename?: 'Mutation', updateopinionsCollection: { __typename?: 'opinionsUpdateResponse', affectedCount: number, records: Array<{ __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any }> } };
+export type ChangeOpinionMutation = { __typename?: 'Mutation', updateopinionsCollection: { __typename?: 'opinionsUpdateResponse', affectedCount: number, records: Array<{ __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any }> } };
 
 export type CreateOpinionMutationVariables = Exact<{
   outcomeId?: InputMaybe<Scalars['UUID']['input']>;
@@ -2658,7 +2443,7 @@ export type CreateOpinionMutationVariables = Exact<{
 }>;
 
 
-export type CreateOpinionMutation = { __typename?: 'Mutation', insertIntoopinionsCollection?: { __typename?: 'opinionsInsertResponse', affectedCount: number, records: Array<{ __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any }> } | null };
+export type CreateOpinionMutation = { __typename?: 'Mutation', insertIntoopinionsCollection?: { __typename?: 'opinionsInsertResponse', affectedCount: number, records: Array<{ __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any }> } | null };
 
 export type CreateParticipantMutationVariables = Exact<{
   userId: Scalars['UUID']['input'];
@@ -2712,7 +2497,7 @@ export type GetRoomOutcomesQueryVariables = Exact<{
 }>;
 
 
-export type GetRoomOutcomesQuery = { __typename?: 'Query', outcomesCollection?: { __typename?: 'outcomesConnection', edges: Array<{ __typename?: 'outcomesEdge', node: { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, topic_id?: any | null, original_outcome_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, cross_pollination_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null } }> } | null };
+export type GetRoomOutcomesQuery = { __typename?: 'Query', outcomesCollection?: { __typename?: 'outcomesConnection', edges: Array<{ __typename?: 'outcomesEdge', node: { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, topic_id?: any | null, original_outcome_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null } }> } | null };
 
 export type RoomParticipantFragment = { __typename?: 'participants', id: any, active: boolean, nick_name: string, user_id?: any | null, room_id?: any | null, status: ParticipantStatusType, updated_at: any, created_at: any };
 
@@ -2795,7 +2580,6 @@ export const FullOpinionFragmentDoc = gql`
   active
   type
   outcome_id
-  cross_pollination_id
   participant_id
   range_value
   statement
