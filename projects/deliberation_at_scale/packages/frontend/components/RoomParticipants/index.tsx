@@ -71,7 +71,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                                     <FontAwesomeIcon icon={faVideoSlash} />
                                 </div>
                             )}
-                            <div
+                            {/* <div
                                 className={classNames(
                                     `absolute bottom-2 backdrop-blur-lg p-2 flex justify-center rounded gap-4 bg-gray-800/90 text-white z-20`,
                                     variant === 'spacious' && 'left-2',
@@ -80,7 +80,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
                                 )}
                             >
                                 <span>{participant.displayName || 'Guest'}</span>
-                            </div>
+                            </div> */}
                         </motion.div>
                     );
                 })}

@@ -14,6 +14,7 @@ import { msg } from "@lingui/macro";
 import { useDispatch } from "react-redux";
 import { setFlowStateEntry } from "@/state/slices/flow";
 
+
 export default function PermissionChatFlow() {
     const { _ } = useLingui();
     const dispatch = useDispatch();
@@ -26,6 +27,14 @@ export default function PermissionChatFlow() {
                 helpers.goToName('permission_verify_working');
             },
         } satisfies QuickReply;
+    }, [_]);
+    const waitingForRoomMessageOptions = useMemo(() => {
+        return [
+            [_(msg`Waiting for a conversation to be ready...`)],
+            [_(msg`This may take a few seconds...`)],
+            [_(msg`Waiting... If you want to cancel, click the button below.`)],
+            [_(msg`Waiting... Hold your horses!`)],
+        ];
     }, [_]);
     const cancelWaitingForRoomQuickReply = useMemo(() => {
         return {
@@ -55,7 +64,7 @@ export default function PermissionChatFlow() {
                     },
                     skip: (helpers) => {
                         const isRequested = helpers.roomState.permission === PermissionState.REQUESTED;
-                        const hasGivenPermission = isRequested && helpers.isVideoEnabled && helpers.isAudioEnabled;
+                        const hasGivenPermission = isRequested && helpers.isVideoEnabled;
 
                         if (!hasGivenPermission) {
                             helpers.goToName("permission_not_working");
@@ -105,7 +114,7 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: `waiting_for_room_1`,
-                    messageOptions: [[_(msg`Waiting for a room to be ready...`)]],
+                    messageOptions: waitingForRoomMessageOptions,
                     timeoutMs: ONE_SECOND_MS * 5,
                     quickReplies: [
                         cancelWaitingForRoomQuickReply,
