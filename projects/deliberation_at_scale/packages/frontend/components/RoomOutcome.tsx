@@ -50,29 +50,10 @@ export default function RoomOutcome(props: Props) {
         return OUTCOME_OPINION_TIMEOUT_MS_LOOKUP[type];
     }, [type, existingOpinion]);
     const hasTimeout = timeoutMs > 0;
-    console.log(`${type}-${variant}`);
-
     const opinionOptions = useMemo(() => {
-        switch (`${type}-${variant}`) {
-            case `${OutcomeType.Consensus}-undefined`:
-                return [
-                    {
-                        content: _(msg`I agree with this consensus.`),
-                        icon: faCheck,
-                        optionType: OpinionOptionType.AgreeConsensus,
-                    },
-                    {
-                        content: _(msg`I don't agree with this.`),
-                        icon: faTimes,
-                        optionType: OpinionOptionType.DisagreeConsensus,
-                    },
-                    {
-                        content: _(msg`This statement should be reformulated.`),
-                        icon: faTimes,
-                        optionType: OpinionOptionType.Wrong,
-                    },
-                ];
-            case `${OutcomeType.Consensus}-compact`:
+        switch (type) {
+            case OutcomeType.Consensus:
+            case OutcomeType.CrossPollination:
                 return [
                     {
                         content: _(msg`Agree`),
@@ -93,9 +74,9 @@ export default function RoomOutcome(props: Props) {
         }
 
         return [];
-    }, [type,variant, _]);
-    
+    }, [type, _]);
     const hasOpinionOptions = (opinionOptions.length > 0);
+    const formattedContent = content?.trim();
 
     if (!outcome) {
         return null;
@@ -109,9 +90,14 @@ export default function RoomOutcome(props: Props) {
             animate={{ opacity: 1, y: 0 }}
         >
             <Pill icon={statementSolid} className="border-black">{title}</Pill>
-            <ReactMarkdown>{content}</ReactMarkdown>
+            <ReactMarkdown>{formattedContent}</ReactMarkdown>
             {hasOpinionOptions && (
-                <div className={classNames("flex gap-2 w-full flex-wrap", variant === "compact" && "flex-row", variant === "spacious" && "flex-col", variant === "spacious" && "flex-col" )}>
+                <div className={classNames(
+                    "flex gap-2 w-full flex-wrap",
+                    variant === "compact" && "flex-row",
+                    variant === "spacious" && "flex-col",
+                    variant === "spacious" && "flex-col"
+                )}>
                     {opinionOptions.map((option) => {
                         const { content, icon, optionType } = option;
                         const isSelected = (existingOpinion?.option_type === optionType);

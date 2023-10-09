@@ -1360,6 +1360,7 @@ type messages implements Node {
   room_status_type: roomStatusType
   rooms: rooms
   safe_language: Boolean
+  tags: String!
   timing_type: timingType!
   type: messageType!
   updated_at: Datetime!
@@ -1396,6 +1397,7 @@ input messagesFilter {
   room_id: UUIDFilter
   room_status_type: roomStatusTypeFilter
   safe_language: BooleanFilter
+  tags: StringFilter
   timing_type: timingTypeFilter
   type: messageTypeFilter
   updated_at: DatetimeFilter
@@ -1414,6 +1416,7 @@ input messagesInsertInput {
   room_id: UUID
   room_status_type: roomStatusType
   safe_language: Boolean
+  tags: String
   timing_type: timingType
   type: messageType
   updated_at: Datetime
@@ -1439,6 +1442,7 @@ input messagesOrderBy {
   room_id: OrderByDirection
   room_status_type: OrderByDirection
   safe_language: OrderByDirection
+  tags: OrderByDirection
   timing_type: OrderByDirection
   type: OrderByDirection
   updated_at: OrderByDirection
@@ -1457,6 +1461,7 @@ input messagesUpdateInput {
   room_id: UUID
   room_status_type: roomStatusType
   safe_language: Boolean
+  tags: String
   timing_type: timingType
   type: messageType
   updated_at: Datetime
@@ -1873,6 +1878,7 @@ type opinionsUpdateResponse {
 
 enum outcomeType {
   consensus
+  cross_pollination
   milestone
   off_topic
   overall_impression

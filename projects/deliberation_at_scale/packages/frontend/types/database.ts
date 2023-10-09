@@ -243,6 +243,7 @@ export interface Database {
                     room_id: string | null
                     room_status_type: Database["public"]["Enums"]["roomStatusType"] | null
                     safe_language: boolean | null
+                    tags: string
                     timing_type: Database["public"]["Enums"]["timingType"]
                     type: Database["public"]["Enums"]["messageType"]
                     updated_at: string
@@ -262,6 +263,7 @@ export interface Database {
                     | Database["public"]["Enums"]["roomStatusType"]
                     | null
                     safe_language?: boolean | null
+                    tags?: string
                     timing_type?: Database["public"]["Enums"]["timingType"]
                     type?: Database["public"]["Enums"]["messageType"]
                     updated_at?: string
@@ -281,6 +283,7 @@ export interface Database {
                     | Database["public"]["Enums"]["roomStatusType"]
                     | null
                     safe_language?: boolean | null
+                    tags?: string
                     timing_type?: Database["public"]["Enums"]["timingType"]
                     type?: Database["public"]["Enums"]["messageType"]
                     updated_at?: string
@@ -789,6 +792,7 @@ export interface Database {
             | "off_topic"
             | "overall_impression"
             | "topic_interest"
+            | "cross_pollination"
             participantStatusType:
             | "queued"
             | "waiting_for_confirmation"

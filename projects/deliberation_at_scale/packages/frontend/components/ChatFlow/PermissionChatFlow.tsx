@@ -14,7 +14,6 @@ import { msg } from "@lingui/macro";
 import { useDispatch } from "react-redux";
 import { setFlowStateEntry } from "@/state/slices/flow";
 
-
 export default function PermissionChatFlow() {
     const { _ } = useLingui();
     const dispatch = useDispatch();

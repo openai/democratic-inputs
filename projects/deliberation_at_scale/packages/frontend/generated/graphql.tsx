@@ -1120,6 +1120,7 @@ export type Messages = Node & {
   room_status_type?: Maybe<RoomStatusType>;
   rooms?: Maybe<Rooms>;
   safe_language?: Maybe<Scalars['Boolean']['output']>;
+  tags: Scalars['String']['output'];
   timing_type: TimingType;
   type: MessageType;
   updated_at: Scalars['Datetime']['output'];
@@ -1198,6 +1199,7 @@ export type MessagesFilter = {
   room_id?: InputMaybe<UuidFilter>;
   room_status_type?: InputMaybe<RoomStatusTypeFilter>;
   safe_language?: InputMaybe<BooleanFilter>;
+  tags?: InputMaybe<StringFilter>;
   timing_type?: InputMaybe<TimingTypeFilter>;
   type?: InputMaybe<MessageTypeFilter>;
   updated_at?: InputMaybe<DatetimeFilter>;
@@ -1216,6 +1218,7 @@ export type MessagesInsertInput = {
   room_id?: InputMaybe<Scalars['UUID']['input']>;
   room_status_type?: InputMaybe<RoomStatusType>;
   safe_language?: InputMaybe<Scalars['Boolean']['input']>;
+  tags?: InputMaybe<Scalars['String']['input']>;
   timing_type?: InputMaybe<TimingType>;
   type?: InputMaybe<MessageType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1241,6 +1244,7 @@ export type MessagesOrderBy = {
   room_id?: InputMaybe<OrderByDirection>;
   room_status_type?: InputMaybe<OrderByDirection>;
   safe_language?: InputMaybe<OrderByDirection>;
+  tags?: InputMaybe<OrderByDirection>;
   timing_type?: InputMaybe<OrderByDirection>;
   type?: InputMaybe<OrderByDirection>;
   updated_at?: InputMaybe<OrderByDirection>;
@@ -1259,6 +1263,7 @@ export type MessagesUpdateInput = {
   room_id?: InputMaybe<Scalars['UUID']['input']>;
   room_status_type?: InputMaybe<RoomStatusType>;
   safe_language?: InputMaybe<Scalars['Boolean']['input']>;
+  tags?: InputMaybe<Scalars['String']['input']>;
   timing_type?: InputMaybe<TimingType>;
   type?: InputMaybe<MessageType>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1641,6 +1646,7 @@ export type OpinionsUpdateResponse = {
 
 export enum OutcomeType {
   Consensus = 'consensus',
+  CrossPollination = 'cross_pollination',
   Milestone = 'milestone',
   OffTopic = 'off_topic',
   OverallImpression = 'overall_impression',
