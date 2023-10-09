@@ -14,8 +14,8 @@ export default function ProfileChatFlow() {
             id: "profile",
             steps: [
                 {
-                    name: "welcome",
-                    messageOptions: [[_(msg`Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants.`)]],
+                    name: "welcome", // Possibly unnecessary to and mention 'Common Ground' and mention 'Deliberation at Scale'. But using both makes it sound big, which I like.
+                    messageOptions: [[_(msg`Hi there [nickName]! Welcome to Common Ground. The world's first Deliberation at Scale event. If you feel ready to join a discussion, we can set you up with other participants.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
@@ -25,7 +25,7 @@ export default function ProfileChatFlow() {
                         {
                             id: 'join-room',
                             icon: faMessage,
-                            content: _(msg`Join a conversation`),
+                            content: _(msg`Join the conversation`),
                             onClick: async (helpers) => {
                                 helpers.postBotMessages([[_(msg`Great! Moving you to the waiting lobby... Hold on tight!`)]]);
                                 await helpers.waitFor(2000);

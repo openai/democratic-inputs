@@ -45,7 +45,7 @@ export default function PermissionChatFlow() {
             steps: [
                 {
                     name: "permission_ask",
-                    messageOptions: [[_(msg`Before we continue, you will need to give permission to use your camera and microphone. We recommend giving those permissions because we prefer face-to-face discussions.`)]],
+                    messageOptions: [[_(msg`Before we continue, you will need to give permission to use your camera and microphone.`)]],
                     timeoutMs: 2000, // keep this fixed to give devices time to initialize
                 },
                 {
@@ -126,7 +126,7 @@ export default function PermissionChatFlow() {
                     },
                 },
                 {
-                    name: "ask_to_enter_room",
+                    name: "ask_to_enter_room", // Bram: Possibly just remove this option -> Participant will be automatically placed in room when one is found. As soon as participant clicks search room, they state to be ready to join one.
                     messageOptions: [[_(msg`A room has been found! Do you want to enter now?`)]],
                     quickReplies: [
                         {

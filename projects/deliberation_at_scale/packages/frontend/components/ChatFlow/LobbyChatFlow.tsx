@@ -16,7 +16,7 @@ export default function LobbyChatFlow() {
             steps: [
                 {
                     name: "greeting_1",
-                    messageOptions: [[_(msg`Hi there [nickName]! I hope you're ready to get started discussing the future of AI.`)]],
+                    messageOptions: [[_(msg`Hi there [nickName]! Good to have you here.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {

@@ -14,14 +14,14 @@ export default function IdleChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[_(msg`Hi there [nickName]! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!`)]],
+                    messageOptions: [[_(msg`Hi there [nickName]. You have been idle for a while. Would you like to still join a room?`)]],
                     quickReplies: [
                         {
                             id: 'retry',
                             icon: faRotate,
                             content: _(msg`Sorry, retry joining a room`),
                             onClick: async (helpers) => {
-                                helpers.postBotMessages([[_(msg`Okay, pay attention! Moving you to the lobby once again...`)]]);
+                                helpers.postBotMessages([[_(msg`Okay! Moving you to the lobby.`)]]);
                                 await helpers.waitFor(2000);
                                 helpers.goToPage('/lobby');
                             },
