@@ -13,11 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:112
+#: components/ChatFlow/PermissionChatFlow.tsx:138
 msgid "A room has been found! Do you want to enter now?"
 msgstr ""
 
-#: components/ChatMessage.tsx:78
+#: components/RoomOutcome.tsx:59
+msgid "Agree"
+msgstr ""
+
+#: components/ChatMessage.tsx:79
 #: hooks/useRoomMessages.ts:55
 msgid "Anonymous"
 msgstr ""
@@ -30,19 +34,27 @@ msgstr ""
 msgid "Assistant"
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:36
+#: components/ChatFlow/PermissionChatFlow.tsx:56
 msgid "Before we continue, you will need to give permission to use your camera and microphone. We recommend giving those permissions because we prefer face-to-face discussions."
 msgstr ""
 
-#: components/ChatFlow/ProfileChatFlow.tsx:45
+#: components/ChatFlow/PermissionChatFlow.tsx:41
+msgid "Cancel"
+msgstr ""
+
+#: components/ChatFlow/ProfileChatFlow.tsx:47
 msgid "Change my profile"
 msgstr ""
 
-#: components/RoomOutcome.tsx:38
+#: app/[lang]/room/[roomId]/layout.tsx:45
+msgid "Connecting to video call..."
+msgstr ""
+
+#: components/RoomOutcome.tsx:40
 msgid "Consensus Proposal"
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:69
+#: components/ChatFlow/PermissionChatFlow.tsx:89
 msgid "Continue to room"
 msgstr ""
 
@@ -62,6 +74,10 @@ msgstr ""
 msgid "Disable video"
 msgstr ""
 
+#: components/RoomOutcome.tsx:64
+msgid "Disagree"
+msgstr ""
+
 #: components/RoomParticipants/controls.tsx:65
 msgid "Enable audio"
 msgstr ""
@@ -70,12 +86,16 @@ msgstr ""
 msgid "Enable video"
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:116
+#: components/ChatFlow/PermissionChatFlow.tsx:142
 msgid "Enter room"
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:42
+#: components/ChatFlow/PermissionChatFlow.tsx:62
 msgid "Everything seems to be working fine. Let's get started!"
+msgstr ""
+
+#: app/[lang]/room/[roomId]/layout.tsx:33
+msgid "Finding room..."
 msgstr ""
 
 #: components/ChatFlow/LobbyChatFlow.tsx:24
@@ -91,7 +111,7 @@ msgstr ""
 msgid "Go back to the home page"
 msgstr ""
 
-#: hooks/useRoomActions.ts:31
+#: hooks/useRoomActions.ts:37
 msgid "Go to voting"
 msgstr ""
 
@@ -132,19 +152,11 @@ msgstr ""
 msgid "Hmmm, it appears the room could not be joined or the other participants took too long to join."
 msgstr ""
 
-#: components/RoomOutcome.tsx:56
-msgid "I agree with this consensus."
-msgstr ""
-
-#: components/RoomOutcome.tsx:61
-msgid "I don't agree with this."
-msgstr ""
-
 #: components/ChatFlow/LoginChatFlow.tsx:32
 msgid "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:89
+#: components/ChatFlow/PermissionChatFlow.tsx:109
 msgid "It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above."
 msgstr ""
 
@@ -172,19 +184,27 @@ msgstr ""
 msgid "Leave conversation"
 msgstr ""
 
-#: hooks/useRoomActions.ts:41
+#: hooks/useRoomActions.ts:57
 msgid "Leave room"
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:57
-msgid "Let's find a room to join!"
+#: components/ChatFlow/PermissionChatFlow.tsx:77
+msgid "Let's find a conversation to join!"
 msgstr ""
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:39
 msgid "Let's review what you all discussed. What was your general impression?"
 msgstr ""
 
-#: components/RoomOutcome.tsx:39
+#: app/[lang]/room/[roomId]/layout.tsx:41
+msgid "Loading media..."
+msgstr ""
+
+#: app/[lang]/room/[roomId]/layout.tsx:37
+msgid "Loading room..."
+msgstr ""
+
+#: components/RoomOutcome.tsx:41
 msgid "Milestone"
 msgstr ""
 
@@ -193,11 +213,11 @@ msgstr ""
 msgid "Moderator"
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:125
+#: components/ChatFlow/PermissionChatFlow.tsx:151
 msgid "Moving you to the room now..."
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:130
+#: components/ChatFlow/PermissionChatFlow.tsx:156
 msgid "No, go back to home page"
 msgstr ""
 
@@ -205,8 +225,12 @@ msgstr ""
 msgid "Now we need to setup your camera and microphone."
 msgstr ""
 
-#: components/RoomOutcome.tsx:40
+#: components/RoomOutcome.tsx:42
 msgid "Off Topic"
+msgstr ""
+
+#: components/ChatFlow/PermissionChatFlow.tsx:44
+msgid "Okay, cancelling..."
 msgstr ""
 
 #: components/ChatFlow/IdleChatFlow.tsx:24
@@ -217,12 +241,16 @@ msgstr ""
 msgid "Okay! Moving you to the lobby once again..."
 msgstr ""
 
+#: components/RoomOutcome.tsx:69
+msgid "Pass"
+msgstr ""
+
 #: components/ChatFlow/InvalidChatFlow.tsx:22
 msgid "Retry joining a room"
 msgstr ""
 
 #: components/ChatFlow/index.tsx:74
-msgid "Select an option above..."
+msgid "Select an button above..."
 msgstr ""
 
 #: components/ChatFlow/index.tsx:199
@@ -270,15 +298,23 @@ msgstr ""
 msgid "There was an error sending you an email. Please try again!"
 msgstr ""
 
-#: components/RoomOutcome.tsx:66
-msgid "This statement should be reformulated."
+#: components/ChatFlow/PermissionChatFlow.tsx:33
+msgid "This may take a few seconds..."
+msgstr ""
+
+#: hooks/useRoomMessages.ts:65
+msgid "This message has been flagged as difficult to understand."
+msgstr ""
+
+#: hooks/useRoomMessages.ts:63
+msgid "This message has been flagged as inappropriate."
 msgstr ""
 
 #: components/ChatFlow/RegisterChatFlow.tsx:29
 msgid "To get started, we need to send you a link for you to register with."
 msgstr ""
 
-#: components/RoomChatSummary.tsx:57
+#: components/RoomTopic.tsx:37
 msgid "Topic"
 msgstr ""
 
@@ -286,17 +322,36 @@ msgstr ""
 msgid "Use my current nickname"
 msgstr ""
 
-#: components/ChatFlow/ProfileChatFlow.tsx:37
+#: hooks/useRoomActions.ts:47
+msgid "View inspiration"
+msgstr ""
+
+#: components/ChatFlow/ProfileChatFlow.tsx:38
 msgid "View results of previous conversations"
 msgstr ""
 
-#: components/ChatFlow/PermissionChatFlow.tsx:96
-#: components/ChatFlow/PermissionChatFlow.tsx:104
+#: components/ChatFlow/PermissionChatFlow.tsx:32
+msgid "Waiting for a conversation to be ready..."
+msgstr ""
+
+#: components/ChatFlow/PermissionChatFlow.tsx:127
 msgid "Waiting for a room to be ready..."
+msgstr ""
+
+#: app/[lang]/room/[roomId]/layout.tsx:49
+msgid "Waiting for all participants to join..."
 msgstr ""
 
 #: components/ChatFlow/index.tsx:74
 msgid "Waiting..."
+msgstr ""
+
+#: components/ChatFlow/PermissionChatFlow.tsx:35
+msgid "Waiting... Hold your horses!"
+msgstr ""
+
+#: components/ChatFlow/PermissionChatFlow.tsx:34
+msgid "Waiting... If you want to cancel, click the button below."
 msgstr ""
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:81
