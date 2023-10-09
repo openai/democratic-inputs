@@ -51,6 +51,8 @@ export interface ProgressionLayer {
 
 /** All the possible tasks that can be registered in the job system */
 export type WorkerTaskId =
+    'enrichVoteCheck' |
+    'verifyRequestedEnd' |
     'enrichClosure' |
     'enrichConsensusProposal' |
     'enrichConsensusStimulation' |

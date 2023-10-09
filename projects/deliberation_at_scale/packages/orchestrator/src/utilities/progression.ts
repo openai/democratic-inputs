@@ -21,9 +21,11 @@ import verifyOffTopic from "../tasks/verifyOffTopic";
 import verifySafeLanguage from "../tasks/verifySafeLanguage";
 import verifySmoothConversation from "../tasks/verifySmoothConversation";
 import verifyGroupIntroduction from "../tasks/verifyGroupIntroduction";
+import verifyRequestedEnd from "../tasks/verifyRequestedEnd";
+import enrichVoteCheck from "../tasks/enrichVoteCheck";
 
 export interface ProgressionTaskExecutorLookup {
-    [key: string]: (payload: BaseProgressionWorkerTaskPayload, helpers: Helpers) => Promise<ModeratorTaskTuple>;
+    [key: string]: (payload: BaseProgressionWorkerTaskPayload, helpers: Helpers) => Promise<ModeratorTaskTuple | void>;
 }
 
 // lookup table so we can execute these tasks without a worker job
@@ -37,6 +39,7 @@ export const progressionTaskExecutorLookup: ProgressionTaskExecutorLookup = {
     enrichSafeBehaviour,
     enrichSmoothConversation,
     enrichTopicIntroduction,
+    enrichVoteCheck,
     verifyConsensusForming,
     verifyEasyLanguage,
     verifyEmotionalWellbeing,
@@ -44,6 +47,7 @@ export const progressionTaskExecutorLookup: ProgressionTaskExecutorLookup = {
     verifyEqualParticipation,
     verifyGroupIntroduction,
     verifyOffTopic,
+    verifyRequestedEnd,
     verifySafeLanguage,
     verifySmoothConversation,
 };

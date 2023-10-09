@@ -3,7 +3,7 @@ import { flat, isEmpty, isObject } from "radash";
 import dayjs from "dayjs";
 
 // TODO: make mechanism to automatically switch between different topologies
-import { progressionTopology } from "../config/test-0-topology";
+import { progressionTopology } from "../config/test-1-topology";
 import { supabaseClient, Moderation } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
 import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionEnrichmentTask, ProgressionLayer, ProgressionLayerId, ProgressionTask, RoomStatus } from "../types";
@@ -75,7 +75,7 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
         return;
     }
 
-    const { failedProgressionTaskIds: currentFailedProgressionTaskIds } = verificationResult;
+    const { failedProgressionTaskIds: currentFailedProgressionTaskIds = [] } = verificationResult;
     const failedVerificationTaskIds = [...currentFailedProgressionTaskIds];
     const hasFailedVerifications = failedVerificationTaskIds.length > 0;
 

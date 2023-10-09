@@ -72,3 +72,24 @@ export async function getDefaultOutsomeSourcesMessageIds<PayloadType extends Bas
 
     return messageIds;
 }
+
+export async function getLatestOutcomeByRoomId(roomId: string) {
+    const { data: outcomes } = await supabaseClient
+        .from("outcomes")
+        .select()
+        .eq("room_id", roomId)
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+    return outcomes?.[0];
+}
+
+export async function getOutcomesByRoomId(roomId: string) {
+    const { data: outcomes } = await supabaseClient
+        .from("outcomes")
+        .select()
+        .eq("room_id", roomId)
+        .order("created_at", { ascending: false });
+
+    return outcomes;
+}

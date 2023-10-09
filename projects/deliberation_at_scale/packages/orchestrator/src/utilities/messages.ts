@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
-import { MessageType, supabaseClient } from "../lib/supabase";
+import { Message, MessageType, Participant, supabaseClient } from "../lib/supabase";
 import { BaseProgressionWorkerTaskPayload, ProgressionHistoryMessageContext } from "../types";
 import { getParticipantsByRoomId } from "./participants";
 import { Helpers } from "graphile-worker";
@@ -11,6 +11,7 @@ export interface SendMessageOptions {
     type: MessageType;
     roomId: string;
     content: string;
+    tags?: string;
 }
 
 export async function sendBotMessage(options: Omit<SendMessageOptions, 'type'>) {
@@ -28,7 +29,7 @@ export async function sendParticipantMessage(options: Omit<SendMessageOptions, '
 }
 
 export async function sendMessage(options: SendMessageOptions) {
-    const { active = true, type, roomId, content, participantId } = options;
+    const { active = true, type, roomId, content, participantId, tags } = options;
 
     await supabaseClient.from("messages").insert({
         active,
@@ -36,6 +37,7 @@ export async function sendMessage(options: SendMessageOptions) {
         room_id: roomId,
         participant_id: participantId,
         content,
+        tags,
     });
 }
 
@@ -53,6 +55,12 @@ export async function getMessageContentForProgressionWorker(payload: BaseProgres
 
     const messages = messagesResult?.value ?? [];
     const participants = participantsResult?.value ?? [];
+    const content = joinMessagesContentWithParticipants(messages, participants);
+
+    return content;
+}
+
+export function joinMessagesContentWithParticipants(messages: Message[], participants: Participant[]) {
     const getParticipantName = (participantId: string | null) => {
         const participant = participants.find((participant) => participant.id === participantId);
         const { nick_name: name } = participant ?? {};
@@ -101,19 +109,20 @@ export interface GetMessagesAfterOptions {
     roomId: string;
     fromDate?: Dayjs;
     limit?: number;
+    types?: MessageType[];
 }
 
 /**
  * Get all the messages that are created after a certain time.
  */
 export async function getMessagesAfter(options: GetMessagesAfterOptions) {
-    const { roomId, fromDate, limit = 100 } = options;
+    const { roomId, fromDate, limit = 100, types = ['chat', 'voice'] } = options;
     let messageStatement = supabaseClient
         .from('messages')
         .select()
         .eq('active', true)
         .eq('room_id', roomId)
-        .in('type', ['chat', 'voice'])
+        .in('type', types)
         .order('created_at', { ascending: false })
         .limit(limit);
 
