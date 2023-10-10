@@ -17,7 +17,7 @@ msgstr ""
 msgid "A room has been found! Do you want to enter now?"
 msgstr ""
 
-#: components/RoomOutcome.tsx:59
+#: components/RoomOutcome.tsx:60
 msgid "Agree"
 msgstr ""
 
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Disable video"
 msgstr ""
 
-#: components/RoomOutcome.tsx:64
+#: components/RoomOutcome.tsx:65
 msgid "Disagree"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Go back to the home page"
 msgstr ""
 
-#: hooks/useRoomActions.ts:35
+#: hooks/useRoomActions.ts:34
 msgid "Go to voting"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgstr ""
 msgid "Leave conversation"
 msgstr ""
 
-#: hooks/useRoomActions.ts:45
+#: hooks/useRoomActions.ts:44
 msgid "Leave room"
 msgstr ""
 
@@ -241,7 +241,7 @@ msgstr ""
 msgid "Okay! Moving you to the lobby once again..."
 msgstr ""
 
-#: components/RoomOutcome.tsx:69
+#: components/RoomOutcome.tsx:70
 msgid "Pass"
 msgstr ""
 
@@ -264,6 +264,10 @@ msgstr ""
 
 #: hooks/useQuickReplies.tsx:12
 msgid "Start over"
+msgstr ""
+
+#: components/RoomOutcome.tsx:43
+msgid "Statement"
 msgstr ""
 
 #: components/ChatFlow/LobbyChatFlow.tsx:64
