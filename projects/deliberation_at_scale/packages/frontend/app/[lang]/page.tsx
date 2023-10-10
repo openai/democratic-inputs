@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 import Button from "@/components/Button";
 import useProfile from "@/hooks/useProfile";
-import { faArrowRightFromBracket, faRotate, faSpinner, faVideo, faMessage, faHandshake, faLightbulb, faShieldHeart, faScroll } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket, faSpinner, faVideo, faLightbulb, faShieldHeart, faScroll } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { supabaseClient } from '@/state/supabase';
 
@@ -22,7 +22,7 @@ export default function Index() {
     return (
         <section id="main-scroll-container" className="p-4 flex flex-col gap-3 overflow-y-scroll pt-24">
             <motion.div layout>
-                <h1 className="mb-4 text-lg font-medium">Welcome to Eindhoven's deliberation about personalisation of AI assistants.</h1>
+                <h1 className="mb-4 text-lg font-medium">Welcome to Eindhoven&apos;s deliberation about personalisation of AI assistants.</h1>
                 <p className="mb-4 text-gray-600">The development of artificial intelligence affects all of us. We believe it is important that this development is steered by the will of the people. You will contribute to this via this deliberation. Thank you for being part of this!</p>
                 <p className="mb-4 text-gray-600">Your next hour on Common Ground will look as follows:</p>
                 <div className="grid grid-cols-2 grid-rows-2 gap-2 mb-4 hyphens-auto text-green-700 text-lg font-medium text-center">
