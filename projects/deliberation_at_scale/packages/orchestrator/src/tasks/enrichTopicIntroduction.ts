@@ -61,7 +61,7 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
                 If you want to have an open discussion and create new statements yourself, you can do so at any time by typing in the chat. I will try to summarize them for you automatically.
             `,
         });
-        await waitFor(ONE_SECOND_MS * 3);
+        await waitFor(ONE_SECOND_MS * 5);
         await sendBotMessage({
             roomId,
             content: `

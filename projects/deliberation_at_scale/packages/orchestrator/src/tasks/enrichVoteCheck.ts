@@ -182,10 +182,13 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         const taskContent = joinMessagesContentWithParticipants(latestOutcomeMessages, participants);
         const consensusResult = await createVerificationFunctionCompletion({
             taskInstruction: `
-                Verify whether the content below contains a summary and if so, what the summary is.
-                Be consise and clear.
-                Only write down the summary statement, not any reasoning or prefixes.
-                Write it from the perspective of the participants.
+            You are a democratic summarisation bot. You will receive some comments made by the participants of a conversation about a difficult topic. These people do not know each other and may have very different views. Do not bias towards any particular person or viewpoint. Using only the comments, create a synthesising, standalone, normative statement that captures the values of each participant and the nuance of what they have shared. Make sure the statement is short and to the point (less than two sentences). When formulating the statement, follow these rules:
+                1. Don't use metaphors or similes. Say it how it is.
+                2. Never use a long word where a short one works.
+                3. If it is possible to cut a word out, cut it.
+                4. Never use the passive where you can use the active.
+                5. Never use a foreign phrase, a scientific word, or a jargon word if there exists an everyday equivalent.
+                6. Break any of these rules if following them would feel strange or uncanny.
             `,
             taskContent,
         });
@@ -463,7 +466,7 @@ function getOpenDiscussionMessageContent(): string {
 
 function getNewCrossPollinationMessageContent(statement: string): string {
     return draw([
-        `I have found a new statement for you to vote on: ${statement}`,
+        `I have found a new statement for you to discuss and vote on: ${statement}`,
     ]) ?? '';
 }
 
