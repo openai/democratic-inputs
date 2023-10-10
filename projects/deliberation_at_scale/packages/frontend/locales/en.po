@@ -14,8 +14,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:138
-msgid "A room has been found! Do you want to enter now?"
-msgstr "A room has been found! Do you want to enter now?"
+msgid "A room has been found! Do you want to join the conversation?"
+msgstr "A room has been found! Do you want to join the conversation?"
 
 #: components/RoomOutcome.tsx:60
 msgid "Agree"
@@ -35,8 +35,8 @@ msgid "Assistant"
 msgstr "Assistant"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:56
-msgid "Before we continue, you will need to give permission to use your camera and microphone."
-msgstr "Before we continue, you will need to give permission to use your camera and microphone."
+msgid "Before we continue, you will need to give permission to use your camera and microphone. Heads up! We will not record your video feed, but may use a transcript of your audio for research."
+msgstr "Before we continue, you will need to give permission to use your camera and microphone. Heads up! We will not record your video feed, but may use a transcript of your audio for research."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:41
 msgid "Cancel"
@@ -132,33 +132,33 @@ msgstr "Great! Moving you to the waiting lobby... Hold on tight!"
 msgid "Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute."
 msgstr "Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute."
 
-#: components/ChatFlow/LobbyChatFlow.tsx:19
-msgid "Hi there [nickName]! Good to have you here."
-msgstr "Hi there [nickName]! Good to have you here."
-
 #: components/ChatFlow/EvaluateChatFlow.tsx:33
 msgid "Hi there [nickName]! I hope you enjoyed the discussion you had with the group."
 msgstr "Hi there [nickName]! I hope you enjoyed the discussion you had with the group."
 
 #: components/ChatFlow/ProfileChatFlow.tsx:18
-msgid "Hi there [nickName]! Welcome to Common Ground. The world's first Deliberation at Scale event. If you feel ready to join a discussion, we can set you up with other participants."
-msgstr "Hi there [nickName]! Welcome to Common Ground. The world's first Deliberation at Scale event. If you feel ready to join a discussion, we can set you up with other participants."
+msgid "Hi there [nickName]! Welcome to Common Ground. This application was developed by the consortium Deliberation at Scale together with OpenAI. When you feel ready to join a discussion, we can set you up with other participants."
+msgstr "Hi there [nickName]! Welcome to Common Ground. This application was developed by the consortium Deliberation at Scale together with OpenAI. When you feel ready to join a discussion, we can set you up with other participants."
 
 #: components/ChatFlow/IdleChatFlow.tsx:17
 msgid "Hi there [nickName]. You have been idle for a while. Would you like to still join a room?"
 msgstr "Hi there [nickName]. You have been idle for a while. Would you like to still join a room?"
 
+#: components/ChatFlow/LobbyChatFlow.tsx:19
+msgid "Hi there! Good to have you here."
+msgstr "Hi there! Good to have you here."
+
 #: components/ChatFlow/InvalidChatFlow.tsx:17
-msgid "Hmmm, it appears the room could not be joined or the other participants took too long to join."
-msgstr "Hmmm, it appears the room could not be joined or the other participants took too long to join."
+msgid "Hmmm, it appears the room could not be joined or the other participants took too long to join. Sorry about that!"
+msgstr "Hmmm, it appears the room could not be joined or the other participants took too long to join. Sorry about that!"
 
 #: components/ChatFlow/LoginChatFlow.tsx:32
 msgid "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
 msgstr "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:109
-msgid "It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above."
-msgstr "It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above."
+msgid "It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above."
+msgstr "It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:63
 msgid "It was bad."
@@ -189,8 +189,8 @@ msgid "Leave room"
 msgstr "Leave room"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:77
-msgid "Let's find a conversation to join!"
-msgstr "Let's find a conversation to join!"
+msgid "Let's find a conversation to join"
+msgstr "Let's find a conversation to join"
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:39
 msgid "Let's review what you all discussed. What was your general impression?"
@@ -214,8 +214,8 @@ msgid "Moderator"
 msgstr "Moderator"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:151
-msgid "Moving you to the room now..."
-msgstr "Moving you to the room now..."
+msgid "Moving you to the room now. Have fun!"
+msgstr "Moving you to the room now. Have fun!"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:156
 msgid "No, go back to home page"
@@ -234,8 +234,8 @@ msgid "Okay, cancelling..."
 msgstr "Okay, cancelling..."
 
 #: components/ChatFlow/InvalidChatFlow.tsx:24
-msgid "Okay! Moving you back to the lobby..."
-msgstr "Okay! Moving you back to the lobby..."
+msgid "Okay! Moving you back to the lobby, one moment please..."
+msgstr "Okay! Moving you back to the lobby, one moment please..."
 
 #: components/ChatFlow/IdleChatFlow.tsx:24
 msgid "Okay! Moving you to the lobby."
@@ -250,17 +250,13 @@ msgid "Retry joining a room"
 msgstr "Retry joining a room"
 
 #: components/ChatFlow/index.tsx:74
-msgid "Select an button above..."
-msgstr "Select an button above..."
+msgid "Select a button above..."
+msgstr "Select a button above..."
 
 #: components/ChatFlow/index.tsx:199
 #: components/ChatFlow/index.tsx:320
 msgid "Something went wrong! Please try again."
 msgstr "Something went wrong! Please try again."
-
-#: components/ChatFlow/IdleChatFlow.tsx:22
-msgid "Sorry, retry joining a room"
-msgstr "Sorry, retry joining a room"
 
 #: hooks/useQuickReplies.tsx:12
 msgid "Start over"
@@ -319,6 +315,10 @@ msgstr "To get started, a registration link will be send to your email."
 msgid "Topic"
 msgstr "Topic"
 
+#: components/ChatFlow/IdleChatFlow.tsx:22
+msgid "Try joining a room again"
+msgstr "Try joining a room again"
+
 #: components/ChatFlow/LobbyChatFlow.tsx:33
 msgid "Use my current nickname"
 msgstr "Use my current nickname"
@@ -331,21 +331,21 @@ msgstr "View results of previous conversations"
 msgid "Waiting for a conversation to be ready..."
 msgstr "Waiting for a conversation to be ready..."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:127
-msgid "Waiting for a room to be ready..."
-msgstr "Waiting for a room to be ready..."
-
 #: app/[lang]/room/[roomId]/layout.tsx:49
 msgid "Waiting for all participants to join..."
 msgstr "Waiting for all participants to join..."
+
+#: components/ChatFlow/PermissionChatFlow.tsx:127
+msgid "Waiting for two other participants..."
+msgstr "Waiting for two other participants..."
 
 #: components/ChatFlow/index.tsx:74
 msgid "Waiting..."
 msgstr "Waiting..."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:35
-msgid "Waiting... Hold your horses!"
-msgstr "Waiting... Hold your horses!"
+msgid "Waiting... Hold on!"
+msgstr "Waiting... Hold on!"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:34
 msgid "Waiting... If you want to cancel, click the button below."
