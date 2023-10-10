@@ -56,6 +56,9 @@ type MessagesScope = 'latestOutcome' | 'room';
 interface AttemptSendBotMessageOptions extends Omit<SendMessageOptions, 'type'> {
     sendOnce?: boolean;
     scope?: MessagesScope;
+    force?: boolean;
+    outcomeCooldownMs?: number;
+    tagCooldownMs?: number;
 }
 
 export default async function enrichVoteCheck(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers) {
@@ -119,9 +122,6 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     const shouldInviteOpenDiscussion = timeSinceLatestOutcome > INVITE_OPEN_DISCUSSION_AFTER_MS;
     const shouldInviteToPass = timeSinceLatestOutcome > INVITE_PASS_AFTER_MS;
     const shouldTimeoutVote = timeSinceLatestOutcome > TIMEOUT_VOTE_AFTER_MS;
-    const hasRecentlySentBotMessage = latestBotOutcomeMessages.some((message) => {
-        return dayjs(message.created_at).isAfter(dayjs().subtract(BOT_OUTCOME_COOLDOWN_MS, 'ms'));
-    });
 
     // contribution helpers
     const contributingParticipantIds = unique(latestOutcomeMessages.map((message) => message.participant_id)).filter((id) => id !== null) as string[];
@@ -134,8 +134,21 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
 
     // bot message helpers
     const attemptSendBotMessage = async (options: AttemptSendBotMessageOptions) => {
-        const { tags, sendOnce = false, scope = 'latestOutcome' } = options;
+        const {
+            tags, sendOnce = false,
+            scope = 'latestOutcome', force = false,
+            tagCooldownMs = BOT_TAG_COOLDOWN_MS, outcomeCooldownMs = BOT_OUTCOME_COOLDOWN_MS,
+        } = options;
         const messages = scope === 'latestOutcome' ? latestBotOutcomeMessages : roomBotMessages;
+        const hasRecentlySentBotMessage = latestBotOutcomeMessages.some((message) => {
+            return dayjs(message.created_at).isAfter(dayjs().subtract(outcomeCooldownMs, 'ms'));
+        });
+
+        // guard: check if we should force the message
+        if (force) {
+            await sendBotMessage(options);
+            return;
+        }
 
         if (hasRecentlySentBotMessage) {
             return;
@@ -156,7 +169,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
             const timeSinceLatestMessageWithTags = Math.abs(dayjs().diff(dayjs(latestMessageWithTags.created_at), 'ms'));
 
             // guard: check if the bot has sent a message with the same tag recently
-            if (timeSinceLatestMessageWithTags < BOT_TAG_COOLDOWN_MS) {
+            if (timeSinceLatestMessageWithTags < tagCooldownMs) {
                 return;
             }
         }
@@ -219,10 +232,11 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     // guard: check if we should timeout the vote
     if (shouldTimeoutVote) {
         helpers.logger.info(`Timing out vote for room ${roomId}...`);
-        await sendBotMessage({
+        await attemptSendBotMessage({
             roomId,
             content: getTimeoutVoteMessageContent(),
             tags: 'timeout-vote',
+            force: true,
         });
         await waitFor(NEW_OUTCOME_AFTER_VOTE_TIMEOUT_MS);
         await sendNewCrossPollination({
@@ -235,7 +249,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
 
     // invite the participants to pass this outcome
     if (shouldInviteToPass) {
-        await sendBotMessage({
+        await attemptSendBotMessage({
             roomId,
             content: getInviteToPassMessageContent(),
             tags: 'invite-to-pass',
@@ -280,14 +294,15 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         await attemptSendBotMessage({
             roomId,
             content: getVoteInviteMessageContent(),
-            tags: 'not-everyone-voted',
+            tags: 'invite-to-vote',
+            tagCooldownMs: BOT_TAG_COOLDOWN_MS * 2,
         });
     }
 
     // send new cross pollination when everyone has voted the same
     if (hasEveryoneVoted && hasEveryoneVotedTheSame) {
         helpers.logger.info(`Sending new cross pollination for room ${roomId} because everyone voted the same...`);
-        await sendBotMessage({
+        await attemptSendBotMessage({
             roomId,
             content: getVotedSameMessageContent(),
             tags: 'everyone-voted-the-same',
@@ -407,9 +422,11 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
     }
 
     helpers.logger.info(`Sending new cross pollination for room ${roomId} with outcome ${candidateOutcomeId} and content ${candidateOutcomeContent}...`);
-    await sendBotMessage({
+    // NOTE: not an attempt!
+    await attemptSendBotMessage({
         roomId,
         content: getNewCrossPollinationMessageContent(candidateOutcomeContent),
+        force: true,
     });
     await waitFor(NEW_OUTCOME_AFTER_OUTCOME_INTRODUCTION_MS);
     const { data: newOutcomes } = await supabaseClient
