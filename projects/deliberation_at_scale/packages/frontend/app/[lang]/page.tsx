@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 import Button from "@/components/Button";
 import useProfile from "@/hooks/useProfile";
-import { faArrowRightFromBracket, faRotate, faSpinner, faVideo, faMessage, faHandshake } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRightFromBracket, faRotate, faSpinner, faVideo, faMessage, faHandshake, faLightbulb, faShieldHeart, faScroll } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { supabaseClient } from '@/state/supabase';
 
@@ -22,28 +22,28 @@ export default function Index() {
     return (
         <section id="main-scroll-container" className="p-4 flex flex-col gap-3 overflow-y-scroll pt-24">
             <motion.div layout>
-                <h1 className="mb-4 text-lg font-medium">Welcome to Deliberation at Scale</h1>
-                <p className="mb-4 text-gray-600">The development of artificial intelligence (AI) affects all of us. With Deliberation at Scale, we want to ensure that guidelines and rules that will come to guide artifical intelligence development are <span className="font-semibold">well-sourced</span>, <span className="font-semibold">representative</span> and <span className="font-semibold">fair</span>.</p>
-                <p className="mb-4 text-gray-600">In Deliberation at Scale you will:</p>
+                <h1 className="mb-4 text-lg font-medium">Welcome to Eindhoven's deliberation about personalisation of AI assistants.</h1>
+                <p className="mb-4 text-gray-600">The development of artificial intelligence affects all of us. We believe it is important that this development is steered by the will of the people. You will contribute to this via this deliberation. Thank you for being part of this!</p>
+                <p className="mb-4 text-gray-600">Your next hour on Common Ground will look as follows:</p>
                 <div className="grid grid-cols-2 grid-rows-2 gap-2 mb-4 hyphens-auto text-green-700 text-lg font-medium text-center">
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faVideo} size="2x" fixedWidth />
-                        <span>Meet two other participants in a video call</span>
+                        <span><b>Setup your profile</b> via email in one minute</span>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
-                        <FontAwesomeIcon icon={faMessage} size="2x" fixedWidth />
-                        <span>Discuss topics surrounding AI governance</span>
+                        <FontAwesomeIcon icon={faScroll} size="2x" fixedWidth />
+                        <span><b>Join a room</b> with two others, and deliberate on provided statements or create your own</span>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
-                        <FontAwesomeIcon icon={faHandshake} size="2x" fixedWidth />
-                        <span>Agree on statements capturing a topic</span>
+                        <FontAwesomeIcon icon={faShieldHeart} size="2x" fixedWidth />
+                        <span>AI moderators help creating a <b>healthy deliberation environment</b></span>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
-                        <FontAwesomeIcon icon={faRotate} size="2x" fixedWidth />
-                        <span>Contribute to a large body of agreement</span>
+                        <FontAwesomeIcon icon={faLightbulb} size="2x" fixedWidth />
+                        <span><b>Contribute</b> to a large body of agreement, and <b>learn</b> from the perspective of others</span>
                     </div>
                 </div>
-                <p className="mb-4 text-gray-600">Are you ready to help create guidelines for the next generation of artificial intelligence?</p>
+                <p className="mb-4 text-gray-600">When you are ready to find common ground, please click Register below. You will be guided through your profile setup, this should only take about 1 minute. When this registration is completed, you will be guided to a room to start the deliberation.</p>
             </motion.div>
             <motion.div className="flex flex-col gap-2">
                 {loading ? (

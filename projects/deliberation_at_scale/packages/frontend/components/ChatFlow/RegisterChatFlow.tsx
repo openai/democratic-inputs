@@ -21,18 +21,18 @@ export default function RegisterChatFlow() {
             steps: [
                 {
                     name: "greeting",
-                    messageOptions: [[_(msg`Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute.`)]],
+                    messageOptions: [[_(msg`Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
                     name: "get_started",
-                    messageOptions: [[_(msg`To get started, we need to send you a link for you to register with.`)]],
+                    messageOptions: [[_(msg`To get started, a registration link will be send to your email.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 askForEmailStep,
                 {
                     name: "thank_you",
-                    messageOptions: [[_(msg`Thank you! An email has been sent with a link to register with!`)]],
+                    messageOptions: [[_(msg`Thank you! You will find an email with a login link in your inbox. After you click on this link, you will be redirected back to this application and ready to start finding common ground.`)]],
                     quickReplies: [resetQuickReply],
                 }
             ]

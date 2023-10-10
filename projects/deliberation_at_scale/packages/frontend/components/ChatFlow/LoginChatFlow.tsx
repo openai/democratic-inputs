@@ -22,7 +22,7 @@ export default function LoginChatFlow() {
                 {
                     name: "greeting",
                     messageOptions: [[
-                        _(msg`Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute.`),
+                        _(msg`Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute.`),
                     ]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
@@ -36,7 +36,7 @@ export default function LoginChatFlow() {
                 askForEmailStep,
                 {
                     name: "thank_you",
-                    messageOptions: [[_(msg`Thank you! You will find a link to login to Deliberation at Scale in your inbox. Use this link to login.`)]],
+                    messageOptions: [[_(msg`Thank you! You will find an email with a login link in your inbox. After you click on this link, you will be redirected back to this application and ready to start finding common ground.`)]],
                     quickReplies: [resetQuickReply],
                 }
             ]

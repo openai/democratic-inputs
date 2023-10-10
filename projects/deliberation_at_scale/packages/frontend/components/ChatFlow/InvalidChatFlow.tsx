@@ -21,7 +21,7 @@ export default function InvalidChatFlow() {
                             icon: faRotate,
                             content: _(msg`Retry joining a room`),
                             onClick: async (helpers) => {
-                                helpers.postBotMessages([[_(msg`Okay! Moving you to the lobby once again...`)]]);
+                                helpers.postBotMessages([[_(msg`Okay! Moving you back to the lobby...`)]]);
                                 await helpers.waitFor(2000);
                                 helpers.goToPage('/lobby');
                             },
