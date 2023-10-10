@@ -30,6 +30,7 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
 
         return topicContent;
     },
+    getShouldSendBotMessage: () => false, // TMP: disable for now
     getBotMessageContent: async (helpers) => {
         const { result } = helpers;
         const { enrichment } = result;
@@ -38,18 +39,26 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
     },
     onTaskCompleted: async (helpers) => {
         const roomId = helpers.payload.roomId;
+        const topicContent = await getTopicContentByRoomId(roomId);
         await waitFor(ONE_SECOND_MS * 10);
         await sendBotMessage({
             roomId,
             content: `
-                If you like, you can type out what you think about the topic. If everyone in your video call types something, we will try to synthesise all your views into one new statement that you can vote on. As soon as everyone has voted, we will find you a new statement to discuss!
+                I hope you had the time to introduce yourselves to each other. Let's get started!
             `,
         });
-        await waitFor(ONE_SECOND_MS * 4);
+        await waitFor(ONE_SECOND_MS * 5);
         await sendBotMessage({
             roomId,
             content: `
-                By taking all the statements which people agree with, we can analyse them to find common ground! After the conversation has ended, we will send you an overview of what we have found.
+                Throughout the conversation you will be asked discuss and vote on statements related to the topic: **${topicContent}**
+            `,
+        });
+        await waitFor(ONE_SECOND_MS * 8);
+        await sendBotMessage({
+            roomId,
+            content: `
+                If you want to have an open discussion and create new statements yourself, you can do so at any time by typing in the chat. I will try to summarize them for you automatically.
             `,
         });
         await waitFor(ONE_SECOND_MS * 3);

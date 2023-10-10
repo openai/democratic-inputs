@@ -4,35 +4,85 @@ import { getParticipantsByRoomId } from "../utilities/participants";
 import { SendMessageOptions, getMessagesAfter, joinMessagesContentWithParticipants, sendBotMessage } from "../utilities/messages";
 import { getLatestOutcomeByRoomId, getOutcomesByRoomId } from "../utilities/outcomes";
 import dayjs from "dayjs";
-import { ONE_SECOND_MS } from "../config/constants";
+import { IS_DEVELOPMENT, ONE_MINUTE_MS, ONE_SECOND_MS } from "../config/constants";
 import { Opinion, OpinionOptionType, Participant, supabaseClient } from "../lib/supabase";
 import { draw, flat, unique } from "radash";
 import { createVerificationFunctionCompletion } from "../lib/openai";
 import { waitFor } from "../utilities/time";
-import { updateRoomStatus } from "../utilities/rooms";
+import { getRoomById } from "../utilities/rooms";
 
-const START_OPEN_DISCUSSION_AFTER_MS = 5 * 60 * ONE_SECOND_MS;
-const OPEN_DICUSSION_TIMEOUT_AFTER_MS = 2 * 60 * ONE_SECOND_MS;
-const OPEN_DISCUSSION_BOT_MESSAGE_TAG = 'open-discussion';
-const DEFAULT_MESSAGE_LIMIT = 200;
-const BOT_MESSAGE_COOLDOWN_MS = ONE_SECOND_MS * 30;
-const BOT_TAG_COOLDOWN_MS = ONE_SECOND_MS * 60;
+// Time constants
+const TIME_MULTIPLIER = IS_DEVELOPMENT ? 1 : 1;
+
+// The time before the bot will invite people to vote
+const INVITE_VOTE_AFTER_MS = 1 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
+
+// The time before the bot will invite the participants to have an open discussion within the current vote
+const INVITE_OPEN_DISCUSSION_AFTER_MS = 5 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
+
+// The time before the bot will invite to pass on the current vote
+const INVITE_PASS_AFTER_MS = 10 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
+
+// The time before the bot will forcefully move to a new vote
+const TIMEOUT_VOTE_AFTER_MS = 15 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
+
+// The time before a new outcome is searched after a vote has timed out
+const NEW_OUTCOME_AFTER_VOTE_TIMEOUT_MS = 5 * ONE_SECOND_MS * TIME_MULTIPLIER;
+
+// The time before a new outcome is searched out after everyone voted the same
+const NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS = 5 * ONE_SECOND_MS * TIME_MULTIPLIER;
+
+// The time before the new outcome is shown after it is announced in chat
+const NEW_OUTCOME_AFTER_OUTCOME_INTRODUCTION_MS = 3 * ONE_SECOND_MS * TIME_MULTIPLIER;
+
+// Timekeeping
+const TIMEKEEPING_MOMENTS = [
+    ONE_MINUTE_MS * 10 * TIME_MULTIPLIER,
+    ONE_MINUTE_MS * 20 * TIME_MULTIPLIER,
+    ONE_MINUTE_MS * 30 * TIME_MULTIPLIER,
+];
+
+// Cooldown of the bot message within each outcome
+const BOT_OUTCOME_COOLDOWN_MS = ONE_SECOND_MS * 30 * TIME_MULTIPLIER;
+
+// Cooldown of the bot message for each message tag
+const BOT_TAG_COOLDOWN_MS = ONE_SECOND_MS * 90 * TIME_MULTIPLIER;
+
+// Data fetching
+const DEFAULT_MESSAGE_LIMIT = 300;
+
+type MessagesScope = 'latestOutcome' | 'room';
+
+interface AttemptSendBotMessageOptions extends Omit<SendMessageOptions, 'type'> {
+    sendOnce?: boolean;
+    scope?: MessagesScope;
+}
 
 export default async function enrichVoteCheck(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers) {
     const { roomId } = payload;
-    const [latestOutcomeResult, participantsResult] = await Promise.allSettled([
+    const [roomResult, latestOutcomeResult, participantsResult, roomBotMessagesResult] = await Promise.allSettled([
+        getRoomById(roomId),
         getLatestOutcomeByRoomId(roomId),
         getParticipantsByRoomId(roomId),
+        getMessagesAfter({
+            roomId,
+            limit: DEFAULT_MESSAGE_LIMIT,
+            types: ['bot'],
+        })
     ]);
 
     // guard: check if the required data is valid
-    if (latestOutcomeResult.status === 'rejected' ||
-        participantsResult.status === 'rejected') {
+    if (roomResult.status === 'rejected' ||
+        latestOutcomeResult.status === 'rejected' ||
+        participantsResult.status === 'rejected' ||
+        roomBotMessagesResult.status === 'rejected') {
         throw Error(`Could not get the latest outcome, participants, or messages for the vote check enrichment.`);
     }
 
+    const room = roomResult?.value;
     const latestOutcome = latestOutcomeResult?.value;
     const participants = participantsResult?.value;
+    const roomBotMessages = roomBotMessagesResult?.value;
 
     // guard: send an initial outcome when there is none yet
     if (!latestOutcome) {
@@ -40,10 +90,14 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         await sendNewCrossPollination({
             roomId,
             helpers,
+            attemptSendBotMessage: (options) => {
+                sendBotMessage(options);
+            },
         });
         return;
     }
 
+    // fetching more data when outcome is found
     const latestOutcomeId = latestOutcome?.id;
     const participantIds = participants?.map(participant => participant.id);
     const latestBotOutcomeMessages = await getMessagesAfter({
@@ -52,123 +106,162 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         types: ['bot'],
         fromDate: dayjs(latestOutcome.created_at),
     });
+    const latestOutcomeMessages = await getMessagesAfter({
+        roomId,
+        limit: DEFAULT_MESSAGE_LIMIT,
+        fromDate: dayjs(latestOutcome?.created_at),
+    });
+
+    // time helpers
+    const timeSinceRoomStartedMs = Math.abs(dayjs().diff(dayjs(room?.created_at), 'ms'));
     const timeSinceLatestOutcome = Math.abs(dayjs().diff(dayjs(latestOutcome.created_at), 'ms'));
-    const shouldStartOpenDiscussion = timeSinceLatestOutcome > START_OPEN_DISCUSSION_AFTER_MS;
-    const starOpenDiscussionMessage = latestBotOutcomeMessages.find((message) => {
-        return message.tags?.includes(OPEN_DISCUSSION_BOT_MESSAGE_TAG);
-    });
-    const hasStartedOpenDiscussion = !!starOpenDiscussionMessage;
-    const timeSinceStartingOpenDiscussion = Math.abs(dayjs().diff(dayjs(starOpenDiscussionMessage?.created_at), 'ms'));
-    const timedOutOpenDiscussion = timeSinceStartingOpenDiscussion > OPEN_DICUSSION_TIMEOUT_AFTER_MS;
+    const shouldInviteVote = timeSinceLatestOutcome > INVITE_VOTE_AFTER_MS;
+    const shouldInviteOpenDiscussion = timeSinceLatestOutcome > INVITE_OPEN_DISCUSSION_AFTER_MS;
+    const shouldInviteToPass = timeSinceLatestOutcome > INVITE_PASS_AFTER_MS;
+    const shouldTimeoutVote = timeSinceLatestOutcome > TIMEOUT_VOTE_AFTER_MS;
     const hasRecentlySentBotMessage = latestBotOutcomeMessages.some((message) => {
-        return dayjs(message.created_at).isAfter(dayjs().subtract(BOT_MESSAGE_COOLDOWN_MS, 'ms'));
+        return dayjs(message.created_at).isAfter(dayjs().subtract(BOT_OUTCOME_COOLDOWN_MS, 'ms'));
     });
-    const attemptSendBotMessage = (options: Omit<SendMessageOptions, 'type'>) => {
-        const { tags } = options;
+
+    // contribution helpers
+    const contributingParticipantIds = unique(latestOutcomeMessages.map((message) => message.participant_id)).filter((id) => id !== null) as string[];
+    const hasEveryoneContributed = contributingParticipantIds.length === participantIds.length;
+    const hasAnyoneContributed = contributingParticipantIds.length > 0;
+    const lackingContributingNicknames = getLackingNicknames({
+        participants,
+        requiredParticipantIds: contributingParticipantIds,
+    });
+
+    // bot message helpers
+    const attemptSendBotMessage = async (options: AttemptSendBotMessageOptions) => {
+        const { tags, sendOnce = false, scope = 'latestOutcome' } = options;
+        const messages = scope === 'latestOutcome' ? latestBotOutcomeMessages : roomBotMessages;
 
         if (hasRecentlySentBotMessage) {
-            // return;
+            return;
         }
 
-        const latestMessageWithTags = latestBotOutcomeMessages.find((message) => {
+        const latestMessageWithTags = messages.find((message) => {
             return !!tags && message.tags?.includes(tags);
         });
 
         // guard: check if the bot has sent a message with the same tag recently
         if (latestMessageWithTags) {
+
+            // skip when already sent out
+            if (sendOnce) {
+                return;
+            }
+
             const timeSinceLatestMessageWithTags = Math.abs(dayjs().diff(dayjs(latestMessageWithTags.created_at), 'ms'));
 
+            // guard: check if the bot has sent a message with the same tag recently
             if (timeSinceLatestMessageWithTags < BOT_TAG_COOLDOWN_MS) {
                 return;
             }
         }
 
-        sendBotMessage(options);
+        await sendBotMessage(options);
     };
 
-    // guard: send open discussion message
-    if (shouldStartOpenDiscussion && !hasStartedOpenDiscussion) {
-        helpers.logger.info(`Sending open discussion message for room ${roomId}...`);
+    // always notify the participants of the timekeeping
+    TIMEKEEPING_MOMENTS.forEach((timekeepingTimeMs) => {
+        if (timeSinceRoomStartedMs > timekeepingTimeMs) {
+            attemptSendBotMessage({
+                roomId,
+                content: getTimeKeepingMessageContent(timekeepingTimeMs),
+                tags: `timekeeping-${timekeepingTimeMs}`,
+                sendOnce: true,
+                scope: 'room',
+            });
+        }
+    });
+
+    // guard: check if everyone contributed so we can attempt to make a summary
+    if (hasEveryoneContributed) {
+        const taskContent = joinMessagesContentWithParticipants(latestOutcomeMessages, participants);
+        const consensusResult = await createVerificationFunctionCompletion({
+            taskInstruction: `
+                Verify whether the content below contains a summary and if so, what the summary is.
+                Be consise and clear.
+                Only write down the summary statement, not any reasoning or prefixes.
+                Write it from the perspective of the participants.
+            `,
+            taskContent,
+        });
+
+        // guard: check if there is a consensus
+        if (!consensusResult.verified) {
+            return;
+        }
+
+        // store the consensus and send it over to the current room for them to vote on
+        const consensusStatement = consensusResult?.moderatedReason;
+        const { data: newOutcomes } = await supabaseClient
+            .from('outcomes')
+            .insert({
+                content: consensusStatement,
+                type: 'consensus',
+                room_id: roomId,
+                original_outcome_id: latestOutcomeId,
+            })
+            .select();
+        const newOutcome = newOutcomes?.[0];
+
+        // debug
+        helpers.logger.info(`Created a new outcome for room ${roomId} with id ${newOutcome?.id} and content ${newOutcome?.content}`);
+        return;
+    }
+
+    // guard: check if we should timeout the vote
+    if (shouldTimeoutVote) {
+        helpers.logger.info(`Timing out vote for room ${roomId}...`);
+        await sendBotMessage({
+            roomId,
+            content: getTimeoutVoteMessageContent(),
+            tags: 'timeout-vote',
+        });
+        await waitFor(NEW_OUTCOME_AFTER_VOTE_TIMEOUT_MS);
+        await sendNewCrossPollination({
+            roomId,
+            helpers,
+            attemptSendBotMessage,
+        });
+        return;
+    }
+
+    // invite the participants to pass this outcome
+    if (shouldInviteToPass) {
+        await sendBotMessage({
+            roomId,
+            content: getInviteToPassMessageContent(),
+            tags: 'invite-to-pass',
+        });
+    }
+
+    // check if we should moderate the open discussion a bit when it all takes too long
+    if (shouldInviteOpenDiscussion) {
+        helpers.logger.info(`Moderating open discussion in room ${roomId}...`);
+
+        // send opening invite only once
         attemptSendBotMessage({
             roomId,
             content: getOpenDiscussionMessageContent(),
-            tags: OPEN_DISCUSSION_BOT_MESSAGE_TAG,
-        });
-        return;
-    }
-
-    // guard: keep track of the open discussion, make a summary or time out the discussion
-    if (shouldStartOpenDiscussion && hasStartedOpenDiscussion) {
-        const openDiscussionMessages = await getMessagesAfter({
-            roomId,
-            limit: DEFAULT_MESSAGE_LIMIT,
-            fromDate: dayjs(starOpenDiscussionMessage?.created_at),
-        });
-        const contributingParticipantIds = unique(openDiscussionMessages.map((message) => message.participant_id)).filter((id) => id !== null) as string[];
-        const hasEveryoneContributed = contributingParticipantIds.length === participantIds.length;
-        const lackingNicknames = getLackingNicknames({
-            participants,
-            requiredParticipantIds: contributingParticipantIds,
+            tags: 'open-discussion',
+            sendOnce: true,
         });
 
-        if (!hasEveryoneContributed) {
+        // send a message to invite others to contribute
+        if (hasAnyoneContributed && !hasEveryoneContributed) {
             attemptSendBotMessage({
                 roomId,
-                content: getInviteContributionMessageContent(lackingNicknames),
+                content: getInviteContributionMessageContent(lackingContributingNicknames),
                 tags: 'not-everyone-contributed',
             });
-            return;
         }
-
-        // on timeout send cross pollination of force a summary?
-        if (timedOutOpenDiscussion) {
-            helpers.logger.info(`Sending new cross pollination for room ${roomId} because the open discussion timed out...`);
-            await sendBotMessage({
-                roomId,
-                content: getTimedOutOpenDiscussionMessageContent(),
-            });
-            await waitFor(ONE_SECOND_MS * 2);
-            await sendNewCrossPollination({
-                roomId,
-                helpers,
-            });
-            return;
-        }
-
-        // check if everyone contributed so we can attempt to make a summary
-        if (hasEveryoneContributed) {
-            const consensusResult = await createVerificationFunctionCompletion({
-                taskInstruction: `
-                    Verify whether the content below contains a consensus and if so, what the consensus is. Be consise and clear.
-                `,
-                taskContent: joinMessagesContentWithParticipants(openDiscussionMessages, participants),
-            });
-
-            // guard: check if there is a consensus
-            if (!consensusResult.verified) {
-                return;
-            }
-
-            // store the consensus
-            const consensusStatement = consensusResult?.moderatedReason;
-            const { data: newOutcomes } = await supabaseClient
-                .from('outcomes')
-                .insert({
-                    content: consensusStatement,
-                    type: 'consensus',
-                    room_id: roomId,
-                    original_outcome_id: latestOutcomeId,
-                })
-                .select();
-            const newOutcome = newOutcomes?.[0];
-
-            // debug
-            helpers.logger.info(`Created a new outcome for room ${roomId} with id ${newOutcome?.id} and content ${newOutcome?.content}`);
-        }
-
-        return;
     }
 
+    // fetching all opinions to see what the votes look like
     const { data: opinions } = await supabaseClient
         .from('opinions')
         .select()
@@ -178,40 +271,39 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     const hasEveryoneVoted = getHasEveryoneVoted({ opinions, participantIds });
     const hasEveryoneVotedTheSame = getHasEveryoneVotedTheSame({ opinions });
 
-    // guard: send message to remind people to vote
-    if (!hasEveryoneVoted) {
+    // attempt send message to remind people to vote
+    if (shouldInviteVote && !hasEveryoneVoted) {
         helpers.logger.info(`Sending vote reminder for room ${roomId}...`);
-        attemptSendBotMessage({
+        await attemptSendBotMessage({
             roomId,
-            content: getVoteReminderMessageContent(),
+            content: getVoteInviteMessageContent(),
             tags: 'not-everyone-voted',
         });
-        return;
     }
 
-    // guard: send new cross pollination when everyone has voted the same
-    if (hasEveryoneVotedTheSame) {
+    // send new cross pollination when everyone has voted the same
+    if (hasEveryoneVoted && hasEveryoneVotedTheSame) {
         helpers.logger.info(`Sending new cross pollination for room ${roomId} because everyone voted the same...`);
         await sendBotMessage({
             roomId,
             content: getVotedSameMessageContent(),
+            tags: 'everyone-voted-the-same',
         });
-        await waitFor(ONE_SECOND_MS * 2);
+        await waitFor(NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS);
         await sendNewCrossPollination({
             roomId,
             helpers,
+            attemptSendBotMessage,
         });
-        return;
     }
 
     // guard: check if everyone has not voted the same
-    if (!hasEveryoneVotedTheSame) {
-        attemptSendBotMessage({
+    if (hasEveryoneVoted && !hasEveryoneVotedTheSame) {
+        await attemptSendBotMessage({
             roomId,
             content: getNotEveryoneVotedTheSameMessageContent(),
             tags: 'not-everyone-voted-the-same',
         });
-        return;
     }
 }
 
@@ -268,21 +360,84 @@ function getHasEveryoneVotedTheSame(options: HasEveryoneVotedTheSameOptions) {
     return hasEveryoneVotedTheSame;
 }
 
+interface SendCrossPollinationOptions {
+    roomId: string;
+    helpers: Helpers;
+    attemptSendBotMessage: (options: AttemptSendBotMessageOptions) => void;
+}
+
+async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
+    const { roomId, helpers, attemptSendBotMessage } = options;
+    const room = await getRoomById(roomId);
+    const outcomes = await getOutcomesByRoomId(roomId);
+    const skippedOutcomeIds = flat(outcomes?.map((outcome) => [outcome.id, outcome.original_outcome_id]) ?? []);
+    const { data: candidateOutcomes } = await supabaseClient
+        .from('outcomes')
+        .select()
+        .not('id', 'in', `(${skippedOutcomeIds.join(',')})`)
+        .limit(100);
+    const candidateOutcome = draw(candidateOutcomes ?? []);
+    const candidateOutcomeId = candidateOutcome?.id;
+    const candidateOutcomeContent = candidateOutcome?.content;
+    const timeSinceRoomStartedMs = Math.abs(dayjs().diff(dayjs(room?.created_at), 'ms'));
+
+    // guard: make sure there is an outcome
+    if (!candidateOutcomeId || !candidateOutcomeContent) {
+        helpers.logger.info(`Could not find an candidate outcome for room ${roomId}.`);
+
+        if (timeSinceRoomStartedMs > ONE_MINUTE_MS * 10) {
+            await attemptSendBotMessage({
+                roomId,
+                content: 'I could not find a new statement for you to discuss. You can continue the discussion if you want or join others in a new conversation!',
+                sendOnce: true,
+                scope: 'room',
+            });
+        } else {
+            await attemptSendBotMessage({
+                roomId,
+                content: 'I could not find a new statement for you to discuss. You can continue the discussion yourself here if you want!',
+                sendOnce: true,
+                scope: 'room',
+            });
+        }
+        return;
+    }
+
+    helpers.logger.info(`Sending new cross pollination for room ${roomId} with outcome ${candidateOutcomeId} and content ${candidateOutcomeContent}...`);
+    await sendBotMessage({
+        roomId,
+        content: getNewCrossPollinationMessageContent(candidateOutcomeContent),
+    });
+    await waitFor(NEW_OUTCOME_AFTER_OUTCOME_INTRODUCTION_MS);
+    const { data: newOutcomes } = await supabaseClient
+        .from('outcomes')
+        .insert({
+            content: candidateOutcomeContent,
+            type: 'cross_pollination',
+            room_id: roomId,
+            original_outcome_id: candidateOutcomeId,
+        })
+        .select();
+    const newOutcome = newOutcomes?.[0];
+
+    return newOutcome;
+}
+
 function getVotedSameMessageContent(): string {
     return draw([
         'Everyone voted the same! Let\'s find a new statement to discuss!',
     ]) ?? '';
 }
 
-function getVoteReminderMessageContent(): string {
+function getVoteInviteMessageContent(): string {
     return draw([
         'Friendly reminder to vote on the mentioned statement!'
     ]) ?? '';
 }
 
-function getTimedOutOpenDiscussionMessageContent(): string {
+function getInviteToPassMessageContent(): string {
     return draw([
-        'The open discussion took a bit too long. Let\'s find a new statement to discuss!',
+        'It looks like the discussion it taking a bit longer. You can also decide to pass on this statement and find a new one to discuss.',
     ]) ?? '';
 }
 
@@ -306,63 +461,20 @@ function getOpenDiscussionMessageContent(): string {
     ]) ?? '';
 }
 
-function getNewCrossPollinationMessage(statement: string): string {
+function getNewCrossPollinationMessageContent(statement: string): string {
     return draw([
         `I have found a new statement for you to vote on: ${statement}`,
     ]) ?? '';
 }
 
-interface SendCrossPollinationOptions {
-    roomId: string;
-    helpers: Helpers;
+function getTimeKeepingMessageContent(timeMs: number): string {
+    return draw([
+        `You have been discussing for more than ${timeMs / ONE_MINUTE_MS} minutes now. You can keep on going or decide to join another conversation.`,
+    ]) ?? '';
 }
 
-async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
-    const { roomId, helpers } = options;
-    const outcomes = await getOutcomesByRoomId(roomId);
-    const skippedOutcomeIds = flat(outcomes?.map((outcome) => [outcome.id, outcome.original_outcome_id]) ?? []);
-    const { data: candidateOutcomes } = await supabaseClient
-        .from('outcomes')
-        .select()
-        .not('id', 'in', `(${skippedOutcomeIds.join(',')})`)
-        .limit(100);
-    const candidateOutcome = draw(candidateOutcomes ?? []);
-    const candidateOutcomeId = candidateOutcome?.id;
-    const candidateOutcomeContent = candidateOutcome?.content;
-
-    // guard: make sure there is an outcome
-    if (!candidateOutcomeId || !candidateOutcomeContent) {
-        helpers.logger.info(`Could not find an candidate outcome for room ${roomId}.`);
-        await sendBotMessage({
-            roomId,
-            content: 'I could not find a new statement for you to vote on. You can discuss new ones by joining a new room.',
-        });
-        await updateRoomStatus({
-            roomId,
-            roomStatus: 'end',
-            helpers,
-        });
-        return;
-    }
-
-    helpers.logger.info(`Sending new cross pollination for room ${roomId} with outcome ${candidateOutcomeId} and content ${candidateOutcomeContent}...`);
-    const { data: newOutcomes } = await supabaseClient
-        .from('outcomes')
-        .insert({
-            content: candidateOutcomeContent,
-            type: 'cross_pollination',
-            room_id: roomId,
-            original_outcome_id: candidateOutcomeId,
-        })
-        .select();
-    const newOutcome = newOutcomes?.[0];
-
-    if (newOutcome) {
-        sendBotMessage({
-            roomId,
-            content: getNewCrossPollinationMessage(newOutcome.content),
-        });
-    }
-
-    return newOutcome;
+function getTimeoutVoteMessageContent(): string {
+    return draw([
+        'Discussing the statement is taking a bit long. Let\'s find a new statement to discuss!',
+    ]) ?? '';
 }

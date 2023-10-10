@@ -16,7 +16,5 @@ export default createModeratedVerifyTask<BaseProgressionWorkerTaskPayload>({
         const content = await getMessageContentForProgressionWorker(payload);
         return content;
     },
-
-    // This group introduction is handled by the enrichGroupIntroduction task
     getShouldSendBotMessage: () => false,
 });
