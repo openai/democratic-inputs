@@ -8,8 +8,8 @@ import '@fortawesome/fontawesome-svg-core/styles.css'; // Import the CSS
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 
 export const metadata = {
-    title: 'Deliberation at Scale',
-    description: 'Deliberation at Scale',
+    title: 'Common Ground',
+    description: 'Common Ground is a platform for deliberation at scale.',
 };
 
 const inter = Inter({
