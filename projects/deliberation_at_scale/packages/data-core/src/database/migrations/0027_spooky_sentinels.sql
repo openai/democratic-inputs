@@ -174,10 +174,6 @@ BEGIN;
   ALTER POLICY "Enable update for users" ON "public"."opinions" WITH CHECK (participant_id IN ( SELECT participants.id FROM participants));
 COMMIT;
 
-BEGIN;
-  ALTER POLICY "Enable insert for authenticated users only" ON "public"."opinions" WITH CHECK (((participant_id IN ( SELECT participants.id FROM participants)) AND ( (outcome_id IN (SELECT id FROM outcomes)) OR (cross_pollination_id IN (SELECT id FROM cross_pollinations)) ) ));
-COMMIT;
-
 --> outcome sources
 CREATE POLICY "Enable read access for authenticated" ON "public"."outcome_sources"
 AS PERMISSIVE FOR SELECT

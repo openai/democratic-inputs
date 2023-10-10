@@ -40,6 +40,7 @@ export default function RoomOutcome(props: Props) {
             case OutcomeType.Consensus: return _(msg`Consensus Proposal`);
             case OutcomeType.Milestone: return _(msg`Milestone`);
             case OutcomeType.OffTopic: return _(msg`Off Topic`);
+            case OutcomeType.CrossPollination: return _(msg`Statement`);
         }
     }, [type, _]);
     const timeoutMs = useMemo(() => {

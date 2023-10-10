@@ -12,9 +12,9 @@ import { waitFor } from "../utilities/time";
 import { updateRoomStatus } from "../utilities/rooms";
 
 const START_OPEN_DISCUSSION_AFTER_MS = 5 * 60 * ONE_SECOND_MS;
-const OPEN_DICUSSION_TIMEOUT_AFTER_MS = 2 * 60 * ONE_SECOND_MS * 9999;
+const OPEN_DICUSSION_TIMEOUT_AFTER_MS = 2 * 60 * ONE_SECOND_MS;
 const OPEN_DISCUSSION_BOT_MESSAGE_TAG = 'open-discussion';
-const DEFAULT_MESSAGE_LIMIT = 100;
+const DEFAULT_MESSAGE_LIMIT = 200;
 const BOT_MESSAGE_COOLDOWN_MS = ONE_SECOND_MS * 30;
 const BOT_TAG_COOLDOWN_MS = ONE_SECOND_MS * 60;
 
@@ -213,29 +213,6 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         });
         return;
     }
-
-    // const latestOutcomeMessages = await getMessagesAfter({
-    //     roomId,
-    //     limit: DEFAULT_MESSAGE_LIMIT,
-    //     fromDate: dayjs(latestOutcome.created_at),
-    // });
-    // const uniqueMessageParticipantIds = unique(latestOutcomeMessages.map((message) => message.participant_id)).filter((id) => id !== null) as string[];
-    // const lackingNicknames = getLackingNicknames({
-    //     participants,
-    //     requiredParticipantIds: uniqueMessageParticipantIds,
-    // });
-    // const hasEveryoneParticipated = lackingNicknames.length === 0;
-
-    // // guard: check if everyone has been participating for this outcome
-    // if (!hasEveryoneParticipated) {
-    //     helpers.logger.info(`Sending contribution reminder for room ${roomId}...`);
-    //     attemptSendBotMessage({
-    //         roomId,
-    //         content: getInviteContributionMessageContent(lackingNicknames),
-    //         tags: 'not-everyone-participated',
-    //     });
-    //     return;
-    // }
 }
 
 interface GetLackingNicknamesOptions {
