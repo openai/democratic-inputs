@@ -79,6 +79,11 @@ export default function ChatMessage(props: Props) {
         return replaceMessageVariables(name ?? _(msg`Anonymous`));
     }, [_, name, replaceMessageVariables]);
 
+    // guard: skip when message is invalid
+    if (!formattedContent) {
+        return null;
+    }
+
     return (
         <motion.div
             layout
