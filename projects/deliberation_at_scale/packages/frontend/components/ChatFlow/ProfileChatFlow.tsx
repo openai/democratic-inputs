@@ -3,12 +3,15 @@ import { ChatFlowConfig } from "@/types/flows";
 import { DEFAULT_BOT_MESSAGE_SPEED_MS } from "@/utilities/constants";
 import { faMessage, faChartBar, faUser } from "@fortawesome/free-regular-svg-icons";
 import { useLingui } from "@lingui/react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import ChatFlow from "./index";
 import { msg } from "@lingui/macro";
+import { supabaseClient } from "@/state/supabase";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProfileChatFlow() {
     const { _ } = useLingui();
+    const logout = useCallback(() => supabaseClient.auth.signOut(), []);
     const flow = useMemo(() => {
         return {
             id: "profile",
@@ -30,6 +33,17 @@ export default function ProfileChatFlow() {
                                 helpers.postBotMessages([[_(msg`Great! Moving you to the waiting lobby... Hold on tight!`)]]);
                                 await helpers.waitFor(2000);
                                 helpers.goToPage('/lobby');
+                            },
+                        },
+                        {
+                            id: 'logout',
+                            icon: faRightFromBracket,
+                            content: _(msg`Logout`),
+                            onClick: async (helpers) => {
+                                helpers.postBotMessages([[_(msg`Logging you out...`)]]);
+                                await logout();
+                                await helpers.waitFor(1000);
+                                helpers.goToPage('/');
                             },
                         },
                         {
