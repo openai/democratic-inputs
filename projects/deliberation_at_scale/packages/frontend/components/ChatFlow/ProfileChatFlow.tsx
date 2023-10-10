@@ -15,7 +15,7 @@ export default function ProfileChatFlow() {
             steps: [
                 {
                     name: "welcome", // Possibly unnecessary to and mention 'Common Ground' and mention 'Deliberation at Scale'. But using both makes it sound big, which I like.
-                    messageOptions: [[_(msg`Hi there [nickName]! Welcome to Common Ground. The world's first Deliberation at Scale event. If you feel ready to join a discussion, we can set you up with other participants.`)]],
+                    messageOptions: [[_(msg`Hi there [nickName]! Welcome to Common Ground. This application was developed by the consortium Deliberation at Scale together with OpenAI. When you feel ready to join a discussion, we can set you up with other participants.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {

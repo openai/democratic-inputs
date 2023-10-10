@@ -71,7 +71,7 @@ export default function ChatFlow(props: Props) {
     }, [inputDisabled, currentStep]);
     const inputPlaceholder = useMemo(() => {
         if (isTextInputDisabled) {
-            return hasQuickReplies ? _(msg`Select an button above...`) : _(msg`Waiting...`);
+            return hasQuickReplies ? _(msg`Select a button above...`) : _(msg`Waiting...`);
         }
 
         return undefined;
@@ -293,7 +293,7 @@ export default function ChatFlow(props: Props) {
                     {!isEmpty(quickReplies) && (
                         <motion.div
                             key="quickReplies"
-                            className="flex flex-col gap-1"
+                            className="flex flex-col gap-2"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                         >

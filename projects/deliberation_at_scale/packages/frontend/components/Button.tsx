@@ -34,7 +34,7 @@ export default function Button(props: Props) {
 
     const defaultClasses = `
         transition-colors
-        rounded-md py-3 px-4
+        rounded-md first:py-3 first:px-4 py-1 px-2
         ${textColorMap[theme]} ${widthVariant} font-semibold
         border bg-white hover:bg-gray-50
         flex items-center justify-center gap-2

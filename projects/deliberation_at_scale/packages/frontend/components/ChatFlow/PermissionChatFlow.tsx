@@ -32,7 +32,7 @@ export default function PermissionChatFlow() {
             [_(msg`Waiting for a conversation to be ready...`)],
             [_(msg`This may take a few seconds...`)],
             [_(msg`Waiting... If you want to cancel, click the button below.`)],
-            [_(msg`Waiting... Hold your horses!`)],
+            [_(msg`Waiting... Hold on!`)],
         ];
     }, [_]);
     const cancelWaitingForRoomQuickReply = useMemo(() => {
@@ -53,7 +53,7 @@ export default function PermissionChatFlow() {
             steps: [
                 {
                     name: "permission_ask",
-                    messageOptions: [[_(msg`Before we continue, you will need to give permission to use your camera and microphone.`)]],
+                    messageOptions: [[_(msg`Before we continue, you will need to give permission to use your camera and microphone. Heads up! We will not record your video feed, but may use a transcript of your audio for research.`)]],
                     timeoutMs: 2000, // keep this fixed to give devices time to initialize
                 },
                 {
@@ -74,7 +74,7 @@ export default function PermissionChatFlow() {
                     quickReplies: [
                         {
                             id: "find_room",
-                            content: _(msg`Let's find a conversation to join!`),
+                            content: _(msg`Let's find a conversation to join`),
                             icon: faSearch,
                             hidden: (helpers) => {
                                 return !isEmpty(helpers?.searchParams?.get('redirect'));
@@ -106,7 +106,7 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: "permission_not_working",
-                    messageOptions: [[_(msg`It appears that you have not enabled the use of your microphone and camera. Please click the button below to try again or enable them above.`)]],
+                    messageOptions: [[_(msg`It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above.`)]],
                     quickReplies: [
                         askPermissionQuickReply,
                     ],
@@ -124,7 +124,7 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: `waiting_for_room_2`,
-                    messageOptions: [[_(msg`Waiting for a room to be ready...`)]],
+                    messageOptions: [[_(msg`Waiting for two other participants...`)]],
                     timeoutMs: ONE_SECOND_MS * 5,
                     quickReplies: [
                         cancelWaitingForRoomQuickReply,
@@ -135,7 +135,7 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: "ask_to_enter_room", // Bram: Possibly just remove this option -> Participant will be automatically placed in room when one is found. As soon as participant clicks search room, they state to be ready to join one.
-                    messageOptions: [[_(msg`A room has been found! Do you want to enter now?`)]],
+                    messageOptions: [[_(msg`A room has been found! Do you want to join the conversation?`)]],
                     quickReplies: [
                         {
                             id: "enter_room",
@@ -148,7 +148,7 @@ export default function PermissionChatFlow() {
                                 }
 
                                 helpers.setFlowStateEntry(LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, true);
-                                helpers.postBotMessages([[_(msg`Moving you to the room now...`)]]);
+                                helpers.postBotMessages([[_(msg`Moving you to the room now. Have fun!`)]]);
                             }
                         },
                         {
