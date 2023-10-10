@@ -35,7 +35,7 @@ msgid "Assistant"
 msgstr ""
 
 #: components/ChatFlow/PermissionChatFlow.tsx:56
-msgid "Before we continue, you will need to give permission to use your camera and microphone. We recommend giving those permissions because we prefer face-to-face discussions."
+msgid "Before we continue, you will need to give permission to use your camera and microphone."
 msgstr ""
 
 #: components/ChatFlow/PermissionChatFlow.tsx:41
@@ -129,23 +129,23 @@ msgstr ""
 
 #: components/ChatFlow/LoginChatFlow.tsx:25
 #: components/ChatFlow/RegisterChatFlow.tsx:24
-msgid "Hey there, welcome to Deliberation at Scale. We appreciate that you're taking the time to contribute."
+msgid "Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute."
+msgstr ""
+
+#: components/ChatFlow/LobbyChatFlow.tsx:19
+msgid "Hi there [nickName]! Good to have you here."
 msgstr ""
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:33
 msgid "Hi there [nickName]! I hope you enjoyed the discussion you had with the group."
 msgstr ""
 
-#: components/ChatFlow/LobbyChatFlow.tsx:19
-msgid "Hi there [nickName]! I hope you're ready to get started discussing the future of AI."
+#: components/ChatFlow/ProfileChatFlow.tsx:18
+msgid "Hi there [nickName]! Welcome to Common Ground. The world's first Deliberation at Scale event. If you feel ready to join a discussion, we can set you up with other participants."
 msgstr ""
 
 #: components/ChatFlow/IdleChatFlow.tsx:17
-msgid "Hi there [nickName]! It looks like you are not paying attention. Be aware people are waiting for you to confirm joining the room!"
-msgstr ""
-
-#: components/ChatFlow/ProfileChatFlow.tsx:18
-msgid "Hi there [nickName]! Welcome to Deliberation at Scale. If you feel ready to join a discussion, we'd love to set you up with other participants."
+msgid "Hi there [nickName]. You have been idle for a while. Would you like to still join a room?"
 msgstr ""
 
 #: components/ChatFlow/InvalidChatFlow.tsx:17
@@ -172,12 +172,12 @@ msgstr ""
 msgid "It was okay."
 msgstr ""
 
-#: components/ChatFlow/ProfileChatFlow.tsx:28
-msgid "Join a conversation"
-msgstr ""
-
 #: components/ChatFlow/EvaluateChatFlow.tsx:85
 msgid "Join another room"
+msgstr ""
+
+#: components/ChatFlow/ProfileChatFlow.tsx:28
+msgid "Join the conversation"
 msgstr ""
 
 #: components/RoomParticipants/controls.tsx:92
@@ -233,12 +233,12 @@ msgstr ""
 msgid "Okay, cancelling..."
 msgstr ""
 
-#: components/ChatFlow/IdleChatFlow.tsx:24
-msgid "Okay, pay attention! Moving you to the lobby once again..."
+#: components/ChatFlow/InvalidChatFlow.tsx:24
+msgid "Okay! Moving you back to the lobby..."
 msgstr ""
 
-#: components/ChatFlow/InvalidChatFlow.tsx:24
-msgid "Okay! Moving you to the lobby once again..."
+#: components/ChatFlow/IdleChatFlow.tsx:24
+msgid "Okay! Moving you to the lobby."
 msgstr ""
 
 #: components/RoomOutcome.tsx:70
@@ -278,12 +278,9 @@ msgstr ""
 msgid "Tap to type"
 msgstr ""
 
-#: components/ChatFlow/RegisterChatFlow.tsx:35
-msgid "Thank you! An email has been sent with a link to register with!"
-msgstr ""
-
 #: components/ChatFlow/LoginChatFlow.tsx:39
-msgid "Thank you! You will find a link to login to Deliberation at Scale in your inbox. Use this link to login."
+#: components/ChatFlow/RegisterChatFlow.tsx:35
+msgid "Thank you! You will find an email with a login link in your inbox. After you click on this link, you will be redirected back to this application and ready to start finding common ground."
 msgstr ""
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:76
@@ -315,7 +312,7 @@ msgid "This message has been flagged as inappropriate."
 msgstr ""
 
 #: components/ChatFlow/RegisterChatFlow.tsx:29
-msgid "To get started, we need to send you a link for you to register with."
+msgid "To get started, a registration link will be send to your email."
 msgstr ""
 
 #: components/RoomTopic.tsx:37
