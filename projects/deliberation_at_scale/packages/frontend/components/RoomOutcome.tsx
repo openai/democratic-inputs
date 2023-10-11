@@ -35,6 +35,7 @@ export default function RoomOutcome(props: Props) {
     const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ subjects: [outcome], participantId });
     const existingOpinion = getExistingOpinion(outcomeId);
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
+    const [progress, setProgress] = useState(0);
     const title = useMemo(() => {
         switch (type) {
             case OutcomeType.Consensus: return _(msg`Consensus Proposal`);
@@ -110,19 +111,25 @@ export default function RoomOutcome(props: Props) {
                                 type: OpinionType.Option,
                                 optionType,
                             });
+                            setProgress(progress+1);
                         };
 
                         return (
-                            <Button
-                                key={optionType}
-                                disabled={isDisabled}
-                                selected={isSelected}
-                                icon={icon}
-                                onClick={onOptionClick}
-                                className="flex-1"
-                            >
-                                {content}
-                            </Button>
+                            <>
+                                <Button
+                                    key={optionType}
+                                    disabled={isDisabled}
+                                    selected={isSelected}
+                                    icon={icon}
+                                    onClick={onOptionClick}
+                                    className="flex-1"
+                                    showProgress={true}
+                                    progress={progress}
+                                >
+                                    {content}
+                                </Button>
+                                
+                            </>
                         );
                     })}
                 </div>

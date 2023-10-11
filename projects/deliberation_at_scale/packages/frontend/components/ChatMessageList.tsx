@@ -114,7 +114,7 @@ export default function ChatMessageList(props: Props) {
                 </AnimatePresence>
             
             </motion.div>
-            <div className="min-h-[12px] md:min-h-[50px] absolute w-full bottom-28 md:bottom-32 bg-gradient-to-b from-transparent to-white" style={{opacity: bottomShadow}}></div>
+            {/* <div className="min-h-[12px] absolute w-full bottom-[0] bg-gradient-to-b from-transparent to-white" style={{opacity: bottomShadow}}></div> not working out with the variable height of the elements below it sadly  */}
         </>
     );
 }
