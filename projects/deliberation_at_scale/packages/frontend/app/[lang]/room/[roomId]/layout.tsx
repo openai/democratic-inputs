@@ -1,6 +1,5 @@
 'use client';
 import { PropsWithChildren, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 
 // import RoomMenu from '@/components/RoomMenu';
 import { useLocalMedia } from '@/hooks/useLocalMedia';
@@ -14,6 +13,7 @@ import { resetFlowStates } from '@/state/slices/flow';
 import { isEmpty } from 'radash';
 import { msg } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
+import useLocalizedPush from '@/hooks/useLocalizedPush';
 
 /**
  * This is the layout for all room interfaces, i.e. all interfaces in which a
@@ -22,7 +22,7 @@ import { useLingui } from '@lingui/react';
 export default function RoomLayout({ children }: PropsWithChildren) {
     const localMedia = useLocalMedia();
     const connection = useRoomConnection();
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
     const { room, roomId, loadingRooms, joiningParticipants } = useRoom();
     const dispatch = useDispatch();
     const { _ } = useLingui();

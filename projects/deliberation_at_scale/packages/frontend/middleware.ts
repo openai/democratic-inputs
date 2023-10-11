@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
     const pathnameIsMissingLocale = locales.every((l) => (
         !pathname.startsWith(`/${l}/`) && pathname !== `/${l}`
     ));
-    
+
     // GUARD: If the locale is missing, we'll redirect
     if (pathnameIsMissingLocale) {
         // Determine the current locale for the page

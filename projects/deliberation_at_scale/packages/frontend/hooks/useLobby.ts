@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import {
     ParticipantStatusType,
@@ -11,6 +10,7 @@ import { usePingParticipant } from "./usePingParticipant";
 import useProfile from "./useProfile";
 import useRealtimeQuery from "./useRealtimeQuery";
 import { useAppSelector } from "@/state/store";
+import useLocalizedPush from "./useLocalizedPush";
 
 export default function useLobby() {
     const { user } = useProfile();
@@ -39,7 +39,7 @@ export default function useLobby() {
     const candidateParticipantId = candidateParticipant?.id;
     const candidateRoomId = candidateParticipant?.room_id;
     const canEnterRoom = !!candidateRoomId && (candidateParticipant?.status === ParticipantStatusType.WaitingForConfirmation);
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
     const enterRoom = useCallback(async () => {
         const enterResult = await enterRoomMutation({
             variables: {

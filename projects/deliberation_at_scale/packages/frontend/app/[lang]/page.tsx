@@ -1,7 +1,6 @@
 "use client";
 import { useCallback } from "react";
 import { faUser as profileIcon, faPenToSquare as registerIcon, faHandPointRight as loginIcon } from "@fortawesome/free-regular-svg-icons";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 import Button from "@/components/Button";
@@ -9,9 +8,10 @@ import useProfile from "@/hooks/useProfile";
 import { faArrowRightFromBracket, faSpinner, faVideo, faLightbulb, faShieldHeart, faScroll } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { supabaseClient } from '@/state/supabase';
+import useLocalizedPush from "@/hooks/useLocalizedPush";
 
 export default function Index() {
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
     const { authUser, loading } = useProfile();
     const isLoggedIn = !!authUser;
     const goToRegister = useCallback(() => push('/register'), [push]);

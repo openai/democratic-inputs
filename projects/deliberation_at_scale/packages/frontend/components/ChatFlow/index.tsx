@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { draw, isEmpty } from "radash";
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,6 +20,7 @@ import useChatFlowMessages from "@/hooks/useChatFlowMessages";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
 import { useLocalMedia } from "@/hooks/useLocalMedia";
 import { useLingui } from "@lingui/react";
+import useLocalizedPush from "@/hooks/useLocalizedPush";
 
 interface Props {
     flow: FlowType;
@@ -47,7 +48,7 @@ export default function ChatFlow(props: Props) {
     const steps = unfilteredSteps.filter((step) => {
         return step.active ?? true;
     });
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
     const searchParams = useSearchParams();
     const params = useParams();
     const mediaContext = useLocalMedia({ redirect: false, request: false });
