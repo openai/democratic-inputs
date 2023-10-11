@@ -6,7 +6,7 @@ import { msg } from "@lingui/macro";
 
 import { statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
-import { FullOutcomeFragment, OpinionOptionType, OpinionType, OutcomeType } from '@/generated/graphql';
+import { FullOutcomeFragment, FullParticipantFragment, OpinionOptionType, OpinionType, OutcomeType, RoomParticipantFragment } from '@/generated/graphql';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useMemo, useState } from 'react';
 import Button from './Button';
@@ -25,17 +25,18 @@ export interface OpinionOption {
 interface Props {
     outcome?: FullOutcomeFragment;
     participantId?: string;
+    participants?: RoomParticipantFragment[]
     variant?: "compact" | "spacious"
 }
 
 export default function RoomOutcome(props: Props) {
     const { _ } = useLingui();
-    const { outcome, participantId, variant } = props;
+    const { outcome, participantId, participants, variant } = props;
     const { id: outcomeId, content = '', type } = outcome ?? {};
-    const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ subjects: [outcome], participantId });
+    const { isGivingOpinion, setOpinion, getExistingOpinion, getGroupOpinions } = useUpsertOpinion({ subjects: [outcome], participantId });
     const existingOpinion = getExistingOpinion(outcomeId);
+    const groupOpinions = getGroupOpinions(outcomeId);
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
-    const [progress, setProgress] = useState(0);
     const title = useMemo(() => {
         switch (type) {
             case OutcomeType.Consensus: return _(msg`Consensus Proposal`);
@@ -105,13 +106,14 @@ export default function RoomOutcome(props: Props) {
                         const { content, icon, optionType } = option;
                         const isSelected = (existingOpinion?.option_type === optionType);
                         const isDisabled = isGivingOpinion || (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
+                        const participantAmount = participants?.length ?? 0;
+                        const progress = (participantAmount > 0) ? (groupOpinions.length / participantAmount) : 0;
                         const onOptionClick = () => {
                             setOpinion({
                                 subjectId: outcomeId,
                                 type: OpinionType.Option,
                                 optionType,
                             });
-                            setProgress(progress+1);
                         };
 
                         return (
@@ -123,12 +125,11 @@ export default function RoomOutcome(props: Props) {
                                     icon={icon}
                                     onClick={onOptionClick}
                                     className="flex-1"
-                                    showProgress={true}
                                     progress={progress}
                                 >
                                     {content}
                                 </Button>
-                                
+
                             </>
                         );
                     })}

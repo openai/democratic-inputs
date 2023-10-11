@@ -34,6 +34,11 @@ export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
             return opinion.outcome_id === subjectId && opinion.participant_id === participantId;
         });
     }, [opinions, participantId]);
+    const getGroupOpinions = useCallback((subjectId: string) => {
+        return opinions.filter((opinion) => {
+            return opinion.outcome_id === subjectId;
+        });
+    }, [opinions]);
     const hasExistingOpinion = useCallback((subjectId: string) => {
         return !!getExistingOpinion(subjectId);
     }, [getExistingOpinion]);
@@ -66,6 +71,7 @@ export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
     }, [changeOpinion, createOpinion, hasExistingOpinion, participantId, subjects]);
 
     return {
+        getGroupOpinions,
         getExistingOpinion,
         hasExistingOpinion,
         isGivingOpinion,
