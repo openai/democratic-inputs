@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
+import dayjs from "dayjs";
 
 import { ValidCreateExternalRoomResult } from "../lib/whereby";
 import { OrchestratorRole } from "../types";
-import dayjs from "dayjs";
 
 declare global {
     namespace NodeJS {
@@ -43,6 +43,7 @@ export const DATABASE_URL = process.env.DATABASE_URL;
 export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 export const SENTRY_DSN = process.env.SENTRY_DSN;
 export const WHEREBY_BEARER_TOKEN = process.env.WHEREBY_BEARER_TOKEN;
+export const LANGUAGE_LOCALE = process.env.LANGUAGE_LOCALE ?? 'en';
 
 /* Time */
 export const ONE_SECOND_MS = 1000;

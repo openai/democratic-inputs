@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { draw, isEmpty } from "radash";
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,6 +20,9 @@ import useChatFlowMessages from "@/hooks/useChatFlowMessages";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
 import { useLocalMedia } from "@/hooks/useLocalMedia";
 import { useLingui } from "@lingui/react";
+import useLocalizedPush from "@/hooks/useLocalizedPush";
+import useProfile from "@/hooks/useProfile";
+import { replaceTextVariables } from "@/utilities/text";
 
 interface Props {
     flow: FlowType;
@@ -47,7 +50,7 @@ export default function ChatFlow(props: Props) {
     const steps = unfilteredSteps.filter((step) => {
         return step.active ?? true;
     });
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
     const searchParams = useSearchParams();
     const params = useParams();
     const mediaContext = useLocalMedia({ redirect: false, request: false });
@@ -76,6 +79,12 @@ export default function ChatFlow(props: Props) {
 
         return undefined;
     }, [hasQuickReplies, isTextInputDisabled, _]);
+    const { nickName } = useProfile();
+    const replaceMessageVariables = useCallback((text: string) => {
+        return replaceTextVariables(text, {
+            nickName,
+        });
+    }, [nickName]);
 
     /** State helpers */
     const reset = useCallback(() => {
@@ -300,6 +309,7 @@ export default function ChatFlow(props: Props) {
                             {quickReplies.map((quickReply) => {
                                 const { id, onClick, content, icon, enabled, hidden } = quickReply;
                                 const key = `${id}-${content}`;
+                                const formattedContent = replaceMessageVariables(content);
                                 const isEnabled = enabled?.(onInputHelpers) ?? true;
                                 const isHidden = hidden?.(onInputHelpers) ?? false;
 
@@ -327,7 +337,7 @@ export default function ChatFlow(props: Props) {
                                         {icon && (
                                             <FontAwesomeIcon icon={icon} />
                                         )}
-                                        <span>{content}</span>
+                                        <span>{formattedContent}</span>
                                     </Button>
                                 );
                             })}

@@ -2,8 +2,10 @@
 import { LocalMediaContext } from '@/components/LocalMedia/context';
 import { PermissionState, setPermissionState } from '@/state/slices/room';
 import { useAppDispatch, useAppSelector } from '@/state/store';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useContext, useEffect, useMemo } from 'react';
+import useLocalizedPush from './useLocalizedPush';
+import { useLanguage } from './useLanguage';
 
 export interface UseLocalMediaOptions {
     request: boolean;
@@ -32,19 +34,21 @@ export function useLocalMedia(options: Partial<UseLocalMediaOptions> = {}) {
     const ctx = useContext(LocalMediaContext);
     const permission = useAppSelector((state) => state.room.permission);
     const dispatch = useAppDispatch();
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
     const pathname = usePathname();
+    const language = useLanguage();
+    const pathnameWithoutLocale = pathname?.replace(`/${language}/`, '/');
 
     useEffect(() => {
         if (permission === PermissionState.NONE) {
             if (redirect) {
-                push(`/lobby/permission?redirect=${pathname}`);
+                push(`/lobby/permission?redirect=${pathnameWithoutLocale}`);
             }
             if (request) {
                 dispatch(setPermissionState(PermissionState.REQUESTED));
             }
         }
-    }, [permission, redirect, request, dispatch, pathname, push]);
+    }, [permission, redirect, request, dispatch, pathnameWithoutLocale, push]);
 
     // GUARD: Check that the context provider is somewhere in the tree
     if (!ctx) {

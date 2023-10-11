@@ -10,7 +10,6 @@
         "outDir": "dist",
         "strict": true,
         "lib": ["es2020"],
-        "baseUrl": ".",
         "forceConsistentCasingInFileNames": true,
         "esModuleInterop": true,
         "experimentalDecorators": true,

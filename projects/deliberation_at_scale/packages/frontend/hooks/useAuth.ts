@@ -19,10 +19,8 @@ export default async function useAuth(
     const supabase = createServerComponentClient<Database>({ cookies });
     const { data } = await supabase.auth.getSession();
 
-    // GUARD: Check if the user is in the right authentication state. If they're
-    // not, redirect to another URL.
-    if ((require === 'authenticated' && !data.session)
-        || (require === 'unauthenticated' && !!data.session)) {
+    // GUARD: Check if the user is in the right authentication state. If they're not, redirect to another URL.
+    if ((require === 'authenticated' && !data.session) || (require === 'unauthenticated' && !!data.session)) {
         redirect(redirectTo);
     }
 }

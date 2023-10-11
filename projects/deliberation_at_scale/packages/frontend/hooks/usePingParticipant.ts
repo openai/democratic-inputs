@@ -1,16 +1,16 @@
 import dayjs from "dayjs";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 import { FullParticipantFragment, ParticipantStatusType, usePingParticipantMutation } from "@/generated/graphql";
 import { PARTICIPANT_PING_INTERVAL_DELAY_MS } from "@/utilities/constants";
+import useLocalizedPush from "./useLocalizedPush";
 
 export function usePingParticipant(candidateParticipant?: FullParticipantFragment) {
     const participantId = candidateParticipant?.id;
     const participantActive = candidateParticipant?.active;
     const participantStatus = candidateParticipant?.status;
     const [ping, { loading, error, data }] = usePingParticipantMutation();
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
 
     useEffect(() => {
 

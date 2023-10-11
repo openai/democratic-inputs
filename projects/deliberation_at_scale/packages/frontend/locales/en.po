@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: components/RoomOutcome.tsx:60
+#: components/RoomOutcome.tsx:62
 msgid "Agree"
 msgstr "Agree"
 
@@ -55,7 +55,7 @@ msgstr "Common Ground"
 msgid "Connecting to video call..."
 msgstr "Connecting to video call..."
 
-#: components/RoomOutcome.tsx:40
+#: components/RoomOutcome.tsx:42
 msgid "Consensus Proposal"
 msgstr "Consensus Proposal"
 
@@ -64,7 +64,6 @@ msgid "Continue to room"
 msgstr "Continue to room"
 
 #: components/RoomMenu.tsx:53
-#: components/RoomTopic.tsx:37
 msgid "Conversation"
 msgstr "Conversation"
 
@@ -80,7 +79,7 @@ msgstr "Disable audio"
 msgid "Disable video"
 msgstr "Disable video"
 
-#: components/RoomOutcome.tsx:65
+#: components/RoomOutcome.tsx:67
 msgid "Disagree"
 msgstr "Disagree"
 
@@ -113,7 +112,7 @@ msgstr "Go back to home page"
 msgid "Go back to the home page"
 msgstr "Go back to the home page"
 
-#: hooks/useRoomActions.ts:34
+#: hooks/useRoomActions.ts:35
 msgid "Go to voting"
 msgstr "Go to voting"
 
@@ -126,8 +125,11 @@ msgstr "Great, your nick name will be \"[nickName]\"."
 msgid "Great! Moving you to the waiting lobby... Hold on tight!"
 msgstr "Great! Moving you to the waiting lobby... Hold on tight!"
 
-#: components/ChatFlow/LoginChatFlow.tsx:25
 #: components/ChatFlow/RegisterChatFlow.tsx:24
+msgid "Hey there, welcome to Common Ground. We appreciate that you're taking the time to contribute."
+msgstr "Hey there, welcome to Common Ground. We appreciate that you're taking the time to contribute."
+
+#: components/ChatFlow/LoginChatFlow.tsx:25
 msgid "Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute."
 msgstr "Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute."
 
@@ -183,7 +185,7 @@ msgstr "Join another conversation"
 msgid "Leave conversation"
 msgstr "Leave conversation"
 
-#: hooks/useRoomActions.ts:44
+#: hooks/useRoomActions.ts:46
 msgid "Leave room"
 msgstr "Leave room"
 
@@ -203,7 +205,7 @@ msgstr "Logging you out..."
 msgid "Logout"
 msgstr "Logout"
 
-#: components/RoomOutcome.tsx:41
+#: components/RoomOutcome.tsx:43
 msgid "Milestone"
 msgstr "Milestone"
 
@@ -211,7 +213,7 @@ msgstr "Milestone"
 msgid "Now your camera and microphone need to be configured."
 msgstr "Now your camera and microphone need to be configured."
 
-#: components/RoomOutcome.tsx:42
+#: components/RoomOutcome.tsx:44
 msgid "Off Topic"
 msgstr "Off Topic"
 
@@ -231,7 +233,7 @@ msgstr "Okay! Moving you to the lobby."
 msgid "Participate in a conversation"
 msgstr "Participate in a conversation"
 
-#: components/RoomOutcome.tsx:70
+#: components/RoomOutcome.tsx:72
 msgid "Pass"
 msgstr "Pass"
 
@@ -264,7 +266,7 @@ msgstr "Start searching for a conversation"
 msgid "Start the conversation"
 msgstr "Start the conversation"
 
-#: components/RoomOutcome.tsx:43
+#: components/RoomOutcome.tsx:45
 msgid "Statement"
 msgstr "Statement"
 
@@ -313,6 +315,10 @@ msgstr "This message has been flagged as inappropriate."
 msgid "To get started, a registration link will be send to your email."
 msgstr "To get started, a registration link will be send to your email."
 
+#: components/RoomTopic.tsx:37
+msgid "Topic"
+msgstr "Topic"
+
 #: components/ChatFlow/IdleChatFlow.tsx:22
 msgid "Try joining a room again"
 msgstr "Try joining a room again"
@@ -334,8 +340,8 @@ msgid "Waiting for all participants to join..."
 msgstr "Waiting for all participants to join..."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:127
-msgid "Waiting for two other participants..."
-msgstr "Waiting for two other participants..."
+msgid "Waiting for other participants..."
+msgstr "Waiting for other participants..."
 
 #: components/ChatFlow/index.tsx:74
 msgid "Waiting..."

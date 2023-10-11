@@ -16,7 +16,7 @@ export default function LobbyChatFlow() {
             steps: [
                 {
                     name: "greeting_1",
-                    messageOptions: [[_(msg`Before joining the conversation, let's pick a nick name and configure your camera and microphone.`)]],
+                    messageOptions: [[_(msg`Before joining the conversation, let's pick a nickname and configure your camera and microphone.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
@@ -39,7 +39,7 @@ export default function LobbyChatFlow() {
                 },
                 {
                     name: "use_current_nickname",
-                    messageOptions: [[_(msg`Great, your nick name will be "[nickName]".`)]],
+                    messageOptions: [[_(msg`Great, your nickname will be "[nickName]".`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                     onTimeout: async (helpers) => {
                         helpers.goToName("ask_go_to_permission_flow");
@@ -47,7 +47,7 @@ export default function LobbyChatFlow() {
                 },
                 {
                     name: "use_new_nickname",
-                    messageOptions: [[_(msg`Great, your nick name will be "[nickName]".`)]],
+                    messageOptions: [[_(msg`Great, your nickname will be "[nickName]".`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {

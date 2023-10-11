@@ -107,7 +107,8 @@ export default function RoomOutcome(props: Props) {
                         const isSelected = (existingOpinion?.option_type === optionType);
                         const isDisabled = isGivingOpinion || (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
                         const participantAmount = participants?.length ?? 0;
-                        const progress = (participantAmount > 0) ? (groupOpinions.length / participantAmount) : 0;
+                        const optionOpinions = groupOpinions.filter((opinion) => opinion.option_type === optionType);
+                        const progress = (participantAmount > 0) ? (optionOpinions.length / participantAmount) : 0;
                         const onOptionClick = () => {
                             setOpinion({
                                 subjectId: outcomeId,
@@ -117,20 +118,17 @@ export default function RoomOutcome(props: Props) {
                         };
 
                         return (
-                            <>
-                                <Button
-                                    key={optionType}
-                                    disabled={isDisabled}
-                                    selected={isSelected}
-                                    icon={icon}
-                                    onClick={onOptionClick}
-                                    className="flex-1"
-                                    progress={progress}
-                                >
-                                    {content}
-                                </Button>
-
-                            </>
+                            <Button
+                                key={optionType}
+                                disabled={isDisabled}
+                                selected={isSelected}
+                                icon={icon}
+                                onClick={onOptionClick}
+                                className="flex-1"
+                                progress={progress}
+                            >
+                                {content}
+                            </Button>
                         );
                     })}
                 </div>

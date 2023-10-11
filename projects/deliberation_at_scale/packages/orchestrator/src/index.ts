@@ -1,5 +1,12 @@
 /* eslint-disable no-console */
-import { ORCHESTRATOR_ROLE } from "./config/constants";
+// NOTE: rename is required to avoid SWC having conflicing namespaces
+// somehow this goes not well when the names are the same
+import { i18n as i } from "@lingui/core";
+
+import en from "../locales/en.js";
+import nl from "../locales/nl.js";
+
+import { LANGUAGE_LOCALE, ORCHESTRATOR_ROLE } from "./config/constants";
 import { startListener, stopListener } from "./listener";
 import { startMigrator, stopMigrator } from "./migrator";
 import { startRunner, stopRunner } from "./runner";
@@ -56,8 +63,16 @@ async function runTasks(taskType: 'startTask' | 'stopTask') {
     }
 }
 
+async function loadLanguage() {
+    i.load("nl", nl.messages);
+    i.load("en", en.messages);
+    i.activate("nl");
+    console.log(`Loaded language ${LANGUAGE_LOCALE}`);
+}
+
 async function start() {
     console.log('Starting up peacefully...');
+    await loadLanguage();
     await runTasks('startTask');
 }
 

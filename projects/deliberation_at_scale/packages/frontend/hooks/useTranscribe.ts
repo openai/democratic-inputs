@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 
 import { useWhisper } from "@/hooks/useWhisper";
-import { DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS, ENABLE_AUTO_START_TRANSCRIPTION, NEXT_PUBLIC_TRANSCRIBE_API_URL, ONE_SECOND_MS } from '@/utilities/constants';
+import { DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS, DEFAULT_TRANSCRIPTION_TIME_SLICE_MS, ENABLE_AUTO_START_TRANSCRIPTION, NEXT_PUBLIC_TRANSCRIBE_API_URL, ONE_SECOND_MS } from '@/utilities/constants';
 import { UseWhisperConfig, UseWhisperTranscript } from './useWhisper/types';
 import useRoom from './useRoom';
 import useProfile from './useProfile';
@@ -23,8 +23,8 @@ export default function useTranscribe(options?: UseTranscribeOptions) {
     const { transcript, startRecording, pauseRecording, resetRecordings } = useWhisper({
         streaming: true,
         autoStart: ENABLE_AUTO_START_TRANSCRIPTION,
-        removeSilence: false,
-        timeSlice: ONE_SECOND_MS * 3,
+        removeSilence: true,
+        timeSlice: DEFAULT_TRANSCRIPTION_TIME_SLICE_MS,
         ...whisperOptions,
         onTranscribe: (blob: Blob) => {
             const emptyResult = new Promise<UseWhisperTranscript>((resolve) => {

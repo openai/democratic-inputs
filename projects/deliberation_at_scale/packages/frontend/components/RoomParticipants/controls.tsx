@@ -9,9 +9,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLingui } from '@lingui/react';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { MouseEvent, useCallback } from 'react';
 import { msg } from "@lingui/macro";
+import useLocalizedPush from '@/hooks/useLocalizedPush';
 
 const bgColorMap: Record<ThemeColors, string> = {
     'blue': 'text-blue-400 bg-blue-800/50',
@@ -24,7 +24,7 @@ export default function LocalParticipantControls() {
     const theme = useTheme();
     const { _ } = useLingui();
 
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
     const { participantId, roomId } = useRoom();
     const [leaveRoom] = useLeaveRoomMutation({ variables: { participantId }});
 

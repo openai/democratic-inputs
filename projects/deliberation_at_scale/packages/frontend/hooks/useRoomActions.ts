@@ -2,12 +2,12 @@ import { useAppSelector } from "@/state/store";
 import useRoom from "./useRoom";
 import { useMemo } from "react";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
 import { OutcomeType } from "@/generated/graphql";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/macro";
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
+import useLocalizedPush from "./useLocalizedPush";
 
 export interface RoomAction {
     id: string;
@@ -20,7 +20,7 @@ export default function useRoomActions() {
     const { _ } = useLingui();
     const { roomId, isRoomEnded, getOutcomeByType } = useRoom();
     const lastOpenedAssistantAt = useAppSelector((state) => state.room.lastOpenedAssistantAt);
-    const { push } = useRouter();
+    const { push } = useLocalizedPush();
     const actions: RoomAction[] = useMemo(() => {
         const newActions: RoomAction[] = [];
         const latestConsensusOutcome = getOutcomeByType(OutcomeType.Consensus);

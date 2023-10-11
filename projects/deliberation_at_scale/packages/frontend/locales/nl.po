@@ -13,333 +13,339 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: components/RoomOutcome.tsx:60
+#: components/RoomOutcome.tsx:62
 msgid "Agree"
-msgstr ""
+msgstr "Mee eens"
 
 #: components/ChatFlow/index.tsx:35
 #: hooks/useRoomMessages.ts:55
 msgid "AI Moderator"
-msgstr ""
+msgstr "AI Moderator"
 
 #: components/ChatMessage.tsx:79
 #: hooks/useRoomMessages.ts:55
 msgid "Anonymous"
-msgstr ""
+msgstr "Anoniem"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:23
 msgid "Ask for permissions now"
-msgstr ""
+msgstr "Vraag nu om toestemmingen"
 
 #: components/RoomMenu.tsx:39
 msgid "Assistant"
-msgstr ""
+msgstr "Assistent"
 
 #: components/ChatFlow/LobbyChatFlow.tsx:19
 msgid "Before joining the conversation, let's pick a nick name and configure your camera and microphone."
-msgstr ""
+msgstr "Voordat je deelneemt aan het gesprek, laten we een bijnaam kiezen en je camera en microfoon configureren."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:41
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #: components/ChatFlow/ProfileChatFlow.tsx:66
 msgid "Change my profile"
-msgstr ""
+msgstr "Verander mijn profiel"
 
 #: components/ColouredHeader.tsx:48
 msgid "Common Ground"
-msgstr ""
+msgstr "Common Ground"
 
 #: app/[lang]/room/[roomId]/layout.tsx:45
 msgid "Connecting to video call..."
-msgstr ""
+msgstr "Verbinden met videogesprek..."
 
-#: components/RoomOutcome.tsx:40
+#: components/RoomOutcome.tsx:42
 msgid "Consensus Proposal"
-msgstr ""
+msgstr "Consensusvoorstel"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:89
 msgid "Continue to room"
-msgstr ""
+msgstr "Ga verder naar de kamer"
 
 #: components/RoomMenu.tsx:53
-#: components/RoomTopic.tsx:37
 msgid "Conversation"
-msgstr ""
+msgstr "Gesprek"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:138
 msgid "Conversation partners have been found. Dive right in!"
-msgstr ""
+msgstr "Gesprekspartners zijn gevonden. Duik erin!"
 
 #: components/RoomParticipants/controls.tsx:65
 msgid "Disable audio"
-msgstr ""
+msgstr "Audio uitschakelen"
 
 #: components/RoomParticipants/controls.tsx:80
 msgid "Disable video"
-msgstr ""
+msgstr "Video uitschakelen"
 
-#: components/RoomOutcome.tsx:65
+#: components/RoomOutcome.tsx:67
 msgid "Disagree"
-msgstr ""
+msgstr "Niet mee eens"
 
 #: components/RoomParticipants/controls.tsx:65
 msgid "Enable audio"
-msgstr ""
+msgstr "Audio inschakelen"
 
 #: components/RoomParticipants/controls.tsx:80
 msgid "Enable video"
-msgstr ""
+msgstr "Video inschakelen"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:62
 msgid "Everything seems to be working fine. Let's get started!"
-msgstr ""
+msgstr "Alles lijkt goed te werken. Laten we beginnen!"
 
 #: app/[lang]/room/[roomId]/layout.tsx:33
 msgid "Finding room..."
-msgstr ""
+msgstr "Kamer zoeken..."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:156
 msgid "Go back to home"
-msgstr ""
+msgstr "Terug naar startpagina"
 
 #: components/ChatFlow/IdleChatFlow.tsx:32
 #: components/ChatFlow/InvalidChatFlow.tsx:32
 msgid "Go back to home page"
-msgstr ""
+msgstr "Terug naar startpagina"
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:56
 msgid "Go back to the home page"
-msgstr ""
+msgstr "Terug naar de startpagina"
 
-#: hooks/useRoomActions.ts:34
+#: hooks/useRoomActions.ts:35
 msgid "Go to voting"
-msgstr ""
+msgstr "Ga naar stemmen"
 
 #: components/ChatFlow/LobbyChatFlow.tsx:42
 #: components/ChatFlow/LobbyChatFlow.tsx:50
 msgid "Great, your nick name will be \"[nickName]\"."
-msgstr ""
+msgstr "Prima, je bijnaam zal \"[nickName]\" zijn."
 
 #: components/ChatFlow/ProfileChatFlow.tsx:38
 msgid "Great! Moving you to the waiting lobby... Hold on tight!"
+msgstr "Geweldig! We verplaatsen je naar de wachtruimte... Even geduld!"
+
+#: components/ChatFlow/RegisterChatFlow.tsx:24
+msgid "Hey there, welcome to Common Ground. We appreciate that you're taking the time to contribute."
 msgstr ""
 
 #: components/ChatFlow/LoginChatFlow.tsx:25
-#: components/ChatFlow/RegisterChatFlow.tsx:24
 msgid "Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute."
-msgstr ""
+msgstr "Hallo, welkom bij deze discussie. We waarderen het dat je de tijd neemt om bij te dragen."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:33
 msgid "Hi there [nickName]! I hope you enjoyed the conversation you had with the group."
-msgstr ""
+msgstr "Hallo daar [nickName]! Ik hoop dat je hebt genoten van het gesprek met de groep."
 
 #: components/ChatFlow/IdleChatFlow.tsx:17
 msgid "Hi there [nickName]. You have been idle for a while. Would you like to still join a room?"
-msgstr ""
+msgstr "Hallo [nickName]. Je bent een tijdje inactief geweest. Wil je nog steeds een kamer betreden?"
 
 #: components/ChatFlow/InvalidChatFlow.tsx:17
 msgid "Hmmm, it appears the room could not be joined or the other participants took too long to join. Sorry about that!"
-msgstr ""
+msgstr "Hmm, het lijkt erop dat de kamer niet kon worden betreden of dat de andere deelnemers te lang deden over het toetreden. Sorry daarvoor!"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:35
 msgid "Hold on!"
-msgstr ""
+msgstr "Wacht even!"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:34
 msgid "If you want to cancel, click the button below."
-msgstr ""
+msgstr "Als je wilt annuleren, klik dan op de knop hieronder."
 
 #: components/ChatFlow/LoginChatFlow.tsx:32
 msgid "In order for you to easily rejoin earlier converstations, we need your e-mail address for identification."
-msgstr ""
+msgstr "Om je gemakkelijk eerdere gesprekken opnieuw te laten deelnemen, hebben we je e-mailadres nodig voor identificatie."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:109
 msgid "It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above."
-msgstr ""
+msgstr "Het lijkt erop dat je het gebruik van je microfoon en camera niet hebt ingeschakeld, of dat ze zijn uitgeschakeld. Klik op de knop hieronder om het opnieuw te proberen of schakel ze in met de knoppen hierboven."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:90
 msgid "It was bad."
-msgstr ""
+msgstr "Het was slecht."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:70
 msgid "It was great!"
-msgstr ""
+msgstr "Het was geweldig!"
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:80
 msgid "It was okay."
-msgstr ""
+msgstr "Het was oké."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:151
 msgid "It's happening now! Enjoy!"
-msgstr ""
+msgstr "Het gebeurt nu! Geniet ervan!"
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:49
 msgid "Join another conversation"
-msgstr ""
+msgstr "Doe mee aan een ander gesprek"
 
 #: components/RoomParticipants/controls.tsx:92
 msgid "Leave conversation"
-msgstr ""
+msgstr "Verlaat gesprek"
 
-#: hooks/useRoomActions.ts:44
+#: hooks/useRoomActions.ts:46
 msgid "Leave room"
-msgstr ""
+msgstr "Verlaat kamer"
 
 #: app/[lang]/room/[roomId]/layout.tsx:41
 msgid "Loading media..."
-msgstr ""
+msgstr "Media laden..."
 
 #: app/[lang]/room/[roomId]/layout.tsx:37
 msgid "Loading room..."
-msgstr ""
+msgstr "Kamer laden..."
 
 #: components/ChatFlow/ProfileChatFlow.tsx:48
 msgid "Logging you out..."
-msgstr ""
+msgstr "Uitloggen..."
 
 #: components/ChatFlow/ProfileChatFlow.tsx:46
 msgid "Logout"
-msgstr ""
+msgstr "Uitloggen"
 
-#: components/RoomOutcome.tsx:41
+#: components/RoomOutcome.tsx:43
 msgid "Milestone"
-msgstr ""
+msgstr "Mijlpaal"
 
 #: components/ChatFlow/LobbyChatFlow.tsx:55
 msgid "Now your camera and microphone need to be configured."
-msgstr ""
+msgstr "Nu moeten je camera en microfoon worden geconfigureerd."
 
-#: components/RoomOutcome.tsx:42
+#: components/RoomOutcome.tsx:44
 msgid "Off Topic"
-msgstr ""
+msgstr "Niet relevant"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:44
 msgid "Okay, cancelling..."
-msgstr ""
+msgstr "Oké, annuleren..."
 
 #: components/ChatFlow/InvalidChatFlow.tsx:24
 msgid "Okay! Moving you back to the lobby, one moment please..."
-msgstr ""
+msgstr "Oké! We verplaatsen je terug naar de wachtruimte, een moment geduld alsjeblieft..."
 
 #: components/ChatFlow/IdleChatFlow.tsx:24
 msgid "Okay! Moving you to the lobby."
-msgstr ""
+msgstr "Oké! We verplaatsen je naar de wachtruimte."
 
 #: components/ChatFlow/ProfileChatFlow.tsx:36
 msgid "Participate in a conversation"
-msgstr ""
+msgstr "Deelnemen aan een gesprek"
 
-#: components/RoomOutcome.tsx:70
+#: components/RoomOutcome.tsx:72
 msgid "Pass"
-msgstr ""
+msgstr "Overslaan"
 
 #: components/ChatFlow/InvalidChatFlow.tsx:22
 msgid "Retry joining a room"
-msgstr ""
+msgstr "Probeer opnieuw een kamer te betreden"
 
 #: components/ChatFlow/index.tsx:74
 msgid "Select a button above..."
-msgstr ""
+msgstr "Selecteer een knop hierboven..."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:42
 msgid "Share your feedback"
-msgstr ""
+msgstr "Deel je feedback"
 
 #: components/ChatFlow/index.tsx:199
 #: components/ChatFlow/index.tsx:320
 msgid "Something went wrong! Please try again."
-msgstr ""
+msgstr "Er is iets misgegaan! Probeer het opnieuw."
 
 #: hooks/useQuickReplies.tsx:12
 msgid "Start over"
-msgstr ""
+msgstr "Begin opnieuw"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:77
 msgid "Start searching for a conversation"
-msgstr ""
+msgstr "Begin met zoeken naar een gesprek"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:142
 msgid "Start the conversation"
-msgstr ""
+msgstr "Begin het gesprek"
 
-#: components/RoomOutcome.tsx:43
+#: components/RoomOutcome.tsx:45
 msgid "Statement"
-msgstr ""
+msgstr "Verklaring"
 
 #: components/ChatFlow/LobbyChatFlow.tsx:59
 msgid "Sure!"
-msgstr ""
+msgstr "Zeker!"
 
 #: components/ChatInput.tsx:39
 msgid "Tap to type"
-msgstr ""
+msgstr "Tik om te typen"
 
 #: components/ChatFlow/LoginChatFlow.tsx:39
 #: components/ChatFlow/RegisterChatFlow.tsx:35
 msgid "Thank you! You will find an email with a login link in your inbox. After you click on this link, you will be redirected back to this application and ready to start finding common ground."
-msgstr ""
+msgstr "Dank je! Je vindt een e-mail met een inloglink in je inbox. Nadat je op deze link hebt geklikt, word je teruggeleid naar deze applicatie en kun je beginnen met het vinden van Common Ground."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:103
 msgid "Thanks for the feedback [nickName]!"
-msgstr ""
+msgstr "Bedankt voor de feedback [nickName]!"
 
 #: hooks/useFlowSteps.tsx:23
 msgid "That is not a valid email address!"
-msgstr ""
+msgstr "Dat is geen geldig e-mailadres!"
 
 #: hooks/useFlowSteps.tsx:27
 msgid "That looks like a valid e-mail. We're sending you an email now..."
-msgstr ""
+msgstr "Dat lijkt een geldig e-mailadres. We sturen je nu een e-mail..."
 
 #: hooks/useFlowSteps.tsx:32
 msgid "There was an error sending you an email. Please try again!"
-msgstr ""
+msgstr "Er is een fout opgetreden bij het versturen van een e-mail. Probeer het opnieuw!"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:33
 msgid "This may take a few seconds..."
-msgstr ""
+msgstr "Dit kan een paar seconden duren..."
 
 #: hooks/useRoomMessages.ts:65
 msgid "This message has been flagged as difficult to understand."
-msgstr ""
+msgstr "Dit bericht is gemarkeerd als moeilijk te begrijpen."
 
 #: hooks/useRoomMessages.ts:63
 msgid "This message has been flagged as inappropriate."
-msgstr ""
+msgstr "Dit bericht is gemarkeerd als ongepast."
 
 #: components/ChatFlow/RegisterChatFlow.tsx:29
 msgid "To get started, a registration link will be send to your email."
+msgstr "Om te beginnen wordt er een registratielink naar je e-mail gestuurd."
+
+#: components/RoomTopic.tsx:37
+msgid "Topic"
 msgstr ""
 
 #: components/ChatFlow/IdleChatFlow.tsx:22
 msgid "Try joining a room again"
-msgstr ""
+msgstr "Probeer opnieuw een kamer te betreden"
 
 #: components/ChatFlow/LobbyChatFlow.tsx:28
 msgid "Use my current nickname"
-msgstr ""
+msgstr "Gebruik mijn huidige bijnaam"
 
 #: components/ChatFlow/ProfileChatFlow.tsx:57
 msgid "View results of previous conversations"
-msgstr ""
+msgstr "Bekijk de resultaten van eerdere gesprekken"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:32
 msgid "Waiting for a conversation to join..."
-msgstr ""
+msgstr "Wachten op een gesprek om deel te nemen..."
 
 #: app/[lang]/room/[roomId]/layout.tsx:49
 msgid "Waiting for all participants to join..."
-msgstr ""
+msgstr "Wachten tot alle deelnemers zijn toegetreden..."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:127
-msgid "Waiting for two other participants..."
+msgid "Waiting for other participants..."
 msgstr ""
 
 #: components/ChatFlow/index.tsx:74
 msgid "Waiting..."
-msgstr ""
+msgstr "Wachten..."
 
 #: components/ChatFlow/ProfileChatFlow.tsx:21
 msgid ""
@@ -348,27 +354,31 @@ msgid ""
 "Remember, your unique perspective enriches the conversation.\n"
 "Let's get started!"
 msgstr ""
+"Welkom bij Common Ground!\n"
+"Duik in ons gesprek over de toekomst van AI.\n"
+"Vergeet niet, jouw unieke perspectief verrijkt het gesprek.\n"
+"Laten we beginnen!"
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:38
 msgid "What do you want to do next?"
-msgstr ""
+msgstr "Wat wil je hierna doen?"
 
 #: components/ChatFlow/LobbyChatFlow.tsx:24
 msgid "What nickname would you like to use? You can also choose your current name \"[nickName]\"."
-msgstr ""
+msgstr "Welke bijnaam wil je gebruiken? Je kunt ook je huidige naam \"[nickName]\" kiezen."
 
 #: components/ChatFlow/EvaluateChatFlow.tsx:66
 msgid "What was your general impression of the conversation?"
-msgstr ""
+msgstr "Wat was je algemene indruk van het gesprek?"
 
 #: hooks/useFlowSteps.tsx:12
 msgid "Will you please enter your e-mail address below?"
-msgstr ""
+msgstr "Wil je alsjeblieft je e-mailadres hieronder invullen?"
 
 #: components/ChatMessage.tsx:50
 msgid "You"
-msgstr ""
+msgstr "Jij"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:56
 msgid "You need to give permission to use your camera and microphone. The video feed is not recorded. In this current test your audio will not be transcribed."
-msgstr ""
+msgstr "Je moet toestemming geven om je camera en microfoon te gebruiken. De videofeed wordt niet opgenomen. In deze huidige test wordt je audio niet getranscribeerd."

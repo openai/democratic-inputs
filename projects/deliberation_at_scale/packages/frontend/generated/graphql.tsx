@@ -2839,7 +2839,7 @@ export type GetLobbyParticipantsQueryResult = Apollo.QueryResult<GetLobbyPartici
 export const GetRoomMessagesDocument = gql`
     query GetRoomMessages($roomId: UUID, $botMessageHistoryAmount: Int!, $participantMessageHistoryAmount: Int!) {
   messagesCollection(
-    filter: {active: {eq: true}, room_id: {eq: $roomId}}
+    filter: {type: {in: [bot, chat]}, active: {eq: true}, room_id: {eq: $roomId}}
     orderBy: {created_at: AscNullsLast}
     last: 30
   ) {
@@ -2861,7 +2861,7 @@ export const GetRoomMessagesDocument = gql`
     }
   }
   participantMessagesCollection: messagesCollection(
-    filter: {type: {in: [chat, voice]}, active: {eq: true}, room_id: {eq: $roomId}}
+    filter: {type: {in: [chat]}, active: {eq: true}, room_id: {eq: $roomId}}
     orderBy: {created_at: AscNullsLast}
     last: $participantMessageHistoryAmount
   ) {

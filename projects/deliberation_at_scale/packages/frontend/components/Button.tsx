@@ -34,6 +34,7 @@ export default function Button(props: Props) {
     const { children, icon, onClick, widthVariant = 'w-full', disabled = false, selected = false, className, progress } = props;
     const theme = useTheme();
     const showProgress = isNumber(progress);
+    const validatedProgress = showProgress ? Math.max(0, Math.min(1, progress)) : 0;
 
     const defaultClasses = `
         transition-colors
@@ -67,7 +68,7 @@ export default function Button(props: Props) {
             </button>
             {showProgress && (
                 <div className='h-2 w-full bg-gray-300 rounded-b'>
-                    <div className="h-full bg-green-400 rounded-b" style={{ width: `${progress * 100}%` }}></div>
+                    <div className="h-full bg-green-400 rounded-b" style={{ width: `${validatedProgress * 100}%` }}></div>
                 </div>
             )}
         </div>

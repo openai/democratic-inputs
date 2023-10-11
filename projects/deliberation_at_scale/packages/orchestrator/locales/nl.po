@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2023-10-11 21:27+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: nl\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/tasks/enrichVoteCheck.ts:527
+msgid "Enjoying the conversation? Please continue. Interested in other people's opinions? Then you can move on to a new group!"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:521
+msgid "Here is a {0} statement for you to discuss and vote on."
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:507
+msgid "Hey {nickNamesString}. Can you also share your thoughts in the chat?"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:546
+msgid "I've been instructed to introduce a new statement after {0} minutes. So here is a new statement!"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:552
+msgid "I've been instructed to introduce a new statement after {0} minutes. So we unfortunately need to stop this conversation!"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:449
+msgid "No new statements could be found unfortunately. You can continue the conversation yourself here!"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:442
+msgid "No new statements could be found unfortunately. You can continue the discussion if you want or join others in a new conversation!"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:514
+msgid "Not everyone has voted. When you all vote the next statement will come. You can also pass the statement. Or maybe you want to type your thoughts in the chat?"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:491
+msgid "Once everyone has voted, a new statement will be shared."
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:498
+msgid "You are not sharing the same opinion. Perhaps you can discuss this a bit more?"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:531
+msgid "You are really enjoying this conversation, but remember other people might also enjoy your contribution."
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:535
+msgid "You discussed and voted on {outcomeAmount} statements so far!"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:484
+msgid "You share the same opinion. A new statement will be shared shortly!"
+msgstr ""
+
+#: src/tasks/enrichVoteCheck.ts:539
+msgid "You've been having a conversation for {0} minutes. {outcomeAmountMessage} {invitation}"
+msgstr ""
