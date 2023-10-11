@@ -35,6 +35,7 @@ export default function RoomOutcome(props: Props) {
     const { isGivingOpinion, setOpinion, getExistingOpinion } = useUpsertOpinion({ subjects: [outcome], participantId });
     const existingOpinion = getExistingOpinion(outcomeId);
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
+    const [progress, setProgress] = useState(0);
     const title = useMemo(() => {
         switch (type) {
             case OutcomeType.Consensus: return _(msg`Consensus Proposal`);
@@ -86,15 +87,16 @@ export default function RoomOutcome(props: Props) {
     return (
         <motion.div
             layoutId={outcomeId}
-            className="py-4 gap-4 flex flex-col items-start"
+            className="gap-2 md:gap-4 flex flex-col items-start"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
         >
-            <Pill icon={statementSolid} className="border-black">{title}</Pill>
+            <Pill icon={statementSolid} className="border-black hidden md:inline-flex">{title}</Pill>
+            <span className="md:hidden font-bold">{title}:</span>
             <ReactMarkdown>{formattedContent}</ReactMarkdown>
             {hasOpinionOptions && (
                 <div className={classNames(
-                    "flex gap-2 w-full flex-wrap",
+                    "flex gap-1 md:gap-2 w-full flex-wrap",
                     variant === "compact" && "flex-row",
                     variant === "spacious" && "flex-col",
                     variant === "spacious" && "flex-col"
@@ -109,19 +111,25 @@ export default function RoomOutcome(props: Props) {
                                 type: OpinionType.Option,
                                 optionType,
                             });
+                            setProgress(progress+1);
                         };
 
                         return (
-                            <Button
-                                key={optionType}
-                                disabled={isDisabled}
-                                selected={isSelected}
-                                icon={icon}
-                                onClick={onOptionClick}
-                                className="flex-1"
-                            >
-                                {content}
-                            </Button>
+                            <>
+                                <Button
+                                    key={optionType}
+                                    disabled={isDisabled}
+                                    selected={isSelected}
+                                    icon={icon}
+                                    onClick={onOptionClick}
+                                    className="flex-1"
+                                    showProgress={true}
+                                    progress={progress}
+                                >
+                                    {content}
+                                </Button>
+                                
+                            </>
                         );
                     })}
                 </div>

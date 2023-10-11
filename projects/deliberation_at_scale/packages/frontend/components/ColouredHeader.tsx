@@ -24,7 +24,7 @@ export default function ColouredHeader() {
         <motion.header
             layoutId="coloured-header"
             className={classNames(
-                'flex w-screen justify-start px-6 items-center text-foreground font-medium transition-all duration-1000 z-10 fixed backdrop-blur-xl border-b bg-white/35',
+                'flex w-screen justify-start px-2 md:px-6 items-center text-foreground font-medium transition-all duration-1000 z-10 fixed backdrop-blur-xl border-b bg-white/35',
                 isHidden ? 'h-0 opacity-0' : 'h-[64px] opacity-100',
                 bgColorMap[theme],
             )}

@@ -20,7 +20,7 @@ export default function Index() {
     const logout = useCallback(() => supabaseClient.auth.signOut(), []);
 
     return (
-        <section id="main-scroll-container" className="p-4 flex flex-col gap-3 overflow-y-scroll pt-24">
+        <section id="main-scroll-container" className="p-2 md:p-4 flex flex-col gap-3 overflow-y-scroll pt-24">
             <motion.div layout>
                 <h1 className="mb-4 text-lg font-medium">Experience, Understand and Influence AI</h1>
                 <p className="mb-4 text-gray-600">
@@ -33,7 +33,7 @@ export default function Index() {
                 <div className="grid grid-cols-2 grid-rows-2 gap-2 mb-4 hyphens-auto text-green-700 text-lg font-medium text-center">
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faVideo} size="2x" fixedWidth />
-                        <span><b>Setup your profile</b> via email in one minute</span>
+                        <p><b>Setup your profile</b> via email in one minute</p>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faScroll} size="2x" fixedWidth />

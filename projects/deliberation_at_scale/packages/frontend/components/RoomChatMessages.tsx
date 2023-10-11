@@ -52,7 +52,7 @@ export default function RoomChatMessages() {
     }, [dispatch]);
 
     return (
-        <div className="flex flex-col shrink min-h-0 gap-2 pb-2 pt-2 px-2 md:px-4 grow">
+        <div className="flex flex-col shrink gap-2 min-h-0 pb-2 px-2 md:px-4 grow relative bottom-0">
             <ChatMessageList messages={messages} />
             <ChatActions actions={actions} />
             <ChatInput

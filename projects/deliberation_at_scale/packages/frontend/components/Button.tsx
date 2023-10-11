@@ -24,35 +24,51 @@ interface Props {
     disabled?: boolean;
     selected?: boolean;
     className?: string;
+    showProgress?: boolean;
+    progress?: number;
 }
 
 type WidthVariant = 'w-full' | 'w-auto';
 
 export default function Button(props: Props) {
-    const { children, icon, onClick, widthVariant = 'w-full', disabled = false, selected = false, className } = props;
+    const { children, icon, onClick, widthVariant = 'w-full', disabled = false, selected = false, className, progress, showProgress } = props;
     const theme = useTheme();
 
     const defaultClasses = `
         transition-colors
-        rounded-md first:py-3 first:px-4 py-1 px-2
+        rounded-md shadow-sm md:py-3 md:px-4 py-2 px-2
         ${textColorMap[theme]} ${widthVariant} font-semibold
-        border bg-white hover:bg-gray-50
+        bg-white hover:bg-gray-50
         flex items-center justify-center gap-2
         ${disabled ? 'grayscale cursor-not-allowed' : ''}
-        ${selected ? selectedBorderMap[theme] : ''}
+        ${showProgress ? 'rounded-b-none' : ''}
+        
         ${className}
     `;
 
+    const parentClasses = `
+        flex-1 border rounded-md
+        ${selected ? selectedBorderMap[theme] : ''}
+    `;
+
     return (
-        <button
-            onClick={onClick}
-            className={defaultClasses}
-            disabled={disabled}
-        >
-            {icon && (
-                <FontAwesomeIcon icon={icon} />
+        <div className={parentClasses}>
+            <button
+                onClick={onClick}
+                className={defaultClasses}
+                disabled={disabled}
+            >
+                {icon && (
+                    <FontAwesomeIcon icon={icon} />
+                )}
+                {children}
+            
+            </button>
+            {showProgress && (
+                <div className='h-2 w-full bg-gray-300 rounded-b'>
+                    <div className="h-full bg-green-400 rounded-b" style={{ width: `${((progress ? progress : 0) * 33)}%` }}></div>
+                </div>
             )}
-            {children}
-        </button>
+        </div>
     );
 }
