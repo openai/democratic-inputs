@@ -69,6 +69,11 @@ export default function useRoom(options?: UseRoomOptions) {
                     INSERT: `participant_id=in.(${participantIds?.join(',')})`,
                 }
             },
+            outcomes: {
+                listenFilters: {
+                    INSERT: `room_id=in.(${roomId})`,
+                }
+            },
         },
     });
     const { user } = useProfile();
