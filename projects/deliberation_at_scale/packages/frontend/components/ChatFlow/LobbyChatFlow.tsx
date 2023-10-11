@@ -21,11 +21,11 @@ export default function LobbyChatFlow() {
                 },
                 {
                     name: "greeting_2",
-                    messageOptions: [[_(msg`What nickname would you like to use? You can also choose your current name "[nickName]".`)]],
+                    messageOptions: [[_(msg`What nickname would you like to use?`)]],
                     quickReplies: [
                         {
                             id: "use_current_nickname",
-                            content: _(msg`Use my current nickname`),
+                            content: _(msg`Use my current nickname: "[nickName]".`),
                             icon: faSignature,
                             onClick: (helpers) => {
                                 helpers.goToName('use_current_nickname');
