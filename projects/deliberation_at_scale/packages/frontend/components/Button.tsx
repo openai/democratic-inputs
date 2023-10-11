@@ -38,15 +38,16 @@ export default function Button(props: Props) {
         transition-colors
         rounded-md shadow-sm md:py-3 md:px-4 py-2 px-2
         ${textColorMap[theme]} ${widthVariant} font-semibold
-        border bg-white hover:bg-gray-50
+        bg-white hover:bg-gray-50
         flex items-center justify-center gap-2
         ${disabled ? 'grayscale cursor-not-allowed' : ''}
-        ${progress ? 'rounded-b-none' : ''}
+        ${showProgress ? 'rounded-b-none' : ''}
+        
         ${className}
     `;
 
     const parentClasses = `
-        flex-1
+        flex-1 border rounded-md
         ${selected ? selectedBorderMap[theme] : ''}
     `;
 

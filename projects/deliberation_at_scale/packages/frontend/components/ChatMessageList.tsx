@@ -16,7 +16,7 @@ export default function ChatMessageList(props: Props) {
     const { messages, className } = props;
     // state to control visibility of gradient shadows 
     const [topShadow, setTopShadow] = useState(0);
-    const [bottomShadow, setBottomShadow] = useState(0);
+    //const [bottomShadow, setBottomShadow] = useState(0);
 
     const ref = useRef<HTMLDivElement>(null);
 
@@ -25,14 +25,14 @@ export default function ChatMessageList(props: Props) {
         const handleScroll = () => {
             if (current) {
                 const scrollTop = current.scrollTop;
-                const offsetHeight = current.offsetHeight;
-                const scrollHeight = current.scrollHeight;
+                //const offsetHeight = current.offsetHeight;
+                //const scrollHeight = current.scrollHeight;
                 // Calculate opacity based on scroll position
                 const topShadowOpacity = Math.min(scrollTop / 100, 1);
-                const bottomShadowOpacity = Math.min((scrollHeight - scrollTop - offsetHeight) / 100, 1);
+                //const bottomShadowOpacity = Math.min((scrollHeight - scrollTop - offsetHeight) / 100, 1);
                 // Set shadow visibility based on scroll position
                 setTopShadow(topShadowOpacity);
-                setBottomShadow(bottomShadowOpacity);
+                //setBottomShadow(bottomShadowOpacity);
             }
         };
         if (current) {
