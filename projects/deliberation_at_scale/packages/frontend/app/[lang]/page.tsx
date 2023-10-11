@@ -20,7 +20,7 @@ export default function Index() {
     const logout = useCallback(() => supabaseClient.auth.signOut(), []);
 
     return (
-        <section id="main-scroll-container" className="p-2 md:p-4 flex flex-col gap-3 overflow-y-scroll pt-24">
+        <section id="main-scroll-container" className="p-2 flex flex-col gap-3 overflow-y-scroll pt-24">
             <motion.div layout>
                 <h1 className="mb-4 text-lg font-medium">Experience, Understand and Influence AI</h1>
                 <p className="mb-4 text-gray-600">
@@ -30,22 +30,22 @@ export default function Index() {
                     Thank you for being part of this effort!
                 </p>
                 <p className="mb-4 text-gray-600">Your experience on Common Ground will look like:</p>
-                <div className="grid grid-cols-2 grid-rows-2 gap-2 mb-4 hyphens-auto text-green-700 text-lg font-medium text-center">
+                <div className="grid sm:grid-cols-2 sm:grid-rows-2 gap-2 mb-4 text-green-700 text-lg font-medium text-center">
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faVideo} size="2x" fixedWidth />
                         <p><b>Setup your profile</b> via email in one minute</p>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faScroll} size="2x" fixedWidth />
-                        <span><b>Join a conversation</b> with two fellow participants</span>
+                        <p><b>Join a conversation</b> with two fellow participants</p>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faShieldHeart} size="2x" fixedWidth />
-                        <span>AI moderators help create a <b>healthy conversation</b></span>
+                        <p>AI moderators help create a <b>healthy conversation</b></p>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faLightbulb} size="2x" fixedWidth />
-                        <span><b>Learn</b> from eachother and <b>contribute</b> to the 040 AI manifesto</span>
+                        <p><b>Learn</b> from eachother and <b>contribute</b> to the 040 AI manifesto</p>
                     </div>
                 </div>
                 {!isLoggedIn && (
