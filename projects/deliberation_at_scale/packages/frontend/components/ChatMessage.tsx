@@ -73,7 +73,7 @@ export default function ChatMessage(props: Props) {
         return replaceMessageVariables(flaggedContent).trim();
     }, [content, flaggedReason, flagged, replaceMessageVariables]);
     const formattedName = useMemo(() => {
-        return replaceMessageVariables(name ?? _(msg`Anonymous`));
+        return replaceMessageVariables(name ?? _(msg`Contributor`));
     }, [_, name, replaceMessageVariables]);
 
     // guard: skip when message is invalid

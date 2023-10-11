@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+// NOTE: cannot be translated due to missing language providers
 export default function NotFound() {
     return (
         <div className="mx-auto my-auto w-full h-screen flex flex-col items-center justify-center gap-4">
