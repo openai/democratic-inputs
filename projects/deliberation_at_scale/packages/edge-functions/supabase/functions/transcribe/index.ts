@@ -102,7 +102,8 @@ serve(async (req) => {
 
   // only update messages when there is text
   if (text) {
-    await upsertMesagesForTranscript({
+    // await upsertMesagesForTranscript({
+    await insertMesagesForTranscript({
         text,
         roomId,
         participantId,
@@ -210,6 +211,7 @@ async function upsertMesagesForTranscript(context: MessagesContext) {
                     content: messageContent,
                     room_id: roomId,
                     participant_id: participantId,
+                    type: 'voice',
                 });
                 // console.log('insertPromise', messageContent);
             upsertPromises.push(insertPromise);
@@ -235,6 +237,21 @@ async function upsertMesagesForTranscript(context: MessagesContext) {
     // });
 
     const results = await Promise.allSettled(upsertPromises);
+}
+
+async function insertMesagesForTranscript(context: MessagesContext) {
+    const { text, roomId, participantId } = context;
+    const result = await supabaseAdminClient
+        .from('messages')
+        .insert({
+            active: true,
+            content: text,
+            room_id: roomId,
+            participant_id: participantId,
+            type: 'voice',
+        });
+
+    return result;
 }
 
 /**
