@@ -2,12 +2,16 @@
 import useRoom from '@/hooks/useRoom';
 import RoomOutcome from './RoomOutcome';
 import { motion, AnimatePresence } from 'framer-motion';
+import useScrollToBottom from '@/hooks/useScrollToBottom';
 
 export default function LatestRoomOutcome() {
     const { outcomes, participantId, participants } = useRoom();
     const lastOutcome = outcomes?.[0];
     const hasOutcome = !!lastOutcome;
     const { id: outcomeId } = lastOutcome ?? {};
+
+    // automatically scroll to the bottom when a new outcome appears
+    useScrollToBottom({ data: lastOutcome });
 
     return (
         <motion.div
