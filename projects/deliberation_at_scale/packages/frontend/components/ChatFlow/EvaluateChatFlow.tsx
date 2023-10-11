@@ -38,6 +38,7 @@ export default function EvaluateChatFlow() {
                     messageOptions: [[_(msg`What do you want to do next?`)]],
                     quickReplies: [
                         {
+                            hidden: () => true,
                             id: "go_to_feedback",
                             content: _(msg`Share your feedback`),
                             onClick: (helpers) => {

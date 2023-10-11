@@ -21,7 +21,7 @@ export default function RegisterChatFlow() {
             steps: [
                 {
                     name: "greeting",
-                    messageOptions: [[_(msg`Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute.`)]],
+                    messageOptions: [[_(msg`Hey there, welcome to Common Ground. We appreciate that you're taking the time to contribute.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
