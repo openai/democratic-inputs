@@ -29,7 +29,7 @@ export default function LoginChatFlow() {
                 {
                     name: "data_justification",
                     messageOptions: [[
-                        _(msg`In order for you to easily rejoin earlier converstations, we need your e-mail address for identification.`),
+                        _(msg`In order for you to easily rejoin earlier conversations, we need your e-mail address for identification.`),
                     ]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
