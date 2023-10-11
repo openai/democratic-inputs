@@ -9,6 +9,21 @@
       "minify": {
         "compress": false,
         "mangle": false
+      },
+      "experimental": {
+        "plugins": [
+          [
+            "@lingui/swc-plugin",
+            {
+                // Optional
+                // Unlike the JS version this option must be passed as object only.
+                // Docs https://lingui.dev/ref/conf#runtimeconfigmodule
+                "runtimeModules": {
+                  "i18n": ["@lingui/core", "i18n"]
+                }
+            }
+          ]
+        ]
       }
     },
     "module": {
