@@ -5,11 +5,10 @@ import { Helpers } from "graphile-worker";
 export default async function enrichModeratorIntroduction(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers): Promise<ModeratorTaskTuple> {
     const contentOptions = [
         `
-        Hello everyone!
-        I'm here to moderate our conversation.
-        Before we dive right into it, let's take a brief moment for introductions.
-        May I suggest saying hi to eachother briefly?
-        After a minute, I'll come back to you and introduce the topic for today.
+        Hi! My role is to moderate your conversation.
+        Shall we start by taking a brief moment for introductions?
+        Perhaps share your name and why this conversation interests you.
+        The topic will be introduced in a moment. When you are ready, you can take it from there.
         `,
     ];
 

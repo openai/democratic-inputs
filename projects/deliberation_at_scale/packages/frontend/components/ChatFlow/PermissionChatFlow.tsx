@@ -29,10 +29,10 @@ export default function PermissionChatFlow() {
     }, [_]);
     const waitingForRoomMessageOptions = useMemo(() => {
         return [
-            [_(msg`Waiting for a conversation to be ready...`)],
+            [_(msg`Waiting for a conversation to join...`)],
             [_(msg`This may take a few seconds...`)],
-            [_(msg`Waiting... If you want to cancel, click the button below.`)],
-            [_(msg`Waiting... Hold on!`)],
+            [_(msg`If you want to cancel, click the button below.`)],
+            [_(msg`Hold on!`)],
         ];
     }, [_]);
     const cancelWaitingForRoomQuickReply = useMemo(() => {
@@ -53,7 +53,7 @@ export default function PermissionChatFlow() {
             steps: [
                 {
                     name: "permission_ask",
-                    messageOptions: [[_(msg`Before we continue, you will need to give permission to use your camera and microphone. Heads up! We will not record your video feed, but may use a transcript of your audio for research.`)]],
+                    messageOptions: [[_(msg`You need to give permission to use your camera and microphone. The video feed is not recorded. In this current test your audio will not be transcribed.`)]],
                     timeoutMs: 2000, // keep this fixed to give devices time to initialize
                 },
                 {
@@ -74,7 +74,7 @@ export default function PermissionChatFlow() {
                     quickReplies: [
                         {
                             id: "find_room",
-                            content: _(msg`Let's find a conversation to join`),
+                            content: _(msg`Start searching for a conversation`),
                             icon: faSearch,
                             hidden: (helpers) => {
                                 return !isEmpty(helpers?.searchParams?.get('redirect'));
@@ -135,11 +135,11 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: "ask_to_enter_room", // Bram: Possibly just remove this option -> Participant will be automatically placed in room when one is found. As soon as participant clicks search room, they state to be ready to join one.
-                    messageOptions: [[_(msg`A room has been found! Do you want to join the conversation?`)]],
+                    messageOptions: [[_(msg`Conversation partners have been found. Dive right in!`)]],
                     quickReplies: [
                         {
                             id: "enter_room",
-                            content: _(msg`Enter room`),
+                            content: _(msg`Start the conversation`),
                             icon: faArrowRight,
                             onClick: (helpers) => {
                                 if (ENABLE_TEST_ROOM) {
@@ -148,12 +148,12 @@ export default function PermissionChatFlow() {
                                 }
 
                                 helpers.setFlowStateEntry(LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, true);
-                                helpers.postBotMessages([[_(msg`Moving you to the room now. Have fun!`)]]);
+                                helpers.postBotMessages([[_(msg`It's happening now! Enjoy!`)]]);
                             }
                         },
                         {
                             id: "cancel_enter_room",
-                            content: _(msg`No, go back to home page`),
+                            content: _(msg`Go back to home`),
                             icon: faHomeAlt,
                             onClick: (helpers) => {
                                 helpers.goToPage(`/profile`);

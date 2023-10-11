@@ -44,28 +44,35 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
         await sendBotMessage({
             roomId,
             content: `
-                I hope you had the time to introduce yourselves to each other. Let's get started!
+                Hopefully you had the time to introduce yourselves.
             `,
         });
         await waitFor(ONE_SECOND_MS * 5);
         await sendBotMessage({
             roomId,
             content: `
-                Throughout the conversation you will be asked discuss and vote on statements related to the topic: **${topicContent}**
-            `,
-        });
-        await waitFor(ONE_SECOND_MS * 8);
-        await sendBotMessage({
-            roomId,
-            content: `
-                If you want to have an open discussion and create new statements yourself, you can do so at any time by typing in the chat. I will try to summarize them for you automatically.
+                Today's conversation is: **${topicContent}**
             `,
         });
         await waitFor(ONE_SECOND_MS * 5);
         await sendBotMessage({
             roomId,
             content: `
-                Good luck and have fun!
+                To help with the conversation, statements will be shared. You can discuss them and vote.
+            `,
+        });
+        await waitFor(ONE_SECOND_MS * 5);
+        await sendBotMessage({
+            roomId,
+            content: `
+                Do you want to create your own statements? You can do that at any time by typing in the chat. Your humble AI moderator will summarize them automatically.
+            `,
+        });
+        await waitFor(ONE_SECOND_MS * 5);
+        await sendBotMessage({
+            roomId,
+            content: `
+                Who wants to start?
             `,
         });
 

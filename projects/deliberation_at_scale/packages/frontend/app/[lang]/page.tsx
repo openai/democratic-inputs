@@ -22,9 +22,14 @@ export default function Index() {
     return (
         <section id="main-scroll-container" className="p-4 flex flex-col gap-3 overflow-y-scroll pt-24">
             <motion.div layout>
-                <h1 className="mb-4 text-lg font-medium">Welcome to Eindhoven&apos;s deliberation about personalisation of AI assistants.</h1>
-                <p className="mb-4 text-gray-600">The development of artificial intelligence affects all of us. We believe it is important that this development is steered by the will of the people. You will contribute to this via this deliberation. Thank you for being part of this!</p>
-                <p className="mb-4 text-gray-600">Your next hour on Common Ground will look as follows:</p>
+                <h1 className="mb-4 text-lg font-medium">Experience, Understand and Influence AI</h1>
+                <p className="mb-4 text-gray-600">
+                    Welcome to our conversation about AI in Eindhoven.<br/><br/>
+                    We all want the <b>best for our city</b>. This is why we want to figure how AI can help.
+                    We believe it is important that <b>people steer</b> this development.
+                    Thank you for being part of this effort!
+                </p>
+                <p className="mb-4 text-gray-600">Your experience on Common Ground will look like:</p>
                 <div className="grid grid-cols-2 grid-rows-2 gap-2 mb-4 hyphens-auto text-green-700 text-lg font-medium text-center">
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faVideo} size="2x" fixedWidth />
@@ -32,18 +37,20 @@ export default function Index() {
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faScroll} size="2x" fixedWidth />
-                        <span><b>Join a room</b> with two others, and deliberate on provided statements or create your own</span>
+                        <span><b>Join a conversation</b> with two fellow participants</span>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faShieldHeart} size="2x" fixedWidth />
-                        <span>AI moderators help creating a <b>healthy deliberation environment</b></span>
+                        <span>AI moderators help create a <b>healthy conversation</b></span>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faLightbulb} size="2x" fixedWidth />
-                        <span><b>Contribute</b> to a large body of agreement, and <b>learn</b> from the perspective of others</span>
+                        <span><b>Learn</b> from eachother and <b>contribute</b> to the 040 AI manifesto</span>
                     </div>
                 </div>
-                <p className="mb-4 text-gray-600">When you are ready to find common ground, please click Register below. You will be guided through your profile setup, this should only take about 1 minute. When this registration is completed, you will be guided to a room to start the deliberation.</p>
+                {!isLoggedIn && (
+                    <p className="mb-4 text-gray-600">To get started, click the button below:</p>
+                )}
             </motion.div>
             <motion.div className="flex flex-col gap-2">
                 {loading ? (

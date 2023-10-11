@@ -35,6 +35,8 @@ const NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS = 5 * ONE_SECOND_MS * TIME_MU
 // The time before the new outcome is shown after it is announced in chat
 const NEW_OUTCOME_AFTER_OUTCOME_INTRODUCTION_MS = 3 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
+const TIMEOUT_CONVSERSATION_AFTER_MS = 40 * ONE_MINUTE_MS * TIME_MULTIPLIER;
+
 // Timekeeping
 const TIMEKEEPING_MOMENTS = [
     ONE_MINUTE_MS * 10 * TIME_MULTIPLIER,
@@ -71,7 +73,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
             roomId,
             limit: DEFAULT_MESSAGE_LIMIT,
             types: ['bot'],
-        })
+        }),
     ]);
 
     // guard: check if the required data is valid
@@ -248,16 +250,16 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     }
 
     // invite the participants to pass this outcome
-    if (shouldInviteToPass) {
-        await attemptSendBotMessage({
-            roomId,
-            content: getInviteToPassMessageContent(),
-            tags: 'invite-to-pass',
-        });
-    }
+    // if (shouldInviteToPass) {
+    //     await attemptSendBotMessage({
+    //         roomId,
+    //         content: getInviteToPassMessageContent(),
+    //         tags: 'invite-to-pass',
+    //     });
+    // }
 
     // check if we should moderate the open discussion a bit when it all takes too long
-    if (shouldInviteOpenDiscussion) {
+    if (shouldInviteOpenDiscussion || shouldInviteToPass) {
         helpers.logger.info(`Moderating open discussion in room ${roomId}...`);
 
         // send opening invite only once
@@ -306,6 +308,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
             roomId,
             content: getVotedSameMessageContent(),
             tags: 'everyone-voted-the-same',
+            force: true,
         });
         await waitFor(NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS);
         await sendNewCrossPollination({
@@ -443,58 +446,72 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
     return newOutcome;
 }
 
+// DONE
 function getVotedSameMessageContent(): string {
     return draw([
-        'Everyone voted the same! Let\'s find a new statement to discuss!',
+        'You share the same opinion. A new statement will be shared shortly!',
     ]) ?? '';
 }
 
+// DONE
 function getVoteInviteMessageContent(): string {
     return draw([
-        'Friendly reminder to vote on the mentioned statement!'
+        'Once everyone has voted, a new statement will be shared.',
     ]) ?? '';
 }
 
-function getInviteToPassMessageContent(): string {
-    return draw([
-        'It looks like the discussion it taking a bit longer. You can also decide to pass on this statement and find a new one to discuss.',
-    ]) ?? '';
-}
+// function getInviteToPassMessageContent(): string {
+//     return draw([
+//         'It looks like the discussion it taking a bit longer. You can also decide to pass on this statement and find a new one to discuss.',
+//     ]) ?? '';
+// }
 
+// DONE
 function getNotEveryoneVotedTheSameMessageContent(): string {
     return draw([
-        'You are not agreeing just yet. Perhaps you can discuss this a bit more?',
+        'You are not sharing the same opinion. Perhaps you can discuss this a bit more?',
     ]) ?? '';
 }
 
+// DONE
 function getInviteContributionMessageContent(nickNames: string[]): string {
     const nickNamesString = nickNames.join(', ');
 
     return draw([
-        `Hey there ${nickNamesString}. You have been a bit quiet. We would love to hear your thoughts!`,
+        `Hey ${nickNamesString}. Can you also share your thoughts in the chat?`,
     ]) ?? '';
 }
 
+// DONE, TODO: rename this
 function getOpenDiscussionMessageContent(): string {
     return draw([
-        'I noticed this statement is quite challenging to vote on. Perhaps we should have an open discussion? I would like to invite you to type your thoughts in the chat.',
+        'Not everyone has voted. When you all vote the next statement will come. You can also pass the statement. Or maybe you want to type your thoughts in the chat?',
     ]) ?? '';
 }
 
-function getNewCrossPollinationMessageContent(statement: string): string {
+// DONE
+function getNewCrossPollinationMessageContent(statement: string, isFirst: boolean = false): string {
     return draw([
-        `I have found a new statement for you to discuss and vote on: ${statement}`,
+        `Here is a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on.`,
     ]) ?? '';
 }
 
+// DONE
 function getTimeKeepingMessageContent(timeMs: number): string {
+    let invitation = `Enjoying the conversation? Please continue. Interested in other people's opinions? Move on to a new group.`;
+
+    if (timeMs >= ONE_MINUTE_MS * 20) {
+        invitation = `You are really enjoying this conversation, but remember other people might also enjoy your contribution.`;
+    }
+
     return draw([
-        `You have been discussing for more than ${timeMs / ONE_MINUTE_MS} minutes now. You can keep on going or decide to join another conversation.`,
+        `You've been having a conversation for ${timeMs / ONE_MINUTE_MS} minutes. ${invitation}`,
     ]) ?? '';
 }
 
+// DONE
 function getTimeoutVoteMessageContent(): string {
     return draw([
-        'Discussing the statement is taking a bit long. Let\'s find a new statement to discuss!',
+        `I've been instructed to introduce a new statement after ${TIMEOUT_VOTE_AFTER_MS / ONE_MINUTE_MS} minutes. So here is a new statement!`,
     ]) ?? '';
 }

@@ -30,13 +30,40 @@ export default function EvaluateChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[_(msg`Hi there [nickName]! I hope you enjoyed the discussion you had with the group.`)]],
+                    messageOptions: [[_(msg`Hi there [nickName]! I hope you enjoyed the conversation you had with the group.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+                },
+                {
+                    name: "thank_you_1",
+                    messageOptions: [[_(msg`What do you want to do next?`)]],
+                    quickReplies: [
+                        {
+                            id: "go_to_feedback",
+                            content: _(msg`Share your feedback`),
+                            onClick: (helpers) => {
+                                helpers.goToPage("/profile");
+                            }
+                        },
+                        {
+                            id: "join_another_room",
+                            content: _(msg`Join another conversation`),
+                            onClick: (helpers) => {
+                                helpers.goToPage("/lobby");
+                            }
+                        },
+                        {
+                            id: "go_to_profile",
+                            content: _(msg`Go back to the home page`),
+                            onClick: (helpers) => {
+                                helpers.goToPage("/profile");
+                            }
+                        },
+                    ],
                 },
                 {
                     active: hasOutcomeType(OutcomeType.OverallImpression),
                     name: "overall_impression",
-                    messageOptions: [[_(msg`Let's review what you all discussed. What was your general impression?`)]],
+                    messageOptions: [[_(msg`What was your general impression of the conversation?`)]],
                     quickReplies: [
                         {
                             id: "review_great",
@@ -75,26 +102,6 @@ export default function EvaluateChatFlow() {
                     name: "overall_impression_thanks",
                     messageOptions: [[_(msg`Thanks for the feedback [nickName]!`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
-                },
-                {
-                    name: "thank_you_1",
-                    messageOptions: [[_(msg`What do you want to do next?`)]],
-                    quickReplies: [
-                        {
-                            id: "join_another_room",
-                            content: _(msg`Join another room`),
-                            onClick: (helpers) => {
-                                helpers.goToPage("/lobby");
-                            }
-                        },
-                        {
-                            id: "go_to_profile",
-                            content: _(msg`Go back to the home page`),
-                            onClick: (helpers) => {
-                                helpers.goToPage("/profile");
-                            }
-                        },
-                    ],
                 },
             ],
         } satisfies ChatFlowConfig;

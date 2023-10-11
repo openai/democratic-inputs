@@ -18,17 +18,22 @@ export default function ProfileChatFlow() {
             steps: [
                 {
                     name: "welcome", // Possibly unnecessary to and mention 'Common Ground' and mention 'Deliberation at Scale'. But using both makes it sound big, which I like.
-                    messageOptions: [[_(msg`Hi there [nickName]! Welcome to Common Ground. This application was developed by the consortium Deliberation at Scale together with OpenAI. When you feel ready to join a discussion, we can set you up with other participants.`)]],
+                    messageOptions: [[_(msg`
+                        Welcome to Common Ground!
+                        Dive into our conversation about the future of AI.
+                        Remember, your unique perspective enriches the conversation.
+                        Let's get started!
+                    `)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
                     name: "choose",
-                    messageOptions: [[_(msg`What would you like to do?`)]],
+                    messageOptions: [[]],
                     quickReplies: [
                         {
                             id: 'join-room',
                             icon: faMessage,
-                            content: _(msg`Join the conversation`),
+                            content: _(msg`Participate in a conversation`),
                             onClick: async (helpers) => {
                                 helpers.postBotMessages([[_(msg`Great! Moving you to the waiting lobby... Hold on tight!`)]]);
                                 await helpers.waitFor(2000);
