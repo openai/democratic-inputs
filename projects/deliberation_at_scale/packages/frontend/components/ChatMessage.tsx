@@ -11,7 +11,6 @@ import useProfile from '@/hooks/useProfile';
 import { useCallback, useMemo } from 'react';
 import { replaceTextVariables } from '@/utilities/text';
 import classNames from 'classnames';
-import { useAppSelector } from '@/state/store';
 import { useLingui } from '@lingui/react';
 
 const highlightedBgColorMap: Record<ThemeColors, string> = {
@@ -45,9 +44,7 @@ export default function ChatMessage(props: Props) {
     const { message, enablePadding = true, first = false, last = false, className } = props;
     const { content, name, nameIcon, date, highlighted = false, flagged = false, flaggedReason } = message;
     const theme = useTheme();
-    const { user } = useProfile();
-    const flowStateNickName = useAppSelector((state) => state.flow.flowStateLookup?.['lobby']?.['nickName']);
-    const nickName = flowStateNickName ?? user?.nick_name ?? _(msg`You`);
+    const { nickName } = useProfile();
     const hasDate = !!date;
     const parsedDate = dayjs(date);
     const isToday = parsedDate.isSame(dayjs(), 'day');

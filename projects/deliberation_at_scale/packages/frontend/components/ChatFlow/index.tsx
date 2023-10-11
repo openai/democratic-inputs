@@ -21,6 +21,8 @@ import useScrollToBottom from "@/hooks/useScrollToBottom";
 import { useLocalMedia } from "@/hooks/useLocalMedia";
 import { useLingui } from "@lingui/react";
 import useLocalizedPush from "@/hooks/useLocalizedPush";
+import useProfile from "@/hooks/useProfile";
+import { replaceTextVariables } from "@/utilities/text";
 
 interface Props {
     flow: FlowType;
@@ -77,6 +79,12 @@ export default function ChatFlow(props: Props) {
 
         return undefined;
     }, [hasQuickReplies, isTextInputDisabled, _]);
+    const { nickName } = useProfile();
+    const replaceMessageVariables = useCallback((text: string) => {
+        return replaceTextVariables(text, {
+            nickName,
+        });
+    }, [nickName]);
 
     /** State helpers */
     const reset = useCallback(() => {
@@ -301,6 +309,7 @@ export default function ChatFlow(props: Props) {
                             {quickReplies.map((quickReply) => {
                                 const { id, onClick, content, icon, enabled, hidden } = quickReply;
                                 const key = `${id}-${content}`;
+                                const formattedContent = replaceMessageVariables(content);
                                 const isEnabled = enabled?.(onInputHelpers) ?? true;
                                 const isHidden = hidden?.(onInputHelpers) ?? false;
 
@@ -328,7 +337,7 @@ export default function ChatFlow(props: Props) {
                                         {icon && (
                                             <FontAwesomeIcon icon={icon} />
                                         )}
-                                        <span>{content}</span>
+                                        <span>{formattedContent}</span>
                                     </Button>
                                 );
                             })}

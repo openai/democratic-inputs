@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { msg } from "@lingui/macro";
+import { useLingui } from '@lingui/react';
 
 import { supabaseClient } from "@/state/supabase";
 import { useGetRoomsQuery, useGetUserQuery } from "@/generated/graphql";
@@ -7,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/state/store";
 import { setAuthUser, setAuthSession } from "@/state/slices/profile";
 
 export default function useProfile() {
+    const { _ } = useLingui();
     const dispatch = useAppDispatch();
     const authUser = useAppSelector((state) => state.profile.authUser);
     const authSession = useAppSelector((state) => state.profile.authSession);
@@ -37,6 +40,8 @@ export default function useProfile() {
         dispatch(setAuthSession(session));
         setLoading(false);
     }, [dispatch]);
+    const flowStateNickName = useAppSelector((state) => state.flow.flowStateLookup?.['lobby']?.['nickName']);
+    const nickName = flowStateNickName ?? user?.nick_name ?? _(msg`You`);
 
     useEffect(() => {
         const { data: authListener } = supabaseClient.auth.onAuthStateChange((event) => {
@@ -61,6 +66,7 @@ export default function useProfile() {
         authUser,
         authSession,
         user,
+        nickName,
         rooms,
         loading,
         isLoggedIn,
