@@ -1,9 +1,10 @@
-import { FullOpinionFragment, FullOutcomeFragment, OpinionOptionType, OpinionType, useChangeOpinionMutation, useCreateOpinionMutation } from "@/generated/graphql";
+import { FullOpinionFragment, FullOutcomeFragment, OpinionOptionType, OpinionType, useCreateOpinionMutation } from "@/generated/graphql";
+import { sort, unique } from "radash";
 import { useCallback, useMemo } from "react";
 
 export type Subject = FullOutcomeFragment;
 
-export interface UseUpsertOpinionOptions {
+export interface UseGiveOpinionOptions {
     subjects?: (Subject | undefined)[];
     participantId?: string;
 }
@@ -16,7 +17,7 @@ export interface SetOpinionOptions {
     rangeValue?: number;
 }
 
-export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
+export default function useGiveOpinion(options: UseGiveOpinionOptions) {
     const { subjects, participantId } = options;
     const opinions = useMemo(() => {
         const opinions: FullOpinionFragment[] = [];
@@ -27,21 +28,34 @@ export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
             });
         });
 
-        return opinions;
+        // only use the latest opinion per outcome per participant
+        const orderedOpinions = sort(opinions, (opinion) => {
+            return opinion.created_at;
+        }, true);
+        const latestOpinions = unique(orderedOpinions, (opinion) => {
+            const { outcome_id, participant_id } = opinion;
+            return `${outcome_id}-${participant_id}`;
+        });
+
+        return latestOpinions;
     }, [subjects]);
     const getExistingOpinion = useCallback((subjectId: string) => {
         return opinions.find((opinion) => {
             return opinion.outcome_id === subjectId && opinion.participant_id === participantId;
         });
     }, [opinions, participantId]);
+    const getGroupOpinions = useCallback((subjectId: string) => {
+        return opinions.filter((opinion) => {
+            return opinion.outcome_id === subjectId;
+        });
+    }, [opinions]);
     const hasExistingOpinion = useCallback((subjectId: string) => {
         return !!getExistingOpinion(subjectId);
     }, [getExistingOpinion]);
-    const [createOpinion, { loading: isCreatingOpinion }] = useCreateOpinionMutation();
-    const [changeOpinion, { loading: isChangingOpinion }] = useChangeOpinionMutation();
-    const isGivingOpinion = isCreatingOpinion || isChangingOpinion;
+    const [createOpinion, { loading: isGivingOpinion }] = useCreateOpinionMutation();
     const setOpinion = useCallback((options: SetOpinionOptions) => {
         const { subjectId } = options;
+        const existingOpinion = getExistingOpinion(subjectId);
         const subject = subjects?.find((subject) => {
             return subject?.id === subjectId;
         });
@@ -52,20 +66,22 @@ export default function useUpsertOpinion(options: UseUpsertOpinionOptions) {
             [subjectIdMutationKey]: subjectId,
         };
 
-        // guard: update an existing opinion when already given one
-        if (hasExistingOpinion(subjectId)) {
-            changeOpinion({
-                variables: mutationVariables,
-            });
+        // guard: skip when the opinion is the same
+        if (existingOpinion &&
+            existingOpinion?.option_type == options.optionType &&
+            existingOpinion?.statement == (options.statement ?? '') &&
+            existingOpinion?.range_value == (options.rangeValue ?? 0)
+        ) {
             return;
         }
 
         createOpinion({
             variables: mutationVariables,
         });
-    }, [changeOpinion, createOpinion, hasExistingOpinion, participantId, subjects]);
+    }, [createOpinion, participantId, subjects, getExistingOpinion]);
 
     return {
+        getGroupOpinions,
         getExistingOpinion,
         hasExistingOpinion,
         isGivingOpinion,

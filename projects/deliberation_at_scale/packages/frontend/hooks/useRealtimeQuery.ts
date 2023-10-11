@@ -218,6 +218,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                     },
                     (payload) => {
                         const newRow = payload.new;
+
                         if (shouldRefetchOnInsert) {
                             refetch();
                         }

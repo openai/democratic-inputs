@@ -16,12 +16,7 @@ export default function LobbyChatFlow() {
             steps: [
                 {
                     name: "greeting_1",
-                    messageOptions: [[_(msg`Hi there! Good to have you here.`)]],
-                    timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
-                },
-                {
-                    name: "greeting_2",
-                    messageOptions: [[_(msg`First, I need to ask you a few questions.`)]],
+                    messageOptions: [[_(msg`Before joining the conversation, let's pick a nick name and configure your camera and microphone.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
@@ -44,7 +39,7 @@ export default function LobbyChatFlow() {
                 },
                 {
                     name: "use_current_nickname",
-                    messageOptions: [[_(msg`Great, we'll keep calling you "[nickName]".`)]],
+                    messageOptions: [[_(msg`Great, your nick name will be "[nickName]".`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                     onTimeout: async (helpers) => {
                         helpers.goToName("ask_go_to_permission_flow");
@@ -52,16 +47,16 @@ export default function LobbyChatFlow() {
                 },
                 {
                     name: "use_new_nickname",
-                    messageOptions: [[_(msg`Great, we'll call you "[nickName]".`)]],
+                    messageOptions: [[_(msg`Great, your nick name will be "[nickName]".`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
                     name: "ask_go_to_permission_flow",
-                    messageOptions: [[_(msg`Now we need to setup your camera and microphone.`)]],
+                    messageOptions: [[_(msg`Now your camera and microphone need to be configured.`)]],
                     quickReplies: [
                         {
                             id: "go_to_permission_flow",
-                            content: _(msg`Sure thing, let's set it up!`),
+                            content: _(msg`Sure!`),
                             icon: faThumbsUp,
                             onClick: (helpers) => {
                                 helpers.goToPage('/lobby/permission');

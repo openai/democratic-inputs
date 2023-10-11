@@ -2,7 +2,8 @@ import { ProgressionTopology } from "../types";
 import { ONE_SECOND_MS } from "./constants";
 
 const INTRODUCE_CONVERSATION_AFTER_MS = 10 * ONE_SECOND_MS;
-const INTRODUCE_TOPIC_AFTER_MS = 60 * ONE_SECOND_MS;
+const INTRODUCE_TOPIC_AFTER_MS = 45 * ONE_SECOND_MS;
+const START_STATEMENTS_AFTER_MS = 45 * ONE_SECOND_MS;
 
 export const progressionTopology: Readonly<ProgressionTopology> = {
     layers: [
@@ -65,7 +66,7 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
                     minAttempts: 1,
                     executionType: 'alwaysBeforeVerification',
                     cooldown: {
-                        startDelayMs: 20 * ONE_SECOND_MS,
+                        startDelayMs: START_STATEMENTS_AFTER_MS,
                     },
                 },
             ],

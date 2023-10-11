@@ -9,8 +9,7 @@ fragment FullOutcome on outcomes {
   created_at
   updated_at
 
-  # Don't filter on active flag, because up the custom upsert behaviour
-  opinionsCollection(orderBy: { created_at: DescNullsLast }) {
+  opinionsCollection(orderBy: { created_at: DescNullsLast }, filter: { active: { eq: true } }) {
     edges {
         node {
             ...FullOpinion

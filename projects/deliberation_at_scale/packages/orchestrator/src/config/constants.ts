@@ -57,7 +57,7 @@ export const ENABLE_SINGLE_ROOM_TESTING = false && IS_DEVELOPMENT;
 export const TEST_ROOM_ID_ALLOWLIST = ['ee440eef-3cbd-48fd-ab37-a0ea12a7c895'];
 export const ENABLE_ROOM_PROGRESSION = true || !IS_DEVELOPMENT;
 export const PRINT_JOBKEY = true && IS_DEVELOPMENT;
-export const PRINT_ROOM_PROGRESSION = true && IS_DEVELOPMENT;
+export const PRINT_ROOM_PROGRESSION = false && IS_DEVELOPMENT;
 export const ENABLE_TEST_WHEREBY_ROOM = false && IS_DEVELOPMENT;
 export const TEST_WHEREBY_ROOM: ValidCreateExternalRoomResult = {
     endDate: dayjs().add(1, 'hour').toISOString(),

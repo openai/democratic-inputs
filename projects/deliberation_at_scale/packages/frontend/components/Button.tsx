@@ -1,6 +1,7 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode } from 'react';
+import { isNumber } from 'radash';
 
 import useTheme, { ThemeColors } from "@/hooks/useTheme";
 
@@ -24,15 +25,15 @@ interface Props {
     disabled?: boolean;
     selected?: boolean;
     className?: string;
-    showProgress?: boolean;
     progress?: number;
 }
 
 type WidthVariant = 'w-full' | 'w-auto';
 
 export default function Button(props: Props) {
-    const { children, icon, onClick, widthVariant = 'w-full', disabled = false, selected = false, className, progress, showProgress } = props;
+    const { children, icon, onClick, widthVariant = 'w-full', disabled = false, selected = false, className, progress } = props;
     const theme = useTheme();
+    const showProgress = isNumber(progress);
 
     const defaultClasses = `
         transition-colors
@@ -42,7 +43,7 @@ export default function Button(props: Props) {
         flex items-center justify-center gap-2
         ${disabled ? 'grayscale cursor-not-allowed' : ''}
         ${showProgress ? 'rounded-b-none' : ''}
-        
+
         ${className}
     `;
 
@@ -62,11 +63,11 @@ export default function Button(props: Props) {
                     <FontAwesomeIcon icon={icon} />
                 )}
                 {children}
-            
+
             </button>
             {showProgress && (
                 <div className='h-2 w-full bg-gray-300 rounded-b'>
-                    <div className="h-full bg-green-400 rounded-b" style={{ width: `${((progress ? progress : 0) * 33)}%` }}></div>
+                    <div className="h-full bg-green-400 rounded-b" style={{ width: `${progress * 100}%` }}></div>
                 </div>
             )}
         </div>

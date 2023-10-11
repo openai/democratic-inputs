@@ -25,7 +25,7 @@ const messageAnimation = {
 };
 
 export default function RoomChatSummary() {
-    const { lastBotMessages, lastParticipantMessages, participantId, roomId, outcomes } = useRoom();
+    const { lastBotMessages, lastParticipantMessages, participantId, participants, roomId, outcomes } = useRoom();
     const { actions } = useRoomActions();
     const [sendRoomMessage] = useSendRoomMessageMutation();
     const dispatch = useAppDispatch();
@@ -49,7 +49,12 @@ export default function RoomChatSummary() {
                         const { id: outcomeId } = outcome;
 
                         return (
-                            <RoomOutcome key={outcomeId} outcome={outcome} participantId={participantId} />
+                            <RoomOutcome
+                                key={outcomeId}
+                                outcome={outcome}
+                                participantId={participantId}
+                                participants={participants}
+                            />
                         );
                     })}
                 </AnimatePresence>

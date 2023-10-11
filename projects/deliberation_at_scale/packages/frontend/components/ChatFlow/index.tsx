@@ -32,7 +32,7 @@ export default function ChatFlow(props: Props) {
     const { _ } = useLingui();
     const defaultBotMessageTemplate: MessageTemplate = useMemo(() => {
         return {
-            name: _(msg`Moderator`),
+            name: _(msg`AI Moderator`),
             nameIcon: aiSolid,
             highlighted: true,
         } satisfies MessageTemplate;
