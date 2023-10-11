@@ -1,5 +1,5 @@
 "use client";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faHammer, faHandsHelping, faPaperPlane, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isEmpty } from "radash";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from "react";
@@ -9,6 +9,8 @@ import { UserInput } from "@/types/flows";
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/macro";
+import Button from "./Button";
+import toast from "react-hot-toast";
 
 const submitBgColorMap: Record<ThemeColors, string> = {
     'blue': 'bg-blue-500',
@@ -32,13 +34,15 @@ export interface ChatInputProps {
     onSubmit: (input: UserInput) => Promise<boolean>;
     disabled?: boolean;
     placeholder?: string;
+    helpAvailable?: boolean;
 }
 
 export default function ChatInput(props: ChatInputProps) {
     const { _ } = useLingui();
     const defaultPlaceholder = _(msg`Tap to type`);
-    const { onSubmit, disabled = false, placeholder = defaultPlaceholder} = props;
+    const { onSubmit, disabled = false, placeholder = defaultPlaceholder, helpAvailable} = props;
     const theme = useTheme();
+    const [helpMenu, setHelpMenu] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState('');
     const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
@@ -73,6 +77,25 @@ export default function ChatInput(props: ChatInputProps) {
         }
     }, [inputRef, disabled]);
 
+    async function fetchAdmin() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // you can resolve or reject here based on some condition
+                // for example, let's resolve the promise:
+                resolve("Facilitator available");
+            }, 1232);
+        });
+    }
+    async function fetchTechie() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // you can resolve or reject here based on some condition
+                // for example, let's resolve the promise:
+                resolve("No Technicians Available");
+            }, 3200);
+        });
+    }
+
     return(
         <motion.form
             layoutId="chat-input"
@@ -80,8 +103,89 @@ export default function ChatInput(props: ChatInputProps) {
             animate={{ opacity: 1 }}
             exit={{ y: 100 }}
             onSubmit={handleSubmit}
-            className={`relative z-10 ${disabled ? 'grayscale cursor-not-allowed' : ''}`}
+            className={`relative flex gap-2 z-10 ${disabled ? 'grayscale cursor-not-allowed' : ''}`}
         >
+            {helpAvailable && (
+                <div className="relative aspect-square group shrink-0 m-1"
+                    onMouseLeave={function (): void {
+                        setHelpMenu(false);
+                    }}>
+
+                    <motion.button
+                        type="button"
+                        className={`duration-300 h-full peer w-full peer rounded-full grow saturate-0 group-hover:saturate-100 transition-all text-white bg-red-300`}
+                        whileTap={{ scale: (disabled ? 1: 0.9) }}
+                        disabled={disabled}
+                        onClick={function (): void {
+                            // const preHelpMenu = helpMenu;
+                            setHelpMenu(!helpMenu);
+                            console.log(helpMenu);
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faUserPlus} />
+                    </motion.button>
+                    {helpMenu && (
+                        <motion.div className="absolute w-max z-50 hover:opacity-100 transition-opacity -translate-y-full top-0 text-black flex flex-col gap-1 pb-4">
+                            <Button className="p-2 shadow-xl" onClick={function (): void {
+                                const promiseAdmin = fetchAdmin();
+                                toast.promise(
+                                    promiseAdmin,
+                                    {
+                                        loading: 'Looking for facilitator',
+                                        success: () => `Facilitator on the way!`,
+                                        error: (err) => `This just happened: ${err.toString()}`,
+                                    },
+                                    {
+                                        style: {
+                                            minWidth: '250px',
+                                        },
+                                        success: {
+                                            duration: 5000,
+                                            icon: '🤙',
+                                        },
+                                        loading: {
+                                            duration: 5000,
+                                            icon: '👀',
+                                        },
+                                    }
+                                );
+                            } }>
+                                <FontAwesomeIcon icon={faHammer} />
+                            Call a Facilitator
+                            </Button>
+                            <Button className="p-2 shadow-xl" onClick={function (): void {
+                                const promiseAdmin = fetchTechie();
+                                toast.promise(
+                                    promiseAdmin,
+                                    {
+                                        loading: 'Looking for technician',
+                                        success: () => `Technician on the way!`,
+                                        error: (err) => `This just happened: ${err.toString()}`,
+                                    },
+                                    {
+                                        style: {
+                                            minWidth: '250px',
+                                        },
+                                        success: {
+                                            duration: 5000,
+                                            icon: '🏃‍♂️',
+                                        },
+                                        loading: {
+                                            duration: 5000,
+                                            icon: '👀',
+                                        },
+                                    }
+                                );
+                            } }>
+                                <FontAwesomeIcon icon={faHandsHelping} />
+                            Call a Technician
+                            </Button>
+                    
+                        </motion.div>
+                    )}
+                </div>
+            )}
+            
             <div className={`flex rounded-md border w-full bg-white focus-within:ring ${focusColorMap[theme]} ${hoverBorderMap[theme]}`}>
                 <input
                     ref={inputRef}
@@ -100,6 +204,7 @@ export default function ChatInput(props: ChatInputProps) {
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </motion.button>
             </div>
+            
         </motion.form>
     );
 }

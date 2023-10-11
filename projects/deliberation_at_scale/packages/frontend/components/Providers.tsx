@@ -9,6 +9,7 @@ import ConditionalRoomConnectionProvider from './RoomConnection/conditional';
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabaseClient } from '@/state/supabase';
+import { Toaster } from 'react-hot-toast';
 
 interface Props {
     children: React.ReactNode;
@@ -37,6 +38,7 @@ export default function Providers({ children }: Props) {
                 <ConditionalLocalMediaProvider>
                     <ConditionalRoomConnectionProvider>
                         {children}
+                        <Toaster position='bottom-center'/>
                     </ConditionalRoomConnectionProvider>
                 </ConditionalLocalMediaProvider>
             </ReduxProvider>

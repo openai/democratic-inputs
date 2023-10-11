@@ -60,6 +60,7 @@ export default function RoomChatMessages() {
                     return sendMessage(input.content);
                 }}
                 disabled={chatInputDisabled}
+                helpAvailable={true}
             />
         </div>
     );
