@@ -22,23 +22,32 @@ export default function LoginChatFlow() {
                 {
                     name: "greeting",
                     messageOptions: [[
-                        _(msg`Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute.`),
+                        _(msg`Hi, welcome back to Common Ground. We appreciate you taking the time to contribute.`),
                     ]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
                     name: "data_justification",
                     messageOptions: [[
-                        _(msg`In order for you to easily rejoin earlier conversations, we need your e-mail address for identification.`),
+                        _(msg`To join conversations again, we need your e-mail address once more.`),
                     ]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 askForEmailStep,
                 {
                     name: "thank_you",
-                    messageOptions: [[_(msg`Thank you! You will find an email with a login link in your inbox. After you click on this link, you will be redirected back to this application and ready to start finding common ground.`)]],
+                    messageOptions: [[
+                        _(msg`Thank you! You will find an email with a login link in your inbox. Be sure to check your SPAM folder as well!`),
+                    ]],
+                    timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+                },
+                {
+                    name: "thank_you_2",
+                    messageOptions: [[
+                        _(msg`After you click on this link, you will be redirected back to this application and ready to start finding common ground.`),
+                    ]],
                     quickReplies: [resetQuickReply],
-                }
+                },
             ]
         } satisfies ChatFlowConfig;
     }, [_, askForEmailStep, resetQuickReply]);

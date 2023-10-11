@@ -14,7 +14,7 @@ export default function IdleChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[_(msg`Hi there [nickName]. You have been idle for a while. Would you like to still join a room?`)]],
+                    messageOptions: [[_(msg`Hello [nickName]. You have been idle for a while. Would you still like to join a conversation?`)]],
                     quickReplies: [
                         {
                             id: 'retry',
@@ -29,7 +29,7 @@ export default function IdleChatFlow() {
                         {
                             id: 'home',
                             icon: faHomeAlt,
-                            content: _(msg`Go back to home page`),
+                            content: _(msg`Go back to profile page`),
                             onClick: async (helpers) => {
                                 helpers.goToPage('/proifle');
                             },
