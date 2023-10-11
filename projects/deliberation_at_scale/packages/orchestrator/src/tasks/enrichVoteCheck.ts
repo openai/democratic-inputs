@@ -288,12 +288,16 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     }
 
     // fetching all opinions to see what the votes look like
-    const { data: opinions } = await supabaseClient
+    const { data: allOpinions } = await supabaseClient
         .from('opinions')
         .select()
         .eq('outcome_id', latestOutcomeId)
         .in('participant_id', participantIds)
         .order('created_at', { ascending: false });
+    const opinions = unique(allOpinions ?? [], (opinion) => {
+        const { outcome_id, participant_id } = opinion;
+        return `${outcome_id}-${participant_id}`;
+    });
     const hasEveryoneVoted = getHasEveryoneVoted({ opinions, participantIds });
     const hasEveryoneVotedTheSame = getHasEveryoneVotedTheSame({ opinions });
 
