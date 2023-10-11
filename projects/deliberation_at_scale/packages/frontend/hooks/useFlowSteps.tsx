@@ -13,7 +13,7 @@ export default function useFlowSteps() {
             onInput: async (input, helpers) => {
                 const { content } = input;
                 // eslint-disable-next-line no-useless-escape
-                const isEmailAddress = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(content);
+                const isEmailAddress = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,100})+$/.test(content);
 
                 helpers.postUserMessages([[content]]);
                 await helpers.waitFor(1000);
