@@ -86,15 +86,16 @@ export default function RoomOutcome(props: Props) {
     return (
         <motion.div
             layoutId={outcomeId}
-            className="py-4 gap-4 flex flex-col items-start"
+            className="gap-2 md:gap-4 flex flex-col items-start"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
         >
-            <Pill icon={statementSolid} className="border-black">{title}</Pill>
+            <Pill icon={statementSolid} className="border-black hidden md:inline-flex">{title}</Pill>
+            <span className="md:hidden font-bold">{title}:</span>
             <ReactMarkdown>{formattedContent}</ReactMarkdown>
             {hasOpinionOptions && (
                 <div className={classNames(
-                    "flex gap-2 w-full flex-wrap",
+                    "flex gap-1 md:gap-2 w-full flex-wrap",
                     variant === "compact" && "flex-row",
                     variant === "spacious" && "flex-col",
                     variant === "spacious" && "flex-col"

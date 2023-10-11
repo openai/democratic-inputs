@@ -18,7 +18,7 @@ export default function LatestRoomOutcome() {
                 {hasOutcome && (
                     <motion.div
                         exit={{ opacity: 0, y: -40 }}
-                        className='mx-2 md:mx-4 my-2 p-4 border shadow rounded'
+                        className='mt-1 md:mx-4 p-2 md:p-4 border z-50 rounded'
                     >
                         <RoomOutcome variant="compact" key={outcomeId} outcome={lastOutcome} participantId={participantId} />
                     </motion.div>

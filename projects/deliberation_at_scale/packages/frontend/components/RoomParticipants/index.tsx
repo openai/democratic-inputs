@@ -38,7 +38,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
             <div
                 className={classNames(
                     "flex",
-                    variant === 'compact' && 'h-[30vh] bg-gray-100 overflow-hidden border md:mx-4 gap-1 mx-1',
+                    variant === 'compact' && 'h-[20vh] md:h-[30vh] bg-gray-100 overflow-hidden border md:mx-4 gap-1 md:mx-1',
                     variant === 'spacious' && 'h-[40vh] relative',
                 )}
             >
@@ -89,7 +89,7 @@ export default function RoomParticipants({ variant }: ParticipantsProps) {
             <motion.div
                 className={classNames(
                     "flex justify-center gap-2 absolute w-1/5 bottom-0 z-20",
-                    variant === 'compact' && 'aspect-[3/4] left-1/2 translate-x-[-50%] mb-[-12px]',
+                    variant === 'compact' && 'aspect-square right-2 mb-[-12px]',
                     variant === 'spacious' && 'aspect-square right-2',
                 )}
                 variants={defaultFadeInVariants}

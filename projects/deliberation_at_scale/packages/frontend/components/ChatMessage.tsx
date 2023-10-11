@@ -53,13 +53,13 @@ export default function ChatMessage(props: Props) {
     const isToday = parsedDate.isSame(dayjs(), 'day');
     const formattedDate = dayjs(date).format(isToday ? 'HH:mm' : 'DD/MM/YYYY HH:mm');
     const wrapperClassName = classNames(
-        `flex flex-col gap-2 width-full rounded transition-colors duration-1000 group`,
-        enablePadding && (highlighted ? 'p-4' : 'px-4 pt-2'),
+        `flex flex-col gap-1 md:gap-2 first:mt-4 -z-10 rounded transition-colors duration-1000 group shrink-1`,
+        enablePadding && (highlighted ? 'p-[7px] pl-[8px] md:p-4' : 'px-[8px] md:px-4 pt-[5px] md:pt-2'),
         highlighted && highlightedBgColorMap[theme],
         first && 'rounded-t-xl',
-        first && !highlighted && 'pt-4',
+        first && !highlighted && 'pt-[7px] md:pt-4',
         last && 'rounded-br-xl',
-        last && !highlighted && 'pb-4',
+        last && !highlighted && 'pb-[7px] md:pb-4',
         className
     );
     const variants = {
