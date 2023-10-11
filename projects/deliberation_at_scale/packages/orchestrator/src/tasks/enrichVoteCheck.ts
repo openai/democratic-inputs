@@ -9,7 +9,7 @@ import { Opinion, OpinionOptionType, Participant, supabaseClient } from "../lib/
 import { draw, flat, unique } from "radash";
 import { createVerificationFunctionCompletion } from "../lib/openai";
 import { waitFor } from "../utilities/time";
-import { getRoomById } from "../utilities/rooms";
+import { getRoomById, updateRoomStatus } from "../utilities/rooms";
 
 // Time constants
 const TIME_MULTIPLIER = IS_DEVELOPMENT ? 1 : 1;
@@ -124,6 +124,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     const shouldInviteOpenDiscussion = timeSinceLatestOutcome > INVITE_OPEN_DISCUSSION_AFTER_MS;
     const shouldInviteToPass = timeSinceLatestOutcome > INVITE_PASS_AFTER_MS;
     const shouldTimeoutVote = timeSinceLatestOutcome > TIMEOUT_VOTE_AFTER_MS;
+    const shouldTimeoutConversation = timeSinceRoomStartedMs > TIMEOUT_CONVSERSATION_AFTER_MS;
 
     // contribution helpers
     const contributingParticipantIds = unique(latestOutcomeMessages.map((message) => message.participant_id)).filter((id) => id !== null) as string[];
@@ -178,6 +179,21 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
 
         await sendBotMessage(options);
     };
+
+    // guard: timeout the conversation when taking too long
+    if (shouldTimeoutConversation) {
+        await attemptSendBotMessage({
+            roomId,
+            content: getTimeoutConversationMessageContent(),
+            force: true,
+        });
+        await updateRoomStatus({
+            roomId,
+            roomStatus: 'end',
+            helpers,
+        });
+        return;
+    }
 
     // always notify the participants of the timekeeping
     TIMEKEEPING_MOMENTS.forEach((timekeepingTimeMs) => {
@@ -248,15 +264,6 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         });
         return;
     }
-
-    // invite the participants to pass this outcome
-    // if (shouldInviteToPass) {
-    //     await attemptSendBotMessage({
-    //         roomId,
-    //         content: getInviteToPassMessageContent(),
-    //         tags: 'invite-to-pass',
-    //     });
-    // }
 
     // check if we should moderate the open discussion a bit when it all takes too long
     if (shouldInviteOpenDiscussion || shouldInviteToPass) {
@@ -425,7 +432,8 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
     }
 
     helpers.logger.info(`Sending new cross pollination for room ${roomId} with outcome ${candidateOutcomeId} and content ${candidateOutcomeContent}...`);
-    // NOTE: not an attempt!
+
+    // NOTE: force this one because it is an important message
     await attemptSendBotMessage({
         roomId,
         content: getNewCrossPollinationMessageContent(candidateOutcomeContent),
@@ -459,12 +467,6 @@ function getVoteInviteMessageContent(): string {
         'Once everyone has voted, a new statement will be shared.',
     ]) ?? '';
 }
-
-// function getInviteToPassMessageContent(): string {
-//     return draw([
-//         'It looks like the discussion it taking a bit longer. You can also decide to pass on this statement and find a new one to discuss.',
-//     ]) ?? '';
-// }
 
 // DONE
 function getNotEveryoneVotedTheSameMessageContent(): string {
@@ -513,5 +515,11 @@ function getTimeKeepingMessageContent(timeMs: number): string {
 function getTimeoutVoteMessageContent(): string {
     return draw([
         `I've been instructed to introduce a new statement after ${TIMEOUT_VOTE_AFTER_MS / ONE_MINUTE_MS} minutes. So here is a new statement!`,
+    ]) ?? '';
+}
+
+function getTimeoutConversationMessageContent(): string {
+    return draw([
+        `I've been instructed to introduce a new statement after ${TIMEOUT_CONVSERSATION_AFTER_MS / ONE_MINUTE_MS} minutes. So we unfortunately need to stop this conversation!`,
     ]) ?? '';
 }
