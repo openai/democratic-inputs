@@ -56,11 +56,21 @@ export default function useRoom(options?: UseRoomOptions) {
         autoRefetch: !!roomId,
         autoRefetchIntervalMs: ONE_SECOND_MS * 10,
     });
+    const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
+    const participantIds = participants?.map(participant => participant.id);
     const { data: outcomesData } = useRealtimeQuery(useGetRoomOutcomesQuery({
         variables: {
             roomId,
         },
-    }));
+    }), {
+        tableEventsLookup: {
+            opinions: {
+                listenFilters: {
+                    INSERT: `participant_id=in.(${participantIds?.join(',')})`,
+                }
+            },
+        },
+    });
     const { user } = useProfile();
     const userId = user?.id;
     const roomNode = roomData?.roomsCollection?.edges?.find((roomEdge) => {
@@ -69,7 +79,6 @@ export default function useRoom(options?: UseRoomOptions) {
     const room = roomNode?.node;
     const roomStatus = room?.status_type;
     const externalRoomId = ENABLE_TEST_ROOM ? TEST_EXTERNAL_ROOM_ID : room?.external_room_id;
-    const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
     const departedParticipants = participants?.filter(participant => participant.status === ParticipantStatusType.EndOfSession) ?? [];
     const joiningParticipants = participants?.filter(participant => participant.status === ParticipantStatusType.WaitingForConfirmation) ?? [];
     const participant = participants?.find(participant => participant.user_id === userId);

@@ -2421,18 +2421,6 @@ export type FullOutcomeFragment = { __typename?: 'outcomes', id: any, active: bo
 
 export type FullParticipantFragment = { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any };
 
-export type ChangeOpinionMutationVariables = Exact<{
-  outcomeId?: InputMaybe<Scalars['UUID']['input']>;
-  participantId: Scalars['UUID']['input'];
-  type: OpinionType;
-  rangeValue?: InputMaybe<Scalars['Int']['input']>;
-  statement?: InputMaybe<Scalars['String']['input']>;
-  optionType?: InputMaybe<OpinionOptionType>;
-}>;
-
-
-export type ChangeOpinionMutation = { __typename?: 'Mutation', updateopinionsCollection: { __typename?: 'opinionsUpdateResponse', affectedCount: number, records: Array<{ __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any }> } };
-
 export type CreateOpinionMutationVariables = Exact<{
   outcomeId?: InputMaybe<Scalars['UUID']['input']>;
   participantId: Scalars['UUID']['input'];
@@ -2466,20 +2454,6 @@ export type GetLobbyParticipantsQueryVariables = Exact<{
 
 
 export type GetLobbyParticipantsQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any } }> } | null };
-
-export type GetParticipantsFromUserQueryVariables = Exact<{
-  authUserId: Scalars['UUID']['input'];
-}>;
-
-
-export type GetParticipantsFromUserQuery = { __typename?: 'Query', usersCollection?: { __typename?: 'usersConnection', edges: Array<{ __typename?: 'usersEdge', node: { __typename?: 'users', id: any, active: boolean, nick_name: string, demographics: any, auth_user_id?: any | null, updated_at: any, created_at: any, participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any } }> } | null } }> } | null };
-
-export type GetRoomIdFromParticipantQueryVariables = Exact<{
-  participantID: Scalars['UUID']['input'];
-}>;
-
-
-export type GetRoomIdFromParticipantQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', room_id?: any | null } }> } | null };
 
 export type RoomMessageFragment = { __typename?: 'messages', id: any, active: boolean, type: MessageType, timing_type: TimingType, visibility_type: VisibilityType, content: string, participant_id?: any | null, room_id?: any | null, room_status_type?: RoomStatusType | null, easy_language?: boolean | null, safe_language?: boolean | null, created_at: any };
 
@@ -2599,7 +2573,10 @@ export const FullOutcomeFragmentDoc = gql`
   content
   created_at
   updated_at
-  opinionsCollection(orderBy: {created_at: DescNullsLast}) {
+  opinionsCollection(
+    orderBy: {created_at: DescNullsLast}
+    filter: {active: {eq: true}}
+  ) {
     edges {
       node {
         ...FullOpinion
@@ -2695,51 +2672,6 @@ export const FullUserFragmentDoc = gql`
   created_at
 }
     `;
-export const ChangeOpinionDocument = gql`
-    mutation ChangeOpinion($outcomeId: UUID, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
-  updateopinionsCollection(
-    filter: {outcome_id: {eq: $outcomeId}, participant_id: {eq: $participantId}}
-    set: {type: $type, range_value: $rangeValue, statement: $statement, option_type: $optionType}
-    atMost: 1
-  ) {
-    affectedCount
-    records {
-      ...FullOpinion
-    }
-  }
-}
-    ${FullOpinionFragmentDoc}`;
-export type ChangeOpinionMutationFn = Apollo.MutationFunction<ChangeOpinionMutation, ChangeOpinionMutationVariables>;
-
-/**
- * __useChangeOpinionMutation__
- *
- * To run a mutation, you first call `useChangeOpinionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useChangeOpinionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [changeOpinionMutation, { data, loading, error }] = useChangeOpinionMutation({
- *   variables: {
- *      outcomeId: // value for 'outcomeId'
- *      participantId: // value for 'participantId'
- *      type: // value for 'type'
- *      rangeValue: // value for 'rangeValue'
- *      statement: // value for 'statement'
- *      optionType: // value for 'optionType'
- *   },
- * });
- */
-export function useChangeOpinionMutation(baseOptions?: Apollo.MutationHookOptions<ChangeOpinionMutation, ChangeOpinionMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ChangeOpinionMutation, ChangeOpinionMutationVariables>(ChangeOpinionDocument, options);
-      }
-export type ChangeOpinionMutationHookResult = ReturnType<typeof useChangeOpinionMutation>;
-export type ChangeOpinionMutationResult = Apollo.MutationResult<ChangeOpinionMutation>;
-export type ChangeOpinionMutationOptions = Apollo.BaseMutationOptions<ChangeOpinionMutation, ChangeOpinionMutationVariables>;
 export const CreateOpinionDocument = gql`
     mutation CreateOpinion($outcomeId: UUID, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
   insertIntoopinionsCollection(
@@ -2904,92 +2836,6 @@ export function useGetLobbyParticipantsLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetLobbyParticipantsQueryHookResult = ReturnType<typeof useGetLobbyParticipantsQuery>;
 export type GetLobbyParticipantsLazyQueryHookResult = ReturnType<typeof useGetLobbyParticipantsLazyQuery>;
 export type GetLobbyParticipantsQueryResult = Apollo.QueryResult<GetLobbyParticipantsQuery, GetLobbyParticipantsQueryVariables>;
-export const GetParticipantsFromUserDocument = gql`
-    query GetParticipantsFromUser($authUserId: UUID!) {
-  usersCollection(filter: {auth_user_id: {eq: $authUserId}}) {
-    edges {
-      node {
-        ...FullUser
-        participantsCollection {
-          edges {
-            node {
-              ...FullParticipant
-            }
-          }
-        }
-      }
-    }
-  }
-}
-    ${FullUserFragmentDoc}
-${FullParticipantFragmentDoc}`;
-
-/**
- * __useGetParticipantsFromUserQuery__
- *
- * To run a query within a React component, call `useGetParticipantsFromUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetParticipantsFromUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetParticipantsFromUserQuery({
- *   variables: {
- *      authUserId: // value for 'authUserId'
- *   },
- * });
- */
-export function useGetParticipantsFromUserQuery(baseOptions: Apollo.QueryHookOptions<GetParticipantsFromUserQuery, GetParticipantsFromUserQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetParticipantsFromUserQuery, GetParticipantsFromUserQueryVariables>(GetParticipantsFromUserDocument, options);
-      }
-export function useGetParticipantsFromUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetParticipantsFromUserQuery, GetParticipantsFromUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetParticipantsFromUserQuery, GetParticipantsFromUserQueryVariables>(GetParticipantsFromUserDocument, options);
-        }
-export type GetParticipantsFromUserQueryHookResult = ReturnType<typeof useGetParticipantsFromUserQuery>;
-export type GetParticipantsFromUserLazyQueryHookResult = ReturnType<typeof useGetParticipantsFromUserLazyQuery>;
-export type GetParticipantsFromUserQueryResult = Apollo.QueryResult<GetParticipantsFromUserQuery, GetParticipantsFromUserQueryVariables>;
-export const GetRoomIdFromParticipantDocument = gql`
-    query GetRoomIdFromParticipant($participantID: UUID!) {
-  participantsCollection(filter: {id: {eq: $participantID}}, first: 1) {
-    edges {
-      node {
-        room_id
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetRoomIdFromParticipantQuery__
- *
- * To run a query within a React component, call `useGetRoomIdFromParticipantQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetRoomIdFromParticipantQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetRoomIdFromParticipantQuery({
- *   variables: {
- *      participantID: // value for 'participantID'
- *   },
- * });
- */
-export function useGetRoomIdFromParticipantQuery(baseOptions: Apollo.QueryHookOptions<GetRoomIdFromParticipantQuery, GetRoomIdFromParticipantQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetRoomIdFromParticipantQuery, GetRoomIdFromParticipantQueryVariables>(GetRoomIdFromParticipantDocument, options);
-      }
-export function useGetRoomIdFromParticipantLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRoomIdFromParticipantQuery, GetRoomIdFromParticipantQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetRoomIdFromParticipantQuery, GetRoomIdFromParticipantQueryVariables>(GetRoomIdFromParticipantDocument, options);
-        }
-export type GetRoomIdFromParticipantQueryHookResult = ReturnType<typeof useGetRoomIdFromParticipantQuery>;
-export type GetRoomIdFromParticipantLazyQueryHookResult = ReturnType<typeof useGetRoomIdFromParticipantLazyQuery>;
-export type GetRoomIdFromParticipantQueryResult = Apollo.QueryResult<GetRoomIdFromParticipantQuery, GetRoomIdFromParticipantQueryVariables>;
 export const GetRoomMessagesDocument = gql`
     query GetRoomMessages($roomId: UUID, $botMessageHistoryAmount: Int!, $participantMessageHistoryAmount: Int!) {
   messagesCollection(

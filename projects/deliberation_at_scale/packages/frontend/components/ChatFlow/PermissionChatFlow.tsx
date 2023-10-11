@@ -124,7 +124,7 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: `waiting_for_room_2`,
-                    messageOptions: [[_(msg`Waiting for two other participants...`)]],
+                    messageOptions: [[_(msg`Waiting for other participants...`)]],
                     timeoutMs: ONE_SECOND_MS * 5,
                     quickReplies: [
                         cancelWaitingForRoomQuickReply,

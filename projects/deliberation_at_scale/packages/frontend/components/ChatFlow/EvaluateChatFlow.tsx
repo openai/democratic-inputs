@@ -8,12 +8,12 @@ import { DEFAULT_BOT_MESSAGE_SPEED_MS } from "@/utilities/constants";
 import { useCallback, useMemo } from "react";
 import useRoom from "@/hooks/useRoom";
 import { OpinionOptionType, OpinionType, OutcomeType } from "@/generated/graphql";
-import useUpsertOpinion, { SetOpinionOptions } from "@/hooks/useUpsertOpinion";
+import useGiveOpinion, { SetOpinionOptions } from "@/hooks/useGiveOpinion";
 
 export default function EvaluateChatFlow() {
     const { _ } = useLingui();
     const { outcomes, participantId, getOutcomeByType, hasOutcomeType } = useRoom();
-    const { setOpinion } = useUpsertOpinion({ subjects: outcomes, participantId });
+    const { setOpinion } = useGiveOpinion({ subjects: outcomes, participantId });
     const handleOpinionClick = useCallback(async (helpers: OnInputHelpers, outcomeType: OutcomeType.OverallImpression, options: Omit<SetOpinionOptions, 'subjectId'>) => {
         const outcome = getOutcomeByType(outcomeType);
         const { id: outcomeId } = outcome ?? {};

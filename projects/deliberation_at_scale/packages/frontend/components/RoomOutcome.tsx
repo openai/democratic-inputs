@@ -6,13 +6,13 @@ import { msg } from "@lingui/macro";
 
 import { statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
-import { FullOutcomeFragment, FullParticipantFragment, OpinionOptionType, OpinionType, OutcomeType, RoomParticipantFragment } from '@/generated/graphql';
+import { FullOutcomeFragment, OpinionOptionType, OpinionType, OutcomeType, RoomParticipantFragment } from '@/generated/graphql';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useMemo, useState } from 'react';
 import Button from './Button';
 import { DISABLE_OPINION_INPUT_WHEN_TIMED_OUT, OUTCOME_OPINION_TIMEOUT_MS_LOOKUP } from '@/utilities/constants';
 import TimeProgressBar from './TimeProgressBar';
-import useUpsertOpinion from '@/hooks/useUpsertOpinion';
+import useGiveOpinion from '@/hooks/useGiveOpinion';
 import { useLingui } from '@lingui/react';
 import classNames from 'classnames';
 
@@ -33,7 +33,7 @@ export default function RoomOutcome(props: Props) {
     const { _ } = useLingui();
     const { outcome, participantId, participants, variant } = props;
     const { id: outcomeId, content = '', type } = outcome ?? {};
-    const { isGivingOpinion, setOpinion, getExistingOpinion, getGroupOpinions } = useUpsertOpinion({ subjects: [outcome], participantId });
+    const { isGivingOpinion, setOpinion, getExistingOpinion, getGroupOpinions } = useGiveOpinion({ subjects: [outcome], participantId });
     const existingOpinion = getExistingOpinion(outcomeId);
     const groupOpinions = getGroupOpinions(outcomeId);
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
