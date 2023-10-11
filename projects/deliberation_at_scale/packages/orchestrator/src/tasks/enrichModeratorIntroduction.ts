@@ -1,10 +1,11 @@
 import { ModeratorTaskTuple, sendHardCodedEnrichMessage } from "../utilities/tasks";
 import { BaseProgressionWorkerTaskPayload } from "../types";
 import { Helpers } from "graphile-worker";
+import { t } from "@lingui/macro";
 
 export default async function enrichModeratorIntroduction(payload: BaseProgressionWorkerTaskPayload, helpers: Helpers): Promise<ModeratorTaskTuple> {
     const contentOptions = [
-        `
+        t`
         Hi! My role is to moderate your conversation.
         Shall we start by taking a brief moment for introductions?
         Perhaps share your name and why this conversation interests you.
