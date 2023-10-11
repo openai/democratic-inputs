@@ -1,5 +1,5 @@
 "use client";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { faUser as profileIcon, faPenToSquare as registerIcon, faHandPointRight as loginIcon } from "@fortawesome/free-regular-svg-icons";
 import { motion } from "framer-motion";
 
@@ -18,6 +18,12 @@ export default function Index() {
     const goToLogin = useCallback(() => push('/login'), [push]);
     const goToProfile = useCallback(() => push('/profile'), [push]);
     const logout = useCallback(() => supabaseClient.auth.signOut(), []);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            goToProfile();
+        }
+    }, [isLoggedIn, goToProfile]);
 
     return (
         <section id="main-scroll-container" className="p-2 flex flex-col gap-3 overflow-y-scroll pt-24">
