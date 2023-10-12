@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { UserInput } from "@/types/flows";
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
 import { useLingui } from "@lingui/react";
-import { msg } from "@lingui/macro";
+import { Trans, msg } from "@lingui/macro";
 import Button from "./Button";
 import toast from "react-hot-toast";
 import useIsMobile from "@/hooks/useIsMobile";
@@ -127,9 +127,9 @@ export default function ChatInput(props: ChatInputProps) {
                                 toast.promise(
                                     promiseAdmin,
                                     {
-                                        loading: 'Looking for facilitator',
-                                        success: () => `Facilitator on the way!`,
-                                        error: (err) => `This just happened: ${err.toString()}`,
+                                        loading: _(msg`Looking for facilitator`),
+                                        success: () => _(msg`Facilitator on the way!`),
+                                        error: (err) => _(msg`This just happened: ${err.toString()}`),
                                     },
                                     {
                                         style: {
@@ -146,17 +146,17 @@ export default function ChatInput(props: ChatInputProps) {
                                     }
                                 );
                             } }>
-                            <FontAwesomeIcon icon={faHammer} />
-                            Call a Facilitator
+                                <FontAwesomeIcon icon={faHammer} />
+                                <Trans>Call a Facilitator</Trans>
                             </Button>
                             <Button className="p-2 shadow-xl" onClick={function (): void {
                                 const promiseAdmin = fetchHelp(HelpRequestType.Technician);
                                 toast.promise(
                                     promiseAdmin,
                                     {
-                                        loading: 'Looking for technician',
-                                        success: () => `Technician on the way!`,
-                                        error: (err) => `This just happened: ${err.toString()}`,
+                                        loading: _(msg`Looking for technician`),
+                                        success: () => _(msg`Technician on the way!`),
+                                        error: (err) => _(msg`This just happened: ${err.toString()}`),
                                     },
                                     {
                                         style: {
@@ -174,7 +174,7 @@ export default function ChatInput(props: ChatInputProps) {
                                 );
                             } }>
                                 <FontAwesomeIcon icon={faHandsHelping} />
-                            Call a Technician
+                                <Trans>Call a Technician</Trans>
                             </Button>
 
                         </motion.div>
