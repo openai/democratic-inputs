@@ -427,11 +427,14 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
     const room = await getRoomById(roomId);
     const outcomes = await getOutcomesByRoomId(roomId);
     const skippedOutcomeIds = flat(outcomes?.map((outcome) => [outcome.id, outcome.original_outcome_id]) ?? []);
+    // TODO: filter on topic_id, this field is currently not populated.
     const { data: candidateOutcomes } = await supabaseClient
         .from('outcomes')
         .select()
         .not('id', 'in', `(${skippedOutcomeIds.join(',')})`)
-        .limit(100);
+        .in('type', ['milestone', 'consensus'])
+        .eq('active', true)
+        .limit(200);
     const candidateOutcome = draw(candidateOutcomes ?? []);
     const candidateOutcomeId = candidateOutcome?.id;
     const candidateOutcomeContent = candidateOutcome?.content;
