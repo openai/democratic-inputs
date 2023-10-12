@@ -118,11 +118,6 @@ msgstr "Go back to the profile page"
 msgid "Go to voting"
 msgstr "Go to voting"
 
-#: components/ChatFlow/LobbyChatFlow.tsx:42
-#: components/ChatFlow/LobbyChatFlow.tsx:50
-msgid "Great, your nickname will be \"[nickName]\"."
-msgstr "Great, your nickname will be \"[nickName]\"."
-
 #: components/ChatFlow/ProfileChatFlow.tsx:55
 msgid "Great! Moving you to the waiting lobby... Hold on tight!"
 msgstr "Great! Moving you to the waiting lobby... Hold on tight!"
@@ -222,6 +217,11 @@ msgstr "Off Topic"
 #: components/ChatFlow/PermissionChatFlow.tsx:44
 msgid "Okay, cancelling..."
 msgstr "Okay, cancelling..."
+
+#: components/ChatFlow/LobbyChatFlow.tsx:42
+#: components/ChatFlow/LobbyChatFlow.tsx:50
+msgid "Okay, your nickname will be \"[nickName]\"."
+msgstr "Okay, your nickname will be \"[nickName]\"."
 
 #: components/ChatFlow/IdleChatFlow.tsx:24
 msgid "Okay! Moving you to the lobby."

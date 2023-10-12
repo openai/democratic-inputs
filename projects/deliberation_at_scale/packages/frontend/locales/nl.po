@@ -118,11 +118,6 @@ msgstr "Terug naar de profielpagina"
 msgid "Go to voting"
 msgstr "Ga naar stemmen"
 
-#: components/ChatFlow/LobbyChatFlow.tsx:42
-#: components/ChatFlow/LobbyChatFlow.tsx:50
-msgid "Great, your nickname will be \"[nickName]\"."
-msgstr "Top, je bijnaam is nu  \"[nickName]\"."
-
 #: components/ChatFlow/ProfileChatFlow.tsx:55
 msgid "Great! Moving you to the waiting lobby... Hold on tight!"
 msgstr "Top! We verplaatsen je naar de wachtruimte... Even geduld!"
@@ -223,13 +218,18 @@ msgstr "Niet relevant"
 msgid "Okay, cancelling..."
 msgstr "Oké, annuleren..."
 
+#: components/ChatFlow/LobbyChatFlow.tsx:42
+#: components/ChatFlow/LobbyChatFlow.tsx:50
+msgid "Okay, your nickname will be \"[nickName]\"."
+msgstr "Oké, je bijnaam zal \"[nickName]\" zijn."
+
 #: components/ChatFlow/IdleChatFlow.tsx:24
 msgid "Okay! Moving you to the lobby."
 msgstr "Oké! We verplaatsen je naar de wachtruimte."
 
 #: components/ChatFlow/ProfileChatFlow.tsx:53
 msgid "Participate in a new conversation"
-msgstr ""
+msgstr "Draag bij aan een nieuw gesprek"
 
 #: components/RoomOutcome.tsx:72
 msgid "Pass"
@@ -237,11 +237,11 @@ msgstr "Overslaan"
 
 #: components/ChatFlow/ProfileChatFlow.tsx:43
 msgid "Rejoin your last conversation"
-msgstr ""
+msgstr "Ga terug naar je laatste gesprek"
 
 #: components/ChatFlow/ProfileChatFlow.tsx:45
 msgid "Rejoining your last conversation..."
-msgstr ""
+msgstr "Je laatste gesprek wordt geladen..."
 
 #: components/ChatFlow/InvalidChatFlow.tsx:22
 msgid "Retry joining a room"
