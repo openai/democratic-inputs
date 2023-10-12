@@ -146,8 +146,8 @@ export default function ChatInput(props: ChatInputProps) {
                                     }
                                 );
                             } }>
-                            <FontAwesomeIcon icon={faHammer} />
-                            Call a Facilitator
+                                <FontAwesomeIcon icon={faHandsHelping} />
+                                Call a Facilitator
                             </Button>
                             <Button className="p-2 shadow-xl" onClick={function (): void {
                                 const promiseAdmin = fetchHelp(HelpRequestType.Technician);
@@ -173,8 +173,8 @@ export default function ChatInput(props: ChatInputProps) {
                                     }
                                 );
                             } }>
-                                <FontAwesomeIcon icon={faHandsHelping} />
-                            Call a Technician
+                                <FontAwesomeIcon icon={faHammer} />
+                                Call a Technician
                             </Button>
 
                         </motion.div>
