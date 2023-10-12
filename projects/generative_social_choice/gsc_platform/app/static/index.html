@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Study on Chatbot Personalization</title>
+    <link href="/static/style.css" rel="stylesheet">
+    <script src="/static/script.js" typename="text/javascript"></script>
+</head>
+<body>
+<div id="outercontainer">
+    <div id="animationcontainer">
+        <form id="form" class="loading">
+            <h2>Study on Chatbot Personalization</h2>
+            <input hidden id="user_id" name="user_id" required>
+            <input hidden id="experiment" name="experiment" required>
+            <input hidden id="step" name="step" required>
+            <div id="question"></div>
+            <fieldset id="buttons"></fieldset>
+            <textarea id="answer" name="answer" cols="30" rows="10"></textarea>
+            <span id="submit">
+                <small id="answerentertext">To submit, hit enter or press button.</small> <input id="submitbutton" type="submit" value="Submit">
+            </span>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    document.getElementById('form').addEventListener('submit', function (e) {
+        submitAnswer(e);
+    });
+    document.getElementById('answer').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            if (e.altKey || e.shiftKey) {
+                const answer = document.getElementById("answer");
+                answer.value = answer.value + "\n";
+            } else {
+                submitAnswer(e);
+            }
+        }
+    });
+    getQuestion();
+</script>
+</html>

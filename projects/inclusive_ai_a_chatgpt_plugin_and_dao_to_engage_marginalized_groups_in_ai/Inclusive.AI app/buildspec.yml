@@ -1,0 +1,41 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - cd server
+      - npm install -g yarn typescript
+      - yarn install
+  build:
+    commands:
+      - yarn build
+  post_build:
+    commands:
+      - cd ../
+      - mkdir ./staging
+      - cp -r ./server/dist ./staging
+      - cp ./server/yarn.lock ./staging
+      - cp ./server/package.json ./staging
+      - cp -r ./server/.platform ./staging
+        #- cp -r .ebextensions ./staging
+
+artifacts:
+  files:
+    - yarn.lock
+    - package.json
+    - 'dist/**/*'
+    - '.platform/**/*' # AWS Elastic Beanstalk configuration files
+    - '.ebextensions/**/*' # AWS Elastic Beanstalk configuration files
+  base-directory: staging
+  discard-paths: no
+
+option_settings:
+  aws:elasticbeanstalk:environment:proxy:
+    ProxyServer: nginx
+
+# option_settings:
+#   - namespace:  aws:elasticbeanstalk:application:environment
+#     option_name:  PORT
+#     value: 8080
