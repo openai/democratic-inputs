@@ -73,7 +73,7 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
         await sendBotMessage({
             roomId,
             content: t`
-                Who wants to start?
+                Who wants to start sharing their thoughts about this conversation?
             `,
         });
 

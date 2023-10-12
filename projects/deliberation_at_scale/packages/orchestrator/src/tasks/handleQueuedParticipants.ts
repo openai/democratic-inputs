@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { draw, shuffle } from 'radash';
+import { draw, shuffle, unique } from 'radash';
 import { Helpers } from "graphile-worker";
 
 import { supabaseClient } from "../lib/supabase";
@@ -20,6 +20,7 @@ export interface HandleQueuedParticipantsPayload {
 // this should be linked to the other groups effort which have the Python script for assigning good groups
 export default async function handleQueuedParticipants(payload: HandleQueuedParticipantsPayload, helpers: Helpers) {
     try {
+        await deactivateDuplicateParticipants(helpers);
         await deactivateInactiveParticipants(helpers);
         await deactivateExpiredRooms(helpers);
         await performDynamicGroupSlicing(helpers);
@@ -43,6 +44,43 @@ export default async function handleQueuedParticipants(payload: HandleQueuedPart
 }
 
 /**
+ * Deactivate duplicate queued or waiting participants for a specific user
+ */
+async function deactivateDuplicateParticipants(helpers: Helpers) {
+    const { data: waitingParticipants, error } = await supabaseClient
+        .from("participants")
+        .select()
+        .in('status', ["queued", "waiting_for_confirmation"])
+        .eq("active", true)
+        .order("created_at", { ascending: false })
+        .select();
+
+    if (error) {
+        helpers.logger.error(`An error occured when deactivating queued participants: ${JSON.stringify(error)}`);
+        return;
+    }
+
+    if (waitingParticipants.length <= 0) {
+        helpers.logger.info(`No waiting participants were deactivated.`);
+        return;
+    }
+
+    const firstParticipantsIds = unique(waitingParticipants, (participant) => {
+        return participant.user_id ?? '';
+    }).map((participant) => participant.id);
+    const deactivatedParticipantIds = waitingParticipants.filter((participant) => {
+        return !firstParticipantsIds.includes(participant.id);
+    }).map((participant) => participant.id);
+    const { data: deactivatedParticipants } = await supabaseClient
+        .from("participants")
+        .update({ active: false })
+        .in('id', deactivatedParticipantIds)
+        .select();
+
+    helpers.logger.info(`Deactivated ${deactivatedParticipants?.length} waiting participants.`);
+}
+
+/**
  * Deactivate participants that have not pinged in a while
  */
 async function deactivateInactiveParticipants(helpers: Helpers) {
@@ -52,7 +90,7 @@ async function deactivateInactiveParticipants(helpers: Helpers) {
     const deactivatedQueuedParticipants = await supabaseClient
         .from("participants")
         .update({ active: false })
-        .eq('status', "queued")
+        .in('status', ["queued"])
         .eq("active", true)
         .lt('last_seen_at', minimumLastSeenAt.toISOString())
         .select();
@@ -120,9 +158,28 @@ async function performDynamicGroupSlicing(helpers: Helpers) {
         .from('participants')
         .select()
         .eq('active', true)
-        .eq('status', 'queued');
-    const queuedParticipants = queuedParticipantsResult.data ?? [];
+        .eq('status', 'queued')
+        .order('created_at', { ascending: false });
+    const allQueuedParticipants = queuedParticipantsResult.data ?? [];
+    const queuedParticipants = unique(allQueuedParticipants, (participant) => {
+        return participant.user_id ?? '';
+    });
+    const queuedParticipantIds = queuedParticipants.map((participant) => participant.id);
+    const skippedParticipantIds = queuedParticipants.filter((participant) => {
+        return !queuedParticipantIds.includes(participant.id);
+    }).map((participant) => participant.id);
     const queuedParticipantsAmount = queuedParticipants?.length ?? 0;
+
+    // guard: see if we need to deactive some participants
+    if (skippedParticipantIds.length > 0) {
+        const { data: deactivatedParticipants } = await supabaseClient
+            .from("participants")
+            .update({ active: false })
+            .in('id', skippedParticipantIds)
+            .select();
+
+        helpers.logger.info(`Deactivated ${deactivatedParticipants?.length} skipped participants.`);
+    }
 
     helpers.logger.info(`There are currently ${queuedParticipantsAmount} queued participants waiting for a room...`);
 
