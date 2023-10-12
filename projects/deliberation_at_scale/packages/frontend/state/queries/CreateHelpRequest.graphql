@@ -1,0 +1,10 @@
+mutation CreateHelpRequest($participantId: UUID!, $roomId: UUID!, $type: helpRequestType!, $externalRoomUrl: String!) {
+  insertIntohelp_requestsCollection(objects: {
+    participant_id: $participantId
+    room_id: $roomId
+    type: $type
+    external_room_url: $externalRoomUrl
+  }) {
+    affectedCount
+  }
+}
