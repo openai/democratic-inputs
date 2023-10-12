@@ -7,6 +7,7 @@
     "setup:env": "cp .env.example .env",
     "start": "next dev -p 3200",
     "build": "next build",
+    "link": "vercel link",
     "deploy": "npm run lingui:extract && vercel --prod",
     "start:prod": "next start -p 3300",
     "start:proxy": "npx local-ssl-proxy --source 3201 --target 3400",

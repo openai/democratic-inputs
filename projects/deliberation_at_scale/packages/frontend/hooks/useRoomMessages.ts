@@ -52,7 +52,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         const { id, active, content, visibility_type: visibilityType, created_at: createdAt, type, participant_id: participantId, easy_language: easyLanguage, safe_language: safeLanguage } = databaseMessage ?? {};
         const isBot = (type === MessageType.Bot);
         const participant = participants?.find((participant) => participant.id === participantId);
-        const nickName = isBot ? _(msg`AI Moderator`) : (participant?.nick_name ?? _(msg`Anonymous`));
+        const nickName = isBot ? _(msg`AI Moderator`) : (participant?.nick_name ?? _(msg`Contributor`));
         const isCurrentParticipant = (!!userId && participant?.user_id === userId);
         const nameIcon = getIconByMessageType(type);
         const highlighted = isBot;

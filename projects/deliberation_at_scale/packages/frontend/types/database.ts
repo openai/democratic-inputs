@@ -682,6 +682,12 @@ export interface Database {
                 }
                 Returns: unknown
             }
+            ping_participant: {
+                Args: {
+                    participant_id: string
+                }
+                Returns: string
+            }
         }
         Enums: {
             completionType: "gpt4" | "gpt"

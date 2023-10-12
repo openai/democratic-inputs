@@ -3,6 +3,7 @@ import { getMessageContentForProgressionWorker, sendBotMessage } from "../utilit
 import { ONE_SECOND_MS, PARTICIPANTS_PER_ROOM } from "../config/constants";
 import { createModeratedEnrichTask } from "../utilities/tasks";
 import { waitFor } from "../utilities/time";
+import { t } from "@lingui/macro";
 
 export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
     getTaskInstruction: async () => {
@@ -31,7 +32,7 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
         await waitFor(ONE_SECOND_MS * 3);
         await sendBotMessage({
             roomId,
-            content: `This discussion has now come to an end. You can now say good-bye to each other and hopefully see you with a next round!`
+            content: t`This discussion has now come to an end. You can now say good-bye to each other and hopefully see you in a next round!`
         });
     },
 });

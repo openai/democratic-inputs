@@ -30,7 +30,7 @@ export default function EvaluateChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[_(msg`Hi there [nickName]! I hope you enjoyed the conversation you had with the group.`)]],
+                    messageOptions: [[_(msg`Hi [nickName]! Hopefully you enjoyed the conversation you had with the group.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
@@ -38,6 +38,7 @@ export default function EvaluateChatFlow() {
                     messageOptions: [[_(msg`What do you want to do next?`)]],
                     quickReplies: [
                         {
+                            hidden: () => true,
                             id: "go_to_feedback",
                             content: _(msg`Share your feedback`),
                             onClick: (helpers) => {
@@ -53,7 +54,7 @@ export default function EvaluateChatFlow() {
                         },
                         {
                             id: "go_to_profile",
-                            content: _(msg`Go back to the home page`),
+                            content: _(msg`Go back to the profile page`),
                             onClick: (helpers) => {
                                 helpers.goToPage("/profile");
                             }

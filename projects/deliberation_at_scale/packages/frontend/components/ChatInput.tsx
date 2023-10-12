@@ -11,6 +11,7 @@ import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/macro";
 import Button from "./Button";
 import toast from "react-hot-toast";
+import useIsMobile from "@/hooks/useIsMobile";
 
 const submitBgColorMap: Record<ThemeColors, string> = {
     'blue': 'bg-blue-500',
@@ -43,6 +44,7 @@ export default function ChatInput(props: ChatInputProps) {
     const { onSubmit, disabled = false, placeholder = defaultPlaceholder, helpAvailable} = props;
     const theme = useTheme();
     const [helpMenu, setHelpMenu] = useState(false);
+    const isMobile = useIsMobile();
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState('');
     const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
@@ -72,10 +74,10 @@ export default function ChatInput(props: ChatInputProps) {
             return;
         }
 
-        if (inputRef.current) {
+        if (inputRef.current && !isMobile) {
             inputRef.current.focus();
         }
-    }, [inputRef, disabled]);
+    }, [inputRef, disabled, isMobile]);
 
     async function fetchAdmin() {
         return new Promise((resolve) => {
@@ -119,7 +121,6 @@ export default function ChatInput(props: ChatInputProps) {
                         onClick={function (): void {
                             // const preHelpMenu = helpMenu;
                             setHelpMenu(!helpMenu);
-                            console.log(helpMenu);
                         }}
                     >
                         <FontAwesomeIcon icon={faUserPlus} />

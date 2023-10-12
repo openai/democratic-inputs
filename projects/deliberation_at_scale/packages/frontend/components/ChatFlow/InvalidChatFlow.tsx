@@ -14,14 +14,14 @@ export default function InvalidChatFlow() {
             steps: [
                 {
                     name: "intro",
-                    messageOptions: [[_(msg`Hmmm, it appears the room could not be joined or the other participants took too long to join. Sorry about that!`)]],
+                    messageOptions: [[_(msg`Hmmm, it appears the conversation could not be joined or the other participants took too long to join. Sorry about that!`)]],
                     quickReplies: [
                         {
                             id: 'retry',
                             icon: faRotate,
                             content: _(msg`Retry joining a room`),
                             onClick: async (helpers) => {
-                                helpers.postBotMessages([[_(msg`Okay! Moving you back to the lobby, one moment please...`)]]);
+                                helpers.postBotMessages([[_(msg`Moving you to the lobby again, one moment please...`)]]);
                                 await helpers.waitFor(2000);
                                 helpers.goToPage('/lobby');
                             },
@@ -29,7 +29,7 @@ export default function InvalidChatFlow() {
                         {
                             id: 'home',
                             icon: faHomeAlt,
-                            content: _(msg`Go back to home page`),
+                            content: _(msg`Go back to profile page`),
                             onClick: async (helpers) => {
                                 helpers.goToPage('/proifle');
                             },

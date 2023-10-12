@@ -21,7 +21,7 @@ export default function RegisterChatFlow() {
             steps: [
                 {
                     name: "greeting",
-                    messageOptions: [[_(msg`Hey there, welcome to this discussion. We appreciate that you're taking the time to contribute.`)]],
+                    messageOptions: [[_(msg`Hey, welcome to Common Ground. We appreciate you taking the time to contribute.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
@@ -32,9 +32,18 @@ export default function RegisterChatFlow() {
                 askForEmailStep,
                 {
                     name: "thank_you",
-                    messageOptions: [[_(msg`Thank you! You will find an email with a login link in your inbox. After you click on this link, you will be redirected back to this application and ready to start finding common ground.`)]],
+                    messageOptions: [[
+                        _(msg`Thank you! You will find an email with a login link in your inbox. Be sure to check your SPAM folder as well!`),
+                    ]],
+                    timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+                },
+                {
+                    name: "thank_you_2",
+                    messageOptions: [[
+                        _(msg`After you click on this link, you will be redirected back to this application to be ready to start finding common ground.`),
+                    ]],
                     quickReplies: [resetQuickReply],
-                }
+                },
             ]
         } satisfies ChatFlowConfig;
     }, [_, askForEmailStep, resetQuickReply]);

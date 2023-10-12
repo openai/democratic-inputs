@@ -346,7 +346,7 @@ function generateActiveField() {
 }
 
 function generateNickNameField() {
-    return varchar("nick_name", { length: 255 }).notNull().default("Anonymous");
+    return varchar("nick_name", { length: 255 }).notNull().default("Contributor");
 }
 
 function generateTimestampFields() {

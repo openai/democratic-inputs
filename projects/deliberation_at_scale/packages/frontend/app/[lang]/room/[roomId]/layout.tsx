@@ -23,7 +23,8 @@ export default function RoomLayout({ children }: PropsWithChildren) {
     const localMedia = useLocalMedia();
     const connection = useRoomConnection();
     const { push } = useLocalizedPush();
-    const { room, roomId, loadingRooms, joiningParticipants } = useRoom();
+    const { room, roomId, loadingRooms, joiningParticipants, inactiveParticipants, loadingParticipants } = useRoom();
+    const hasInactiveParticipants = inactiveParticipants?.length > 0;
     const dispatch = useDispatch();
     const { _ } = useLingui();
 
@@ -66,12 +67,12 @@ export default function RoomLayout({ children }: PropsWithChildren) {
         };
     }, [isReady, push]);
 
-    // handle inactive rooms
+    // handle inactive rooms or inactive participants
     useEffect(() => {
-        if (!room && !loadingRooms) {
+        if ((!room && !loadingRooms) || (hasInactiveParticipants && !loadingParticipants)) {
             push('/lobby/invalid');
         }
-    }, [loadingRooms, push, room]);
+    }, [loadingRooms, push, room, hasInactiveParticipants, loadingParticipants]);
 
     // once in the room reset all the flow states
     // this is so that any previous flow state is not carried over to new rooms

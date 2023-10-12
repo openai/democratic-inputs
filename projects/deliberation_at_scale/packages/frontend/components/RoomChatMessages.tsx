@@ -2,6 +2,7 @@
 import useRoom from "@/hooks/useRoom";
 import ChatMessageList from "./ChatMessageList";
 import ChatInput from "./ChatInput";
+
 import { useCallback, useEffect } from "react";
 import { useSendRoomMessageMutation } from "@/generated/graphql";
 import useScrollToBottom from "@/hooks/useScrollToBottom";
@@ -34,7 +35,7 @@ export default function RoomChatMessages() {
         return true;
     }, [participantId, isSendingMessage, roomId, sendRoomMessage]);
 
-    // automatically scroll the main container to the bottom on new messages
+    // automatically scroll the messages container to the bottom on new messages
     const { scrollToBottom } = useScrollToBottom({ data: messages });
 
     // instantly scroll to the bottom when the messages are loaded

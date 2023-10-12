@@ -6,8 +6,8 @@ import { getLatestOutcomeByRoomId, getOutcomesByRoomId } from "../utilities/outc
 import dayjs from "dayjs";
 import { IS_DEVELOPMENT, ONE_MINUTE_MS, ONE_SECOND_MS } from "../config/constants";
 import { Opinion, OpinionOptionType, Participant, supabaseClient } from "../lib/supabase";
-import { draw, flat, unique } from "radash";
-import { createVerificationFunctionCompletion } from "../lib/openai";
+import { draw, flat, unique, isEmpty } from "radash";
+import { createPromptCompletion, createVerificationFunctionCompletion } from "../lib/openai";
 import { waitFor } from "../utilities/time";
 import { getRoomById, updateRoomStatus } from "../utilities/rooms";
 import { t } from "@lingui/macro";
@@ -37,6 +37,9 @@ const NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS = 5 * ONE_SECOND_MS * TIME_MU
 const NEW_OUTCOME_AFTER_OUTCOME_INTRODUCTION_MS = 3 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
 const TIMEOUT_CONVSERSATION_AFTER_MS = 40 * ONE_MINUTE_MS * TIME_MULTIPLIER;
+
+// The minimum time before a new outcome is allowed to be created
+const NEW_CROSS_POLLINATION_COOLDOWN_MS = 10 * ONE_SECOND_MS;
 
 // Timekeeping
 const TIMEKEEPING_MOMENTS = [
@@ -227,46 +230,47 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     if (hasEveryoneContributed) {
         const taskContent = joinMessagesContentWithParticipants(latestOutcomeMessages, participants);
         const contributionCheckResult = await createVerificationFunctionCompletion({
-            taskInstruction: `
-
-            `,
+            taskInstruction: getSummarisationPrompt({
+                mode: 'verification',
+            }),
             taskContent,
         });
-        const contributionResult = await createVerificationFunctionCompletion({
-            taskInstruction: `
-            You are a democratic summarisation bot. You will receive some comments made by the participants of a conversation about a difficult topic. These people do not know each other and may have very different views. Do not bias towards any particular person or viewpoint. Using only the comments, create a synthesising, standalone, normative statement that captures the values of each participant and the nuance of what they have shared. Make sure the statement is short and to the point (less than two sentences). When formulating the statement, follow these rules:
-                1. Don't use metaphors or similes. Say it how it is.
-                2. Never use a long word where a short one works.
-                3. If it is possible to cut a word out, cut it.
-                4. Never use the passive where you can use the active.
-                5. Never use a foreign phrase, a scientific word, or a jargon word if there exists an everyday equivalent.
-                6. Break any of these rules if following them would feel strange or uncanny.
-            `,
-            taskContent,
-        });
-        const isContribution = contributionCheckResult.verified;
-        const contribution = contributionResult.text;
-        const hasContribution = !isEmpty(contribution.trim());
+        const isContribution = contributionCheckResult?.verified ?? false;
 
-        // guard: check if there is a consensus
-        if (isContribution && hasContribution) {
+        // guard: check if there is a valuable contribution
+        if (isContribution) {
+            const contributionResult = await createPromptCompletion({
+                taskInstruction: getSummarisationPrompt({
+                    mode: 'completion',
+                }),
+                taskContent,
+            });
+            const hasContribution = !!contributionResult && !isEmpty(contributionResult.trim());
 
-            // store the consensus and send it over to the current room for them to vote on
-            const consensusStatement = consensusResult?.moderatedReason;
-            const { data: newOutcomes } = await supabaseClient
-                .from('outcomes')
-                .insert({
-                    content: consensusStatement,
-                    type: 'consensus',
-                    room_id: roomId,
-                    original_outcome_id: latestOutcomeId,
-                })
-                .select();
-            const newOutcome = newOutcomes?.[0];
+            if (hasContribution) {
+                // store the consensus and send it over to the current room for them to vote on
+                const { data: newOutcomes } = await supabaseClient
+                    .from('outcomes')
+                    .insert({
+                        content: contributionResult,
+                        type: 'consensus',
+                        room_id: roomId,
+                        original_outcome_id: latestOutcomeId,
+                    })
+                    .select();
+                const newOutcome = newOutcomes?.[0];
+                helpers.logger.info(`Created a new outcome for room ${roomId} with id ${newOutcome?.id} and content ${newOutcome?.content}`);
 
-            // debug
-            helpers.logger.info(`Created a new outcome for room ${roomId} with id ${newOutcome?.id} and content ${newOutcome?.content}`);
-            return;
+                if (newOutcome) {
+                    await attemptSendBotMessage({
+                        roomId,
+                        content: getNewContributionMessageContent(),
+                        tags: 'new-contributions',
+                        force: true,
+                    });
+                    return;
+                }
+            }
         }
     }
 
@@ -345,6 +349,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
                 await waitFor(NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS);
             },
         });
+        return;
     }
 
     // guard: check if everyone has not voted the same
@@ -431,6 +436,12 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
     const candidateOutcomeId = candidateOutcome?.id;
     const candidateOutcomeContent = candidateOutcome?.content;
     const timeSinceRoomStartedMs = Math.abs(dayjs().diff(dayjs(room?.created_at), 'ms'));
+    const newestOutcome = outcomes?.[0];
+    const timeSinceLastOutcomeMs = Math.abs(dayjs().diff(dayjs(newestOutcome?.created_at), 'ms'));
+
+    if (newestOutcome && timeSinceLastOutcomeMs < NEW_CROSS_POLLINATION_COOLDOWN_MS) {
+        return;
+    }
 
     // guard: make sure there is an outcome
     if (!candidateOutcomeId || !candidateOutcomeContent) {
@@ -481,7 +492,7 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
 // DONE
 function getVotedSameMessageContent(): string {
     return draw([
-        t`You share the same opinion. A new statement will be shared shortly!`,
+        t`You share the same opinion. A new statement will follow shortly!`,
     ]) ?? '';
 }
 
@@ -551,4 +562,56 @@ function getTimeoutConversationMessageContent(): string {
     return draw([
         t`I've been instructed to introduce a new statement after ${TIMEOUT_CONVSERSATION_AFTER_MS / ONE_MINUTE_MS} minutes. So we unfortunately need to stop this conversation!`,
     ]) ?? '';
+}
+
+function getNewContributionMessageContent(): string {
+    return draw([
+        t`A new statement has been created based on your contributions! You can now vote on it whether you agree or disagree with the proposal.`,
+    ]) ?? '';
+}
+
+interface SummarisationPromptOptions {
+    mode: 'completion' | 'verification';
+}
+
+function getSummarisationPrompt(options: SummarisationPromptOptions) {
+    const { mode } = options;
+    const basePrompt = `
+        Role: You are a democratic summarisation bot built by the consortium "Deliberation at scale".
+
+        Context: You will receive some unstructured comments from the participants of a conversation about a difficult topic.
+        These people do not know each other and may have very different views.
+
+        Task: Using only the comments, create one synthesising, standalone, normative "We should..." statement that captures the values of each participant and the nuance of what they have shared.
+
+        When formulating the statement, follow these rules:
+        1. Don't use metaphors or similes. Say it how it is.
+        2. Never use a long word where a short one works.
+        3. If it is possible to cut a word out, cut it out.
+        4. Ensure the statement is short and to the point (less than two sentences).
+        5. Never use the passive where you can use the active.
+        6. Never use a foreign phrase, a scientific word, or a jargon word if there exists an everyday equivalent.
+        7. Remember the statement should be standalone. The statement you generate will be presented and voted on by people with no knowledge of how it was generated. Do not describe the discussion itself!
+        8. Use only the comments that demonstrate an intent to contribute to the broader societal discussion: Meta commentary, comments directed at the participants themselves, and or filler content should be ignored for the analysis.
+        9. Do not be biased towards any particular person or viewpoint in the conversation.
+    `;
+    const completionPrompt = `
+        10. If no relevant content is found, do not reply to the irrelevant content! Just say a variant of: "I don't think you have all typed out your own thoughts on the subject yet. If you could all share what you think, then I can make a summary of your views. Thanks!"
+    `;
+    const verificationPrompt = `
+        10. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!
+
+        Instructions:
+        If you can make a statement respond in a structured JSON without any prefixes or postfixes whether this is the case.
+        As an output use the following JSON format:
+            - verified: boolean to identify whether a relevant statement could be made.
+            - statement: the actual statement that was made.
+    `;
+
+    const prompt = `
+        ${basePrompt}
+        ${mode === 'completion' ? completionPrompt : verificationPrompt}
+    `;
+
+    return prompt;
 }

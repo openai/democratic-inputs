@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import useTheme, { ThemeColors } from "@/hooks/useTheme";
 import { usePathname } from "next/navigation";
 import classNames from 'classnames';
-import { NavLink } from "./NavLink";
 import useProfile from "@/hooks/useProfile";
 // import { Trans } from "@lingui/macro";
 import Image from "next/image";
 import wordmark from "@/public/images/wordmark.png";
 
+import { useCallback } from "react";
+import useLocalizedPush from "@/hooks/useLocalizedPush";
+import { NavLink } from "./NavLink";
 
 const bgColorMap: Record<ThemeColors, string> = {
     'blue': 'text-blue-600',
@@ -18,10 +20,12 @@ const bgColorMap: Record<ThemeColors, string> = {
 
 export default function ColouredHeader() {
     const theme = useTheme();
+    const { push } = useLocalizedPush();
     const { isLoggedIn } = useProfile();
     const pathname = usePathname();
     const isHidden = !!pathname?.includes('/room');
     const navTo = isLoggedIn ? '/profile' : '/';
+    const goToProfile = useCallback(() => push(navTo), [push, navTo]);
 
     return (
         <motion.header
@@ -35,14 +39,15 @@ export default function ColouredHeader() {
             <div className="max-w-[768px] w-full mx-auto">
                 {!isHidden && (
                     <NavLink href={navTo} className="flex items-center">
-                        {/* <motion.span
+                        <div onClick={goToProfile} className="hover:cursor-pointer">
+                            {/* <motion.span
                             className="mr-3 translate-y-[-2px] inline-block text-xl"
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                         >
                         🦡
                         </motion.span> */}
-                        {/* <motion.span
+                            {/* <motion.span
                             className="inline-block"
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -50,14 +55,15 @@ export default function ColouredHeader() {
                         >
                             <Trans>Common Ground</Trans>
                         </motion.span> */}
-                        <motion.span
-                            className="inline-block"
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.1 }}
-                        >
-                            <Image className="h-10 w-full" src={wordmark} alt="" />
-                        </motion.span>
+                            <motion.span
+                                className="inline-block"
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.1 }}
+                            >
+                                <Image className="h-10 w-full" src={wordmark} alt="" />
+                            </motion.span>
+                        </div>
                     </NavLink>
                 )}
             </div>

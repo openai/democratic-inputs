@@ -20,7 +20,7 @@ export default function PermissionChatFlow() {
     const askPermissionQuickReply = useMemo(() => {
         return {
             id: "permission_ask_yes",
-            content: _(msg`Ask for permissions now`),
+            content: _(msg`Check device permissions now`),
             onClick: (helpers) => {
                 helpers.setFlowStateEntry(LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, true);
                 helpers.goToName('permission_verify_working');

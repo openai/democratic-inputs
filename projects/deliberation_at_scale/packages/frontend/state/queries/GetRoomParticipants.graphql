@@ -10,7 +10,8 @@ fragment RoomParticipant on participants {
 }
 
 query GetRoomParticipants($roomId: UUID!) {
-  participantsCollection(filter: { active: { eq: true }, room_id: { eq: $roomId } }) {
+  # also fetch inactive participants so we can check if the room is still valid!
+  participantsCollection(filter: { room_id: { eq: $roomId } }) {
     edges {
       node {
         ...RoomParticipant

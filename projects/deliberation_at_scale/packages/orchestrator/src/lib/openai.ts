@@ -53,17 +53,14 @@ export async function createVerificationFunctionCompletion(options: Verification
         functionSchema: {
             name: "is_verified",
             description: `
-                Determine whether the content is verified or not while including a reason for moderation.
-
-                Follow these instructions:
-                ${taskInstruction}
+                Determine whether based on the instructions the provided content is valid.
             `,
             parameters: {
                 type: "object",
                 properties: {
                     verified: {
                         type: "boolean",
-                        description: `Result of whether this is the case: ${taskInstruction}.`,
+                        description: `Result of whether the provided content is verified by the instructions.`,
                     },
                     moderatedReason: {
                         type: "string",

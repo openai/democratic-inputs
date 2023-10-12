@@ -1,7 +1,7 @@
 import Providers from '@/components/Providers';
 import './globals.css';
 import { PropsWithChildren } from 'react';
-import { Red_Hat_Text } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // Import the CSS
@@ -12,9 +12,9 @@ export const metadata = {
     description: 'Common Ground is a platform for deliberation at scale.',
 };
 
-const red_hat_text = Red_Hat_Text({
+const inter = Inter({
     subsets: ['latin-ext'],
-    variable: '--font-redhat-text',
+    variable: '--font-inter',
     display: 'swap',
     weight: 'variable',
     fallback: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
@@ -25,9 +25,8 @@ export default async function RootLayout({
     children
 }: PropsWithChildren) {
     return (
-        <html lang="en">
-            {/* include redhat as heading font */}
-            <body className={red_hat_text.variable}>
+        <html>
+            <body className={inter.variable}>
                 <Providers>
                     <main className="bg-background flex flex-col items-center">
                         {children}
