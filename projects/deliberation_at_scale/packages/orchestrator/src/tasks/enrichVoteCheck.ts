@@ -25,7 +25,7 @@ const INVITE_OPEN_DISCUSSION_AFTER_MS = 3 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER
 const INVITE_PASS_AFTER_MS = 5 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
 // The time before the bot will forcefully move to a new vote
-const TIMEOUT_VOTE_AFTER_MS = 7 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
+const TIMEOUT_VOTE_AFTER_MS = 10 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
 // The time before a new outcome is searched after a vote has timed out
 const NEW_OUTCOME_AFTER_VOTE_TIMEOUT_MS = 5 * ONE_SECOND_MS * TIME_MULTIPLIER;
