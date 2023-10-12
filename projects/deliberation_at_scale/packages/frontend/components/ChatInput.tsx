@@ -1,5 +1,5 @@
 "use client";
-import { faHammer, faHandsHelping, faPaperPlane, faQuestion, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faHammer, faHandsHelping, faPaperPlane, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isEmpty } from "radash";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from "react";
@@ -146,7 +146,7 @@ export default function ChatInput(props: ChatInputProps) {
                                     }
                                 );
                             } }>
-                                <FontAwesomeIcon icon={faHammer} />
+                                <FontAwesomeIcon icon={faHandsHelping} />
                                 <Trans>Call a Facilitator</Trans>
                             </Button>
                             <Button className="p-2 shadow-xl" onClick={function (): void {
@@ -173,7 +173,7 @@ export default function ChatInput(props: ChatInputProps) {
                                     }
                                 );
                             } }>
-                                <FontAwesomeIcon icon={faHandsHelping} />
+                                <FontAwesomeIcon icon={faHammer} />
                                 <Trans>Call a Technician</Trans>
                             </Button>
 

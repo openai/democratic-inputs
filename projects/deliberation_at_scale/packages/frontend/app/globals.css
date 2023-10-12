@@ -10,10 +10,14 @@ html, body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    font-family: var(--font-inter);
 }
 
 h1,h2,h3,h4 {
-    font-family: 'Red Hat Display', sans-serif;
+    font-family: var(--font-red-hat-display);
+}
+
+h1{
     font-weight: bold;
 }
 

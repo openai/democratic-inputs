@@ -39,24 +39,24 @@ export default function Index() {
                 <p className="mb-4 text-gray-600"><Trans>Your experience on Common Ground will look like:</Trans></p>
                 <div className="grid sm:grid-cols-2 sm:grid-rows-2 gap-2 mb-4 text-green-700 text-lg font-medium text-center">
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
-                        <FontAwesomeIcon icon={registerIcon} size="2x" fixedWidth />
-                        <Trans><p><b>Setup your profile</b> via email in one minute</p></Trans>
+                        <FontAwesomeIcon icon={faVideo} size="2x" fixedWidth />
+                        <Trans><h2><b>Setup your profile</b> via email in one minute</h2></Trans>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
-                        <FontAwesomeIcon icon={faVideo} size="2x" fixedWidth />
-                        <Trans><p><b>Join a conversation</b> with two fellow participants</p></Trans>
+                        <FontAwesomeIcon icon={faScroll} size="2x" fixedWidth />
+                        <Trans><h2><b>Join a conversation</b> with two fellow participants</h2></Trans>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faShieldHeart} size="2x" fixedWidth />
-                        <Trans><p>AI moderators help create a <b>healthy conversation</b></p></Trans>
+                        <Trans><h2>AI moderators help create a <b>healthy conversation</b></h2></Trans>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faLightbulb} size="2x" fixedWidth />
-                        <Trans><p><b>Learn</b> from each other and <b>contribute</b> to the 040 AI manifesto</p></Trans>
+                        <Trans><h2><b>Learn</b> from eachother and <b>contribute</b> to the 040 AI manifesto</h2></Trans>
                     </div>
                 </div>
                 {!isLoggedIn && (
-                    <p className="mb-4 text-gray-600"><Trans>To get started, click 'Register' below:</Trans></p>
+                    <p className="mb-4 text-gray-600"><Trans>To get started, click &apos;Register&apos; below:</Trans></p>
                 )}
             </motion.div>
             <motion.div className="flex flex-col gap-2">
