@@ -867,8 +867,9 @@ export type CompletionsUpdateResponse = {
 };
 
 export enum CrossPollinationType {
-  Outcome = 'outcome',
-  Topic = 'topic'
+  Afterwards = 'afterwards',
+  Closing = 'closing',
+  Discussion = 'discussion'
 }
 
 /** Boolean expression comparing fields on type "crossPollinationType" */
@@ -877,6 +878,20 @@ export type CrossPollinationTypeFilter = {
   in?: InputMaybe<Array<CrossPollinationType>>;
   is?: InputMaybe<FilterIs>;
   neq?: InputMaybe<CrossPollinationType>;
+};
+
+export enum DiscussionType {
+  Bot = 'bot',
+  Chat = 'chat',
+  Voice = 'voice'
+}
+
+/** Boolean expression comparing fields on type "discussionType" */
+export type DiscussionTypeFilter = {
+  eq?: InputMaybe<DiscussionType>;
+  in?: InputMaybe<Array<DiscussionType>>;
+  is?: InputMaybe<FilterIs>;
+  neq?: InputMaybe<DiscussionType>;
 };
 
 export type Events = Node & {
@@ -1640,6 +1655,7 @@ export enum OutcomeType {
   Milestone = 'milestone',
   OffTopic = 'off_topic',
   OverallImpression = 'overall_impression',
+  SeedStatement = 'seed_statement',
   TopicInterest = 'topic_interest'
 }
 

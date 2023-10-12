@@ -157,6 +157,52 @@ export interface Database {
                 }
                 Relationships: []
             }
+            help_requests: {
+                Row: {
+                    active: boolean
+                    created_at: string
+                    external_room_url: string | null
+                    id: string
+                    participant_id: string | null
+                    room_id: string | null
+                    type: Database["public"]["Enums"]["helpRequestType"]
+                    updated_at: string
+                }
+                Insert: {
+                    active?: boolean
+                    created_at?: string
+                    external_room_url?: string | null
+                    id?: string
+                    participant_id?: string | null
+                    room_id?: string | null
+                    type?: Database["public"]["Enums"]["helpRequestType"]
+                    updated_at?: string
+                }
+                Update: {
+                    active?: boolean
+                    created_at?: string
+                    external_room_url?: string | null
+                    id?: string
+                    participant_id?: string | null
+                    room_id?: string | null
+                    type?: Database["public"]["Enums"]["helpRequestType"]
+                    updated_at?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "help_requests_participant_id_participants_id_fk"
+                        columns: ["participant_id"]
+                        referencedRelation: "participants"
+                        referencedColumns: ["id"]
+                    },
+                    {
+                        foreignKeyName: "help_requests_room_id_rooms_id_fk"
+                        columns: ["room_id"]
+                        referencedRelation: "rooms"
+                        referencedColumns: ["id"]
+                    }
+                ]
+            }
             messages: {
                 Row: {
                     active: boolean
@@ -676,23 +722,25 @@ export interface Database {
                 Args: Record<PropertyKey, never>
                 Returns: string
             }
-            get_room_ids_by_user_ids: {
+            ping_participant: {
                 Args: {
-                    user_ids: string[]
+                    participant_id: string
                 }
-                Returns: unknown
+                Returns: string
             }
         }
         Enums: {
             completionType: "gpt4" | "gpt"
-            crossPollinationType: "outcome" | "topic"
+            crossPollinationType: "discussion" | "closing" | "afterwards"
+            discussionType: "chat" | "voice" | "bot"
+            helpRequestType: "facilitator" | "technician"
             messageType: "chat" | "voice" | "bot"
             moderationType:
             | "harrashment"
-            | "consensus"
             | "spam"
             | "off_topic"
             | "other"
+            | "consensus"
             | "unequal"
             | "clarification"
             opinionOptionType:
@@ -717,6 +765,7 @@ export interface Database {
             | "overall_impression"
             | "topic_interest"
             | "cross_pollination"
+            | "seed_statement"
             participantStatusType:
             | "queued"
             | "waiting_for_confirmation"
@@ -724,11 +773,11 @@ export interface Database {
             | "in_room"
             | "end_of_session"
             roomStatusType:
-            | "group_intro"
             | "safe"
             | "informed"
             | "debate"
             | "results"
+            | "group_intro"
             | "topic_intro"
             | "close"
             | "end"
