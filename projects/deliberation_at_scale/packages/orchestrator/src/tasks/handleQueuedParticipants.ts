@@ -229,6 +229,15 @@ async function performDynamicGroupSlicing(helpers: Helpers) {
             continue;
         }
 
+        // guard: check if these three participants were already in a room together
+        // TODO: check if two people are already in a room together
+        // const newRoomParticipants = allQueuedParticipants.filter((participant) => {
+        //     return newRoomParticipantIds.includes(participant.id);
+        // });
+        // const newRoomUserIds = newRoomParticipants.map((participant) => {
+        //     return participant.user_id;
+        // });
+
         // store all the promises in an array so we can wait for them to finish
         assignRoomPromises.push(assignParticipantsToRoom({
             helpers,
