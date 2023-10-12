@@ -2947,7 +2947,7 @@ export type GetRoomOutcomesLazyQueryHookResult = ReturnType<typeof useGetRoomOut
 export type GetRoomOutcomesQueryResult = Apollo.QueryResult<GetRoomOutcomesQuery, GetRoomOutcomesQueryVariables>;
 export const GetRoomParticipantsDocument = gql`
     query GetRoomParticipants($roomId: UUID!) {
-  participantsCollection(filter: {active: {eq: true}, room_id: {eq: $roomId}}) {
+  participantsCollection(filter: {room_id: {eq: $roomId}}) {
     edges {
       node {
         ...RoomParticipant
