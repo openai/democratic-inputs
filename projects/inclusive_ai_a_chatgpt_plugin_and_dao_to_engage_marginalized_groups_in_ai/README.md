@@ -1,10 +1,10 @@
 # Inclusive.AI: A ChatGPT Plugin and DAO to Engage Marginalized Groups in AI
 
 In this project, a ChatGPT plugin will be developed that enables DAO (Decentralized Autonomous Organization) mechanisms to promote a ChatGPT-facilitated democratic decision process. This decentralized decision process will allow diverse marginalized populations, such as teenagers, people with disabilities, people of color, and people from the Global South, equal access to major decision makings and produce better decisions for communities and society at large.
-![Screenshot 2023-09-20 at 12.13.55 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/9db40024-cdfd-4993-8bc3-617750f19cbb/28b0da3d-2a82-43b4-aba6-b2b36089d53d/Screenshot_2023-09-20_at_12.13.55_PM.png)
+<img width="715" alt="Screenshot 2023-10-12 at 11 49 20 AM" src="https://github.com/openai/democratic-inputs/assets/38181397/4e5978ee-6d74-4f19-9861-6c20d004f1a0">
+<img width="635" alt="Screenshot 2023-10-12 at 11 49 33 AM" src="https://github.com/openai/democratic-inputs/assets/38181397/f5d9d3a7-e4a5-476c-ab7d-80c229c1e400">
+<img width="751" alt="Screenshot 2023-10-12 at 11 49 43 AM" src="https://github.com/openai/democratic-inputs/assets/38181397/daf632ac-26fb-44dd-a980-dada98b644f1">
 
-![InclusiveAI.drawio.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/9db40024-cdfd-4993-8bc3-617750f19cbb/4965e9bc-767f-4843-9de6-c423d9cab1a9/InclusiveAI.drawio.png)
-![Screenshot 2023-09-25 at 2.44.47 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/9db40024-cdfd-4993-8bc3-617750f19cbb/4cb0bfe8-1897-4add-be97-4d5fcebd2b4e/Screenshot_2023-09-25_at_2.44.47_PM.png)
 
 ## Component: Web3Auth
 
