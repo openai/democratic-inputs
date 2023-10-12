@@ -5,7 +5,6 @@ import { Message } from '@/types/flows';
 import ChatMessage from './ChatMessage';
 import { MESSAGES_SCROLL_CONTAINER_ID } from '@/utilities/constants';
 import classNames from 'classnames';
-import { useState, useEffect, useRef } from 'react';
 
 interface Props {
     messages: (Message | null | undefined)[] | undefined;

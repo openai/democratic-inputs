@@ -82,5 +82,6 @@ export const OUTCOME_OPINION_TIMEOUT_MS_LOOKUP: Record<OutcomeType, number> = {
     [OutcomeType.Milestone]: 0,
     [OutcomeType.OffTopic]: 0,
     [OutcomeType.OverallImpression]: 0,
-    [OutcomeType.TopicInterest]: 0
+    [OutcomeType.TopicInterest]: 0,
+    [OutcomeType.SeedStatement]: 0,
 };

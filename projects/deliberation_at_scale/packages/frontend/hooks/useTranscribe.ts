@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 
 import { useWhisper } from "@/hooks/useWhisper";
-import { DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS, DEFAULT_TRANSCRIPTION_TIME_SLICE_MS, ENABLE_AUTO_START_TRANSCRIPTION, NEXT_PUBLIC_TRANSCRIBE_API_URL, ONE_SECOND_MS } from '@/utilities/constants';
+import { DEFAULT_TRANSCRIPTION_CHUNK_DURATION_MS, DEFAULT_TRANSCRIPTION_TIME_SLICE_MS, ENABLE_AUTO_START_TRANSCRIPTION, NEXT_PUBLIC_TRANSCRIBE_API_URL } from '@/utilities/constants';
 import { UseWhisperConfig, UseWhisperTranscript } from './useWhisper/types';
 import useRoom from './useRoom';
 import useProfile from './useProfile';
