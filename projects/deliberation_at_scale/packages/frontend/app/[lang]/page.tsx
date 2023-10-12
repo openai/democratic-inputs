@@ -22,7 +22,7 @@ export default function Index() {
     return (
         <section id="main-scroll-container" className="p-2 flex flex-col gap-3 overflow-y-scroll pt-24">
             <motion.div layout>
-                <h1 className="mb-4 text-lg font-medium">Experience, Understand and Influence AI</h1>
+                <h1 className="mb-4 text-3xl font-medium">Experience, Understand and Influence AI</h1>
                 <p className="mb-4 text-gray-600">
                     Welcome to our conversation about AI in Eindhoven.<br/><br/>
                     We all want the <b>best for our city</b>. This is why we want to figure how AI can help.

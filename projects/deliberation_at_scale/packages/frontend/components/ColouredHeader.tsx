@@ -5,7 +5,10 @@ import { usePathname } from "next/navigation";
 import classNames from 'classnames';
 import { NavLink } from "./NavLink";
 import useProfile from "@/hooks/useProfile";
-import { Trans } from "@lingui/macro";
+// import { Trans } from "@lingui/macro";
+import Image from "next/image";
+import wordmark from "@/public/images/wordmark.png";
+
 
 const bgColorMap: Record<ThemeColors, string> = {
     'blue': 'text-blue-600',
@@ -31,7 +34,7 @@ export default function ColouredHeader() {
         >
             <div className="max-w-[768px] w-full mx-auto">
                 {!isHidden && (
-                    <NavLink href={navTo}>
+                    <NavLink href={navTo} className="flex items-center">
                         {/* <motion.span
                             className="mr-3 translate-y-[-2px] inline-block text-xl"
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -39,13 +42,21 @@ export default function ColouredHeader() {
                         >
                         🦡
                         </motion.span> */}
-                        <motion.span
+                        {/* <motion.span
                             className="inline-block"
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.1 }}
                         >
                             <Trans>Common Ground</Trans>
+                        </motion.span> */}
+                        <motion.span
+                            className="inline-block"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.1 }}
+                        >
+                            <Image className="h-10 w-full" src={wordmark} alt="" />
                         </motion.span>
                     </NavLink>
                 )}

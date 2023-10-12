@@ -12,6 +12,11 @@ html, body {
     overflow: hidden;
 }
 
+h1,h2,h3,h4 {
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: bold;
+}
+
 * {
     outline-color: #ddd;
 }
