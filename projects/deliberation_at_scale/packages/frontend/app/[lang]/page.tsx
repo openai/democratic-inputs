@@ -60,7 +60,7 @@ export default function Index() {
             </motion.div>
             <motion.div className="flex flex-col gap-2">
                 {loading ? (
-                    <FontAwesomeIcon icon={faSpinner} spin className="text-gray-400" />
+                    <FontAwesomeIcon icon={faSpinner} spin className="text-gray-400 w-[25px] mx-auto" />
                 ) : (
                     isLoggedIn ? (
                         <>
