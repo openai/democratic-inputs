@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: "runner",
     script: "./dist/index.js",
-    instances : "5",
+    instances : "1",
     exec_mode : "cluster",
     env: {
         ORCHESTRATOR_ROLE: "runner",
