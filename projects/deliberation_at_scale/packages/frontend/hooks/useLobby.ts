@@ -33,7 +33,7 @@ export default function useLobby() {
             },
         });
     }, [rawRefetchParticipants, userId]);
-    const [createParticipant] = useCreateParticipantMutation();
+    const [createParticipant, { loading: isCreatingParticipant }] = useCreateParticipantMutation();
     const [enterRoomMutation, { loading: isEnteringRoom }] = useEnterRoomMutation();
     const candidateParticipant = participantData?.participantsCollection?.edges?.[0]?.node;
     const candidateParticipantId = candidateParticipant?.id;
@@ -65,7 +65,7 @@ export default function useLobby() {
     // create a queued participant when the user has none yet
     // block this when no valid user is found OR when we are already waiting for a confirm
     useEffect(() => {
-        if (participantsLoading || !!candidateParticipant || !userId || confirmingParticipantId) {
+        if (participantsLoading || !!candidateParticipant || !userId || isConfirming || isCreatingParticipant) {
             return;
         }
 
@@ -78,7 +78,7 @@ export default function useLobby() {
         }).then(() => {
             refetchParticipants();
         });
-    }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, confirmingParticipantId, flowStateNickName]);
+    }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, isConfirming, flowStateNickName, isCreatingParticipant]);
 
     // store the the participant ID when a confirm is requested
     // this will help us redirect the user back to the timeed out flow when not responding quickly enough

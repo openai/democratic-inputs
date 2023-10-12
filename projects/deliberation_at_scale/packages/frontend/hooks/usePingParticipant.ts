@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { useEffect } from "react";
 
 import { FullParticipantFragment, ParticipantStatusType, usePingParticipantMutation } from "@/generated/graphql";
@@ -22,6 +21,7 @@ export function usePingParticipant(candidateParticipant?: FullParticipantFragmen
         }
 
         const pingInterval = setInterval(async () => {
+            console.log('PING', participantId);
             const { data, error } = await supabaseClient.rpc('ping_participant', {
                 participant_id: participantId,
             });
