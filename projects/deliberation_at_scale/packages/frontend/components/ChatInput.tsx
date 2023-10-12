@@ -110,11 +110,10 @@ export default function ChatInput(props: ChatInputProps) {
 
                     <motion.button
                         type="button"
-                        className={`duration-300 h-full peer w-full peer rounded-full grow saturate-0 group-hover:saturate-100 transition-all text-white bg-red-300`}
+                        className={`duration-300 w-[40px] h-[40px] peer peer rounded-full grow saturate-0 group-hover:saturate-100 transition-all text-white bg-red-300`}
                         whileTap={{ scale: (disabled ? 1: 0.9) }}
                         disabled={disabled}
-                        onClick={function (): void {
-                            // const preHelpMenu = helpMenu;
+                        onClick={() => {
                             setHelpMenu(!helpMenu);
                         }}
                     >
