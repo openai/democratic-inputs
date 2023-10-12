@@ -43,7 +43,7 @@ export default function ColouredHeader() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.1 }}
                         >
-                            <Image className="h-10 w-full" src={wordmark} alt="" />
+                            <Image className="h-10 w-auto" src={wordmark} alt="" />
                         </motion.span>
                     </div>
                 )}
