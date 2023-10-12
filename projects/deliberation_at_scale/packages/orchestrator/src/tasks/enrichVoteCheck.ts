@@ -579,7 +579,7 @@ interface SummarisationPromptOptions {
 
 function getSummarisationPrompt(options: SummarisationPromptOptions) {
     const { mode } = options;
-    const basePrompt = `
+    const basePrompt = t`
         Role: You are a democratic summarisation bot built by the consortium "Deliberation at scale".
 
         Context: You will receive some unstructured comments from the participants of a conversation about a difficult topic.
@@ -598,10 +598,10 @@ function getSummarisationPrompt(options: SummarisationPromptOptions) {
         8. Use only the comments that demonstrate an intent to contribute to the broader societal discussion: Meta commentary, comments directed at the participants themselves, and or filler content should be ignored for the analysis.
         9. Do not be biased towards any particular person or viewpoint in the conversation.
     `;
-    const completionPrompt = `
+    const completionPrompt = t`
         10. If no relevant content is found, do not reply to the irrelevant content! Just say a variant of: "I don't think you have all typed out your own thoughts on the subject yet. If you could all share what you think, then I can make a summary of your views. Thanks!"
     `;
-    const verificationPrompt = `
+    const verificationPrompt = t`
         10. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!
 
         Instructions:
