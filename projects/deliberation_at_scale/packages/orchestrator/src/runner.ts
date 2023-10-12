@@ -8,7 +8,7 @@ let runnerUtils: WorkerUtils;
 
 export async function startRunner() {
     const runnerOptions: RunnerOptions = {
-        concurrency: 10,
+        concurrency: 20,
         taskDirectory: `${__dirname}/tasks`,
         parsedCronItems: parseCronItems(crontab),
         noPreparedStatements: true,
