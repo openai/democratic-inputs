@@ -722,12 +722,6 @@ export interface Database {
                 Args: Record<PropertyKey, never>
                 Returns: string
             }
-            get_room_ids_by_user_ids: {
-                Args: {
-                    user_ids: string[]
-                }
-                Returns: unknown
-            }
             ping_participant: {
                 Args: {
                     participant_id: string
@@ -737,15 +731,16 @@ export interface Database {
         }
         Enums: {
             completionType: "gpt4" | "gpt"
-            crossPollinationType: "outcome" | "topic"
+            crossPollinationType: "discussion" | "closing" | "afterwards"
+            discussionType: "chat" | "voice" | "bot"
             helpRequestType: "facilitator" | "technician"
             messageType: "chat" | "voice" | "bot"
             moderationType:
             | "harrashment"
-            | "consensus"
             | "spam"
             | "off_topic"
             | "other"
+            | "consensus"
             | "unequal"
             | "clarification"
             opinionOptionType:
@@ -778,11 +773,11 @@ export interface Database {
             | "in_room"
             | "end_of_session"
             roomStatusType:
-            | "group_intro"
             | "safe"
             | "informed"
             | "debate"
             | "results"
+            | "group_intro"
             | "topic_intro"
             | "close"
             | "end"

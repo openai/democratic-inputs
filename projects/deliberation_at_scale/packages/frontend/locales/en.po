@@ -18,8 +18,8 @@ msgid "<0><1>Join a conversation</1> with two fellow participants</0>"
 msgstr "<0><1>Join a conversation</1> with two fellow participants</0>"
 
 #: app/[lang]/page.tsx:55
-msgid "<0><1>Learn</1> from each other and <2>contribute</2> to the 040 AI manifesto</0>"
-msgstr "<0><1>Learn</1> from each other and <2>contribute</2> to the 040 AI manifesto</0>"
+msgid "<0><1>Learn</1> from eachother and <2>contribute</2> to the 040 AI manifesto</0>"
+msgstr "<0><1>Learn</1> from eachother and <2>contribute</2> to the 040 AI manifesto</0>"
 
 #: app/[lang]/page.tsx:43
 msgid "<0><1>Setup your profile</1> via email in one minute</0>"
@@ -34,7 +34,7 @@ msgstr "<0>AI moderators help create a <1>healthy conversation</1></0>"
 msgid "After you click on this link, you will be redirected back to this application to be ready to start finding common ground."
 msgstr "After you click on this link, you will be redirected back to this application to be ready to start finding common ground."
 
-#: components/RoomOutcome.tsx:62
+#: components/RoomOutcome.tsx:66
 msgid "Agree"
 msgstr "Agree"
 
@@ -51,11 +51,11 @@ msgstr "Assistant"
 msgid "Before joining the conversation, let's pick a nickname and configure your camera and microphone."
 msgstr "Before joining the conversation, let's pick a nickname and configure your camera and microphone."
 
-#: components/ChatInput.tsx:150
+#: components/ChatInput.tsx:149
 msgid "Call a Facilitator"
 msgstr "Call a Facilitator"
 
-#: components/ChatInput.tsx:177
+#: components/ChatInput.tsx:176
 msgid "Call a Technician"
 msgstr "Call a Technician"
 
@@ -89,7 +89,7 @@ msgid "Contributor"
 msgstr "Contributor"
 
 #: components/RoomMenu.tsx:53
-#: components/RoomTopic.tsx:37
+#: components/RoomTopic.tsx:42
 msgid "Conversation"
 msgstr "Conversation"
 
@@ -105,7 +105,7 @@ msgstr "Disable audio"
 msgid "Disable video"
 msgstr "Disable video"
 
-#: components/RoomOutcome.tsx:67
+#: components/RoomOutcome.tsx:71
 msgid "Disagree"
 msgstr "Disagree"
 
@@ -125,7 +125,7 @@ msgstr "Everything seems to be working fine. Let's get started!"
 msgid "Experience, Understand and Influence AI"
 msgstr "Experience, Understand and Influence AI"
 
-#: components/ChatInput.tsx:131
+#: components/ChatInput.tsx:130
 msgid "Facilitator on the way!"
 msgstr "Facilitator on the way!"
 
@@ -242,11 +242,11 @@ msgstr "Login"
 msgid "Logout"
 msgstr "Logout"
 
-#: components/ChatInput.tsx:130
+#: components/ChatInput.tsx:129
 msgid "Looking for facilitator"
 msgstr "Looking for facilitator"
 
-#: components/ChatInput.tsx:157
+#: components/ChatInput.tsx:156
 msgid "Looking for technician"
 msgstr "Looking for technician"
 
@@ -283,7 +283,7 @@ msgstr "Okay! Moving you to the lobby."
 msgid "Participate in a new conversation"
 msgstr "Participate in a new conversation"
 
-#: components/RoomOutcome.tsx:72
+#: components/RoomOutcome.tsx:76
 msgid "Pass"
 msgstr "Pass"
 
@@ -329,6 +329,8 @@ msgid "Start the conversation"
 msgstr "Start the conversation"
 
 #: components/RoomOutcome.tsx:45
+#: components/RoomOutcome.tsx:46
+#: components/RoomOutcome.tsx:47
 msgid "Statement"
 msgstr "Statement"
 
@@ -340,7 +342,7 @@ msgstr "Sure!"
 msgid "Tap to type"
 msgstr "Tap to type"
 
-#: components/ChatInput.tsx:158
+#: components/ChatInput.tsx:157
 msgid "Technician on the way!"
 msgstr "Technician on the way!"
 
@@ -365,8 +367,8 @@ msgstr "That looks like a valid e-mail. We're sending you an email now..."
 msgid "There was an error sending you an email. Please try again!"
 msgstr "There was an error sending you an email. Please try again!"
 
-#: components/ChatInput.tsx:132
-#: components/ChatInput.tsx:159
+#: components/ChatInput.tsx:131
+#: components/ChatInput.tsx:158
 msgid "This just happened: {0}"
 msgstr "This just happened: {0}"
 

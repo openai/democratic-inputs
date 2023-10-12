@@ -15,11 +15,11 @@ msgstr ""
 
 #: src/tasks/enrichVoteCheck.ts:601
 msgid "10. If no relevant content is found, do not reply to the irrelevant content! Just say a variant of: \"I don't think you have all typed out your own thoughts on the subject yet. If you could all share what you think, then I can make a summary of your views. Thanks!\""
-msgstr ""
+msgstr "10. Als er geen relevante inhoud wordt gevonden, reageer dan niet op de irrelevante inhoud! Zeg een variant van: \"Ik denk niet dat jullie allemaal je eigen gedachten over het onderwerp al hebben uitgetypt. Als jullie allemaal zouden kunnen delen wat jullie denken, dan kan ik een samenvatting maken van jullie standpunten. Bedankt!"
 
 #: src/tasks/enrichVoteCheck.ts:604
 msgid "10. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!"
-msgstr ""
+msgstr "10. Zoek naar relevante inhoud, zelfs als een deel ervan nutteloos is. Reageer niet op irrelevante inhoud!"
 
 #: src/tasks/enrichVoteCheck.ts:572
 msgid "A new statement has been created based on your contributions! You can now vote on it whether you agree or disagree with the proposal."
@@ -27,7 +27,7 @@ msgstr "Een nieuwe stelling is gecreëerd op basis van jouw bijdragen! Je kunt n
 
 #: src/tasks/enrichTopicIntroduction.ts:68
 msgid "Do you want to create your **own statements**? You can do that at any time by **typing in the chat**. Your humble AI moderator will summarize them automatically."
-msgstr ""
+msgstr "Wil je **eigen stellingen** inbrengen? Dat kan op elk moment door **te typen in de chat**. Je bescheiden AI moderator zal ze automatisch samenvatten."
 
 #: src/tasks/enrichVoteCheck.ts:541
 msgid "Enjoying the conversation? Please continue. Interested in other people's opinions? Then you can move on to a new group!"
@@ -47,7 +47,7 @@ msgid ""
 "Shall we start by taking a brief moment for introductions?\n"
 "Perhaps **share your name** and why **this conversation interests you**.\n"
 "The topic will be introduced in a moment. When you are ready, you can take it from there."
-msgstr ""
+msgstr "Hallo! Het is mijn taak om jullie gesprek te begeleiden.Zullen we beginnen met een korte introductie?Misschien kun **je jezelf introduceren** en delen waarom je **geinteresseerd was in dit gesprek**.Het onderwerp zal zo worden geïntroduceerd. Als u er klaar voor bent, kunt u het vanaf daar overnemen."
 
 #: src/tasks/enrichTopicIntroduction.ts:47
 msgid "Hopefully you had the time to introduce yourselves."
@@ -94,6 +94,16 @@ msgid ""
 "8. Use only the comments that demonstrate an intent to contribute to the broader societal discussion: Meta commentary, comments directed at the participants themselves, and or filler content should be ignored for the analysis.\n"
 "9. Do not be biased towards any particular person or viewpoint in the conversation."
 msgstr ""
+"Rol: Je bent een democratische samenvattingsbot gebouwd door het consortium ¨Deliberation at Scale¨.¨Context: Je ontvangt een aantal ongestructureerde opmerkingen van de deelnemers aan een gesprek over een moeilijk onderwerp.\n"
+"Deze mensen kennen elkaar niet en kunnen heel verschillende meningen hebben.\n"
+"Opdracht: Stel op basis van alleen de opmerkingen één samenvattende, op zichzelf staande, normatieve uitspraak op die de waarden van elke deelnemer weergeeft en de nuance van wat ze hebben gedeeld.\n"
+"Volg deze regels bij het formuleren van de verklaring:\n"
+"1. Gebruik geen metaforen of vergelijkingen. Zeg hoe het is.2. Gebruik nooit een lang woord waar een kort woord werkt.3. Als het mogelijk is om een woord weg te knippen, knip het dan weg.\n"
+"4. Zorg dat de uitspraak kort en bondig is (minder dan twee zinnen).\n"
+"5. Gebruik nooit het passieve waar je het actieve kunt gebruiken.\n"
+"6. Gebruik nooit een vreemde uitdrukking, een wetenschappelijk woord of een jargonwoord als er een alledaags equivalent bestaat.\n"
+"7. Onthoud dat de verklaring op zichzelf moet staan. De verklaring die je genereert zal worden gepresenteerd en er zal over gestemd worden door mensen die niet weten hoe het tot stand is gekomen. Beschrijf de discussie zelf niet!8. Gebruik alleen de commentaren die de intentie tonen om bij te dragen aan de bredere maatschappelijke discussie: Metacommentaar, commentaar gericht op de deelnemers zelf, en of opvulcontent moeten genegeerd worden voor de analyse.\n"
+"9. Wees niet bevooroordeeld ten opzichte van een bepaalde persoon of standpunt in het gesprek."
 
 #: src/tasks/enrichClosure.ts:35
 msgid "This discussion has now come to an end. You can now say good-bye to each other and hopefully see you in a next round!"
