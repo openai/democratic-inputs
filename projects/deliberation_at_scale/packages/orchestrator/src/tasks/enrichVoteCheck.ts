@@ -38,6 +38,9 @@ const NEW_OUTCOME_AFTER_OUTCOME_INTRODUCTION_MS = 3 * ONE_SECOND_MS * TIME_MULTI
 
 const TIMEOUT_CONVSERSATION_AFTER_MS = 40 * ONE_MINUTE_MS * TIME_MULTIPLIER;
 
+// The minimum time before a new outcome is allowed to be created
+const NEW_CROSS_POLLINATION_COOLDOWN_MS = 10 * ONE_SECOND_MS;
+
 // Timekeeping
 const TIMEKEEPING_MOMENTS = [
     ONE_MINUTE_MS * 10 * TIME_MULTIPLIER,
@@ -433,6 +436,12 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
     const candidateOutcomeId = candidateOutcome?.id;
     const candidateOutcomeContent = candidateOutcome?.content;
     const timeSinceRoomStartedMs = Math.abs(dayjs().diff(dayjs(room?.created_at), 'ms'));
+    const newestOutcome = outcomes?.[0];
+    const timeSinceLastOutcomeMs = Math.abs(dayjs().diff(dayjs(newestOutcome?.created_at), 'ms'));
+
+    if (newestOutcome && timeSinceLastOutcomeMs < NEW_CROSS_POLLINATION_COOLDOWN_MS) {
+        return;
+    }
 
     // guard: make sure there is an outcome
     if (!candidateOutcomeId || !candidateOutcomeContent) {
