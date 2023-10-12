@@ -1,5 +1,5 @@
 "use client";
-import { faHammer, faHandsHelping, faPaperPlane, faQuestion, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faHammer, faHandsHelping, faPaperPlane, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isEmpty } from "radash";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from "react";

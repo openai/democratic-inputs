@@ -39,19 +39,19 @@ export default function Index() {
                 <div className="grid sm:grid-cols-2 sm:grid-rows-2 gap-2 mb-4 text-green-700 text-lg font-medium text-center">
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faVideo} size="2x" fixedWidth />
-                        <p><b>Setup your profile</b> via email in one minute</p>
+                        <h2><b>Setup your profile</b> via email in one minute</h2>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faScroll} size="2x" fixedWidth />
-                        <p><b>Join a conversation</b> with two fellow participants</p>
+                        <h2><b>Join a conversation</b> with two fellow participants</h2>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faShieldHeart} size="2x" fixedWidth />
-                        <p>AI moderators help create a <b>healthy conversation</b></p>
+                        <h2>AI moderators help create a <b>healthy conversation</b></h2>
                     </div>
                     <div className="bg-green-50 p-4 py-6 rounded flex flex-col items-center gap-4">
                         <FontAwesomeIcon icon={faLightbulb} size="2x" fixedWidth />
-                        <p><b>Learn</b> from eachother and <b>contribute</b> to the 040 AI manifesto</p>
+                        <h2><b>Learn</b> from eachother and <b>contribute</b> to the 040 AI manifesto</h2>
                     </div>
                 </div>
                 {!isLoggedIn && (

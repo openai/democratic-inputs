@@ -1,7 +1,7 @@
 import Providers from '@/components/Providers';
 import './globals.css';
 import { PropsWithChildren } from 'react';
-import { Inter } from 'next/font/google';
+import { Inter, Red_Hat_Display } from 'next/font/google';
 
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // Import the CSS
@@ -20,13 +20,21 @@ const inter = Inter({
     fallback: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
 });
 
+const red_hat_display = Red_Hat_Display({
+    subsets: ['latin-ext'],
+    variable: '--font-red-hat-display',
+    display: 'swap',
+    weight: 'variable',
+    fallback: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
+});
+
 
 export default async function RootLayout({
     children
 }: PropsWithChildren) {
     return (
         <html>
-            <body className={inter.variable}>
+            <body className={`${inter.variable} ${red_hat_display.variable}`}>
                 <Providers>
                     <main className="bg-background flex flex-col items-center">
                         {children}
