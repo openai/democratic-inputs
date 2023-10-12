@@ -32,12 +32,13 @@ export default function RoomTopic({ variant }: TopicProps) {
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={classNames(
-                "rounded gap-1 md:gap-4 flex flex-col md:flex-row items-center",
-                topicColorBgMap[theme],
-                variant === 'compact' && 'md:mx-4 md:my-2 mb-1 p-2 md:p-4',
-                variant === "spacious" && "p-4"
-            )}
+            // className={classNames(
+            //     "rounded gap-1 md:gap-4 flex flex-col md:flex-row items-center",
+            //     topicColorBgMap[theme],
+            //     variant === 'compact' && 'md:mx-4 md:my-2 mb-1 p-2 md:p-4',
+            //     variant === "spacious" && "p-4"
+            // )}
+            className={classNames("rounded gap-4 flex items-center", topicColorBgMap[theme], variant === 'compact' && 'md:mx-4 md:my-2 mb-1 p-2 md:p-4', variant === "spacious" && "p-4")}
         >
             <Pill icon={topicSolid} className="border-green-700 hidden md:inline-flex" iconClassName="rotate-90"><Trans>Conversation</Trans></Pill>
             <span className='md:hidden self-start font-bold'>Conversation:</span><ReactMarkdown>{topicContent}</ReactMarkdown>
