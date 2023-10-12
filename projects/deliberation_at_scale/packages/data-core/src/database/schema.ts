@@ -25,7 +25,7 @@ export const OUTCOME_SOURCES_TABLE_NAME = "outcome_sources";
 export const OPINIONS_TABLE_NAME = "opinions";
 export const COMPLETIONS_TABLE_NAME = "completions";
 export const MODERATIONS_TABLE_NAME = "moderations";
-export const JOB_RESULTS_TABLE_NAME = "job_results";
+export const HELP_REQUESTS_TABLE_NAME = "help_requests";
 
 // foreign key field names to make it easy to keep track when renaming tables
 // NOTE: rename the variable name here and the field key in the schema definition!
@@ -55,6 +55,7 @@ export const UPDATED_AT_FIELD_NAME = "updated_at";
 export const topicType = pgEnum("topicType", ["original", "remixed"]);
 export const messageType = pgEnum("messageType", ["chat", "voice", "bot"]);
 export const roomStatusType = pgEnum("roomStatusType", ["group_intro", "topic_intro", "safe", "informed", "debate", "results", "close", "end"]);
+export const helpRequestType = pgEnum("helpRequestType", ["facilitator", "technician"]);
 export const startRoomStatusType = roomStatusType.enumValues[0];
 export const outcomeType = pgEnum("outcomeType", [
     "milestone",
@@ -175,6 +176,24 @@ export const events = pgTable(EVENTS_TABLE_NAME, {
     return {
         startsAtIndex: index("starts_at_index").on(table.startsAt),
         endsAtIndex: index("starts_at_index").on(table.endsAt),
+        ...generateActiveFieldIndex(table),
+        ...generateTimestampFieldIndexes(table),
+    };
+});
+
+export const helpRequests = pgTable(HELP_REQUESTS_TABLE_NAME, {
+    id: generateIdField(),
+    active: generateActiveField(),
+    type: helpRequestType("type").notNull().default('facilitator'),
+    externalRoomUrl: text("external_room_url"),
+    roomId: uuid(ROOM_ID_FIELD_NAME).references(() => rooms.id),
+    participantId: uuid(PARTICIPANT_ID_FIELD_NAME).references(() => participants.id),
+    ...generateTimestampFields(),
+}, (table) => {
+    return {
+        typeIndex: index("type_index").on(table.type),
+        roomIdIndex: index("room_id_index").on(table.roomId),
+        participantIdIndex: index("participant_id_index").on(table.participantId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };

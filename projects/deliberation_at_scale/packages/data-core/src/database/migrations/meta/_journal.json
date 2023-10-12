@@ -253,6 +253,41 @@
       "when": 1697066193152,
       "tag": "0035_amused_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1697112246177,
+      "tag": "0036_real_ben_parker",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "5",
+      "when": 1697112352335,
+      "tag": "0037_chemical_overlord",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1697112403464,
+      "tag": "0038_whole_lila_cheney",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1697112548025,
+      "tag": "0039_clean_black_widow",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1697112679212,
+      "tag": "0040_mature_puff_adder",
+      "breakpoints": true
     }
   ]
 }

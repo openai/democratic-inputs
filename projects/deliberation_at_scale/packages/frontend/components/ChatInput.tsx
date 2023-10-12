@@ -1,5 +1,5 @@
 "use client";
-import { faHammer, faHandsHelping, faPaperPlane, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faHammer, faHandsHelping, faPaperPlane, faQuestion, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isEmpty } from "radash";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from "react";
@@ -12,6 +12,8 @@ import { msg } from "@lingui/macro";
 import Button from "./Button";
 import toast from "react-hot-toast";
 import useIsMobile from "@/hooks/useIsMobile";
+import { HelpRequestType, useCreateHelpRequestMutation } from "@/generated/graphql";
+import useRoom from "@/hooks/useRoom";
 
 const submitBgColorMap: Record<ThemeColors, string> = {
     'blue': 'bg-blue-500',
@@ -40,9 +42,11 @@ export interface ChatInputProps {
 
 export default function ChatInput(props: ChatInputProps) {
     const { _ } = useLingui();
+    const { externalRoomId, roomId, participantId } = useRoom();
     const defaultPlaceholder = _(msg`Tap to type`);
     const { onSubmit, disabled = false, placeholder = defaultPlaceholder, helpAvailable} = props;
     const theme = useTheme();
+    const [createHelpRequest] = useCreateHelpRequestMutation();
     const [helpMenu, setHelpMenu] = useState(false);
     const isMobile = useIsMobile();
     const inputRef = useRef<HTMLInputElement>(null);
@@ -67,6 +71,16 @@ export default function ChatInput(props: ChatInputProps) {
     const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);
     }, [setInput]);
+    const fetchHelp = useCallback(async (type: HelpRequestType) => {
+        await createHelpRequest({
+            variables: {
+                roomId: roomId,
+                participantId: participantId,
+                type,
+                externalRoomUrl: externalRoomId ?? '',
+            },
+        });
+    }, [roomId, participantId, externalRoomId, createHelpRequest]);
 
     // focus the input when it is enabled
     useEffect(() => {
@@ -79,25 +93,6 @@ export default function ChatInput(props: ChatInputProps) {
         }
     }, [inputRef, disabled, isMobile]);
 
-    async function fetchAdmin() {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                // you can resolve or reject here based on some condition
-                // for example, let's resolve the promise:
-                resolve("Facilitator available");
-            }, 1232);
-        });
-    }
-    async function fetchTechie() {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                // you can resolve or reject here based on some condition
-                // for example, let's resolve the promise:
-                resolve("No Technicians Available");
-            }, 3200);
-        });
-    }
-
     return(
         <motion.form
             layoutId="chat-input"
@@ -108,7 +103,7 @@ export default function ChatInput(props: ChatInputProps) {
             className={`relative flex gap-2 z-10 ${disabled ? 'grayscale cursor-not-allowed' : ''}`}
         >
             {helpAvailable && (
-                <div className="relative aspect-square group shrink-0 m-1"
+                <div className="relative aspect-square group shrink-0 m-2"
                     onMouseLeave={function (): void {
                         setHelpMenu(false);
                     }}>
@@ -123,12 +118,12 @@ export default function ChatInput(props: ChatInputProps) {
                             setHelpMenu(!helpMenu);
                         }}
                     >
-                        <FontAwesomeIcon icon={faUserPlus} />
+                        <FontAwesomeIcon icon={faQuestion} />
                     </motion.button>
                     {helpMenu && (
                         <motion.div className="absolute w-max z-50 hover:opacity-100 transition-opacity -translate-y-full top-0 text-black flex flex-col gap-1 pb-4">
                             <Button className="p-2 shadow-xl" onClick={function (): void {
-                                const promiseAdmin = fetchAdmin();
+                                const promiseAdmin = fetchHelp(HelpRequestType.Facilitator);
                                 toast.promise(
                                     promiseAdmin,
                                     {
@@ -151,11 +146,11 @@ export default function ChatInput(props: ChatInputProps) {
                                     }
                                 );
                             } }>
-                                <FontAwesomeIcon icon={faHammer} />
+                            <FontAwesomeIcon icon={faHammer} />
                             Call a Facilitator
                             </Button>
                             <Button className="p-2 shadow-xl" onClick={function (): void {
-                                const promiseAdmin = fetchTechie();
+                                const promiseAdmin = fetchHelp(HelpRequestType.Technician);
                                 toast.promise(
                                     promiseAdmin,
                                     {
@@ -181,12 +176,12 @@ export default function ChatInput(props: ChatInputProps) {
                                 <FontAwesomeIcon icon={faHandsHelping} />
                             Call a Technician
                             </Button>
-                    
+
                         </motion.div>
                     )}
                 </div>
             )}
-            
+
             <div className={`flex rounded-md border w-full bg-white focus-within:ring ${focusColorMap[theme]} ${hoverBorderMap[theme]}`}>
                 <input
                     ref={inputRef}
@@ -205,7 +200,7 @@ export default function ChatInput(props: ChatInputProps) {
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </motion.button>
             </div>
-            
+
         </motion.form>
     );
 }
