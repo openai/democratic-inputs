@@ -1,0 +1,162 @@
+body {
+    background-color: #eee;
+    font-family: 'Roboto', sans-serif;
+}
+
+#outercontainer {
+    width: 80%;
+    max-width: 80em;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.h2 {
+    text-align: center;
+}
+
+#question {
+    background-color: #3f51b5;
+    padding: 15pt;
+    border-radius: 4pt;
+    color: white;
+    box-sizing: border-box;
+}
+
+#buttons {
+    display: none; /* will be "flex" when shown */
+    margin: 8pt 0 0 0;
+    padding: 0;
+    border: 0;
+    flex-wrap: wrap;
+    gap: 8pt;
+}
+
+.choiceinput {
+    /* display: none would make radio buttons inaccessible to tab and screen reader, so hiding differently */
+    opacity: 0;
+    position: absolute;
+}
+
+.choicediv  {
+    background: #bdbdbd;
+    display: flex;
+    flex-grow: 1;
+    border-radius: 4pt;
+    color: black;
+    border: 3pt solid transparent;
+    min-width: 8%;
+}
+
+.choiceinput:focus + .choicediv {
+    outline: rgba(77, 97, 171, 0.5) auto 3pt;
+}
+
+.choiceinput:checked + .choicediv {
+    background: #5b5b5b;
+    color: white;
+    border: 3pt solid #3b3b3b;
+}
+
+.choicelabel {
+    display: block;
+    padding: 5pt;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+#answer {
+    display: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 8pt;
+    border-radius: 4pt;
+    border: none;
+    padding: 8pt;
+}
+
+#answerentertext {
+    display: none;
+}
+
+#submit {
+    margin-top: 8pt;
+    float: right;
+}
+
+.float-out {
+    animation: float-out .5s ease-in both;
+    transform-box: view-box;
+}
+
+@keyframes float-out {
+    0% {
+    transform: translateY(0px);
+    opacity: 1;
+    }
+    100% {
+    transform: translateY(-300%);
+    opacity: 0;
+    }
+}
+
+.float-in {
+    animation: float-in .5s ease-out both;
+    transform-box: view-box;
+}
+
+@keyframes float-in {
+    0% {
+    transform: translateY(300%);
+    opacity: 0;
+    }
+    100% {
+    transform: translateY(0px);
+    opacity: 1;
+    }
+}
+
+.loading #question {
+    animation-name: loading-question-animation;
+    animation-duration: .5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
+}
+
+.loading #question::after {
+    content: "Loading…";
+}
+
+.loading #answer {
+    display: block;
+}
+
+.reading {
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.reading #question {
+    color: black;
+    background-color: white;
+}
+
+.longtext #answer {
+    display: block;
+}
+
+.longtext #submit #answerentertext {
+    display: inline;
+}
+
+.choice #buttons {
+    display: flex;
+}
+
+@keyframes loading-question-animation {
+    0%   {background-color: #3f51b5;}
+    100% {background-color: #8e99d7;}
+}

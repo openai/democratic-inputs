@@ -12,7 +12,7 @@ This is the codebase for the *Generative Social Choice* team. It is still in flu
 ### Code structure
 
 We have two repos:
-- **generative-social-choice**, which contains our *research code* (implementing and measuring performance of algorithms and prompts). 
-- **gensocialchoiceplatform**, which contains our *platform code* (the interface our Prolific participants use). 
+- **gsc_research**, which contains our *research code* (implementing and measuring performance of algorithms and prompts). 
+- **gsc_platform**, which contains our *platform code* (the interface our Prolific participants use). 
 
 Under each folder, you can find the `README.md` for the corresponding repo. 

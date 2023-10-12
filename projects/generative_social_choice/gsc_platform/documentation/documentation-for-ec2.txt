@@ -1,0 +1,66 @@
+### Launch an EC2 Instance:
+Log in to the AWS Management Console.
+Navigate to the EC2 Dashboard.
+Launch a new EC2 instance, choosing an Amazon Machine Image (AMI) based on your preferred operating system (e.g., Amazon Linux, Ubuntu, etc.).
+Configure the instance details, including instance type, VPC, and security groups.
+Launch the instance and create or use an existing key pair for SSH access.
+Connect to the EC2 Instance:
+Use SSH to connect to your EC2 instance using the key pair you selected during instance launch:
+css
+Copy code
+ssh -i path/to/your/key.pem ec2-user@your-instance-ip
+
+To link instance to github repo and pull code from github
+ssh-keygen
+
+Link instance to github repo and pull code from github
+
+pip install flask
+
+
+### Install Gunicorn:
+First, make sure you have your Flask app ready to go. Then, install Gunicorn using pip:
+bash
+Copy code
+pip install gunicorn
+Run Gunicorn:
+Once Gunicorn is installed, you can start your Flask app using the following command:
+bash
+Copy code
+gunicorn -w 4 -b 0.0.0.0:8000 your_app:app
+-w 4: Specifies the number of worker processes. You can adjust this based on the resources available on your server.
+-b 0.0.0.0:8000: Binds Gunicorn to listen on all available network interfaces on port 8000.
+your_app:app: Replace your_app with the name of your Python file (without the .py extension) and app with the name of your Flask app instance.
+
+
+
+Add port 8000 to the security group
+
+Navigate to [public_ip]:8000 from a browser
+
+### Run gunicorn in a background task:
+
+sudo nano /etc/systemd/system/gensocialchoiceplatform.service
+
+[Unit]
+Description=Gunicorn instance to serve gensocialchoice
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/gensocialchoiceplatform
+ExecStart=/path/to/your/virtualenv/bin/gunicorn  -b 0.0.0.0:8000 run:app
+
+[Install]
+WantedBy=multi-user.target
+
+
+Save the file and enable the service:
+bash
+Copy code
+sudo systemctl enable gensocialchoiceplatform
+sudo systemctl start gensocialchoiceplatform
+
+
+### Instructions for adding a database
+https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html

@@ -1,0 +1,17 @@
+my_gpt_usage.pkl
+OPENAI_API_KEY
+OPENAI_ORGANIZATION
+my_gpt_usage.csv
+__pycache__/
+test.ipynb
+.DS_Store
+*.DS_Store
+test.py
+config.ini
+todo.md
+code_llm_project.md
+.vscode/
+test.csv
+PALM_API_KEY
+Generative_Social_Choice.egg-info/
+
