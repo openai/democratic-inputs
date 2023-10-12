@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { FullParticipantFragment, ParticipantStatusType, usePingParticipantMutation } from "@/generated/graphql";
 import { PARTICIPANT_PING_INTERVAL_DELAY_MS } from "@/utilities/constants";
 import useLocalizedPush from "./useLocalizedPush";
+import { supabaseClient } from "@/state/supabase";
 
 export function usePingParticipant(candidateParticipant?: FullParticipantFragment) {
     const participantId = candidateParticipant?.id;
@@ -21,17 +22,22 @@ export function usePingParticipant(candidateParticipant?: FullParticipantFragmen
         }
 
         const pingInterval = setInterval(async () => {
-            const pingResult = await ping({
-                variables: {
-                    participantId,
-                    lastSeenAt: dayjs().toISOString(),
-                }
+            const { data, error } = await supabaseClient.rpc('ping_participant', {
+                participant_id: participantId,
             });
+            const affectedCount = data ? 1 : 0;
 
-            const affectedCount = pingResult.data?.updateparticipantsCollection?.affectedCount ?? 0;
+            // GraphQL version
+            // const pingResult = await ping({
+            //     variables: {
+            //         participantId,
+            //         lastSeenAt: dayjs().toISOString(),
+            //     }
+            // });
+            // const affectedCount = pingResult.data?.updateparticipantsCollection?.affectedCount ?? 0;
 
             // reload the pge when the participant got deactivated somehow
-            if (affectedCount <= 0) {
+            if (error || affectedCount <= 0) {
                 document.location.reload();
             }
         }, PARTICIPANT_PING_INTERVAL_DELAY_MS);
