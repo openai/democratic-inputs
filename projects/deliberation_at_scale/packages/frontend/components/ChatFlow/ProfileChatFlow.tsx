@@ -7,11 +7,17 @@ import { useCallback, useMemo } from "react";
 import ChatFlow from "./index";
 import { msg } from "@lingui/macro";
 import { supabaseClient } from "@/state/supabase";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faReplyAll, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { RoomStatusType, useGetRoomsQuery } from "@/generated/graphql";
+import useRealtimeQuery from "@/hooks/useRealtimeQuery";
 
 export default function ProfileChatFlow() {
     const { _ } = useLingui();
     const logout = useCallback(() => supabaseClient.auth.signOut(), []);
+    const { data: roomsData, loading: roomsLoading } = useRealtimeQuery(useGetRoomsQuery());
+    const rooms = useMemo(() => roomsData?.roomsCollection?.edges.map((room) => room.node), [roomsData]);
+    const latestRoom = useMemo(() => rooms?.[0], [rooms]);
+    const hasLatestRoom = !!latestRoom && latestRoom.active && latestRoom.status_type !== RoomStatusType.End;
     const flow = useMemo(() => {
         return {
             id: "profile",
@@ -31,9 +37,20 @@ export default function ProfileChatFlow() {
                     messageOptions: [[]],
                     quickReplies: [
                         {
+                            hidden: () => !hasLatestRoom || roomsLoading,
+                            id: 'rejoin-room',
+                            icon: faReplyAll,
+                            content: _(msg`Rejoin your last conversation`),
+                            onClick: async (helpers) => {
+                                helpers.postBotMessages([[_(msg`Rejoining your last conversation...`)]]);
+                                await helpers.waitFor(1000);
+                                helpers.goToPage(`/room/${latestRoom?.id}`);
+                            },
+                        },
+                        {
                             id: 'join-room',
                             icon: faMessage,
-                            content: _(msg`Participate in a conversation`),
+                            content: _(msg`Participate in a new conversation`),
                             onClick: async (helpers) => {
                                 helpers.postBotMessages([[_(msg`Great! Moving you to the waiting lobby... Hold on tight!`)]]);
                                 await helpers.waitFor(2000);

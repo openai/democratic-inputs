@@ -40,7 +40,7 @@ export default function RegisterChatFlow() {
                 {
                     name: "thank_you_2",
                     messageOptions: [[
-                        _(msg`After you click on this link, you will be redirected back to this application and ready to start finding common ground.`),
+                        _(msg`After you click on this link, you will be redirected back to this application to be ready to start finding common ground.`),
                     ]],
                     quickReplies: [resetQuickReply],
                 },

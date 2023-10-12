@@ -24,7 +24,7 @@ export default async function RootLayout({
     children
 }: PropsWithChildren) {
     return (
-        <html lang="en">
+        <html>
             <body className={inter.variable}>
                 <Providers>
                     <main className="bg-background flex flex-col items-center">

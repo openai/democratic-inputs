@@ -21,7 +21,6 @@ export function usePingParticipant(candidateParticipant?: FullParticipantFragmen
         }
 
         const pingInterval = setInterval(async () => {
-            console.log('PING', participantId);
             const { data, error } = await supabaseClient.rpc('ping_participant', {
                 participant_id: participantId,
             });

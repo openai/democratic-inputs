@@ -15,7 +15,7 @@ msgstr ""
 
 #: components/ChatFlow/LoginChatFlow.tsx:47
 #: components/ChatFlow/RegisterChatFlow.tsx:43
-msgid "After you click on this link, you will be redirected back to this application and ready to start finding common ground."
+msgid "After you click on this link, you will be redirected back to this application to be ready to start finding common ground."
 msgstr ""
 
 #: components/RoomOutcome.tsx:62
@@ -47,7 +47,7 @@ msgstr "Verander mijn profiel"
 msgid "Check device permissions now"
 msgstr ""
 
-#: components/ColouredHeader.tsx:48
+#: components/ColouredHeader.tsx:51
 msgid "Common Ground"
 msgstr "Common Ground"
 
