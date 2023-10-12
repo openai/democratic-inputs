@@ -66,7 +66,7 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
         await sendBotMessage({
             roomId,
             content: t`
-                Do you want to create your own statements? You can do that at any time by typing in the chat. Your humble AI moderator will summarize them automatically.
+                Do you want to create your **own statements**? You can do that at any time by **typing in the chat**. Your humble AI moderator will summarize them automatically.
             `,
         });
         await waitFor(ONE_SECOND_MS * 5);

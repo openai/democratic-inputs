@@ -51,7 +51,7 @@ export const ONE_MINUTE_MS = 60 * ONE_SECOND_MS;
 
 /* Progression */
 export const ROOM_PROGRESSION_WITH_JOBS = false;
-export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+export const IS_DEVELOPMENT = false && process.env.NODE_ENV === 'development';
 export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
 export const ENABLE_TASK_TESTING = false && IS_DEVELOPMENT;
 export const ENABLE_SINGLE_ROOM_TESTING = false && IS_DEVELOPMENT;

@@ -19,13 +19,13 @@ const TIME_MULTIPLIER = IS_DEVELOPMENT ? 1 : 1;
 const INVITE_VOTE_AFTER_MS = 1 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
 // The time before the bot will invite the participants to have an open discussion within the current vote
-const INVITE_OPEN_DISCUSSION_AFTER_MS = 5 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
+const INVITE_OPEN_DISCUSSION_AFTER_MS = 3 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
 // The time before the bot will invite to pass on the current vote
-const INVITE_PASS_AFTER_MS = 10 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
+const INVITE_PASS_AFTER_MS = 5 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
 // The time before the bot will forcefully move to a new vote
-const TIMEOUT_VOTE_AFTER_MS = 15 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
+const TIMEOUT_VOTE_AFTER_MS = 7 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
 // The time before a new outcome is searched after a vote has timed out
 const NEW_OUTCOME_AFTER_VOTE_TIMEOUT_MS = 5 * ONE_SECOND_MS * TIME_MULTIPLIER;
@@ -603,12 +603,6 @@ function getSummarisationPrompt(options: SummarisationPromptOptions) {
     `;
     const verificationPrompt = t`
         10. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!
-
-        Instructions:
-        If you can make a statement respond in a structured JSON without any prefixes or postfixes whether this is the case.
-        As an output use the following JSON format:
-            - verified: boolean to identify whether a relevant statement could be made.
-            - statement: the actual statement that was made.
     `;
 
     const prompt = `
