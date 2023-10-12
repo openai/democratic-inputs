@@ -85,6 +85,7 @@ export default function useRoom(options?: UseRoomOptions) {
     const roomStatus = room?.status_type;
     const externalRoomId = ENABLE_TEST_ROOM ? TEST_EXTERNAL_ROOM_ID : room?.external_room_id;
     const departedParticipants = participants?.filter(participant => participant.status === ParticipantStatusType.EndOfSession) ?? [];
+    const inactiveParticipants = participants?.filter(participant => participant.active === false) ?? [];
     const joiningParticipants = participants?.filter(participant => participant.status === ParticipantStatusType.WaitingForConfirmation) ?? [];
     const participant = participants?.find(participant => participant.user_id === userId);
     const participantId = participant?.id;
@@ -128,6 +129,7 @@ export default function useRoom(options?: UseRoomOptions) {
         participants,
         participant,
         departedParticipants,
+        inactiveParticipants,
         joiningParticipants,
         participantId,
         loadingParticipants,
