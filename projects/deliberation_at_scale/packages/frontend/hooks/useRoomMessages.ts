@@ -27,6 +27,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
         participantMessageHistoryAmount = 1,
         botMessageHistoryAmount = 1,
     } = options ?? {};
+    const hasRoom = !!roomId;
     const { _ } = useLingui();
     const insertFilter = `room_id=eq.${roomId}`;
     const { data: messagesData, loading: messagesLoading } = useRealtimeQuery(useGetRoomMessagesQuery({
@@ -36,7 +37,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
             participantMessageHistoryAmount
         }
     }), {
-        autoRefetch: true,
+        autoRefetch: hasRoom,
         autoRefetchIntervalMs: ONE_SECOND_MS * 3,
         tableEventsLookup: {
             messages: {

@@ -43,6 +43,7 @@ export default function useRoom(options?: UseRoomOptions) {
     const params = useParams();
     const paramsRoomId = params?.roomId as RoomId;
     const { roomId = paramsRoomId } = options ?? {};
+    const hasRoom = !!roomId;
     const { data: roomData, loading: loadingRooms, error: roomError } = useRealtimeQuery(useGetRoomsQuery({
         variables: {
             roomId,
@@ -53,7 +54,7 @@ export default function useRoom(options?: UseRoomOptions) {
             roomId,
         },
     }), {
-        autoRefetch: !!roomId,
+        autoRefetch: hasRoom,
         autoRefetchIntervalMs: ONE_SECOND_MS * 10,
     });
     const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
@@ -63,6 +64,8 @@ export default function useRoom(options?: UseRoomOptions) {
             roomId,
         },
     }), {
+        autoRefetch: hasRoom,
+        autoRefetchIntervalMs: ONE_SECOND_MS * 10,
         tableEventsLookup: {
             opinions: {
                 listenFilters: {
