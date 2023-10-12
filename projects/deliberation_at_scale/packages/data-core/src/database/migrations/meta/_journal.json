@@ -288,6 +288,13 @@
       "when": 1697112679212,
       "tag": "0040_mature_puff_adder",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1697114869334,
+      "tag": "0041_free_talisman",
+      "breakpoints": true
     }
   ]
 }

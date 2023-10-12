@@ -62,6 +62,7 @@ export const outcomeType = pgEnum("outcomeType", [
     "consensus",
     "off_topic",
     "cross_pollination",
+    "seed_statement",
 
     "overall_impression",
     "topic_interest",

@@ -68,18 +68,18 @@ $function$
 CREATE POLICY "Enable insert for authenticated users only" ON "public"."participants"
 AS PERMISSIVE FOR INSERT
 TO authenticated
-WITH CHECK (user_id = current_user_id()::uuid AND room_id IS NULL)
+WITH CHECK (user_id = current_user_id()::uuid AND room_id IS NULL);
 
 CREATE POLICY "Enable read access to owning users and peer users" ON "public"."participants"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (user_id = current_user_id()::uuid)
+USING (user_id = current_user_id()::uuid);
 
 CREATE POLICY "Enable update for users based on email" ON "public"."participants"
 AS PERMISSIVE FOR UPDATE
 TO authenticated
 USING (user_id = current_user_id()::uuid)
-WITH CHECK (user_id = current_user_id()::uuid)
+WITH CHECK (user_id = current_user_id()::uuid);
 
 CREATE OR REPLACE TRIGGER participants_update_cls
   BEFORE UPDATE
@@ -99,69 +99,69 @@ COMMIT;
 CREATE POLICY "Enable read access for all users" ON "public"."users"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (auth_user_id = auth.uid())
+USING (auth_user_id = auth.uid());
 
 CREATE POLICY "Enable update for users based on logged in user" ON "public"."users"
 AS PERMISSIVE FOR UPDATE
 TO authenticated
-WITH CHECK (id = current_user_id()::uuid)
+WITH CHECK (id = current_user_id()::uuid);
 
 --> rooms
 CREATE POLICY "Enable insert for authenticated users only" ON "public"."rooms"
 AS PERMISSIVE FOR INSERT
 TO authenticated
-WITH CHECK (id IN (SELECT room_id FROM participants WHERE user_id = current_user_id()::uuid))
+WITH CHECK (id IN (SELECT room_id FROM participants WHERE user_id = current_user_id()::uuid));
 
 CREATE POLICY "Enable read access to authenticated" ON "public"."rooms"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (id IN (SELECT room_id FROM participants WHERE user_id = current_user_id()::uuid))
+USING (id IN (SELECT room_id FROM participants WHERE user_id = current_user_id()::uuid));
 
 CREATE POLICY "Enable update for service key" ON "public"."rooms"
 AS PERMISSIVE FOR UPDATE
 TO service_role
 USING (TRUE)
-WITH CHECK (TRUE)
+WITH CHECK (TRUE);
 
 --> topics
 CREATE POLICY "Enable read access for all authenticated users" ON "public"."topics"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (TRUE)
+USING (TRUE);
 
 --> messages
 CREATE POLICY "Enable read access for authenticated users" ON "public"."messages"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (room_id IN (SELECT id FROM rooms))
+USING (room_id IN (SELECT id FROM rooms));
 
 CREATE POLICY "Enable insert for authenticated users only" ON "public"."messages"
 AS PERMISSIVE FOR INSERT
 TO authenticated
-WITH CHECK (participant_id IN (SELECT id FROM participants) AND room_id IN (SELECT id FROM rooms))
+WITH CHECK (participant_id IN (SELECT id FROM participants) AND room_id IN (SELECT id FROM rooms));
 
 --> outcomes
 CREATE POLICY "Enable read access for authenticated" ON "public"."outcomes"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (room_id IN (SELECT id FROM rooms))
+USING (room_id IN (SELECT id FROM rooms));
 
 --> opinions
 CREATE POLICY "Enable read access for authenticated" ON "public"."opinions"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (participant_id IN (SELECT id FROM participants))
+USING (participant_id IN (SELECT id FROM participants));
 
 CREATE POLICY "Enable update for users" ON "public"."opinions"
 AS PERMISSIVE FOR UPDATE
 TO authenticated
 USING (participant_id IN (SELECT id from participants) AND outcome_id IN (SELECT id from outcomes))
-WITH CHECK (participant_id IN (SELECT id from participants) AND outcome_id IN (SELECT id from outcomes))
+WITH CHECK (participant_id IN (SELECT id from participants) AND outcome_id IN (SELECT id from outcomes));
 
 CREATE POLICY "Enable insert for authenticated users only" ON "public"."opinions"
 AS PERMISSIVE FOR INSERT
 TO authenticated
-WITH CHECK (participant_id IN (SELECT id FROM participants) AND outcome_id IN (SELECT id FROM outcomes))
+WITH CHECK (participant_id IN (SELECT id FROM participants) AND outcome_id IN (SELECT id FROM outcomes));
 
 CREATE OR REPLACE TRIGGER opinions_update_cls
   BEFORE UPDATE
@@ -178,18 +178,18 @@ COMMIT;
 CREATE POLICY "Enable read access for authenticated" ON "public"."outcome_sources"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (outcome_id IN (SELECT id FROM outcomes))
+USING (outcome_id IN (SELECT id FROM outcomes));
 
 --> cross pollinations
 CREATE POLICY "Enable read access for authenticated" ON "public"."cross_pollinations"
 AS PERMISSIVE FOR SELECT
 TO authenticated
-USING (room_id IN (SELECT id FROM rooms))
+USING (room_id IN (SELECT id FROM rooms));
 
 --> events
 CREATE POLICY "Enable read access for all users" ON "public"."events"
 AS PERMISSIVE FOR SELECT
 TO public
-USING (true)
+USING (true);
 
 

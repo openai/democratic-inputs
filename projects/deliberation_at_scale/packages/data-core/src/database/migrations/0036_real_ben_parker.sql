@@ -22,14 +22,3 @@ BEGIN
     END LOOP;
 END;
 $$;
-
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."help_requests"
-AS PERMISSIVE FOR INSERT
-TO authenticated
-
-WITH CHECK (participant_id IN (SELECT id FROM participants))
-
-CREATE POLICY "Enable read access for authenticated" ON "public"."help_requests"
-AS PERMISSIVE FOR SELECT
-TO authenticated
-USING (participant_id IN (SELECT id FROM participants))
