@@ -9,6 +9,7 @@ import { UserInput } from "@/types/flows";
 import useTheme, { ThemeColors } from '@/hooks/useTheme';
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/macro";
+import useIsMobile from "@/hooks/useIsMobile";
 
 const submitBgColorMap: Record<ThemeColors, string> = {
     'blue': 'bg-blue-500',
@@ -39,6 +40,7 @@ export default function ChatInput(props: ChatInputProps) {
     const defaultPlaceholder = _(msg`Tap to type`);
     const { onSubmit, disabled = false, placeholder = defaultPlaceholder} = props;
     const theme = useTheme();
+    const isMobile = useIsMobile();
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState('');
     const handleSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
@@ -68,10 +70,10 @@ export default function ChatInput(props: ChatInputProps) {
             return;
         }
 
-        if (inputRef.current) {
+        if (inputRef.current && !isMobile) {
             inputRef.current.focus();
         }
-    }, [inputRef, disabled]);
+    }, [inputRef, disabled, isMobile]);
 
     return(
         <motion.form
