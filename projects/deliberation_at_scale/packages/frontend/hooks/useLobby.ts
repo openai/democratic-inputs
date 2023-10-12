@@ -11,11 +11,14 @@ import useProfile from "./useProfile";
 import useRealtimeQuery from "./useRealtimeQuery";
 import { useAppSelector } from "@/state/store";
 import useLocalizedPush from "./useLocalizedPush";
+import dayjs, { Dayjs } from "dayjs";
+import { ONE_SECOND_MS } from "@/utilities/constants";
 
 export default function useLobby() {
     const { user } = useProfile();
     const { id: userId } = user ?? {};
     const [confirmingParticipantId, setConfirmingParticipantId] = useState<string | null>(null);
+    const [lastCreatedAt, setLastCreatedAt] = useState<Dayjs | null>(null);
     const flowStateNickName = useAppSelector((state) => state.flow.flowStateLookup?.['lobby']?.['nickName']);
     const isConfirming = !!confirmingParticipantId;
     const { data: participantData,
@@ -65,11 +68,17 @@ export default function useLobby() {
     // create a queued participant when the user has none yet
     // block this when no valid user is found OR when we are already waiting for a confirm
     useEffect(() => {
-        if (participantsLoading || !!candidateParticipant || !userId || isConfirming || isCreatingParticipant) {
+        const hasValidCandidate = !!candidateParticipant
+            && candidateParticipant.status !== ParticipantStatusType.EndOfSession
+            && candidateParticipant.active === true
+            && Math.abs(dayjs().diff(dayjs(lastCreatedAt), 'ms')) <= ONE_SECOND_MS * 60;
+
+        if (participantsLoading || hasValidCandidate || !userId || isConfirming || isCreatingParticipant) {
             return;
         }
 
         // create new participant
+        setLastCreatedAt(dayjs());
         createParticipant({
             variables: {
                 userId,
@@ -78,7 +87,7 @@ export default function useLobby() {
         }).then(() => {
             refetchParticipants();
         });
-    }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, isConfirming, flowStateNickName, isCreatingParticipant]);
+    }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, isConfirming, flowStateNickName, isCreatingParticipant, setLastCreatedAt, lastCreatedAt]);
 
     // store the the participant ID when a confirm is requested
     // this will help us redirect the user back to the timeed out flow when not responding quickly enough
