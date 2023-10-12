@@ -21,6 +21,8 @@ export const ANIMATION_DURATION_S = '0.3s';
  * Language
  */
 export const DEFAULT_LANGUAGE = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE ?? 'en';
+export const ENABLE_FORCE_LANGUAGE = process.env.NEXT_PUBLIC_ENABLE_FORCE_LANGUAGE ?? false;
+export const FORCED_LANGUAGE = process.env.NEXT_PUBLIC_FORCED_LANGUAGE ?? 'en';
 
 /**
  * Time
