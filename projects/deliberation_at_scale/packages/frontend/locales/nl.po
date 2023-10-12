@@ -89,7 +89,7 @@ msgid "Contributor"
 msgstr "Deelnemer"
 
 #: components/RoomMenu.tsx:53
-#: components/RoomTopic.tsx:42
+#: components/RoomTopic.tsx:43
 msgid "Conversation"
 msgstr "Gesprek"
 
