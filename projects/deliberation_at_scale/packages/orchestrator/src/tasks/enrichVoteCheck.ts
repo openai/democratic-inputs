@@ -432,7 +432,7 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
         .from('outcomes')
         .select()
         .not('id', 'in', `(${skippedOutcomeIds.join(',')})`)
-        .in('type', ['milestone', 'consensus'])
+        .in('type', ['milestone', 'consensus', 'seed_statement'])
         .eq('active', true)
         .limit(200);
     const candidateOutcome = draw(candidateOutcomes ?? []);
