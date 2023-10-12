@@ -122,6 +122,8 @@ export type Mutation = {
   deleteFromcompletionsCollection: CompletionsDeleteResponse;
   /** Deletes zero or more records from the `events` collection */
   deleteFromeventsCollection: EventsDeleteResponse;
+  /** Deletes zero or more records from the `help_requests` collection */
+  deleteFromhelp_requestsCollection: Help_RequestsDeleteResponse;
   /** Deletes zero or more records from the `messages` collection */
   deleteFrommessagesCollection: MessagesDeleteResponse;
   /** Deletes zero or more records from the `moderations` collection */
@@ -144,6 +146,8 @@ export type Mutation = {
   insertIntocompletionsCollection?: Maybe<CompletionsInsertResponse>;
   /** Adds one or more `events` records to the collection */
   insertIntoeventsCollection?: Maybe<EventsInsertResponse>;
+  /** Adds one or more `help_requests` records to the collection */
+  insertIntohelp_requestsCollection?: Maybe<Help_RequestsInsertResponse>;
   /** Adds one or more `messages` records to the collection */
   insertIntomessagesCollection?: Maybe<MessagesInsertResponse>;
   /** Adds one or more `moderations` records to the collection */
@@ -166,6 +170,8 @@ export type Mutation = {
   updatecompletionsCollection: CompletionsUpdateResponse;
   /** Updates zero or more records in the `events` collection */
   updateeventsCollection: EventsUpdateResponse;
+  /** Updates zero or more records in the `help_requests` collection */
+  updatehelp_requestsCollection: Help_RequestsUpdateResponse;
   /** Updates zero or more records in the `messages` collection */
   updatemessagesCollection: MessagesUpdateResponse;
   /** Updates zero or more records in the `moderations` collection */
@@ -198,6 +204,13 @@ export type MutationDeleteFromcompletionsCollectionArgs = {
 export type MutationDeleteFromeventsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
   filter?: InputMaybe<EventsFilter>;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationDeleteFromhelp_RequestsCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<Help_RequestsFilter>;
 };
 
 
@@ -277,6 +290,12 @@ export type MutationInsertIntoeventsCollectionArgs = {
 
 
 /** The root type for creating and mutating data */
+export type MutationInsertIntohelp_RequestsCollectionArgs = {
+  objects: Array<Help_RequestsInsertInput>;
+};
+
+
+/** The root type for creating and mutating data */
 export type MutationInsertIntomessagesCollectionArgs = {
   objects: Array<MessagesInsertInput>;
 };
@@ -343,6 +362,14 @@ export type MutationUpdateeventsCollectionArgs = {
   atMost?: Scalars['Int']['input'];
   filter?: InputMaybe<EventsFilter>;
   set: EventsUpdateInput;
+};
+
+
+/** The root type for creating and mutating data */
+export type MutationUpdatehelp_RequestsCollectionArgs = {
+  atMost?: Scalars['Int']['input'];
+  filter?: InputMaybe<Help_RequestsFilter>;
+  set: Help_RequestsUpdateInput;
 };
 
 
@@ -455,6 +482,8 @@ export type Query = {
   completionsCollection?: Maybe<CompletionsConnection>;
   /** A pagable collection of type `events` */
   eventsCollection?: Maybe<EventsConnection>;
+  /** A pagable collection of type `help_requests` */
+  help_requestsCollection?: Maybe<Help_RequestsConnection>;
   /** A pagable collection of type `messages` */
   messagesCollection?: Maybe<MessagesConnection>;
   /** A pagable collection of type `moderations` */
@@ -497,6 +526,17 @@ export type QueryEventsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
+};
+
+
+/** The root type for querying data */
+export type QueryHelp_RequestsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<Help_RequestsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<Help_RequestsOrderBy>>;
 };
 
 
@@ -927,6 +967,116 @@ export type EventsUpdateResponse = {
   affectedCount: Scalars['Int']['output'];
   /** Array of records impacted by the mutation */
   records: Array<Events>;
+};
+
+export enum HelpRequestType {
+  Facilitator = 'facilitator',
+  Technician = 'technician'
+}
+
+/** Boolean expression comparing fields on type "helpRequestType" */
+export type HelpRequestTypeFilter = {
+  eq?: InputMaybe<HelpRequestType>;
+  in?: InputMaybe<Array<HelpRequestType>>;
+  is?: InputMaybe<FilterIs>;
+  neq?: InputMaybe<HelpRequestType>;
+};
+
+export type Help_Requests = Node & {
+  __typename?: 'help_requests';
+  active: Scalars['Boolean']['output'];
+  created_at: Scalars['Datetime']['output'];
+  external_room_url?: Maybe<Scalars['String']['output']>;
+  id: Scalars['UUID']['output'];
+  /** Globally Unique Record Identifier */
+  nodeId: Scalars['ID']['output'];
+  participant_id?: Maybe<Scalars['UUID']['output']>;
+  participants?: Maybe<Participants>;
+  room_id?: Maybe<Scalars['UUID']['output']>;
+  rooms?: Maybe<Rooms>;
+  type: HelpRequestType;
+  updated_at: Scalars['Datetime']['output'];
+};
+
+export type Help_RequestsConnection = {
+  __typename?: 'help_requestsConnection';
+  edges: Array<Help_RequestsEdge>;
+  pageInfo: PageInfo;
+};
+
+export type Help_RequestsDeleteResponse = {
+  __typename?: 'help_requestsDeleteResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<Help_Requests>;
+};
+
+export type Help_RequestsEdge = {
+  __typename?: 'help_requestsEdge';
+  cursor: Scalars['String']['output'];
+  node: Help_Requests;
+};
+
+export type Help_RequestsFilter = {
+  active?: InputMaybe<BooleanFilter>;
+  created_at?: InputMaybe<DatetimeFilter>;
+  external_room_url?: InputMaybe<StringFilter>;
+  id?: InputMaybe<UuidFilter>;
+  nodeId?: InputMaybe<IdFilter>;
+  participant_id?: InputMaybe<UuidFilter>;
+  room_id?: InputMaybe<UuidFilter>;
+  type?: InputMaybe<HelpRequestTypeFilter>;
+  updated_at?: InputMaybe<DatetimeFilter>;
+};
+
+export type Help_RequestsInsertInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  external_room_url?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  participant_id?: InputMaybe<Scalars['UUID']['input']>;
+  room_id?: InputMaybe<Scalars['UUID']['input']>;
+  type?: InputMaybe<HelpRequestType>;
+  updated_at?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type Help_RequestsInsertResponse = {
+  __typename?: 'help_requestsInsertResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<Help_Requests>;
+};
+
+export type Help_RequestsOrderBy = {
+  active?: InputMaybe<OrderByDirection>;
+  created_at?: InputMaybe<OrderByDirection>;
+  external_room_url?: InputMaybe<OrderByDirection>;
+  id?: InputMaybe<OrderByDirection>;
+  participant_id?: InputMaybe<OrderByDirection>;
+  room_id?: InputMaybe<OrderByDirection>;
+  type?: InputMaybe<OrderByDirection>;
+  updated_at?: InputMaybe<OrderByDirection>;
+};
+
+export type Help_RequestsUpdateInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  created_at?: InputMaybe<Scalars['Datetime']['input']>;
+  external_room_url?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  participant_id?: InputMaybe<Scalars['UUID']['input']>;
+  room_id?: InputMaybe<Scalars['UUID']['input']>;
+  type?: InputMaybe<HelpRequestType>;
+  updated_at?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type Help_RequestsUpdateResponse = {
+  __typename?: 'help_requestsUpdateResponse';
+  /** Count of the records impacted by the mutation */
+  affectedCount: Scalars['Int']['output'];
+  /** Array of records impacted by the mutation */
+  records: Array<Help_Requests>;
 };
 
 export enum MessageType {
@@ -1768,6 +1918,7 @@ export type Participants = Node & {
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
   demographics: Scalars['JSON']['output'];
+  help_requestsCollection?: Maybe<Help_RequestsConnection>;
   id: Scalars['UUID']['output'];
   last_seen_at: Scalars['Datetime']['output'];
   messagesCollection?: Maybe<MessagesConnection>;
@@ -1793,6 +1944,16 @@ export type ParticipantsCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
+};
+
+
+export type ParticipantsHelp_RequestsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<Help_RequestsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<Help_RequestsOrderBy>>;
 };
 
 
@@ -1941,6 +2102,7 @@ export type Rooms = Node & {
   completionsCollection?: Maybe<CompletionsConnection>;
   created_at: Scalars['Datetime']['output'];
   external_room_id?: Maybe<Scalars['String']['output']>;
+  help_requestsCollection?: Maybe<Help_RequestsConnection>;
   id: Scalars['UUID']['output'];
   messagesCollection?: Maybe<MessagesConnection>;
   moderationsCollection?: Maybe<ModerationsConnection>;
@@ -1963,6 +2125,16 @@ export type RoomsCompletionsCollectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompletionsOrderBy>>;
+};
+
+
+export type RoomsHelp_RequestsCollectionArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  filter?: InputMaybe<Help_RequestsFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<Help_RequestsOrderBy>>;
 };
 
 
@@ -2421,6 +2593,16 @@ export type FullOutcomeFragment = { __typename?: 'outcomes', id: any, active: bo
 
 export type FullParticipantFragment = { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any };
 
+export type CreateHelpRequestMutationVariables = Exact<{
+  participantId: Scalars['UUID']['input'];
+  roomId: Scalars['UUID']['input'];
+  type: HelpRequestType;
+  externalRoomUrl: Scalars['String']['input'];
+}>;
+
+
+export type CreateHelpRequestMutation = { __typename?: 'Mutation', insertIntohelp_requestsCollection?: { __typename?: 'help_requestsInsertResponse', affectedCount: number } | null };
+
 export type CreateOpinionMutationVariables = Exact<{
   outcomeId?: InputMaybe<Scalars['UUID']['input']>;
   participantId: Scalars['UUID']['input'];
@@ -2672,6 +2854,44 @@ export const FullUserFragmentDoc = gql`
   created_at
 }
     `;
+export const CreateHelpRequestDocument = gql`
+    mutation CreateHelpRequest($participantId: UUID!, $roomId: UUID!, $type: helpRequestType!, $externalRoomUrl: String!) {
+  insertIntohelp_requestsCollection(
+    objects: {participant_id: $participantId, room_id: $roomId, type: $type, external_room_url: $externalRoomUrl}
+  ) {
+    affectedCount
+  }
+}
+    `;
+export type CreateHelpRequestMutationFn = Apollo.MutationFunction<CreateHelpRequestMutation, CreateHelpRequestMutationVariables>;
+
+/**
+ * __useCreateHelpRequestMutation__
+ *
+ * To run a mutation, you first call `useCreateHelpRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateHelpRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createHelpRequestMutation, { data, loading, error }] = useCreateHelpRequestMutation({
+ *   variables: {
+ *      participantId: // value for 'participantId'
+ *      roomId: // value for 'roomId'
+ *      type: // value for 'type'
+ *      externalRoomUrl: // value for 'externalRoomUrl'
+ *   },
+ * });
+ */
+export function useCreateHelpRequestMutation(baseOptions?: Apollo.MutationHookOptions<CreateHelpRequestMutation, CreateHelpRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateHelpRequestMutation, CreateHelpRequestMutationVariables>(CreateHelpRequestDocument, options);
+      }
+export type CreateHelpRequestMutationHookResult = ReturnType<typeof useCreateHelpRequestMutation>;
+export type CreateHelpRequestMutationResult = Apollo.MutationResult<CreateHelpRequestMutation>;
+export type CreateHelpRequestMutationOptions = Apollo.BaseMutationOptions<CreateHelpRequestMutation, CreateHelpRequestMutationVariables>;
 export const CreateOpinionDocument = gql`
     mutation CreateOpinion($outcomeId: UUID, $participantId: UUID!, $type: opinionType!, $rangeValue: Int, $statement: String, $optionType: opinionOptionType) {
   insertIntoopinionsCollection(

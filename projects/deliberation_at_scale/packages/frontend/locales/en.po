@@ -39,17 +39,13 @@ msgstr "Before joining the conversation, let's pick a nickname and configure you
 msgid "Cancel"
 msgstr "Cancel"
 
-#: components/ChatFlow/ProfileChatFlow.tsx:66
+#: components/ChatFlow/ProfileChatFlow.tsx:83
 msgid "Change my profile"
 msgstr "Change my profile"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:23
 msgid "Check device permissions now"
 msgstr "Check device permissions now"
-
-#: components/ColouredHeader.tsx:51
-msgid "Common Ground"
-msgstr "Common Ground"
 
 #: app/[lang]/room/[roomId]/layout.tsx:46
 msgid "Connecting to video call..."
@@ -127,7 +123,7 @@ msgstr "Go to voting"
 msgid "Great, your nickname will be \"[nickName]\"."
 msgstr "Great, your nickname will be \"[nickName]\"."
 
-#: components/ChatFlow/ProfileChatFlow.tsx:38
+#: components/ChatFlow/ProfileChatFlow.tsx:55
 msgid "Great! Moving you to the waiting lobby... Hold on tight!"
 msgstr "Great! Moving you to the waiting lobby... Hold on tight!"
 
@@ -199,11 +195,11 @@ msgstr "Loading media..."
 msgid "Loading room..."
 msgstr "Loading room..."
 
-#: components/ChatFlow/ProfileChatFlow.tsx:48
+#: components/ChatFlow/ProfileChatFlow.tsx:65
 msgid "Logging you out..."
 msgstr "Logging you out..."
 
-#: components/ChatFlow/ProfileChatFlow.tsx:46
+#: components/ChatFlow/ProfileChatFlow.tsx:63
 msgid "Logout"
 msgstr "Logout"
 
@@ -231,13 +227,21 @@ msgstr "Okay, cancelling..."
 msgid "Okay! Moving you to the lobby."
 msgstr "Okay! Moving you to the lobby."
 
-#: components/ChatFlow/ProfileChatFlow.tsx:36
-msgid "Participate in a conversation"
-msgstr "Participate in a conversation"
+#: components/ChatFlow/ProfileChatFlow.tsx:53
+msgid "Participate in a new conversation"
+msgstr "Participate in a new conversation"
 
 #: components/RoomOutcome.tsx:72
 msgid "Pass"
 msgstr "Pass"
+
+#: components/ChatFlow/ProfileChatFlow.tsx:43
+msgid "Rejoin your last conversation"
+msgstr "Rejoin your last conversation"
+
+#: components/ChatFlow/ProfileChatFlow.tsx:45
+msgid "Rejoining your last conversation..."
+msgstr "Rejoining your last conversation..."
 
 #: components/ChatFlow/InvalidChatFlow.tsx:22
 msgid "Retry joining a room"
@@ -276,7 +280,7 @@ msgstr "Statement"
 msgid "Sure!"
 msgstr "Sure!"
 
-#: components/ChatInput.tsx:40
+#: components/ChatInput.tsx:46
 msgid "Tap to type"
 msgstr "Tap to type"
 
@@ -329,7 +333,7 @@ msgstr "Try joining a room again"
 msgid "Use my current nickname: \"[nickName]\"."
 msgstr "Use my current nickname: \"[nickName]\"."
 
-#: components/ChatFlow/ProfileChatFlow.tsx:57
+#: components/ChatFlow/ProfileChatFlow.tsx:74
 msgid "View results of previous conversations"
 msgstr "View results of previous conversations"
 
@@ -349,7 +353,7 @@ msgstr "Waiting for other participants..."
 msgid "Waiting..."
 msgstr "Waiting..."
 
-#: components/ChatFlow/ProfileChatFlow.tsx:21
+#: components/ChatFlow/ProfileChatFlow.tsx:27
 msgid ""
 "Welcome to Common Ground!\n"
 "Dive into our conversation about the future of AI.\n"

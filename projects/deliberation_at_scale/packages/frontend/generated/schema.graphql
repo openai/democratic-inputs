@@ -146,6 +146,17 @@ type Mutation {
     filter: eventsFilter
   ): eventsDeleteResponse!
 
+  """Deletes zero or more records from the `help_requests` collection"""
+  deleteFromhelp_requestsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: help_requestsFilter
+  ): help_requestsDeleteResponse!
+
   """Deletes zero or more records from the `messages` collection"""
   deleteFrommessagesCollection(
     """
@@ -251,6 +262,9 @@ type Mutation {
   """Adds one or more `events` records to the collection"""
   insertIntoeventsCollection(objects: [eventsInsertInput!]!): eventsInsertResponse
 
+  """Adds one or more `help_requests` records to the collection"""
+  insertIntohelp_requestsCollection(objects: [help_requestsInsertInput!]!): help_requestsInsertResponse
+
   """Adds one or more `messages` records to the collection"""
   insertIntomessagesCollection(objects: [messagesInsertInput!]!): messagesInsertResponse
 
@@ -309,6 +323,22 @@ type Mutation {
     """
     set: eventsUpdateInput!
   ): eventsUpdateResponse!
+
+  """Updates zero or more records in the `help_requests` collection"""
+  updatehelp_requestsCollection(
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: help_requestsFilter
+
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: help_requestsUpdateInput!
+  ): help_requestsUpdateResponse!
 
   """Updates zero or more records in the `messages` collection"""
   updatemessagesCollection(
@@ -536,6 +566,27 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [eventsOrderBy!]
   ): eventsConnection
+
+  """A pagable collection of type `help_requests`"""
+  help_requestsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: help_requestsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [help_requestsOrderBy!]
+  ): help_requestsConnection
 
   """A pagable collection of type `messages`"""
   messagesCollection(
@@ -1084,6 +1135,116 @@ type eventsUpdateResponse {
 
   """Array of records impacted by the mutation"""
   records: [events!]!
+}
+
+enum helpRequestType {
+  facilitator
+  technician
+}
+
+"""
+Boolean expression comparing fields on type "helpRequestType"
+"""
+input helpRequestTypeFilter {
+  eq: helpRequestType
+  in: [helpRequestType!]
+  is: FilterIs
+  neq: helpRequestType
+}
+
+type help_requests implements Node {
+  active: Boolean!
+  created_at: Datetime!
+  external_room_url: String
+  id: UUID!
+
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  participant_id: UUID
+  participants: participants
+  room_id: UUID
+  rooms: rooms
+  type: helpRequestType!
+  updated_at: Datetime!
+}
+
+type help_requestsConnection {
+  edges: [help_requestsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type help_requestsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [help_requests!]!
+}
+
+type help_requestsEdge {
+  cursor: String!
+  node: help_requests!
+}
+
+input help_requestsFilter {
+  active: BooleanFilter
+  created_at: DatetimeFilter
+  external_room_url: StringFilter
+  id: UUIDFilter
+  nodeId: IDFilter
+  participant_id: UUIDFilter
+  room_id: UUIDFilter
+  type: helpRequestTypeFilter
+  updated_at: DatetimeFilter
+}
+
+input help_requestsInsertInput {
+  active: Boolean
+  created_at: Datetime
+  external_room_url: String
+  id: UUID
+  participant_id: UUID
+  room_id: UUID
+  type: helpRequestType
+  updated_at: Datetime
+}
+
+type help_requestsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [help_requests!]!
+}
+
+input help_requestsOrderBy {
+  active: OrderByDirection
+  created_at: OrderByDirection
+  external_room_url: OrderByDirection
+  id: OrderByDirection
+  participant_id: OrderByDirection
+  room_id: OrderByDirection
+  type: OrderByDirection
+  updated_at: OrderByDirection
+}
+
+input help_requestsUpdateInput {
+  active: Boolean
+  created_at: Datetime
+  external_room_url: String
+  id: UUID
+  participant_id: UUID
+  room_id: UUID
+  type: helpRequestType
+  updated_at: Datetime
+}
+
+type help_requestsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [help_requests!]!
 }
 
 enum messageType {
@@ -2048,6 +2209,25 @@ type participants implements Node {
   ): completionsConnection
   created_at: Datetime!
   demographics: JSON!
+  help_requestsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: help_requestsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [help_requestsOrderBy!]
+  ): help_requestsConnection
   id: UUID!
   last_seen_at: Datetime!
   messagesCollection(
@@ -2253,6 +2433,25 @@ type rooms implements Node {
   ): completionsConnection
   created_at: Datetime!
   external_room_id: String
+  help_requestsCollection(
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: help_requestsFilter
+
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Sort order to apply to the collection"""
+    orderBy: [help_requestsOrderBy!]
+  ): help_requestsConnection
   id: UUID!
   messagesCollection(
     """Query values in the collection after the provided cursor"""
