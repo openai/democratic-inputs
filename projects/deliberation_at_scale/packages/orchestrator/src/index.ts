@@ -66,7 +66,7 @@ async function runTasks(taskType: 'startTask' | 'stopTask') {
 async function loadLanguage() {
     i.load("nl", nl.messages);
     i.load("en", en.messages);
-    i.activate("nl");
+    i.activate(LANGUAGE_LOCALE);
     console.log(`Loaded language ${LANGUAGE_LOCALE}`);
 }
 
