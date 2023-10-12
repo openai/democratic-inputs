@@ -346,6 +346,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
                 await waitFor(NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS);
             },
         });
+        return;
     }
 
     // guard: check if everyone has not voted the same

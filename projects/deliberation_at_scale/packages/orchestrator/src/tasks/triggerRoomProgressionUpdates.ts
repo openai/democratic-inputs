@@ -46,6 +46,7 @@ export default async function triggerRoomProgressionUpdates(payload: TriggerRoom
             helpers.logger.info(`Scheduling progression update for room ${roomId}...`);
             helpers.addJob("updateRoomProgression", newJobPayload, {
                 jobKey,
+                jobKeyMode: 'unsafe_dedupe',
             });
         });
     } catch (error) {
