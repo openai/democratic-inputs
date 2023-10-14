@@ -1,0 +1,21 @@
+
+body {
+  background-color: #f5f6ff;
+  margin: 0;  
+}
+
+.sign-out {
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #88dded;
+  border: 1px solid #1c2c4c;
+  background-color: #1c2c4c;
+  font-weight: 600;
+}
+
+.eyebrow {
+  font-family: "Open Sans Condensed" !important;
+  font-weight: bold;
+  font-size: .875em;
+  letter-spacing: .1875em;
+}

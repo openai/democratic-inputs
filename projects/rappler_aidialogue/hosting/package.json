@@ -1,0 +1,38 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/ibm-plex-sans": "^5.0.9",
+    "@fontsource/open-sans-condensed": "^4.5.5",
+    "@fontsource/pt-serif": "^5.0.10",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/lab": "^5.0.0-alpha.144",
+    "@mui/material": "^5.14.5",
+    "@mui/x-date-pickers": "^6.15.0",
+    "anonymous-animals-gen": "^1.0.3",
+    "dayjs": "^1.11.10",
+    "firebase": "^10.3.0",
+    "html-react-parser": "^4.2.2",
+    "next": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-firebase-hooks": "^5.1.1",
+    "react-text-truncate": "^0.19.0",
+    "react-virtuoso": "^4.5.0",
+    "uniqolor": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.43",
+    "@types/react": "^18.0.12",
+    "@types/react-dom": "^18.0.5",
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.28",
+    "typescript": "^4.7.3"
+  }
+}
