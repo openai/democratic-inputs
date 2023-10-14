@@ -1,4 +1,4 @@
-# FGD Ai
+# Rappler aiDialogue
 
 OpenAI powered focus group discussion built on Firebase.
 
