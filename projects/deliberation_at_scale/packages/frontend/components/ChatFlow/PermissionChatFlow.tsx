@@ -2,7 +2,7 @@
 import useChatFlowState from "@/hooks/useChatFlowState";
 import ChatFlow from "./index";
 import RequestPermissions from "../LocalMedia/RequestPermissions";
-import { ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_FOUND_ROOM_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY, LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, ONE_SECOND_MS, TEST_ROOM_ID } from "@/utilities/constants";
+import { ENABLE_ROOM_AUTO_JOIN, ENABLE_TEST_ROOM, LOBBY_ALLOW_ASK_PERMISSION_STATE_KEY, LOBBY_FOUND_ROOM_STATE_KEY, LOBBY_WAITING_FOR_ROOM_STATE_KEY, LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, ONE_SECOND_MS, TEST_ROOM_ID } from "@/utilities/constants";
 import WaitingForRoom from "../RoomConnection/WaitingForRoom";
 import { ChatFlowConfig, OnInputHelpers, QuickReply } from "@/types/flows";
 import { PermissionState } from "@/state/slices/room";
@@ -211,6 +211,12 @@ const waitingForRoomOnTimeout = async (helpers: OnInputHelpers, goToName: string
     // TODO: add mechanism to stop this look via a simple counter in the state?
     if (!hasFoundRoom) {
         helpers.goToName(goToName);
+        return;
+    }
+
+    // guard: check if auto join is enabled
+    if (ENABLE_ROOM_AUTO_JOIN) {
+        helpers.setFlowStateEntry(LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY, true);
         return;
     }
 
