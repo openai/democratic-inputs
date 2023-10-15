@@ -332,7 +332,7 @@ msgstr "Begin het gesprek"
 #: components/RoomOutcome.tsx:46
 #: components/RoomOutcome.tsx:47
 msgid "Statement"
-msgstr "Verklaring"
+msgstr "Stelling"
 
 #: components/ChatFlow/LobbyChatFlow.tsx:59
 msgid "Sure!"
