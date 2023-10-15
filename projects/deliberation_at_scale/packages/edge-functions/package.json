@@ -7,7 +7,9 @@
     "start": "supabase start",
     "serve": "supabase functions serve",
     "set-secrets": "dotenv -e .env -- sh -c 'supabase secrets set --env-file ./.env --project-ref \"$PROJECT_ID\"'",
-    "deploy": "npm run set-secrets && dotenv -e .env -- sh -c 'supabase functions deploy transcribe --project-ref \"$PROJECT_ID\"'"
+    "deploy": "npm run deploy:login-anonymous && npm run deploy:transcribe",
+    "deploy:transcribe": "npm run set-secrets && dotenv -e .env -- sh -c 'supabase functions deploy transcribe --project-ref \"$PROJECT_ID\"'",
+    "deploy:login-anonymous": "npm run set-secrets && dotenv -e .env -- sh -c 'supabase functions deploy login-anonymous --project-ref \"$PROJECT_ID\"'"
   },
   "keywords": [],
   "author": "Pepijn Verburg <pepijn@bmd.studio>, Lei Nelissen <lei@bmd.studio>, Jorim Theuns <jorim@dembrane.com>",
