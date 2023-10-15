@@ -51,7 +51,7 @@ export const ONE_MINUTE_MS = 60 * ONE_SECOND_MS;
 
 /* Progression */
 export const ROOM_PROGRESSION_WITH_JOBS = false;
-export const IS_DEVELOPMENT = false && process.env.NODE_ENV === 'development';
+export const IS_DEVELOPMENT = true && process.env.NODE_ENV === 'development';
 export const DISABLE_CRONTAB = true && IS_DEVELOPMENT;
 export const ENABLE_TASK_TESTING = false && IS_DEVELOPMENT;
 export const ENABLE_SINGLE_ROOM_TESTING = false && IS_DEVELOPMENT;
@@ -69,18 +69,19 @@ export const TEST_WHEREBY_ROOM: ValidCreateExternalRoomResult = {
 };
 
 /* Deliberation */
-export const DEVELOPMENT_PARTICIPANTS_PER_ROOM = 1;
+export const DEVELOPMENT_PARTICIPANTS_PER_ROOM = 3;
 export const PRODUCTION_PARTICIPANTS_PER_ROOM = 3;
 export const PARTICIPANTS_PER_ROOM = IS_DEVELOPMENT ? DEVELOPMENT_PARTICIPANTS_PER_ROOM : PRODUCTION_PARTICIPANTS_PER_ROOM;
 export const MAX_ROOM_DURATION_MS = 60 * ONE_MINUTE_MS;
 export const MAX_ROOM_AMOUNT_PER_JOB = 30;
 
 /* Lobby */
-export const PARTICIPANT_PING_EXPIRY_TIME_MS = 10 * ONE_SECOND_MS;
-export const PARTICIPANT_CONFIRM_EXPIRY_TIME_MS = 30 * ONE_SECOND_MS;
+export const PARTICIPANT_PING_EXPIRY_TIME_MS = 15 * ONE_SECOND_MS;
+export const PARTICIPANT_CONFIRM_EXPIRY_TIME_MS = 60 * ONE_SECOND_MS;
 
 /* Tasks */
-export const HANDLE_QUEUED_PARTICIPANTS_INTERVAL_MS = 2 * ONE_SECOND_MS;
+export const HANDLE_QUEUED_PARTICIPANTS_INTERVAL_MS = 5 * ONE_SECOND_MS;
+export const UPDATE_ROOM_PROGRESSION_INTERVAL_MS = 10 * ONE_SECOND_MS;
 
 /* Whereby */
 export const WHEREBY_API_URL = 'https://api.whereby.dev/v1/';

@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 
 export default function LatestRoomOutcome() {
-    const { outcomes, participantId, participants } = useRoom();
-    const lastOutcome = outcomes?.[0];
+    const { lastOutcome, participantId, participants } = useRoom();
     const hasOutcome = !!lastOutcome;
     const { id: outcomeId } = lastOutcome ?? {};
 

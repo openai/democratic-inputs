@@ -90,5 +90,3 @@ process.on('SIGQUIT', shutdown);
 (async() => {
     await start();
 })();
-
-

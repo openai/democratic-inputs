@@ -1035,9 +1035,8 @@ type completionsUpdateResponse {
 }
 
 enum crossPollinationType {
-  afterwards
-  closing
-  discussion
+  outcome
+  topic
 }
 
 """
@@ -1048,22 +1047,6 @@ input crossPollinationTypeFilter {
   in: [crossPollinationType!]
   is: FilterIs
   neq: crossPollinationType
-}
-
-enum discussionType {
-  bot
-  chat
-  voice
-}
-
-"""
-Boolean expression comparing fields on type "discussionType"
-"""
-input discussionTypeFilter {
-  eq: discussionType
-  in: [discussionType!]
-  is: FilterIs
-  neq: discussionType
 }
 
 type events implements Node {

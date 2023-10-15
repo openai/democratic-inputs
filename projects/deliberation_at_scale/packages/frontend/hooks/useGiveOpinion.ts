@@ -1,4 +1,6 @@
 import { FullOpinionFragment, FullOutcomeFragment, OpinionOptionType, OpinionType, useCreateOpinionMutation } from "@/generated/graphql";
+// import { randomUUID } from "crypto";
+// import dayjs from "dayjs";
 import { sort, unique } from "radash";
 import { useCallback, useMemo } from "react";
 
@@ -77,6 +79,24 @@ export default function useGiveOpinion(options: UseGiveOpinionOptions) {
 
         createOpinion({
             variables: mutationVariables,
+            // optimisticResponse: {
+            //     insertIntoopinionsCollection: {
+            //         affectedCount: 1,
+            //         records: [{
+            //             __typename: 'opinions',
+            //             id: randomUUID(),
+            //             active: true,
+            //             type: mutationVariables.type,
+            //             outcome_id: mutationVariables.subjectId,
+            //             participant_id: mutationVariables.participantId,
+            //             range_value: mutationVariables.rangeValue ?? 0,
+            //             statement: mutationVariables.statement ?? '',
+            //             option_type: mutationVariables.optionType,
+            //             created_at: dayjs().toISOString(),
+            //             updated_at: dayjs().toISOString(),
+            //         }],
+            //     },
+            // }
         });
     }, [createOpinion, participantId, subjects, getExistingOpinion]);
 

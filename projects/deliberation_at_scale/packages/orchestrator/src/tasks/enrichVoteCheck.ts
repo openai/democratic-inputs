@@ -30,9 +30,6 @@ const TIMEOUT_VOTE_AFTER_MS = 10 * 60 * ONE_SECOND_MS * TIME_MULTIPLIER;
 // The time before a new outcome is searched after a vote has timed out
 const NEW_OUTCOME_AFTER_VOTE_TIMEOUT_MS = 5 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
-// The time before a new outcome is searched out after everyone voted the same
-const NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS = 5 * ONE_SECOND_MS * TIME_MULTIPLIER;
-
 // The time before the new outcome is shown after it is announced in chat
 const NEW_OUTCOME_AFTER_OUTCOME_INTRODUCTION_MS = 3 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
@@ -49,7 +46,7 @@ const TIMEKEEPING_MOMENTS = [
 ];
 
 // Cooldown of the bot message within each outcome
-const BOT_OUTCOME_COOLDOWN_MS = ONE_SECOND_MS * 30 * TIME_MULTIPLIER;
+const BOT_OUTCOME_COOLDOWN_MS = ONE_SECOND_MS * 60 * TIME_MULTIPLIER;
 
 // Cooldown of the bot message for each message tag
 const BOT_TAG_COOLDOWN_MS = ONE_SECOND_MS * 90 * TIME_MULTIPLIER;
@@ -141,6 +138,11 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     const lackingContributingNicknames = getLackingNicknames({
         participants,
         requiredParticipantIds: contributingParticipantIds,
+    });
+
+    // request helpers
+    const hasRequestedNextStatement = latestOutcomeMessages.some((message) => {
+        return message.tags?.toLowerCase().includes('next-statement');
     });
 
     // bot message helpers
@@ -321,6 +323,16 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     const hasEveryoneVoted = getHasEveryoneVoted({ opinions, participantIds });
     const hasEveryoneVotedTheSame = getHasEveryoneVotedTheSame({ opinions });
 
+    // guard: check if a next statement is requested
+    if (hasEveryoneVoted && hasRequestedNextStatement) {
+        await sendNewCrossPollination({
+            roomId,
+            helpers,
+            attemptSendBotMessage,
+        });
+        return;
+    }
+
     // attempt send message to remind people to vote
     if (shouldInviteVote && !hasEveryoneVoted) {
         helpers.logger.info(`Sending vote reminder for room ${roomId}...`);
@@ -334,20 +346,10 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
 
     // send new cross pollination when everyone has voted the same
     if (hasEveryoneVoted && hasEveryoneVotedTheSame) {
-        await sendNewCrossPollination({
+        await attemptSendBotMessage({
             roomId,
-            helpers,
-            attemptSendBotMessage,
-            beforeSend: async () => {
-                helpers.logger.info(`Sending new cross pollination for room ${roomId} because everyone voted the same...`);
-                await attemptSendBotMessage({
-                    roomId,
-                    content: getVotedSameMessageContent(),
-                    tags: 'everyone-voted-the-same',
-                    force: true,
-                });
-                await waitFor(NEW_OUTCOME_AFTER_EVERYONE_VOTED_THE_SAME_MS);
-            },
+            content: getVotedSameMessageContent(),
+            tags: 'everyone-voted-the-same',
         });
         return;
     }
@@ -495,14 +497,14 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
 // DONE
 function getVotedSameMessageContent(): string {
     return draw([
-        t`You share the same opinion. A new statement will follow shortly!`,
+        t`You share the same opinion. You can discuss this a bit more or move on to a new statement using the next button.`,
     ]) ?? '';
 }
 
 // DONE
 function getVoteInviteMessageContent(): string {
     return draw([
-        t`Once everyone has voted, a new statement will be shared.`,
+        t`Don't forget to vote on the statement!`,
     ]) ?? '';
 }
 
@@ -525,7 +527,7 @@ function getInviteContributionMessageContent(nickNames: string[]): string {
 // DONE, TODO: rename this
 function getOpenDiscussionMessageContent(): string {
     return draw([
-        t`Not everyone has voted. When you all vote the next statement will come. You can also pass the statement. Or maybe you want to type your thoughts in the chat?`,
+        t`Not everyone has voted. After voting you can choose to discuss it further or move to the next statement.`,
     ]) ?? '';
 }
 

@@ -98,6 +98,7 @@ export default function useRoom(options?: UseRoomOptions) {
 
         return sortedNodes;
     }, [outcomesData]);
+    const lastOutcome = outcomes?.[0];
     const roomMessagesTuple = useRoomMessages({ roomId, participants, userId });
     const topic = room?.topics;
     const topicId = topic?.id;
@@ -140,6 +141,7 @@ export default function useRoom(options?: UseRoomOptions) {
 
         // outcomes
         outcomes,
+        lastOutcome,
         getOutcomeByType,
         hasOutcomeType,
 

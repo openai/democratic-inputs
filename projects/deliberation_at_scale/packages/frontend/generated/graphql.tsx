@@ -867,9 +867,8 @@ export type CompletionsUpdateResponse = {
 };
 
 export enum CrossPollinationType {
-  Afterwards = 'afterwards',
-  Closing = 'closing',
-  Discussion = 'discussion'
+  Outcome = 'outcome',
+  Topic = 'topic'
 }
 
 /** Boolean expression comparing fields on type "crossPollinationType" */
@@ -878,20 +877,6 @@ export type CrossPollinationTypeFilter = {
   in?: InputMaybe<Array<CrossPollinationType>>;
   is?: InputMaybe<FilterIs>;
   neq?: InputMaybe<CrossPollinationType>;
-};
-
-export enum DiscussionType {
-  Bot = 'bot',
-  Chat = 'chat',
-  Voice = 'voice'
-}
-
-/** Boolean expression comparing fields on type "discussionType" */
-export type DiscussionTypeFilter = {
-  eq?: InputMaybe<DiscussionType>;
-  in?: InputMaybe<Array<DiscussionType>>;
-  is?: InputMaybe<FilterIs>;
-  neq?: InputMaybe<DiscussionType>;
 };
 
 export type Events = Node & {
@@ -2726,10 +2711,11 @@ export type SendRoomMessageMutationVariables = Exact<{
   roomId: Scalars['UUID']['input'];
   participantId: Scalars['UUID']['input'];
   content: Scalars['String']['input'];
+  tags?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type SendRoomMessageMutation = { __typename?: 'Mutation', insertIntomessagesCollection?: { __typename?: 'messagesInsertResponse', records: Array<{ __typename?: 'messages', id: any, room_id?: any | null, participant_id?: any | null, content: string }> } | null };
+export type SendRoomMessageMutation = { __typename?: 'Mutation', insertIntomessagesCollection?: { __typename?: 'messagesInsertResponse', records: Array<{ __typename?: 'messages', id: any, room_id?: any | null, participant_id?: any | null, content: string, tags: string }> } | null };
 
 export type StartRoomMutationVariables = Exact<{
   topicId: Scalars['UUID']['input'];
@@ -3421,15 +3407,16 @@ export type PingParticipantMutationHookResult = ReturnType<typeof usePingPartici
 export type PingParticipantMutationResult = Apollo.MutationResult<PingParticipantMutation>;
 export type PingParticipantMutationOptions = Apollo.BaseMutationOptions<PingParticipantMutation, PingParticipantMutationVariables>;
 export const SendRoomMessageDocument = gql`
-    mutation SendRoomMessage($roomId: UUID!, $participantId: UUID!, $content: String!) {
+    mutation SendRoomMessage($roomId: UUID!, $participantId: UUID!, $content: String!, $tags: String) {
   insertIntomessagesCollection(
-    objects: {room_id: $roomId, participant_id: $participantId, content: $content}
+    objects: {room_id: $roomId, participant_id: $participantId, content: $content, tags: $tags}
   ) {
     records {
       id
       room_id
       participant_id
       content
+      tags
     }
   }
 }
@@ -3452,6 +3439,7 @@ export type SendRoomMessageMutationFn = Apollo.MutationFunction<SendRoomMessageM
  *      roomId: // value for 'roomId'
  *      participantId: // value for 'participantId'
  *      content: // value for 'content'
+ *      tags: // value for 'tags'
  *   },
  * });
  */

@@ -13,7 +13,7 @@ import useRoomActions from "@/hooks/useRoomActions";
 import ChatActions from "./ChatActions";
 
 export default function RoomChatMessages() {
-    const { messages, participantId, roomId, messagesLoading } = useRoom();
+    const { messages, participantId, roomId, messagesLoading, refetchMessages } = useRoom();
     const { actions } = useRoomActions();
     const [sendRoomMessage, { loading: isSendingMessage }] = useSendRoomMessageMutation();
     const dispatch = useAppDispatch();
@@ -25,15 +25,18 @@ export default function RoomChatMessages() {
             return false;
         }
 
-        sendRoomMessage({
+        await sendRoomMessage({
             variables: {
                 content: formattedMessage,
                 participantId,
                 roomId,
             }
         });
+
+        // TMP: temporary until Realtime has better performance
+        refetchMessages();
         return true;
-    }, [participantId, isSendingMessage, roomId, sendRoomMessage]);
+    }, [isSendingMessage, sendRoomMessage, participantId, roomId, refetchMessages]);
 
     // automatically scroll the messages container to the bottom on new messages
     const { scrollToBottom } = useScrollToBottom({ data: messages });

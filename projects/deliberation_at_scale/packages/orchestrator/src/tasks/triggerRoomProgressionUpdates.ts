@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 import { supabaseClient } from "../lib/supabase";
 import { UpdateRoomProgressionPayload } from "./updateRoomProgression";
-import { ENABLE_SINGLE_ROOM_TESTING, ONE_SECOND_MS, TEST_ROOM_ID_ALLOWLIST } from "../config/constants";
+import { ENABLE_SINGLE_ROOM_TESTING, ONE_SECOND_MS, TEST_ROOM_ID_ALLOWLIST, UPDATE_ROOM_PROGRESSION_INTERVAL_MS } from "../config/constants";
 import { reschedule } from "../scheduler";
 import { captureEvent } from "../lib/sentry";
 
@@ -46,7 +46,6 @@ export default async function triggerRoomProgressionUpdates(payload: TriggerRoom
             helpers.logger.info(`Scheduling progression update for room ${roomId}...`);
             helpers.addJob("updateRoomProgression", newJobPayload, {
                 jobKey,
-                jobKeyMode: 'unsafe_dedupe',
             });
         });
     } catch (error) {
@@ -60,7 +59,7 @@ export default async function triggerRoomProgressionUpdates(payload: TriggerRoom
     await reschedule<TriggerRoomProgressionUpdatesPayload>({
         workerTaskId: "triggerRoomProgressionUpdates",
         jobKey: "triggerRoomProgressionUpdates",
-        intervalMs: ONE_SECOND_MS * 10,
+        intervalMs: UPDATE_ROOM_PROGRESSION_INTERVAL_MS,
         payload: {},
         helpers,
     });

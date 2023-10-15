@@ -4,7 +4,7 @@ import { Helpers } from "graphile-worker";
 
 import { supabaseClient } from "../lib/supabase";
 import { createExternalRoom } from "../lib/whereby";
-import { MAX_ROOM_AMOUNT_PER_JOB, MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_CONFIRM_EXPIRY_TIME_MS, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
+import { HANDLE_QUEUED_PARTICIPANTS_INTERVAL_MS, MAX_ROOM_AMOUNT_PER_JOB, MAX_ROOM_DURATION_MS, ONE_SECOND_MS, PARTICIPANTS_PER_ROOM, PARTICIPANT_CONFIRM_EXPIRY_TIME_MS, PARTICIPANT_PING_EXPIRY_TIME_MS } from "../config/constants";
 import { reschedule } from "../scheduler";
 import { captureEvent } from "../lib/sentry";
 
@@ -35,7 +35,7 @@ export default async function handleQueuedParticipants(payload: HandleQueuedPart
     await reschedule<HandleQueuedParticipantsPayload>({
         workerTaskId: "handleQueuedParticipants",
         jobKey: "handleQueuedParticipants",
-        intervalMs: ONE_SECOND_MS * 3,
+        intervalMs: HANDLE_QUEUED_PARTICIPANTS_INTERVAL_MS,
         payload: {
             jobKey: "handleQueuedParticipants",
         },

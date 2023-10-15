@@ -6,7 +6,7 @@ import objectHash from "object-hash";
 import { get, isEmpty, set } from "radash";
 
 import { supabaseClient } from "@/state/supabase";
-import { AUTO_QUERY_REFETCH_INTERVAL_MS, ENABLE_AUTO_QUERY_REFETCH } from "@/utilities/constants";
+import { AUTO_QUERY_REFETCH_INTERVAL_MS, ENABLE_AUTO_QUERY_REFETCH, ENABLE_REALTIME_SUBSCRIPTIONS } from "@/utilities/constants";
 
 export interface UseNestedLiveQueryOptions {
     channelPrefix?: string;
@@ -200,7 +200,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
             };
 
             // guard: skip this entry when none should be tracked
-            if (shouldListenToNone) {
+            if (shouldListenToNone || !ENABLE_REALTIME_SUBSCRIPTIONS) {
                 return;
             }
 

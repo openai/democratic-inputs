@@ -70,8 +70,8 @@ export default function useLobby() {
     useEffect(() => {
         const hasValidCandidate = !!candidateParticipant
             && candidateParticipant.status !== ParticipantStatusType.EndOfSession
-            && candidateParticipant.active === true
-            && Math.abs(dayjs().diff(dayjs(lastCreatedAt), 'ms')) <= ONE_SECOND_MS * 60;
+            && candidateParticipant.active === true;
+            // && Math.abs(dayjs().diff(dayjs(lastCreatedAt), 'ms')) <= ONE_SECOND_MS * 60 * 2;
 
         if (participantsLoading || hasValidCandidate || !userId || isConfirming || isCreatingParticipant) {
             return;
