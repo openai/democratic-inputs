@@ -565,7 +565,7 @@ function getTimeoutVoteMessageContent(): string {
 
 function getTimeoutConversationMessageContent(): string {
     return draw([
-        t`I've been instructed to introduce a new statement after ${TIMEOUT_CONVSERSATION_AFTER_MS / ONE_MINUTE_MS} minutes. So we unfortunately need to stop this conversation!`,
+        t`I've been instructed to stop this conversation after ${TIMEOUT_CONVSERSATION_AFTER_MS / ONE_MINUTE_MS} minutes. So we unfortunately need to stop this conversation!`,
     ]) ?? '';
 }
 

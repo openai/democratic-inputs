@@ -62,8 +62,8 @@ msgid "I've been instructed to introduce a new statement after {0} minutes. So h
 msgstr "Ik heb instructies gekregen om een nieuwe stelling te introduceren na {0} minuten. Dus hier is een nieuwe stelling!"
 
 #: src/tasks/enrichVoteCheck.ts:568
-msgid "I've been instructed to introduce a new statement after {0} minutes. So we unfortunately need to stop this conversation!"
-msgstr "Ik heb instructies gekregen om een nieuwe stelling te introduceren na {0} minuten. Dus we moeten helaas dit gesprek stoppen!"
+msgid "I've been instructed to stop this conversation after {0} minutes. So we unfortunately need to stop this conversation!"
+msgstr ""
 
 #: src/tasks/enrichVoteCheck.ts:465
 msgid "No new statements could be found unfortunately. You can continue the conversation yourself here!"
