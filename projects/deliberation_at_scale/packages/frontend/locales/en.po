@@ -34,7 +34,7 @@ msgstr "<0>AI moderators help create a <1>healthy conversation</1></0>"
 msgid "After you click on this link, you will be redirected back to this application to be ready to start finding common ground."
 msgstr "After you click on this link, you will be redirected back to this application to be ready to start finding common ground."
 
-#: components/RoomOutcome.tsx:66
+#: components/RoomOutcome.tsx:67
 msgid "Agree"
 msgstr "Agree"
 
@@ -75,7 +75,7 @@ msgstr "Check device permissions now"
 msgid "Connecting to video call..."
 msgstr "Connecting to video call..."
 
-#: components/RoomOutcome.tsx:42
+#: components/RoomOutcome.tsx:43
 msgid "Consensus Proposal"
 msgstr "Consensus Proposal"
 
@@ -105,7 +105,7 @@ msgstr "Disable audio"
 msgid "Disable video"
 msgstr "Disable video"
 
-#: components/RoomOutcome.tsx:71
+#: components/RoomOutcome.tsx:72
 msgid "Disagree"
 msgstr "Disagree"
 
@@ -150,7 +150,7 @@ msgstr "Go back to the profile page"
 msgid "Go to profile"
 msgstr "Go to profile"
 
-#: hooks/useRoomActions.ts:35
+#: hooks/useRoomActions.ts:44
 msgid "Go to voting"
 msgstr "Go to voting"
 
@@ -174,6 +174,10 @@ msgstr "Hi [nickName]! Hopefully you enjoyed the conversation you had with the g
 msgid "Hi, welcome back to Common Ground. We appreciate you taking the time to contribute."
 msgstr "Hi, welcome back to Common Ground. We appreciate you taking the time to contribute."
 
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:24
+msgid "Hi, welcome to Common Ground. We appreciate you taking the time to contribute."
+msgstr "Hi, welcome to Common Ground. We appreciate you taking the time to contribute."
+
 #: components/ChatFlow/InvalidChatFlow.tsx:17
 msgid "Hmmm, it appears the conversation could not be joined or the other participants took too long to join. Sorry about that!"
 msgstr "Hmmm, it appears the conversation could not be joined or the other participants took too long to join. Sorry about that!"
@@ -181,6 +185,10 @@ msgstr "Hmmm, it appears the conversation could not be joined or the other parti
 #: components/ChatFlow/PermissionChatFlow.tsx:35
 msgid "Hold on!"
 msgstr "Hold on!"
+
+#: hooks/useRoomActions.ts:65
+msgid "I would like to move on to the next statement."
+msgstr "I would like to move on to the next statement."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:34
 msgid "If you want to cancel, click the button below."
@@ -211,12 +219,9 @@ msgid "Join another conversation"
 msgstr "Join another conversation"
 
 #: components/RoomParticipants/controls.tsx:92
+#: hooks/useRoomActions.ts:81
 msgid "Leave conversation"
 msgstr "Leave conversation"
-
-#: hooks/useRoomActions.ts:46
-msgid "Leave room"
-msgstr "Leave room"
 
 #: app/[lang]/room/[roomId]/layout.tsx:42
 msgid "Loading media..."
@@ -229,6 +234,10 @@ msgstr "Loading room..."
 #: app/[lang]/page.tsx:69
 msgid "Log out"
 msgstr "Log out"
+
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:45
+msgid "Logging you in..."
+msgstr "Logging you in..."
 
 #: components/ChatFlow/ProfileChatFlow.tsx:65
 msgid "Logging you out..."
@@ -250,7 +259,7 @@ msgstr "Looking for facilitator"
 msgid "Looking for technician"
 msgstr "Looking for technician"
 
-#: components/RoomOutcome.tsx:43
+#: components/RoomOutcome.tsx:44
 msgid "Milestone"
 msgstr "Milestone"
 
@@ -258,11 +267,15 @@ msgstr "Milestone"
 msgid "Moving you to the lobby again, one moment please..."
 msgstr "Moving you to the lobby again, one moment please..."
 
+#: hooks/useRoomActions.ts:55
+msgid "Next statement"
+msgstr "Next statement"
+
 #: components/ChatFlow/LobbyChatFlow.tsx:55
 msgid "Now your camera and microphone need to be configured."
 msgstr "Now your camera and microphone need to be configured."
 
-#: components/RoomOutcome.tsx:44
+#: components/RoomOutcome.tsx:45
 msgid "Off Topic"
 msgstr "Off Topic"
 
@@ -283,7 +296,7 @@ msgstr "Okay! Moving you to the lobby."
 msgid "Participate in a new conversation"
 msgstr "Participate in a new conversation"
 
-#: components/RoomOutcome.tsx:76
+#: components/RoomOutcome.tsx:77
 msgid "Pass"
 msgstr "Pass"
 
@@ -328,9 +341,9 @@ msgstr "Start searching for a conversation"
 msgid "Start the conversation"
 msgstr "Start the conversation"
 
-#: components/RoomOutcome.tsx:45
 #: components/RoomOutcome.tsx:46
 #: components/RoomOutcome.tsx:47
+#: components/RoomOutcome.tsx:48
 msgid "Statement"
 msgstr "Statement"
 
@@ -351,6 +364,10 @@ msgstr "Technician on the way!"
 msgid "Thank you! You will find an email with a login link in your inbox. Be sure to check your SPAM folder as well!"
 msgstr "Thank you! You will find an email with a login link in your inbox. Be sure to check your SPAM folder as well!"
 
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:42
+msgid "Thank you. Getting login details..."
+msgstr "Thank you. Getting login details..."
+
 #: components/ChatFlow/EvaluateChatFlow.tsx:104
 msgid "Thanks for the feedback [nickName]!"
 msgstr "Thanks for the feedback [nickName]!"
@@ -362,6 +379,10 @@ msgstr "That is not a valid email address!"
 #: hooks/useFlowSteps.tsx:27
 msgid "That looks like a valid e-mail. We're sending you an email now..."
 msgstr "That looks like a valid e-mail. We're sending you an email now..."
+
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:49
+msgid "There was an error getting the login details. Please try again!"
+msgstr "There was an error getting the login details. Please try again!"
 
 #: hooks/useFlowSteps.tsx:32
 msgid "There was an error sending you an email. Please try again!"
@@ -395,6 +416,10 @@ msgstr "To get started, click 'Register' below:"
 #: components/ChatFlow/LoginChatFlow.tsx:32
 msgid "To join conversations again, we need your e-mail address once more."
 msgstr "To join conversations again, we need your e-mail address once more."
+
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:31
+msgid "To join conversations, we need your Prolific ID to verify that you are a Prolific user."
+msgstr "To join conversations, we need your Prolific ID to verify that you are a Prolific user."
 
 #: components/ChatFlow/IdleChatFlow.tsx:22
 msgid "Try joining a room again"
@@ -455,6 +480,10 @@ msgstr "What was your general impression of the conversation?"
 #: hooks/useFlowSteps.tsx:12
 msgid "Will you please enter your e-mail address below?"
 msgstr "Will you please enter your e-mail address below?"
+
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:37
+msgid "Will you please enter your Prolific ID below?"
+msgstr "Will you please enter your Prolific ID below?"
 
 #: hooks/useProfile.ts:44
 msgid "You"

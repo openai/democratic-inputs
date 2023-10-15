@@ -34,7 +34,7 @@ msgstr "<0>AI-moderators zorgen voor een <1>gezonde gespreks omgeving</1></0>"
 msgid "After you click on this link, you will be redirected back to this application to be ready to start finding common ground."
 msgstr "Nadat je op de link hebt geklikt wordt je teruggeleid naar deze app. Ready to find common ground."
 
-#: components/RoomOutcome.tsx:66
+#: components/RoomOutcome.tsx:67
 msgid "Agree"
 msgstr "Mee eens"
 
@@ -75,7 +75,7 @@ msgstr "Controleer de apparaatmachtigingen"
 msgid "Connecting to video call..."
 msgstr "Verbinden met videogesprek..."
 
-#: components/RoomOutcome.tsx:42
+#: components/RoomOutcome.tsx:43
 msgid "Consensus Proposal"
 msgstr "Consensusvoorstel"
 
@@ -105,7 +105,7 @@ msgstr "Audio uitschakelen"
 msgid "Disable video"
 msgstr "Video uitschakelen"
 
-#: components/RoomOutcome.tsx:71
+#: components/RoomOutcome.tsx:72
 msgid "Disagree"
 msgstr "Oneens"
 
@@ -150,7 +150,7 @@ msgstr "Terug naar de profielpagina"
 msgid "Go to profile"
 msgstr "Naar je profiel"
 
-#: hooks/useRoomActions.ts:35
+#: hooks/useRoomActions.ts:44
 msgid "Go to voting"
 msgstr "Ga naar stemmen"
 
@@ -174,6 +174,10 @@ msgstr "Hoi [nickName]! Hopelijk heb je genoten van het gesprek dat je hebt geha
 msgid "Hi, welcome back to Common Ground. We appreciate you taking the time to contribute."
 msgstr "Hé, welkom bij Common Ground. We waarderen het dat je de tijd neemt om een bijdrage te leveren."
 
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:24
+msgid "Hi, welcome to Common Ground. We appreciate you taking the time to contribute."
+msgstr ""
+
 #: components/ChatFlow/InvalidChatFlow.tsx:17
 msgid "Hmmm, it appears the conversation could not be joined or the other participants took too long to join. Sorry about that!"
 msgstr "Hmmm, het lijkt erop dat er niet aan het gesprek kon worden deelgenomen of dat de andere deelnemers er te lang over deden om deel te nemen. Sorry!"
@@ -181,6 +185,10 @@ msgstr "Hmmm, het lijkt erop dat er niet aan het gesprek kon worden deelgenomen 
 #: components/ChatFlow/PermissionChatFlow.tsx:35
 msgid "Hold on!"
 msgstr "Wacht even!"
+
+#: hooks/useRoomActions.ts:65
+msgid "I would like to move on to the next statement."
+msgstr ""
 
 #: components/ChatFlow/PermissionChatFlow.tsx:34
 msgid "If you want to cancel, click the button below."
@@ -211,12 +219,9 @@ msgid "Join another conversation"
 msgstr "Doe mee aan een ander gesprek"
 
 #: components/RoomParticipants/controls.tsx:92
+#: hooks/useRoomActions.ts:81
 msgid "Leave conversation"
 msgstr "Verlaat gesprek"
-
-#: hooks/useRoomActions.ts:46
-msgid "Leave room"
-msgstr "Verlaat kamer"
 
 #: app/[lang]/room/[roomId]/layout.tsx:42
 msgid "Loading media..."
@@ -229,6 +234,10 @@ msgstr "Kamer laden..."
 #: app/[lang]/page.tsx:69
 msgid "Log out"
 msgstr "Log uit"
+
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:45
+msgid "Logging you in..."
+msgstr ""
 
 #: components/ChatFlow/ProfileChatFlow.tsx:65
 msgid "Logging you out..."
@@ -250,7 +259,7 @@ msgstr "Zoekend naar een facilitator"
 msgid "Looking for technician"
 msgstr "Zoekend naar een technicus"
 
-#: components/RoomOutcome.tsx:43
+#: components/RoomOutcome.tsx:44
 msgid "Milestone"
 msgstr "Mijlpaal"
 
@@ -258,11 +267,15 @@ msgstr "Mijlpaal"
 msgid "Moving you to the lobby again, one moment please..."
 msgstr "We verplaatsen je naar de wachtruimte, een momentje..."
 
+#: hooks/useRoomActions.ts:55
+msgid "Next statement"
+msgstr ""
+
 #: components/ChatFlow/LobbyChatFlow.tsx:55
 msgid "Now your camera and microphone need to be configured."
 msgstr "Nu moeten je camera en microfoon worden geconfigureerd."
 
-#: components/RoomOutcome.tsx:44
+#: components/RoomOutcome.tsx:45
 msgid "Off Topic"
 msgstr "Niet relevant"
 
@@ -283,7 +296,7 @@ msgstr "Oké! We verplaatsen je naar de wachtruimte."
 msgid "Participate in a new conversation"
 msgstr "Draag bij aan een nieuw gesprek"
 
-#: components/RoomOutcome.tsx:76
+#: components/RoomOutcome.tsx:77
 msgid "Pass"
 msgstr "Overslaan"
 
@@ -328,9 +341,9 @@ msgstr "Begin met zoeken naar een gesprek"
 msgid "Start the conversation"
 msgstr "Begin het gesprek"
 
-#: components/RoomOutcome.tsx:45
 #: components/RoomOutcome.tsx:46
 #: components/RoomOutcome.tsx:47
+#: components/RoomOutcome.tsx:48
 msgid "Statement"
 msgstr "Stelling"
 
@@ -351,6 +364,10 @@ msgstr "Een technicus is onderweg!"
 msgid "Thank you! You will find an email with a login link in your inbox. Be sure to check your SPAM folder as well!"
 msgstr "Bedankt! Je vindt een e-mail met een aanmeldlink in je inbox. Controleer ook je SPAM-map!"
 
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:42
+msgid "Thank you. Getting login details..."
+msgstr ""
+
 #: components/ChatFlow/EvaluateChatFlow.tsx:104
 msgid "Thanks for the feedback [nickName]!"
 msgstr "Bedankt voor de feedback [nickName]!"
@@ -362,6 +379,10 @@ msgstr "Dat is geen geldig e-mailadres!"
 #: hooks/useFlowSteps.tsx:27
 msgid "That looks like a valid e-mail. We're sending you an email now..."
 msgstr "Dat lijkt een geldig e-mailadres. We sturen je nu een e-mail..."
+
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:49
+msgid "There was an error getting the login details. Please try again!"
+msgstr ""
 
 #: hooks/useFlowSteps.tsx:32
 msgid "There was an error sending you an email. Please try again!"
@@ -395,6 +416,10 @@ msgstr "Om te beginnen, klik hieronder op 'Registreer':"
 #: components/ChatFlow/LoginChatFlow.tsx:32
 msgid "To join conversations again, we need your e-mail address once more."
 msgstr "Om weer deel te nemen aan gesprekken hebben we je e-mailadres nodig."
+
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:31
+msgid "To join conversations, we need your Prolific ID to verify that you are a Prolific user."
+msgstr ""
 
 #: components/ChatFlow/IdleChatFlow.tsx:22
 msgid "Try joining a room again"
@@ -455,6 +480,10 @@ msgstr "Wat was je algemene indruk van het gesprek?"
 #: hooks/useFlowSteps.tsx:12
 msgid "Will you please enter your e-mail address below?"
 msgstr "Wil je alsjeblieft je e-mailadres hieronder invullen?"
+
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:37
+msgid "Will you please enter your Prolific ID below?"
+msgstr ""
 
 #: hooks/useProfile.ts:44
 msgid "You"
