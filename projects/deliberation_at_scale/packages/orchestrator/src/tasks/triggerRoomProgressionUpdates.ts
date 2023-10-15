@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 import { supabaseClient } from "../lib/supabase";
 import { UpdateRoomProgressionPayload } from "./updateRoomProgression";
-import { ENABLE_SINGLE_ROOM_TESTING, ONE_SECOND_MS, TEST_ROOM_ID_ALLOWLIST, UPDATE_ROOM_PROGRESSION_INTERVAL_MS } from "../config/constants";
+import { ENABLE_SINGLE_ROOM_TESTING, TEST_ROOM_ID_ALLOWLIST, UPDATE_ROOM_PROGRESSION_INTERVAL_MS } from "../config/constants";
 import { reschedule } from "../scheduler";
 import { captureEvent } from "../lib/sentry";
 
