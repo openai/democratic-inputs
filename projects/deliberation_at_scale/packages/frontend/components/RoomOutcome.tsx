@@ -8,7 +8,7 @@ import { statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
 import { FullOutcomeFragment, OpinionOptionType, OpinionType, OutcomeType, RoomParticipantFragment } from '@/generated/graphql';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Button from './Button';
 import { DISABLE_OPINION_INPUT_WHEN_TIMED_OUT, OUTCOME_OPINION_TIMEOUT_MS_LOOKUP } from '@/utilities/constants';
 import TimeProgressBar from './TimeProgressBar';
@@ -33,7 +33,8 @@ export default function RoomOutcome(props: Props) {
     const { _ } = useLingui();
     const { outcome, participantId, participants, variant } = props;
     const { id: outcomeId, content = '', type } = outcome ?? {};
-    const { isGivingOpinion, setOpinion, getExistingOpinion, getGroupOpinions } = useGiveOpinion({ subjects: [outcome], participantId });
+    const { setOpinion, getExistingOpinion, getGroupOpinions } = useGiveOpinion({ subjects: [outcome], participantId });
+    const [selectedOpinionOptionType, setSelectedOpinionOptionType] = useState<OpinionOptionType | undefined | null>();
     const existingOpinion = getExistingOpinion(outcomeId);
     const groupOpinions = getGroupOpinions(outcomeId);
     const [timeoutCompleted, setTimeoutCompleted] = useState(false);
@@ -85,6 +86,13 @@ export default function RoomOutcome(props: Props) {
     const hasOpinionOptions = (opinionOptions.length > 0);
     const formattedContent = content?.trim();
 
+    // handle updates from the database which should reset the optimistic selected option
+    useEffect(() => {
+        if (existingOpinion && existingOpinion.option_type === selectedOpinionOptionType) {
+            setSelectedOpinionOptionType(null);
+        }
+    }, [existingOpinion, selectedOpinionOptionType]);
+
     if (!outcome) {
         return null;
     }
@@ -108,12 +116,13 @@ export default function RoomOutcome(props: Props) {
                 )}>
                     {opinionOptions.map((option) => {
                         const { content, icon, optionType } = option;
-                        const isSelected = (existingOpinion?.option_type === optionType);
-                        const isDisabled = isGivingOpinion || (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
+                        const isSelected = (existingOpinion?.option_type === optionType && !selectedOpinionOptionType) || selectedOpinionOptionType === optionType;
+                        const isDisabled = (timeoutCompleted && DISABLE_OPINION_INPUT_WHEN_TIMED_OUT);
                         const participantAmount = participants?.length ?? 0;
-                        const optionOpinions = groupOpinions.filter((opinion) => opinion.option_type === optionType);
-                        const progress = (participantAmount > 0) ? (optionOpinions.length / participantAmount) : 0;
+                        const otherOptionOpinions = groupOpinions.filter((opinion) => opinion.option_type === optionType && opinion.participant_id != participantId);
+                        const progress = (participantAmount > 0) ? ((otherOptionOpinions.length + (isSelected ? 1 : 0)) / participantAmount) : 0;
                         const onOptionClick = () => {
+                            setSelectedOpinionOptionType(optionType);
                             setOpinion({
                                 subjectId: outcomeId,
                                 type: OpinionType.Option,
