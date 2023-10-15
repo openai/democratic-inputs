@@ -21,6 +21,24 @@ export default function Providers({ children }: Props) {
     const accessToken = params?.get('access_token') as string;
     const refreshToken = params?.get('refresh_token') as string;
 
+    // login using the hash parameter provided by Supabase
+    useEffect(() => {
+        const hash = window.location.hash;
+        const formattedHash = hash.slice(1);
+        const result = formattedHash.split('&').reduce(function (res: Record<string, string>, item) {
+            const parts: string[] = item.split('=');
+            res[parts[0]] = parts[1];
+            return res;
+        }, {});
+        const accessToken = result['access_token'];
+        const refreshToken = result['refresh_token'];
+        supabaseClient.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+        });
+    }, []);
+
+    // using the query parameters provided by us
     useEffect(() => {
         if (!accessToken || !refreshToken) {
             return;
