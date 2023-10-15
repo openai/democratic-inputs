@@ -46,7 +46,7 @@ const TIMEKEEPING_MOMENTS = [
 ];
 
 // Cooldown of the bot message within each outcome
-const BOT_OUTCOME_COOLDOWN_MS = ONE_SECOND_MS * 60 * TIME_MULTIPLIER;
+const BOT_OUTCOME_COOLDOWN_MS = ONE_SECOND_MS * 30 * TIME_MULTIPLIER;
 
 // Cooldown of the bot message for each message tag
 const BOT_TAG_COOLDOWN_MS = ONE_SECOND_MS * 90 * TIME_MULTIPLIER;
