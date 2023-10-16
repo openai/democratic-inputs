@@ -33,7 +33,7 @@ serve(async (req) => {
 
   const { data } = await supabaseAdminClient.auth.admin.generateLink({
     type: 'magiclink',
-    email: `${identifier}@bmd.studio`,
+    email: `${identifier}@prolific.com`,
     options: {
         redirectTo: APP_URL,
     },
