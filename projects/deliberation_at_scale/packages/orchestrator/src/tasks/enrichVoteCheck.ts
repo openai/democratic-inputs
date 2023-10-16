@@ -88,6 +88,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     }
 
     const room = roomResult?.value;
+    const topicId = room?.topic_id;
     const latestOutcome = latestOutcomeResult?.value;
     const outcomes = outcomesResult?.value;
     const participants = participantsResult?.value;
@@ -98,6 +99,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         helpers.logger.info(`Sending initial outcome for room ${roomId}...`);
         await sendNewCrossPollination({
             roomId,
+            topicId,
             helpers,
             attemptSendBotMessage: (options) => {
                 sendBotMessage(options);
@@ -107,7 +109,8 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     }
 
     // fetching more data when outcome is found
-    const latestOutcomeId = latestOutcome?.id;
+    const latestOutcomeId = latestOutcome.id;
+    const latestOutcomeContent = latestOutcome.content;
     const participantIds = participants?.map(participant => participant.id);
     const roomOutcomeAmount = outcomes?.length ?? 0;
     const latestBotOutcomeMessages = await getMessagesAfter({
@@ -234,16 +237,34 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         const contributionCheckResult = await createVerificationFunctionCompletion({
             taskInstruction: getSummarisationPrompt({
                 mode: 'verification',
+                statement: latestOutcomeContent,
             }),
             taskContent,
         });
         const isContribution = contributionCheckResult?.verified ?? false;
 
+        // check if there is no contribution yet
+        if (!isContribution) {
+            await attemptSendBotMessage({
+                roomId,
+                content: getNoVerifiedContributionMessageContent(),
+                tags: 'no-verified-contribution-yet',
+            });
+        }
+
+        // console.log('isContribution', contributionCheckResult, taskContent); process.exit(1);
         // guard: check if there is a valuable contribution
         if (isContribution) {
+            await attemptSendBotMessage({
+                roomId,
+                content: getVerifiedContributionMessageContent(),
+                tags: 'verified-contribution',
+                force: true,
+            });
             const contributionResult = await createPromptCompletion({
                 taskInstruction: getSummarisationPrompt({
                     mode: 'completion',
+                    statement: latestOutcomeContent,
                 }),
                 taskContent,
             });
@@ -280,6 +301,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     if (shouldTimeoutVote) {
         await sendNewCrossPollination({
             roomId,
+            topicId,
             helpers,
             attemptSendBotMessage,
             beforeSend: async () => {
@@ -327,6 +349,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     if (hasEveryoneVoted && hasRequestedNextStatement) {
         await sendNewCrossPollination({
             roomId,
+            topicId,
             helpers,
             attemptSendBotMessage,
         });
@@ -419,22 +442,23 @@ function getHasEveryoneVotedTheSame(options: HasEveryoneVotedTheSameOptions) {
 
 interface SendCrossPollinationOptions {
     roomId: string;
+    topicId?: string;
     helpers: Helpers;
     beforeSend?: () => Promise<void>;
     attemptSendBotMessage: (options: AttemptSendBotMessageOptions) => void;
 }
 
 async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
-    const { roomId, helpers, attemptSendBotMessage, beforeSend } = options;
+    const { roomId, topicId, helpers, attemptSendBotMessage, beforeSend } = options;
     const room = await getRoomById(roomId);
     const outcomes = await getOutcomesByRoomId(roomId);
     const skippedOutcomeIds = flat(outcomes?.map((outcome) => [outcome.id, outcome.original_outcome_id]) ?? []);
-    // TODO: filter on topic_id, this field is currently not populated.
     const { data: candidateOutcomes } = await supabaseClient
         .from('outcomes')
         .select()
         .not('id', 'in', `(${skippedOutcomeIds.join(',')})`)
         .in('type', ['milestone', 'consensus', 'seed_statement'])
+        .or(`topic_id.eq.${topicId},topic_id.is.null`)
         .eq('active', true)
         .limit(200);
     const candidateOutcome = draw(candidateOutcomes ?? []);
@@ -571,20 +595,33 @@ function getTimeoutConversationMessageContent(): string {
 
 function getNewContributionMessageContent(): string {
     return draw([
-        t`A new statement has been created based on your contributions! You can now vote on it whether you agree or disagree with the proposal.`,
+        t`A new statement has been created based on your messages! You can now vote on it whether you agree or disagree with the proposal.`,
+    ]) ?? '';
+}
+
+function getNoVerifiedContributionMessageContent(): string {
+    return draw([
+        t`I could not yet find a new statement based on your messages. Perhaps you can expand on it a bit more in chat?`,
+    ]) ?? '';
+}
+
+function getVerifiedContributionMessageContent(): string {
+    return draw([
+        t`I think I might've found a new statement based on your messages! Working on it...`,
     ]) ?? '';
 }
 
 interface SummarisationPromptOptions {
     mode: 'completion' | 'verification';
+    statement: string;
 }
 
 function getSummarisationPrompt(options: SummarisationPromptOptions) {
-    const { mode } = options;
+    const { mode, statement } = options;
     const basePrompt = t`
         Role: You are a democratic summarisation bot built by the consortium "Deliberation at scale".
 
-        Context: You will receive some unstructured comments from the participants of a conversation about a difficult topic.
+        Context: You will receive some unstructured comments from the participants of a conversation about the following statement: ${statement}.
         These people do not know each other and may have very different views.
 
         Task: Using only the comments, create one synthesising, standalone, normative "We should..." statement that captures the values of each participant and the nuance of what they have shared.
@@ -606,10 +643,11 @@ function getSummarisationPrompt(options: SummarisationPromptOptions) {
     const verificationPrompt = t`
         10. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!
     `;
+    const expandedPrompt = (mode === 'completion' ? completionPrompt : verificationPrompt);
 
     const prompt = `
         ${basePrompt}
-        ${mode === 'completion' ? completionPrompt : verificationPrompt}
+        ${expandedPrompt}
     `;
 
     return prompt;
