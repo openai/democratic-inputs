@@ -5,7 +5,6 @@ import { ChatCompletionCreateParams } from "openai/resources/chat";
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions";
 import { supabaseClient } from "./supabase";
 import dayjs from "dayjs";
-import { CompletionCreateParamsBase } from "openai/resources/completions";
 
 const openaiClient = new OpenAI({
     apiKey: OPENAI_API_KEY,
@@ -23,7 +22,7 @@ export interface FunctionCompletionOptions {
 export interface PromptCompletionOptions {
     taskInstruction: string;
     taskContent: string;
-    model?: ChatCompletionCreateParamsBase['model'] | CompletionCreateParamsBase['model'];
+    model?: ChatCompletionCreateParamsBase['model'];
 }
 
 export interface VerificationFunctionCompletionOptions {
@@ -51,7 +50,7 @@ export async function createVerificationFunctionCompletion(options: Verification
         taskInstruction,
         taskContent,
         functionSchema: {
-            name: "is_verified",
+            name: "verify_for_task_instruction",
             description: `
                 Determine whether based on the instructions the provided content is valid.
             `,
@@ -127,7 +126,7 @@ export async function createFunctionCompletion(options: FunctionCompletionOption
         taskInstruction,
         taskContent,
         functionSchema,
-        model = 'gpt-4-0613',
+        model = 'gpt-3.5-turbo-0613',
     } = options;
     const startTime = dayjs();
     const waitingMessageInterval = setInterval(() => {
@@ -187,7 +186,7 @@ export async function createPromptCompletion(options: PromptCompletionOptions): 
     const {
         taskInstruction,
         taskContent,
-        model = 'text-davinci-003',
+        model = 'gpt-4-0613',
     } = options;
     const startTime = dayjs();
     const waitingMessageInterval = setInterval(() => {
@@ -204,10 +203,15 @@ export async function createPromptCompletion(options: PromptCompletionOptions): 
     const [completionResult, completionLogResult] = await Promise.allSettled([
 
         // perform the structured completion
-        openaiClient.completions.create({
+        openaiClient.chat.completions.create({
             model,
-            prompt,
-            max_tokens: 1000,
+            messages: [{
+                role: 'user',
+                content: taskInstruction,
+            },{
+                role: 'user',
+                content: taskContent,
+            }]
         }),
 
         // log the prompt to the database for transparency on decision making and debugging
@@ -231,7 +235,7 @@ export async function createPromptCompletion(options: PromptCompletionOptions): 
         return;
     }
 
-    const completion = completionResult.value.choices?.[0]?.text;
+    const completion = completionResult.value.choices?.[0].message.content ?? undefined;
 
     return completion;
 }
