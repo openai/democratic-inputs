@@ -1,0 +1,16 @@
+mutation UpdateNickName($userId: UUID!, $nickName: String!) {
+    updateusersCollection(
+        filter: {
+            id: { eq: $userId },
+        },
+        set: {
+            nick_name: $nickName
+        }
+    ) {
+        affectedCount
+        records {
+            id
+            nick_name
+        }
+    }
+}

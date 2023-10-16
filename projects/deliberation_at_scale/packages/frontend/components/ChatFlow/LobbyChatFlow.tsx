@@ -1,15 +1,20 @@
 "use client";
 import { ChatFlowConfig } from "@/types/flows";
-import { DEFAULT_BOT_MESSAGE_SPEED_MS } from "@/utilities/constants";
+import { DEFAULT_BOT_MESSAGE_SPEED_MS, ONE_SECOND_MS } from "@/utilities/constants";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { faSignature } from "@fortawesome/free-solid-svg-icons";
 import { useLingui } from "@lingui/react";
 import { useMemo } from "react";
 import ChatFlow from "./index";
 import { msg } from "@lingui/macro";
+import { useUpdateNickNameMutation } from "@/generated/graphql";
+import useProfile from "@/hooks/useProfile";
 
 export default function LobbyChatFlow() {
     const { _ } = useLingui();
+    const { userId } = useProfile();
+    const [updateNickName] = useUpdateNickNameMutation();
+
     const flow = useMemo(() => {
         return {
             id: "lobby",
@@ -33,7 +38,19 @@ export default function LobbyChatFlow() {
                         }
                     ],
                     onInput: async (input, helpers) => {
-                        helpers.setFlowStateEntry('nickName', input.content);
+                        const nickName = input.content.trim();
+                        helpers.setFlowStateEntry('nickName', nickName);
+
+                        if (userId) {
+                            await updateNickName({
+                                variables: {
+                                    userId,
+                                    nickName,
+                                },
+                            });
+                        }
+
+                        await helpers.waitFor(ONE_SECOND_MS);
                         helpers.goToName("use_new_nickname");
                     }
                 },
@@ -47,7 +64,7 @@ export default function LobbyChatFlow() {
                 },
                 {
                     name: "use_new_nickname",
-                    messageOptions: [[_(msg`Okay, your nickname will be "[nickName]".`)]],
+                    messageOptions: [[_(msg`Okay, from now on your nickname will be "[nickName]".`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
                 },
                 {
@@ -66,7 +83,7 @@ export default function LobbyChatFlow() {
                 },
             ]
         } satisfies ChatFlowConfig;
-    }, [_]);
+    }, [_, updateNickName, userId]);
 
     return (
         <ChatFlow flow={flow}/>
