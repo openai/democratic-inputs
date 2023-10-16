@@ -6,7 +6,7 @@ import { msg } from "@lingui/macro";
 
 import { statementSolid } from "./EntityIcons";
 import Pill from "./Pill";
-import { FullOutcomeFragment, OpinionOptionType, OpinionType, OutcomeType, RoomParticipantFragment } from '@/generated/graphql';
+import { FullOutcomeFragment, OpinionOptionType, OpinionType, OutcomeType, FullParticipantFragment } from '@/generated/graphql';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useMemo, useState } from 'react';
 import Button from './Button';
@@ -25,7 +25,7 @@ export interface OpinionOption {
 interface Props {
     outcome?: FullOutcomeFragment;
     participantId?: string;
-    participants?: RoomParticipantFragment[]
+    participants?: FullParticipantFragment[]
     variant?: "compact" | "spacious"
 }
 

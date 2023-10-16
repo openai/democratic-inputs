@@ -11,9 +11,10 @@ import { openRoomChat } from "@/state/slices/room";
 import { useAppDispatch } from "@/state/store";
 import useRoomActions from "@/hooks/useRoomActions";
 import ChatActions from "./ChatActions";
+import { usePingParticipant } from "@/hooks/usePingParticipant";
 
 export default function RoomChatMessages() {
-    const { messages, participantId, roomId, messagesLoading, refetchMessages } = useRoom();
+    const { messages, participant, participantId, roomId, messagesLoading, refetchMessages } = useRoom();
     const { actions } = useRoomActions();
     const [sendRoomMessage, { loading: isSendingMessage }] = useSendRoomMessageMutation();
     const dispatch = useAppDispatch();
@@ -54,6 +55,9 @@ export default function RoomChatMessages() {
     useEffect(() => {
         dispatch(openRoomChat());
     }, [dispatch]);
+
+    // ping the participant entry to know which participants are still in the room
+    usePingParticipant(participant);
 
     return (
         <div className="flex flex-col shrink gap-2 min-h-0 pb-2 px-2 md:px-4 grow relative bottom-0 justify-end">

@@ -2656,14 +2656,12 @@ export type GetRoomOutcomesQueryVariables = Exact<{
 
 export type GetRoomOutcomesQuery = { __typename?: 'Query', outcomesCollection?: { __typename?: 'outcomesConnection', edges: Array<{ __typename?: 'outcomesEdge', node: { __typename?: 'outcomes', id: any, active: boolean, type: OutcomeType, room_id?: any | null, topic_id?: any | null, original_outcome_id?: any | null, content: string, created_at: any, updated_at: any, opinionsCollection?: { __typename?: 'opinionsConnection', edges: Array<{ __typename?: 'opinionsEdge', node: { __typename?: 'opinions', id: any, active: boolean, type: OpinionType, outcome_id?: any | null, participant_id: any, range_value: number, statement: string, option_type?: OpinionOptionType | null, created_at: any, updated_at: any } }> } | null } }> } | null };
 
-export type RoomParticipantFragment = { __typename?: 'participants', id: any, active: boolean, nick_name: string, user_id?: any | null, room_id?: any | null, status: ParticipantStatusType, updated_at: any, created_at: any };
-
 export type GetRoomParticipantsQueryVariables = Exact<{
   roomId: Scalars['UUID']['input'];
 }>;
 
 
-export type GetRoomParticipantsQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, nick_name: string, user_id?: any | null, room_id?: any | null, status: ParticipantStatusType, updated_at: any, created_at: any } }> } | null };
+export type GetRoomParticipantsQuery = { __typename?: 'Query', participantsCollection?: { __typename?: 'participantsConnection', edges: Array<{ __typename?: 'participantsEdge', node: { __typename?: 'participants', id: any, active: boolean, room_id?: any | null, user_id?: any | null, nick_name: string, participation_score: number, created_at: any, updated_at: any, status: ParticipantStatusType, last_seen_at: any } }> } | null };
 
 export type SimpleRoomFragment = { __typename?: 'rooms', id: any, active: boolean, external_room_id?: string | null, status_type: RoomStatusType, updated_at: any, created_at: any, topics: { __typename?: 'topics', id: any, active: boolean, content: string, updated_at: any, created_at: any } };
 
@@ -2717,13 +2715,6 @@ export type SendRoomMessageMutationVariables = Exact<{
 
 export type SendRoomMessageMutation = { __typename?: 'Mutation', insertIntomessagesCollection?: { __typename?: 'messagesInsertResponse', records: Array<{ __typename?: 'messages', id: any, room_id?: any | null, participant_id?: any | null, content: string, tags: string }> } | null };
 
-export type StartRoomMutationVariables = Exact<{
-  topicId: Scalars['UUID']['input'];
-}>;
-
-
-export type StartRoomMutation = { __typename?: 'Mutation', insertIntoroomsCollection?: { __typename?: 'roomsInsertResponse', affectedCount: number, records: Array<{ __typename?: 'rooms', id: any }> } | null };
-
 export type UpdateDemographicsMutationVariables = Exact<{
   userId: Scalars['UUID']['input'];
   demographics?: InputMaybe<Scalars['JSON']['input']>;
@@ -2731,6 +2722,14 @@ export type UpdateDemographicsMutationVariables = Exact<{
 
 
 export type UpdateDemographicsMutation = { __typename?: 'Mutation', updateusersCollection: { __typename?: 'usersUpdateResponse', affectedCount: number } };
+
+export type UpdateNickNameMutationVariables = Exact<{
+  userId: Scalars['UUID']['input'];
+  nickName: Scalars['String']['input'];
+}>;
+
+
+export type UpdateNickNameMutation = { __typename?: 'Mutation', updateusersCollection: { __typename?: 'usersUpdateResponse', affectedCount: number, records: Array<{ __typename?: 'users', id: any, nick_name: string }> } };
 
 export const FullOpinionFragmentDoc = gql`
     fragment FullOpinion on opinions {
@@ -2798,18 +2797,6 @@ export const RoomMessageFragmentDoc = gql`
   safe_language
   created_at
   type
-}
-    `;
-export const RoomParticipantFragmentDoc = gql`
-    fragment RoomParticipant on participants {
-  id
-  active
-  nick_name
-  user_id
-  room_id
-  status
-  updated_at
-  created_at
 }
     `;
 export const SimpleRoomTopicFragmentDoc = gql`
@@ -3172,12 +3159,12 @@ export const GetRoomParticipantsDocument = gql`
   participantsCollection(filter: {room_id: {eq: $roomId}}) {
     edges {
       node {
-        ...RoomParticipant
+        ...FullParticipant
       }
     }
   }
 }
-    ${RoomParticipantFragmentDoc}`;
+    ${FullParticipantFragmentDoc}`;
 
 /**
  * __useGetRoomParticipantsQuery__
@@ -3450,42 +3437,6 @@ export function useSendRoomMessageMutation(baseOptions?: Apollo.MutationHookOpti
 export type SendRoomMessageMutationHookResult = ReturnType<typeof useSendRoomMessageMutation>;
 export type SendRoomMessageMutationResult = Apollo.MutationResult<SendRoomMessageMutation>;
 export type SendRoomMessageMutationOptions = Apollo.BaseMutationOptions<SendRoomMessageMutation, SendRoomMessageMutationVariables>;
-export const StartRoomDocument = gql`
-    mutation StartRoom($topicId: UUID!) {
-  insertIntoroomsCollection(objects: {topic_id: $topicId}) {
-    affectedCount
-    records {
-      id
-    }
-  }
-}
-    `;
-export type StartRoomMutationFn = Apollo.MutationFunction<StartRoomMutation, StartRoomMutationVariables>;
-
-/**
- * __useStartRoomMutation__
- *
- * To run a mutation, you first call `useStartRoomMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useStartRoomMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [startRoomMutation, { data, loading, error }] = useStartRoomMutation({
- *   variables: {
- *      topicId: // value for 'topicId'
- *   },
- * });
- */
-export function useStartRoomMutation(baseOptions?: Apollo.MutationHookOptions<StartRoomMutation, StartRoomMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<StartRoomMutation, StartRoomMutationVariables>(StartRoomDocument, options);
-      }
-export type StartRoomMutationHookResult = ReturnType<typeof useStartRoomMutation>;
-export type StartRoomMutationResult = Apollo.MutationResult<StartRoomMutation>;
-export type StartRoomMutationOptions = Apollo.BaseMutationOptions<StartRoomMutation, StartRoomMutationVariables>;
 export const UpdateDemographicsDocument = gql`
     mutation UpdateDemographics($userId: UUID!, $demographics: JSON) {
   updateusersCollection(
@@ -3523,3 +3474,41 @@ export function useUpdateDemographicsMutation(baseOptions?: Apollo.MutationHookO
 export type UpdateDemographicsMutationHookResult = ReturnType<typeof useUpdateDemographicsMutation>;
 export type UpdateDemographicsMutationResult = Apollo.MutationResult<UpdateDemographicsMutation>;
 export type UpdateDemographicsMutationOptions = Apollo.BaseMutationOptions<UpdateDemographicsMutation, UpdateDemographicsMutationVariables>;
+export const UpdateNickNameDocument = gql`
+    mutation UpdateNickName($userId: UUID!, $nickName: String!) {
+  updateusersCollection(filter: {id: {eq: $userId}}, set: {nick_name: $nickName}) {
+    affectedCount
+    records {
+      id
+      nick_name
+    }
+  }
+}
+    `;
+export type UpdateNickNameMutationFn = Apollo.MutationFunction<UpdateNickNameMutation, UpdateNickNameMutationVariables>;
+
+/**
+ * __useUpdateNickNameMutation__
+ *
+ * To run a mutation, you first call `useUpdateNickNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNickNameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNickNameMutation, { data, loading, error }] = useUpdateNickNameMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      nickName: // value for 'nickName'
+ *   },
+ * });
+ */
+export function useUpdateNickNameMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNickNameMutation, UpdateNickNameMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateNickNameMutation, UpdateNickNameMutationVariables>(UpdateNickNameDocument, options);
+      }
+export type UpdateNickNameMutationHookResult = ReturnType<typeof useUpdateNickNameMutation>;
+export type UpdateNickNameMutationResult = Apollo.MutationResult<UpdateNickNameMutation>;
+export type UpdateNickNameMutationOptions = Apollo.BaseMutationOptions<UpdateNickNameMutation, UpdateNickNameMutationVariables>;

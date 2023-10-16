@@ -1,20 +1,9 @@
-fragment RoomParticipant on participants {
-  id
-  active
-  nick_name
-  user_id
-  room_id
-  status
-  updated_at
-  created_at
-}
-
 query GetRoomParticipants($roomId: UUID!) {
   # also fetch inactive participants so we can check if the room is still valid!
   participantsCollection(filter: { room_id: { eq: $roomId } }) {
     edges {
       node {
-        ...RoomParticipant
+        ...FullParticipant
       }
     }
   }

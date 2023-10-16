@@ -1,6 +1,6 @@
 import { alphabetical } from "radash";
 
-import { MessageType, RoomMessageFragment, RoomParticipantFragment, useGetRoomMessagesQuery } from "@/generated/graphql";
+import { MessageType, RoomMessageFragment, FullParticipantFragment, useGetRoomMessagesQuery } from "@/generated/graphql";
 import useRealtimeQuery from "./useRealtimeQuery";
 import { RoomId } from "@/state/slices/room";
 import { getIconByMessageType } from "@/components/EntityIcons";
@@ -13,7 +13,7 @@ import { ONE_SECOND_MS } from "@/utilities/constants";
 
 export interface UseMessagesOptions {
     roomId: RoomId;
-    participants: RoomParticipantFragment[] | undefined;
+    participants: FullParticipantFragment[] | undefined;
     userId: string;
     participantMessageHistoryAmount?: number;
     botMessageHistoryAmount?: number;
