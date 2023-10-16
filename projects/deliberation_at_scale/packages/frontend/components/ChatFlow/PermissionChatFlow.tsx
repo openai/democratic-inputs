@@ -28,12 +28,30 @@ export default function PermissionChatFlow() {
         } satisfies QuickReply;
     }, [_]);
     const waitingForRoomMessageOptions = useMemo(() => {
-        return [
+        const tooltipMessages = [
+            _(msg`Your vote is important. Give the system time to register it.`),
+            _(msg`Your vote is important. It will be registered.`),
+            _(msg`Share your opinions first. Then vote.`),
+            _(msg`Progressing after a conversation? Press 'next statement'.`),
+            _(msg`Thank you for participating in this test!`),
+            _(msg`You can actually share what you really think!`),
+            _(msg`Meeting new people can be hard: that's okay! `),
+            _(msg`Found a bug? Tell us in the evaluation form.`),
+        ];
+        const waitingMessages = [
             [_(msg`Waiting for a conversation to join...`)],
             [_(msg`This may take a few seconds...`)],
             [_(msg`If you want to cancel, click the button below.`)],
-            [_(msg`Hold on!`)],
         ];
+
+        // combine all tooltip messages with all waiting messages
+        const messages = tooltipMessages.map((tooltipMessage) => {
+            return waitingMessages.map((waitingMessage) => {
+                return `${waitingMessage} ${tooltipMessage}`;
+            });
+        });
+
+        return messages;
     }, [_]);
     const cancelWaitingForRoomQuickReply = useMemo(() => {
         return {
