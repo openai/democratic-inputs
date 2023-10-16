@@ -68,13 +68,15 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         }
 
         const refetchInterval = setInterval(() => {
-            refetch();
+            if (!loading) {
+                refetch();
+            }
         }, autoRefetchIntervalMs);
 
         return () => {
             clearInterval(refetchInterval);
         };
-    }, [autoRefetch, autoRefetchIntervalMs, refetch]);
+    }, [autoRefetch, autoRefetchIntervalMs, refetch, loading]);
 
     // handle disconnects
     useEffect(() => {
