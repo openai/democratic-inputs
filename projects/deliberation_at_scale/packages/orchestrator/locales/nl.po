@@ -49,9 +49,9 @@ msgstr "Hé {nickNamesString}. Kun je ook je gedachten delen in de chat?"
 msgid ""
 "Hi! My role is to moderate your conversation.\n"
 "Shall we start by taking a brief moment for introductions?\n"
-"Perhaps **share your name** and why **this conversation interests you**.\n"
+"Perhaps **introduce yourself** and why **this conversation interests you**.\n"
 "The topic will be introduced in a moment. When you are ready, you can take it from there."
-msgstr "Hallo! Het is mijn taak om jullie gesprek te begeleiden.Zullen we beginnen met een korte introductie?Misschien kun **je jezelf introduceren** en delen waarom je **geinteresseerd was in dit gesprek**.Het onderwerp zal zo worden geïntroduceerd. Als u er klaar voor bent, kunt u het vanaf daar overnemen."
+msgstr ""
 
 #: src/tasks/enrichTopicIntroduction.ts:47
 msgid "Hopefully you had the time to introduce yourselves."
