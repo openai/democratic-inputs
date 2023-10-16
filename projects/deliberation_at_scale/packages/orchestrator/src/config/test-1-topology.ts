@@ -50,21 +50,21 @@ export const progressionTopology: Readonly<ProgressionTopology> = {
         {
             id: 'results',
             roomStatus: 'results',
-            verifications: [
-                {
-                    id: 'results-verifyRequestedEnd',
-                    workerTaskId: 'verifyRequestedEnd',
-                    cooldown: {
-                        startDelayMs: ALLOW_END_REQUEST_AFTER_MS,
-                        durationMs: 15 * ONE_SECOND_MS,
-                    },
-                }
-            ],
+            // verifications: [
+            //     {
+            //         id: 'results-verifyRequestedEnd',
+            //         workerTaskId: 'verifyRequestedEnd',
+            //         cooldown: {
+            //             startDelayMs: ALLOW_END_REQUEST_AFTER_MS,
+            //             durationMs: 15 * ONE_SECOND_MS,
+            //         },
+            //     }
+            // ],
             enrichments: [
                 {
                     id: 'results-enrichVoteCheck',
                     workerTaskId: 'enrichVoteCheck',
-                    minAttempts: 1,
+                    minAttempts: 999999999999,
                     executionType: 'alwaysBeforeVerification',
                     cooldown: {
                         startDelayMs: START_STATEMENTS_AFTER_MS,
