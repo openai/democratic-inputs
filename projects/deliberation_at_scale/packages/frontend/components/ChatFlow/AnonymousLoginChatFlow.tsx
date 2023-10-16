@@ -38,10 +38,11 @@ export default function AnonymousLoginChatFlow() {
                     quickReplies: [resetQuickReply],
                     onInput: async (input, helpers) => {
                         const { content: identifier } = input;
+                        const formattedContent = identifier?.trim();
 
                         helpers.postBotMessages([[_(msg`Thank you. Getting login details...`)]]);
                         try {
-                            const { loginLink } = await getAnonymousLoginLink(identifier);
+                            const { loginLink } = await getAnonymousLoginLink(formattedContent);
                             helpers.postBotMessages([[_(msg`Logging you in...`)]]);
                             helpers.waitFor(DEFAULT_BOT_MESSAGE_SPEED_MS);
                             window.location.assign(loginLink);
