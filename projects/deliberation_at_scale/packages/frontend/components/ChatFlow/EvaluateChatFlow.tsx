@@ -9,11 +9,18 @@ import { useCallback, useMemo } from "react";
 import useRoom from "@/hooks/useRoom";
 import { OpinionOptionType, OpinionType, OutcomeType } from "@/generated/graphql";
 import useGiveOpinion, { SetOpinionOptions } from "@/hooks/useGiveOpinion";
+import useProfile from "@/hooks/useProfile";
+import { faArrowRight, faEnvelopeOpenText } from "@fortawesome/free-solid-svg-icons";
 
 export default function EvaluateChatFlow() {
     const { _ } = useLingui();
+    const { authUser } = useProfile();
     const { outcomes, participantId, getOutcomeByType, hasOutcomeType } = useRoom();
     const { setOpinion } = useGiveOpinion({ subjects: outcomes, participantId });
+    const prolificEmailAddress = authUser?.email ?? '';
+    const isProlificEmailAddress = prolificEmailAddress.includes('prolific.com');
+    const prolificId = prolificEmailAddress.split('@')?.[0] ?? '';
+    const prolificSurveyUrl = `https://tally.so/r/n08ozy?prolific-ID=${prolificId}`;
     const handleOpinionClick = useCallback(async (helpers: OnInputHelpers, outcomeType: OutcomeType.OverallImpression, options: Omit<SetOpinionOptions, 'subjectId'>) => {
         const outcome = getOutcomeByType(outcomeType);
         const { id: outcomeId } = outcome ?? {};
@@ -24,6 +31,7 @@ export default function EvaluateChatFlow() {
         });
         helpers.goToNext();
     }, [getOutcomeByType, setOpinion]);
+
     const evaluateFlow = useMemo(() => {
         return {
             id: 'evaluate',
@@ -32,6 +40,38 @@ export default function EvaluateChatFlow() {
                     name: "intro",
                     messageOptions: [[_(msg`Hi [nickName]! Hopefully you enjoyed the conversation you had with the group.`)]],
                     timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+                },
+                {
+                    active: isProlificEmailAddress,
+                    name: "prolific_continue",
+                    messageOptions: [[_(msg`If you have another 15 - 20 minutes, please join another conversation.`)]],
+                    timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+                },
+                {
+                    active: isProlificEmailAddress,
+                    name: "prolific_tally_questions_intro",
+                    messageOptions: [[_(msg`Otherwise, click the button below to progress to the final evaluation and recieve your completion code.`)]],
+                    timeoutMs: DEFAULT_BOT_MESSAGE_SPEED_MS,
+                },
+                {
+                    active: isProlificEmailAddress,
+                    name: "prolific_tally_questions",
+                    messageOptions: [[_(msg`In case the button does not work: [${prolificSurveyUrl}](${prolificSurveyUrl})`)]],
+                    quickReplies: [{
+                        id: "open_to_tally_form",
+                        content: _(msg`Open final evaluation`),
+                        icon: faEnvelopeOpenText,
+                        onClick: () => {
+                            window.open(prolificSurveyUrl, '_blank');
+                        }
+                    }, {
+                        id: "continue",
+                        icon: faArrowRight,
+                        content: _(msg`Continue`),
+                        onClick: (helpers) => {
+                            helpers.goToName('thank_you_1');
+                        }
+                    }],
                 },
                 {
                     name: "thank_you_1",
@@ -106,7 +146,7 @@ export default function EvaluateChatFlow() {
                 },
             ],
         } satisfies ChatFlowConfig;
-    }, [handleOpinionClick, hasOutcomeType, _]);
+    }, [_, isProlificEmailAddress, prolificSurveyUrl, hasOutcomeType, handleOpinionClick]);
 
     return (
         <ChatFlow flow={evaluateFlow}/>
