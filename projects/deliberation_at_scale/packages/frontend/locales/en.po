@@ -13,21 +13,21 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: app/[lang]/page.tsx:47
+#: app/[lang]/page.tsx:49
 msgid "<0><1>Join a conversation</1> with two fellow participants</0>"
 msgstr "<0><1>Join a conversation</1> with two fellow participants</0>"
 
-#: app/[lang]/page.tsx:55
-msgid "<0><1>Learn</1> from eachother and <2>contribute</2> to the 040 AI manifesto</0>"
-msgstr "<0><1>Learn</1> from eachother and <2>contribute</2> to the 040 AI manifesto</0>"
+#: app/[lang]/page.tsx:57
+msgid "<0><1>Learn</1> from eachother and <2>contribute</2>!</0>"
+msgstr "<0><1>Learn</1> from eachother and <2>contribute</2>!</0>"
 
-#: app/[lang]/page.tsx:43
+#: app/[lang]/page.tsx:45
 msgid "<0><1>Setup your profile</1> via email in one minute</0>"
 msgstr "<0><1>Setup your profile</1> via email in one minute</0>"
 
-#: app/[lang]/page.tsx:51
-msgid "<0>AI moderators help create a <1>healthy conversation</1></0>"
-msgstr "<0>AI moderators help create a <1>healthy conversation</1></0>"
+#: app/[lang]/page.tsx:53
+msgid "<0>An AI moderator may <1>help you in your conversation</1></0>"
+msgstr "<0>An AI moderator may <1>help you in your conversation</1></0>"
 
 #: components/ChatFlow/LoginChatFlow.tsx:47
 #: components/ChatFlow/RegisterChatFlow.tsx:43
@@ -59,7 +59,7 @@ msgstr "Call a Facilitator"
 msgid "Call a Technician"
 msgstr "Call a Technician"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:41
+#: components/ChatFlow/PermissionChatFlow.tsx:59
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -79,7 +79,11 @@ msgstr "Connecting to video call..."
 msgid "Consensus Proposal"
 msgstr "Consensus Proposal"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:89
+#: components/ChatFlow/EvaluateChatFlow.tsx:70
+msgid "Continue"
+msgstr "Continue"
+
+#: components/ChatFlow/PermissionChatFlow.tsx:107
 msgid "Continue to room"
 msgstr "Continue to room"
 
@@ -93,7 +97,7 @@ msgstr "Contributor"
 msgid "Conversation"
 msgstr "Conversation"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:138
+#: components/ChatFlow/PermissionChatFlow.tsx:156
 msgid "Conversation partners have been found. Dive right in!"
 msgstr "Conversation partners have been found. Dive right in!"
 
@@ -117,13 +121,13 @@ msgstr "Enable audio"
 msgid "Enable video"
 msgstr "Enable video"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:62
+#: components/ChatFlow/PermissionChatFlow.tsx:80
 msgid "Everything seems to be working fine. Let's get started!"
 msgstr "Everything seems to be working fine. Let's get started!"
 
 #: app/[lang]/page.tsx:32
-msgid "Experience, Understand and Influence AI"
-msgstr "Experience, Understand and Influence AI"
+msgid "Experience and influence AI! Welcome to a conversation about AI in your city."
+msgstr "Experience and influence AI! Welcome to a conversation about AI in your city."
 
 #: components/ChatInput.tsx:130
 msgid "Facilitator on the way!"
@@ -133,7 +137,11 @@ msgstr "Facilitator on the way!"
 msgid "Finding room..."
 msgstr "Finding room..."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:156
+#: components/ChatFlow/PermissionChatFlow.tsx:39
+msgid "Found a bug? Tell us in the evaluation form."
+msgstr "Found a bug? Tell us in the evaluation form."
+
+#: components/ChatFlow/PermissionChatFlow.tsx:174
 msgid "Go back to home"
 msgstr "Go back to home"
 
@@ -142,11 +150,11 @@ msgstr "Go back to home"
 msgid "Go back to profile page"
 msgstr "Go back to profile page"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:57
+#: components/ChatFlow/EvaluateChatFlow.tsx:97
 msgid "Go back to the profile page"
 msgstr "Go back to the profile page"
 
-#: app/[lang]/page.tsx:68
+#: app/[lang]/page.tsx:70
 msgid "Go to profile"
 msgstr "Go to profile"
 
@@ -166,7 +174,7 @@ msgstr "Hello [nickName]. You have been idle for a while. Would you still like t
 msgid "Hey, welcome to Common Ground. We appreciate you taking the time to contribute."
 msgstr "Hey, welcome to Common Ground. We appreciate you taking the time to contribute."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:33
+#: components/ChatFlow/EvaluateChatFlow.tsx:41
 msgid "Hi [nickName]! Hopefully you enjoyed the conversation you had with the group."
 msgstr "Hi [nickName]! Hopefully you enjoyed the conversation you had with the group."
 
@@ -182,39 +190,43 @@ msgstr "Hi, welcome to Common Ground. We appreciate you taking the time to contr
 msgid "Hmmm, it appears the conversation could not be joined or the other participants took too long to join. Sorry about that!"
 msgstr "Hmmm, it appears the conversation could not be joined or the other participants took too long to join. Sorry about that!"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:35
-msgid "Hold on!"
-msgstr "Hold on!"
-
 #: hooks/useRoomActions.ts:65
 msgid "I would like to move on to the next statement."
 msgstr "I would like to move on to the next statement."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:34
+#: components/ChatFlow/EvaluateChatFlow.tsx:47
+msgid "If you have another 15 - 20 minutes, please join another conversation."
+msgstr "If you have another 15 - 20 minutes, please join another conversation."
+
+#: components/ChatFlow/PermissionChatFlow.tsx:44
 msgid "If you want to cancel, click the button below."
 msgstr "If you want to cancel, click the button below."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:109
+#: components/ChatFlow/EvaluateChatFlow.tsx:59
+msgid "In case the button does not work: [{prolificSurveyUrl}]({prolificSurveyUrl})"
+msgstr "In case the button does not work: [{prolificSurveyUrl}]({prolificSurveyUrl})"
+
+#: components/ChatFlow/PermissionChatFlow.tsx:127
 msgid "It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above."
 msgstr "It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:91
+#: components/ChatFlow/EvaluateChatFlow.tsx:131
 msgid "It was bad."
 msgstr "It was bad."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:71
+#: components/ChatFlow/EvaluateChatFlow.tsx:111
 msgid "It was great!"
 msgstr "It was great!"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:81
+#: components/ChatFlow/EvaluateChatFlow.tsx:121
 msgid "It was okay."
 msgstr "It was okay."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:151
+#: components/ChatFlow/PermissionChatFlow.tsx:169
 msgid "It's happening now! Enjoy!"
 msgstr "It's happening now! Enjoy!"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:50
+#: components/ChatFlow/EvaluateChatFlow.tsx:90
 msgid "Join another conversation"
 msgstr "Join another conversation"
 
@@ -231,7 +243,7 @@ msgstr "Loading media..."
 msgid "Loading room..."
 msgstr "Loading room..."
 
-#: app/[lang]/page.tsx:69
+#: app/[lang]/page.tsx:71
 msgid "Log out"
 msgstr "Log out"
 
@@ -243,7 +255,7 @@ msgstr "Logging you in..."
 msgid "Logging you out..."
 msgstr "Logging you out..."
 
-#: app/[lang]/page.tsx:74
+#: app/[lang]/page.tsx:76
 msgid "Login"
 msgstr "Login"
 
@@ -258,6 +270,10 @@ msgstr "Looking for facilitator"
 #: components/ChatInput.tsx:156
 msgid "Looking for technician"
 msgstr "Looking for technician"
+
+#: components/ChatFlow/PermissionChatFlow.tsx:38
+msgid "Meeting new people can be hard: that's okay!"
+msgstr "Meeting new people can be hard: that's okay!"
 
 #: components/RoomOutcome.tsx:44
 msgid "Milestone"
@@ -279,7 +295,7 @@ msgstr "Now your camera and microphone need to be configured."
 msgid "Off Topic"
 msgstr "Off Topic"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:44
+#: components/ChatFlow/PermissionChatFlow.tsx:62
 msgid "Okay, cancelling..."
 msgstr "Okay, cancelling..."
 
@@ -292,6 +308,14 @@ msgstr "Okay, your nickname will be \"[nickName]\"."
 msgid "Okay! Moving you to the lobby."
 msgstr "Okay! Moving you to the lobby."
 
+#: components/ChatFlow/EvaluateChatFlow.tsx:62
+msgid "Open final evaluation"
+msgstr "Open final evaluation"
+
+#: components/ChatFlow/EvaluateChatFlow.tsx:53
+msgid "Otherwise, click the button below to progress to the final evaluation and recieve your completion code."
+msgstr "Otherwise, click the button below to progress to the final evaluation and recieve your completion code."
+
 #: components/ChatFlow/ProfileChatFlow.tsx:53
 msgid "Participate in a new conversation"
 msgstr "Participate in a new conversation"
@@ -300,7 +324,11 @@ msgstr "Participate in a new conversation"
 msgid "Pass"
 msgstr "Pass"
 
-#: app/[lang]/page.tsx:73
+#: components/ChatFlow/PermissionChatFlow.tsx:35
+msgid "Progressing after a conversation? Press 'next statement'."
+msgstr "Progressing after a conversation? Press 'next statement'."
+
+#: app/[lang]/page.tsx:75
 msgid "Register"
 msgstr "Register"
 
@@ -320,9 +348,13 @@ msgstr "Retry joining a room"
 msgid "Select a button above..."
 msgstr "Select a button above..."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:43
+#: components/ChatFlow/EvaluateChatFlow.tsx:83
 msgid "Share your feedback"
 msgstr "Share your feedback"
+
+#: components/ChatFlow/PermissionChatFlow.tsx:34
+msgid "Share your opinions first. Then vote."
+msgstr "Share your opinions first. Then vote."
 
 #: components/ChatFlow/index.tsx:208
 #: components/ChatFlow/index.tsx:330
@@ -333,11 +365,11 @@ msgstr "Something went wrong! Please try again."
 msgid "Start over"
 msgstr "Start over"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:77
+#: components/ChatFlow/PermissionChatFlow.tsx:95
 msgid "Start searching for a conversation"
 msgstr "Start searching for a conversation"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:142
+#: components/ChatFlow/PermissionChatFlow.tsx:160
 msgid "Start the conversation"
 msgstr "Start the conversation"
 
@@ -359,6 +391,10 @@ msgstr "Tap to type"
 msgid "Technician on the way!"
 msgstr "Technician on the way!"
 
+#: components/ChatFlow/PermissionChatFlow.tsx:36
+msgid "Thank you for participating in this test!"
+msgstr "Thank you for participating in this test!"
+
 #: components/ChatFlow/LoginChatFlow.tsx:40
 #: components/ChatFlow/RegisterChatFlow.tsx:36
 msgid "Thank you! You will find an email with a login link in your inbox. Be sure to check your SPAM folder as well!"
@@ -368,7 +404,7 @@ msgstr "Thank you! You will find an email with a login link in your inbox. Be su
 msgid "Thank you. Getting login details..."
 msgstr "Thank you. Getting login details..."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:104
+#: components/ChatFlow/EvaluateChatFlow.tsx:144
 msgid "Thanks for the feedback [nickName]!"
 msgstr "Thanks for the feedback [nickName]!"
 
@@ -393,7 +429,7 @@ msgstr "There was an error sending you an email. Please try again!"
 msgid "This just happened: {0}"
 msgstr "This just happened: {0}"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:33
+#: components/ChatFlow/PermissionChatFlow.tsx:43
 msgid "This may take a few seconds..."
 msgstr "This may take a few seconds..."
 
@@ -409,7 +445,7 @@ msgstr "This message has been flagged as inappropriate."
 msgid "To get started, a registration link will be send to your email."
 msgstr "To get started, a registration link will be send to your email."
 
-#: app/[lang]/page.tsx:59
+#: app/[lang]/page.tsx:61
 msgid "To get started, click 'Register' below:"
 msgstr "To get started, click 'Register' below:"
 
@@ -433,7 +469,7 @@ msgstr "Use my current nickname: \"[nickName]\"."
 msgid "View results of previous conversations"
 msgstr "View results of previous conversations"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:32
+#: components/ChatFlow/PermissionChatFlow.tsx:42
 msgid "Waiting for a conversation to join..."
 msgstr "Waiting for a conversation to join..."
 
@@ -441,13 +477,17 @@ msgstr "Waiting for a conversation to join..."
 msgid "Waiting for all participants to join..."
 msgstr "Waiting for all participants to join..."
 
-#: components/ChatFlow/PermissionChatFlow.tsx:127
+#: components/ChatFlow/PermissionChatFlow.tsx:145
 msgid "Waiting for other participants..."
 msgstr "Waiting for other participants..."
 
 #: components/ChatFlow/index.tsx:77
 msgid "Waiting..."
 msgstr "Waiting..."
+
+#: app/[lang]/page.tsx:34
+msgid "We all want the <0>best for the places where we live</0>. This is why we want to figure how AI can help. We believe it is important that <1>people steer</1> this development. Thank you for being part of this effort!"
+msgstr "We all want the <0>best for the places where we live</0>. This is why we want to figure how AI can help. We believe it is important that <1>people steer</1> this development. Thank you for being part of this effort!"
 
 #: components/ChatFlow/ProfileChatFlow.tsx:27
 msgid ""
@@ -461,11 +501,7 @@ msgstr ""
 "Remember, your unique perspective enriches the conversation.\n"
 "Let's get started!"
 
-#: app/[lang]/page.tsx:34
-msgid "Welcome to our conversation about AI in Eindhoven.<0/><1/>We all want the <2>best for our city</2>. This is why we want to figure how AI can help. We believe it is important that <3>people steer</3> this development. Thank you for being part of this effort!"
-msgstr "Welcome to our conversation about AI in Eindhoven.<0/><1/>We all want the <2>best for our city</2>. This is why we want to figure how AI can help. We believe it is important that <3>people steer</3> this development. Thank you for being part of this effort!"
-
-#: components/ChatFlow/EvaluateChatFlow.tsx:38
+#: components/ChatFlow/EvaluateChatFlow.tsx:78
 msgid "What do you want to do next?"
 msgstr "What do you want to do next?"
 
@@ -473,7 +509,7 @@ msgstr "What do you want to do next?"
 msgid "What nickname would you like to use?"
 msgstr "What nickname would you like to use?"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:67
+#: components/ChatFlow/EvaluateChatFlow.tsx:107
 msgid "What was your general impression of the conversation?"
 msgstr "What was your general impression of the conversation?"
 
@@ -489,10 +525,22 @@ msgstr "Will you please enter your Prolific ID below?"
 msgid "You"
 msgstr "You"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:56
+#: components/ChatFlow/PermissionChatFlow.tsx:37
+msgid "You can actually share what you really think!"
+msgstr "You can actually share what you really think!"
+
+#: components/ChatFlow/PermissionChatFlow.tsx:74
 msgid "You need to give permission to use your camera and microphone. The video feed is not recorded. In this current test your audio will not be transcribed."
 msgstr "You need to give permission to use your camera and microphone. The video feed is not recorded. In this current test your audio will not be transcribed."
 
-#: app/[lang]/page.tsx:39
+#: app/[lang]/page.tsx:41
 msgid "Your experience on Common Ground will look like:"
 msgstr "Your experience on Common Ground will look like:"
+
+#: components/ChatFlow/PermissionChatFlow.tsx:32
+msgid "Your vote is important. Give the system time to register it."
+msgstr "Your vote is important. Give the system time to register it."
+
+#: components/ChatFlow/PermissionChatFlow.tsx:33
+msgid "Your vote is important. It will be registered."
+msgstr "Your vote is important. It will be registered."
