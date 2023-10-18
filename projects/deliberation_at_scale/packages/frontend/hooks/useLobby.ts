@@ -9,17 +9,15 @@ import {
 import { usePingParticipant } from "./usePingParticipant";
 import useProfile from "./useProfile";
 import useRealtimeQuery from "./useRealtimeQuery";
-import { useAppSelector } from "@/state/store";
 import useLocalizedPush from "./useLocalizedPush";
 import dayjs, { Dayjs } from "dayjs";
 // import { ONE_SECOND_MS } from "@/utilities/constants";
 
 export default function useLobby() {
-    const { user } = useProfile();
+    const { user, nickName } = useProfile();
     const { id: userId } = user ?? {};
     const [confirmingParticipantId, setConfirmingParticipantId] = useState<string | null>(null);
     const [lastCreatedAt, setLastCreatedAt] = useState<Dayjs | null>(null);
-    const flowStateNickName = useAppSelector((state) => state.flow.flowStateLookup?.['lobby']?.['nickName']);
     const isConfirming = !!confirmingParticipantId;
     const { data: participantData,
         loading: participantsLoading,
@@ -82,12 +80,12 @@ export default function useLobby() {
         createParticipant({
             variables: {
                 userId,
-                nickName: flowStateNickName,
+                nickName,
             },
         }).then(() => {
             refetchParticipants();
         });
-    }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, isConfirming, flowStateNickName, isCreatingParticipant, setLastCreatedAt, lastCreatedAt]);
+    }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, isConfirming, isCreatingParticipant, setLastCreatedAt, lastCreatedAt, nickName]);
 
     // store the the participant ID when a confirm is requested
     // this will help us redirect the user back to the timeed out flow when not responding quickly enough
