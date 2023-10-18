@@ -29,20 +29,20 @@ export default function PermissionChatFlow() {
     }, [_]);
     const waitingForRoomMessageOptions = useMemo(() => {
         const messages = [
-            _(msg`Waiting for a conversation to join...`),
-            _(msg`We do not record your video or audio.`),
-            _(msg`Want create a new statement? Just type and send your thoughts into the chat.`),
-            _(msg`Our AI is not listening in, it only understands what you type and send in the chat.`),
-            _(msg`We really care about what you care about! Type your thoughts into the chat to share them with us.`),
-            _(msg`This may take a few minutes...`),
-            _(msg`Your vote is important. Give the system time to register it.`),
-            _(msg`Your vote is important. It will be registered.`),
-            _(msg`Share your opinions first. Then vote.`),
-            _(msg`Progressing after a conversation? Press 'next statement'.`),
+            _(msg`Note: We do not record your video or audio.`),
+            _(msg`Tip: Want create a new statement? Just type and send your thoughts into the chat.`),
+            _(msg`Note: Our AI is not listening in, it only understands what you type and send in the chat.`),
+            _(msg`Tip: We really care about what you care about! Type your thoughts into the chat to share them with us.`),
+            _(msg`Note: This may take a few minutes - don't leave the page!`),
+            _(msg`Tip: Your vote is important. Give the system time to register it.`),
+            _(msg`Tip: Your vote is important. It will be registered.`),
+            _(msg`Tip: Share your opinions first. Then vote.`),
+            _(msg`Tip: Is anything stuck or broken? Try refreshing the page.`),
+            _(msg`Tip: Progressing after a conversation? Press 'next statement'.`),
             _(msg`Thank you for participating in this test!`),
-            _(msg`You can actually share what you really think!`),
-            _(msg`Meeting new people can be hard: that's okay! `),
-            _(msg`Found a bug? Tell us in the evaluation form.`),
+            _(msg`Tip: You can actually share what you really think!`),
+            _(msg`Tip: Meeting new people can be hard: that's okay! `),
+            _(msg`Tip: Found a bug? Tell us in the evaluation form.`),
         ];
 
         return messages.map((message) => {
@@ -52,7 +52,7 @@ export default function PermissionChatFlow() {
     const cancelWaitingForRoomQuickReply = useMemo(() => {
         return {
             id: "cancel_waiting_for_room",
-            content: _(msg`Cancel`),
+            content: _(msg`Leave the queue.`),
             icon: faCancel,
             onClick: async (helpers) => {
                 helpers.postBotMessages([[_(msg`Okay, cancelling...`)]]);
@@ -138,7 +138,7 @@ export default function PermissionChatFlow() {
                 },
                 {
                     name: `waiting_for_room_2`,
-                    messageOptions: [[_(msg`Waiting for other participants...`)]],
+                    messageOptions: [[_(msg`Waiting for two other participants...`)]],
                     timeoutMs: ONE_SECOND_MS * 5,
                     quickReplies: [
                         cancelWaitingForRoomQuickReply,

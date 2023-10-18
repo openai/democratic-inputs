@@ -55,7 +55,8 @@ export default function RoomOutcome(props: Props) {
 
         return OUTCOME_OPINION_TIMEOUT_MS_LOOKUP[type];
     }, [type, existingOpinion]);
-    const hasTimeout = timeoutMs > 0;
+    // const hasTimeout = timeoutMs > 0;
+    const hasTimeout = false;
     const opinionOptions = useMemo(() => {
         switch (type) {
             case OutcomeType.Consensus:
@@ -81,7 +82,6 @@ export default function RoomOutcome(props: Props) {
                 ];
         }
 
-        return [];
     }, [type, _]);
     const hasOpinionOptions = (opinionOptions.length > 0);
     const formattedContent = content?.trim();
