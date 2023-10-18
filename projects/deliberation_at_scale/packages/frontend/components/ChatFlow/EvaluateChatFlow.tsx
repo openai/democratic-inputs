@@ -20,7 +20,7 @@ export default function EvaluateChatFlow() {
     const prolificEmailAddress = authUser?.email ?? '';
     const isProlificEmailAddress = prolificEmailAddress.includes('prolific.com');
     const prolificId = prolificEmailAddress.split('@')?.[0] ?? '';
-    const prolificSurveyUrl = `https://tally.so/r/n08ozy?prolific-ID=${prolificId}`;
+    const prolificSurveyUrl = `https://tally.so/r/n08D1B?prolific-ID=${prolificId}`;
     const handleOpinionClick = useCallback(async (helpers: OnInputHelpers, outcomeType: OutcomeType.OverallImpression, options: Omit<SetOpinionOptions, 'subjectId'>) => {
         const outcome = getOutcomeByType(outcomeType);
         const { id: outcomeId } = outcome ?? {};
