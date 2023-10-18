@@ -16,6 +16,7 @@ import { openRoomAssistant } from '@/state/slices/room';
 import useRoomActions from '@/hooks/useRoomActions';
 import ChatActions from './ChatActions';
 import Divider from './Divider';
+import { usePingParticipant } from '@/hooks/usePingParticipant';
 
 const ENABLE_CHAT = false;
 const messageAnimation = {
@@ -25,7 +26,7 @@ const messageAnimation = {
 };
 
 export default function RoomChatSummary() {
-    const { lastBotMessages, lastParticipantMessages, participantId, participants, roomId, outcomes } = useRoom();
+    const { lastBotMessages, lastParticipantMessages, participantId, participant, participants, roomId, outcomes } = useRoom();
     const { actions } = useRoomActions();
     const [sendRoomMessage] = useSendRoomMessageMutation();
     const dispatch = useAppDispatch();
@@ -34,6 +35,9 @@ export default function RoomChatSummary() {
     useEffect(() => {
         dispatch(openRoomAssistant());
     }, [dispatch]);
+
+    // ping the participant entry to know which participants are still in the room
+    usePingParticipant(participant);
 
     return (
         <div className="flex flex-col gap-2 pb-4 justify-between min-h-0">
