@@ -16,6 +16,7 @@ export const supabaseClient = createClient<Database>(
     }
 );
 
+export type Room = Database["public"]["Tables"]["rooms"]["Row"];
 export type Message = Database["public"]["Tables"]["messages"]["Row"];
 export type Opinion = Database["public"]["Tables"]["opinions"]["Row"];
 export type Participant = Database["public"]["Tables"]["participants"]["Row"];
