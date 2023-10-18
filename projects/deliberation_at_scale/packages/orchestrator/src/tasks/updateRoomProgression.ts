@@ -17,7 +17,6 @@ import { getRoomById, updateRoomStatus } from "../utilities/rooms";
 import { ModeratorTaskTuple } from "../utilities/tasks";
 import { progressionTaskExecutorLookup } from "../utilities/progression";
 import { captureEvent } from "@sentry/node";
-import { reschedule } from "../scheduler";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -29,7 +28,7 @@ export interface UpdateRoomProgressionPayload {
  * A configurable topology of a succesful deliberation is used as a reference to determine all the steps.
  */
 export default async function updateRoomProgression(payload: UpdateRoomProgressionPayload, helpers: Helpers) {
-    const { roomId, jobKey } = payload;
+    const { roomId } = payload;
 
     try {
         const room = await getRoomById(roomId);
@@ -59,20 +58,6 @@ export default async function updateRoomProgression(payload: UpdateRoomProgressi
             },
         });
     }
-
-    // guard: make sure the job key is valid
-    if (!jobKey) {
-        return;
-    }
-
-    // reschedule this task
-    // await reschedule<UpdateRoomProgressionPayload>({
-    //     workerTaskId: "updateRoomProgression",
-    //     jobKey,
-    //     intervalMs: UPDATE_ROOM_PROGRESSION_INTERVAL_MS,
-    //     payload,
-    //     helpers,
-    // });
 }
 
 
