@@ -45,6 +45,11 @@ export default function AnonymousLoginChatFlow() {
                             const { loginLink } = await getAnonymousLoginLink(formattedContent);
                             helpers.postBotMessages([[_(msg`Logging you in...`)]]);
                             helpers.waitFor(DEFAULT_BOT_MESSAGE_SPEED_MS);
+
+                            // if (true) {
+                            //     loginLink = loginLink.replace('https://findcommonground.vercel.app/', 'http://localhost:3200/');
+                            // }
+
                             window.location.assign(loginLink);
                         } catch (error) {
                             helpers.postBotMessages([[_(msg`There was an error getting the login details. Please try again!`)]]);
