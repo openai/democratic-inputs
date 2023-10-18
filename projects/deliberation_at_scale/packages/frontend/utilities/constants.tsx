@@ -80,7 +80,7 @@ export const TRANSCRIBE_VALID_MIN_TEXT_LENGTH = 30;
  */
 export const DISABLE_OPINION_INPUT_WHEN_TIMED_OUT = false;
 export const OUTCOME_OPINION_TIMEOUT_MS_LOOKUP: Record<OutcomeType, number> = {
-    [OutcomeType.Consensus]: 15 * ONE_SECOND_MS,
+    [OutcomeType.Consensus]: 0,
     [OutcomeType.CrossPollination]: 0,
     [OutcomeType.Milestone]: 0,
     [OutcomeType.OffTopic]: 0,

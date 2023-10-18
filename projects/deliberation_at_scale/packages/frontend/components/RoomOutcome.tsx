@@ -55,8 +55,7 @@ export default function RoomOutcome(props: Props) {
 
         return OUTCOME_OPINION_TIMEOUT_MS_LOOKUP[type];
     }, [type, existingOpinion]);
-    // const hasTimeout = timeoutMs > 0;
-    const hasTimeout = false;
+    const hasTimeout = timeoutMs > 0;
     const opinionOptions = useMemo(() => {
         switch (type) {
             case OutcomeType.Consensus:
