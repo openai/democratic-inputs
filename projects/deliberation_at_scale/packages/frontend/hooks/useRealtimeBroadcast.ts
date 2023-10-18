@@ -41,6 +41,7 @@ export default function useRealtimeBroadcast(options: UseRealtimeBroadcastOption
 
         newChannel.subscribe((status) => {
             if (status != "SUBSCRIBED") {
+                // eslint-disable-next-line no-console
                 console.error(`Could not subscribe to channel: ${channelId}`);
                 return;
             }
