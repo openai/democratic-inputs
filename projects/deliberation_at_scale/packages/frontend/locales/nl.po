@@ -47,7 +47,7 @@ msgstr "AI Moderator"
 msgid "Assistant"
 msgstr "Assistent"
 
-#: components/ChatFlow/LobbyChatFlow.tsx:19
+#: components/ChatFlow/LobbyChatFlow.tsx:24
 msgid "Before joining the conversation, let's pick a nickname and configure your camera and microphone."
 msgstr "Voordat je aan het gesprek deelneemt, laten we een bijnaam kiezen en je camera en microfoon configureren."
 
@@ -287,7 +287,7 @@ msgstr "We verplaatsen je naar de wachtruimte, een momentje..."
 msgid "Next statement"
 msgstr ""
 
-#: components/ChatFlow/LobbyChatFlow.tsx:55
+#: components/ChatFlow/LobbyChatFlow.tsx:72
 msgid "Now your camera and microphone need to be configured."
 msgstr "Nu moeten je camera en microfoon worden geconfigureerd."
 
@@ -299,8 +299,11 @@ msgstr "Niet relevant"
 msgid "Okay, cancelling..."
 msgstr "Oké, annuleren..."
 
-#: components/ChatFlow/LobbyChatFlow.tsx:42
-#: components/ChatFlow/LobbyChatFlow.tsx:50
+#: components/ChatFlow/LobbyChatFlow.tsx:67
+msgid "Okay, from now on your nickname will be \"[nickName]\"."
+msgstr ""
+
+#: components/ChatFlow/LobbyChatFlow.tsx:59
 msgid "Okay, your nickname will be \"[nickName]\"."
 msgstr "Oké, je bijnaam zal \"[nickName]\" zijn."
 
@@ -379,7 +382,7 @@ msgstr "Begin het gesprek"
 msgid "Statement"
 msgstr "Stelling"
 
-#: components/ChatFlow/LobbyChatFlow.tsx:59
+#: components/ChatFlow/LobbyChatFlow.tsx:76
 msgid "Sure!"
 msgstr "Zeker!"
 
@@ -461,7 +464,7 @@ msgstr ""
 msgid "Try joining a room again"
 msgstr "Probeer opnieuw een kamer te betreden"
 
-#: components/ChatFlow/LobbyChatFlow.tsx:28
+#: components/ChatFlow/LobbyChatFlow.tsx:33
 msgid "Use my current nickname: \"[nickName]\"."
 msgstr "Gebruik mijn huidige bijnaam: \"[nickName]\"."
 
@@ -505,7 +508,7 @@ msgstr ""
 msgid "What do you want to do next?"
 msgstr "Wat wil je hierna doen?"
 
-#: components/ChatFlow/LobbyChatFlow.tsx:24
+#: components/ChatFlow/LobbyChatFlow.tsx:29
 msgid "What nickname would you like to use?"
 msgstr "Welke bijnaam wil je gebruiken?"
 
@@ -521,7 +524,7 @@ msgstr "Wil je alsjeblieft je e-mailadres hieronder invullen?"
 msgid "Will you please enter your Prolific ID below?"
 msgstr ""
 
-#: hooks/useProfile.ts:44
+#: hooks/useProfile.ts:45
 msgid "You"
 msgstr "Jij"
 
