@@ -32,7 +32,7 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
         await waitFor(ONE_SECOND_MS * 3);
         await sendBotMessage({
             roomId,
-            content: t`This discussion has now come to an end. You can now say good-bye to each other and hopefully see you in a next round!`
+            content: t`This discussion has now come to an end. You can now say good-bye to each other. I look forward to seeing you in a future conversation.`
         });
     },
 });
