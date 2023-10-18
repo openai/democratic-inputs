@@ -302,6 +302,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
                         content: contributionResult,
                         type: 'consensus',
                         room_id: roomId,
+                        topic_id: topicId,
                         original_outcome_id: latestOutcomeId,
                     })
                     .select();
