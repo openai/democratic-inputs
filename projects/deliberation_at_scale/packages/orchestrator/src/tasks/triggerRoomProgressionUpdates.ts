@@ -3,9 +3,10 @@ import dayjs from "dayjs";
 
 import { supabaseClient } from "../lib/supabase";
 import { UpdateRoomProgressionPayload } from "./updateRoomProgression";
-import { ENABLE_SINGLE_ROOM_TESTING, TEST_ROOM_ID_ALLOWLIST, UPDATE_ROOM_PROGRESSION_INTERVAL_MS } from "../config/constants";
+import { ENABLE_SINGLE_ROOM_TESTING, ONE_SECOND_MS, TEST_ROOM_ID_ALLOWLIST, UPDATE_ROOM_PROGRESSION_INTERVAL_MS } from "../config/constants";
 import { reschedule } from "../scheduler";
 import { captureEvent } from "../lib/sentry";
+import { getRunnerUtils } from "../runner";
 
 export interface TriggerRoomProgressionUpdatesPayload {
     // empty
@@ -19,24 +20,45 @@ export default async function triggerRoomProgressionUpdates(payload: TriggerRoom
     try {
         // TODO: refine this query to only select rooms that are actually active
         const minCreatedAt = dayjs().subtract(1, "hour").toISOString();
-        const activeRoomsData = await supabaseClient
-            .from('rooms')
-            .select()
-            .eq('active', true)
-            .not('starts_at', 'is', null)
-            .gt('created_at', minCreatedAt);
-        const activeRooms = activeRoomsData?.data ?? [];
+        const [activeRoomsResult] = await Promise.allSettled([
+            supabaseClient
+                .from('rooms')
+                .select()
+                .eq('active', true)
+                .not('starts_at', 'is', null)
+                .gt('created_at', minCreatedAt),
+        ]);
+
+        // guard: check for rejections
+        if (activeRoomsResult.status === "rejected") {
+            throw new Error(`Error while fetching active rooms or locked jobs.`);
+        }
+
+        const activeRooms = activeRoomsResult.value?.data ?? [];
         const activeRoomsAmount = activeRooms.length;
 
         helpers.logger.info(`Scheduling progression updates for all ${activeRoomsAmount} active rooms...`);
 
-        activeRooms.map((activeRoom) => {
+        await Promise.allSettled(activeRooms.map(async (activeRoom) => {
             const { id: roomId } = activeRoom;
             const jobKey = `updateRoomProgression-${roomId}`;
             const newJobPayload: UpdateRoomProgressionPayload = {
                 roomId,
                 jobKey,
             };
+            const { rows: [existingJob] } = await getRunnerUtils().withPgClient((pgClient) => {
+                return pgClient.query("SELECT * FROM graphile_worker.jobs WHERE key = $1", [jobKey]);
+            });
+
+            // guard: we need to check whether the existing job is currently being executed
+            // and if so we will skip this room, because another worker is already working on it
+            if (existingJob &&
+                existingJob.attempts < existingJob.max_attempts &&
+                Math.abs(dayjs().diff(dayjs(existingJob.run_at), 'ms')) < ONE_SECOND_MS * 60 * 2
+            ) {
+                helpers.logger.info(`Skipping room ${roomId} because it is already being worked on...`);
+                return;
+            }
 
             // guard: skip when in testing mode and room is not in allowlist
             if (ENABLE_SINGLE_ROOM_TESTING && !TEST_ROOM_ID_ALLOWLIST.includes(roomId)) {
@@ -44,10 +66,11 @@ export default async function triggerRoomProgressionUpdates(payload: TriggerRoom
             }
 
             helpers.logger.info(`Scheduling progression update for room ${roomId}...`);
-            helpers.addJob("updateRoomProgression", newJobPayload, {
+
+            return await helpers.addJob("updateRoomProgression", newJobPayload, {
                 jobKey,
             });
-        });
+        }));
     } catch (error) {
         captureEvent({
             message: `Error while scheduling progression updates: ${JSON.stringify(error)}`,

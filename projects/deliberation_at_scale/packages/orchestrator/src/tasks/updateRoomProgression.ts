@@ -4,18 +4,19 @@ import dayjs from "dayjs";
 
 // TODO: make mechanism to automatically switch between different topologies
 import { progressionTopology } from "../config/test-1-topology";
-import { supabaseClient, Moderation } from "../lib/supabase";
+import { supabaseClient, Moderation, Room } from "../lib/supabase";
 import { waitForAllModerationCompletions } from "../lib/graphileWorker";
 import { BaseProgressionWorkerTaskPayload, EnrichmentExecutionType, ProgressionEnrichmentTask, ProgressionLayer, ProgressionLayerId, ProgressionTask, RoomStatus } from "../types";
 import { Database } from "../generated/database-public.types";
 import { VerificationFunctionCompletionResult } from "../lib/openai";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { ENABLE_ROOM_PROGRESSION, PRINT_ROOM_PROGRESSION, ROOM_PROGRESSION_WITH_JOBS } from "../config/constants";
+import { ENABLE_ROOM_PROGRESSION, PRINT_ROOM_PROGRESSION, ROOM_PROGRESSION_WITH_JOBS, UPDATE_ROOM_PROGRESSION_INTERVAL_MS } from "../config/constants";
 import { getMessagesAfter, sendBotMessage } from "../utilities/messages";
 import { getCompletedModerationsByJobKey, getLastCompletedModerationByJobKey, getModerationsByJobKey } from "../utilities/moderations";
 import { getRoomById, updateRoomStatus } from "../utilities/rooms";
 import { ModeratorTaskTuple } from "../utilities/tasks";
 import { progressionTaskExecutorLookup } from "../utilities/progression";
+import { captureEvent } from "@sentry/node";
 
 export interface UpdateRoomProgressionPayload {
     roomId: string;
@@ -27,8 +28,41 @@ export interface UpdateRoomProgressionPayload {
  * A configurable topology of a succesful deliberation is used as a reference to determine all the steps.
  */
 export default async function updateRoomProgression(payload: UpdateRoomProgressionPayload, helpers: Helpers) {
+    const { roomId } = payload;
+
+    try {
+        const room = await getRoomById(roomId);
+
+        // guard: skip when room is not valid
+        if (!room) {
+            helpers.logger.error(`Could not update progression for room ${roomId} because the room was not found.`);
+            return;
+        }
+
+        const createdAt = dayjs(room?.created_at);
+        const minCreatedAt = dayjs().subtract(1, "hour").toISOString();
+
+        // guard: skip when room is not active anymore
+        if (!room.active || createdAt.isBefore(minCreatedAt)) {
+            helpers.logger.info(`Skipping progression for room ${roomId} because it is not active anymore.`);
+            return;
+        }
+
+        await performRoomProgression(room, payload, helpers);
+    } catch (error) {
+        helpers.logger.error(`Could not update progression for room ${payload.roomId}: ${error}`);
+        captureEvent({
+            message: `Could not update progression for room ${payload.roomId}: ${error}`,
+            extra: {
+                payload,
+            },
+        });
+    }
+}
+
+
+async function performRoomProgression(room: Room, payload: UpdateRoomProgressionPayload, helpers: Helpers) {
     const { roomId, jobKey } = payload;
-    const room = await getRoomById(roomId);
 
     // guard: check if the room is valid
     if (!roomId || !room) {

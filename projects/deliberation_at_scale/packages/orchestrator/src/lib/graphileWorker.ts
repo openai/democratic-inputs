@@ -17,6 +17,7 @@ export interface AllCompletionsWaitOptions {
     timeoutMs?: number;
 }
 
+// TODO: fix permissions for performing the queries below
 export const graphileWorkerClient = createClient<Database>(
     SUPABASE_URL,
     SUPABASE_KEY,
@@ -24,9 +25,6 @@ export const graphileWorkerClient = createClient<Database>(
         db: {
             schema: 'graphile_worker',
         },
-        auth: {
-            persistSession: false,
-        }
     }
 );
 
@@ -34,11 +32,31 @@ export async function getJobByKey(jobKey: string) {
     const jobsResult = await graphileWorkerClient
         .from('jobs')
         .select()
-        .eq('job_key', jobKey)
+        .eq('key', jobKey)
         .limit(1);
     const job = jobsResult?.data?.[0];
 
     return job;
+}
+
+export async function getLockedJobs() {
+    const jobsResult = await graphileWorkerClient
+        .from('jobs')
+        .select()
+        .not('locked_at', 'is', null)
+        .not('locked_by', 'is', null);
+    const jobs = jobsResult?.data ?? [];
+
+    return jobs;
+}
+
+export async function getJobs() {
+    const jobsResult = await graphileWorkerClient
+        .from('jobs')
+        .select();
+    const jobs = jobsResult?.data ?? [];
+
+    return jobs;
 }
 
 export type ModerationCompletionTuple = {

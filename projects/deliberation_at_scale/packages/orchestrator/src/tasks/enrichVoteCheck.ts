@@ -320,12 +320,23 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
                 helpers.logger.info(`Created a new outcome for room ${roomId} with id ${newOutcome?.id} and content ${newOutcome?.content}`);
 
                 if (newOutcome) {
-                    await attemptSendBotMessage({
-                        roomId,
-                        content: getNewContributionMessageContent(),
-                        tags: 'new-contributions',
-                        force: true,
-                    });
+                    await Promise.allSettled([
+                        attemptSendBotMessage({
+                            roomId,
+                            content: getNewContributionMessageContent(),
+                            tags: 'new-contributions',
+                            force: true,
+                        }),
+                        supabaseClient
+                            .from('outcome_sources')
+                            .insert(latestOutcomeMessages.map((message) => {
+                                return {
+                                    outcome_id: newOutcome.id,
+                                    message_id: message.id,
+                                };
+                            }))
+                    ]);
+
                     return;
                 }
             }
