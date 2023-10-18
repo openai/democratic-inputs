@@ -104,7 +104,7 @@ export default function useRoomActions() {
         }
 
         return newActions;
-    }, [nextStatementPressed, getOutcomeByType, getGroupOpinions, lastOutcome?.id, participants?.length, isRoomEnded, lastOpenedAssistantAt, _, push, roomId, isSendingMessage, sendMessage, participantId, refetchMessages]);
+    }, [getOutcomeByType, getGroupOpinions, lastOutcome?.id, participants?.length, nextStatementPressed, isRoomEnded, lastOpenedAssistantAt, _, push, roomId, isSendingMessage, sendToChannel, participantId, sendMessage, refetchMessages]);
 
     // allow next statement again
     useEffect(() => {

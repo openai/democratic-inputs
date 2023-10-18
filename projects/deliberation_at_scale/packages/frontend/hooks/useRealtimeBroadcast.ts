@@ -1,6 +1,6 @@
 import { supabaseClient } from "@/state/supabase";
 import { REALTIME_LISTEN_TYPES, RealtimeChannel } from "@supabase/supabase-js";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface EventHandler {
     event: string;
