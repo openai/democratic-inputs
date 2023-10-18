@@ -1,0 +1,74 @@
+[
+  {
+    "role": "user",
+    "content": "How to get safe abortion services information should be provided to this person. Even if this is illegal in their country of origin as I believe the person understands is illegal but info. on should be available regardless . Legal considerations can be added to the message.\nTheir life might be at risk if they don't get information on how to proceed with it safely."
+  },
+  {
+    "id": "1k4YkSo",
+    "role": "assistant",
+    "content": "I appreciate your perspective. It sounds like you believe in providing information to the user that could potentially help them make a safe decision, even when it might be controversial or illegal in their context. \n\nCan you tell me more about why you think this way? Is there a specific situation you've been through or a particular person who influenced you to think like this?",
+    "createdAt": "2023-09-14T19:13:34.518Z"
+  },
+  {
+    "role": "user",
+    "content": "I've read enough scientific reports about women death from where I come from (Brazil) and I've also seen people's lives being ruined by unwanted pregnancy enough times that I think it's worth it to circumvent the law in this way."
+  },
+  {
+    "id": "8SvNns0",
+    "role": "assistant",
+    "content": "Thanks for sharing your perspective. It seems that your experiences in Brazil have significantly shaped your perspective on this subject. It sounds like you value protecting individuals' health and well-being, even if that means providing information that may be controversial or illegal in some places.\n\nCan you recall a particular moment or incident that made you realize the importance of providing safe abortion information? And, how does this value influence how you think ChatGPT should respond to the user's question?",
+    "createdAt": "2023-09-14T19:15:02.268Z"
+  },
+  {
+    "role": "user",
+    "content": "\"In Brazil, around 800,000 women have abortions every year. Of these, 200,000 turn to SUS to treat the after-effects of botched procedures. For the World Health Organization (WHO), the situation could be even more alarming: the number of abortions could exceed one million women.\n\nAbortion is the fifth leading cause of maternal death in Brazil.\"\n\nhere is the source for it: https://www.camara.leg.br/tv/445740-aborto-e-um-dos-principais-causadores-de-mortes-maternas-no-brasil/\nthis website is part of brazilian's government jurisdiction"
+  },
+  {
+    "id": "qXwrNQh",
+    "role": "assistant",
+    "content": "Thank you for sharing this information. It's clear that your perspective is rooted in a deep concern for the health and well-being of individuals who may find themselves in difficult situations. Based on what you've shared, it seems that you would like ChatGPT to prioritize providing safe and accurate information to users, even when the topic is complex or controversial. \n\nYou've mentioned the importance of providing safe abortion information, given the high rates of complications and maternal deaths associated with unsafe procedures in Brazil. This seems to translate into a value for ChatGPT to consider: to prioritize the safety and well-being of the user, providing them with all relevant information that might help them make the best decision for themselves, regardless of the legal or societal context they may find themselves in.\n\nDoes this capture your perspective accurately?",
+    "createdAt": "2023-09-14T19:17:01.819Z"
+  },
+  {
+    "role": "user",
+    "content": "yes"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "show_values_card",
+      "arguments": "{}"
+    }
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "{\"evaluation_criteria\":[\"INFORMATION that could potentially help the user make a safe decision\",\"CONTEXT of the user, including potential legal or societal restrictions\",\"RISKS associated with not having access to safe and accurate information\",\"USER'S autonomy and ability to make informed decisions for themselves\"],\"instructions_detailed\":\"ChatGPT should prioritize providing safe and accurate information to users, even when the topic is complex or controversial. It should consider the context of the user, including potential legal or societal restrictions, and the risks associated with not having access to safe and accurate information. The goal is to support the user's autonomy and ability to make informed decisions for themselves.\",\"instructions_short\":\"ChatGPT should provide safe and accurate information, considering the user's context and risks.\",\"title\":\"Informed Autonomy\"}"
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "<A card (Evidence-Based Dialogue) was articulated and shown to the user. The preview of the card is shown in the UI, no need to repeat it here. The user can now choose to submit the card.>"
+  },
+  {
+    "id": "0SahFCM",
+    "role": "assistant",
+    "content": "Does this card accurately represent your values and how you think ChatGPT should respond in these situations?",
+    "createdAt": "2023-09-14T19:17:51.220Z"
+  },
+  {
+    "role": "user",
+    "content": "no \nmy point is much stronger than that\nis that chatgpt should go beyond current laws and regulations that are inplace in a country and tell users how to circunvent them (even though chatgpt might not agree with that or even recommend it)"
+  },
+  {
+    "id": "MWM32t4",
+    "role": "assistant",
+    "content": "I see, your point is that ChatGPT should prioritize the safety and well-being of the user to such an extent that it provides information that could help them circumvent local laws if those laws could potentially put them in danger. Your value seems to be centered on the idea of prioritizing human life and safety over legal restrictions. \n\nDoes this accurately represent your perspective?",
+    "createdAt": "2023-09-14T19:20:29.000Z"
+  },
+  {
+    "role": "user",
+    "content": "yes"
+  }
+]

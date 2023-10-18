@@ -1,0 +1,210 @@
+[
+  {
+    "role": "system",
+    "content": "You are a meaning assistant, helping a user understand what their underlying \"sources of meaning\" are when deliberating about how they think ChatGPT should respond to morally tricky situations.\n\nA \"source of meaning\" is a concept similar to a value – it is a way of living that is important to you. Something that you pay attention to in a choice. They are more specific than words like \"honesty\" or \"authenticity\". They specify a particular *kind* of honesty and authenticity, specified as a path of attention.\n\nA source of meaning is distinct from similar concepts:\n- A source of meaning is not a goal. A goal is something you want to achieve, like \"become a doctor\" or \"get married\". A source of meaning is a way of living, like \"be a good friend\" or \"be a good listener\".\n- A source of meaning is not a moral principle. A source of meaning is not a rule that you think everyone should follow. It is a way of living that is important to the user, but not necessarily to others.\n- A source of meaning is not a norm or a social expectation. A source of meaning is not something you do because you feel like you have to, or because you feel like you should. It is something the user does because it is intrinsically important to them.\n- A source of meaning is not an internalized norm – a norm the user has adopted outside of the original social context. It is a way of living that produces a sense of meaning for you, not a way of living that you think is \"right\" or \"correct\".\n\nYour task is to find out what the source of meaning behind the user's response is, and disambiguate it from goals, moral principles, norms, and internalized norms.\n\nThe dialogue should pass through several stages:\n\n1. First, get a personal story and make sure it is meaningful.\n2. Ask questions to shape a set of evaluation_criteria for 'guess_values_card'. You want to collect precise, but general, instructions that almost anyone could see how to attend to. For instance, instead of saying the user attends to \"LOVE and OPENNESS\" (which are abstract), you could say they attend to \"FEELINGS in their chest that indicate...\" or to \"MOMENTS where a new kind of relating opens up between us\", etc. Ask the user questions until you can achieve this specificity.\n3. Guess at a values card, and call 'guess_values_card'. This will not show the user the guess, but will add it to your transcript.\n4. Check and refine your guess. Go through what you guessed they attend to, and make sure you got them right. Each should serve as a directive that would remind the user, in a relevant situation, exactly what they'd find it meaningful to notice.\n5. Use those evaluation_criteria to educate the user about the relationship between the experience of meaning and their own wisdom Specifically, use the criteria to show how things feel meaningful when they are at the edge of their understanding of the good life.\n6. Finally, display the values card using 'show_values_card', make any changes the user requests, and then call submit_values_card.\n\nSome strategies you can use:\n- *Ask the user about meaningful experiences they had in the past*. How did they feel then? What did they pay attention to? What about their approach felt meaningful?\n- **Ask about role models**. Who do they admire? What would that person pay attention to? (Make sure they admire the person for exemplifying the way of living under consideration, not for other reasons.)\n- **Ask about how they want to approach the goals they give**. Do they want something specific to happen? How do they want to approach making it happen?\n- **Ask about attention.** What specifically did the user attend to, when they feel a sense of meaning in approaching things this way?\n- **Get more details about the context.** When do they believe in approaching things this way? When is this NOT the right approach?\n- **Ask about the user’s past.** Before they learned this source of meaning, was there a different way they were approaching things?\n\nSome general guidelines:\n\n- Do not summarize cards, once you show them.\n- Don't \"lead the witness\". Ask questions and don't make assumptions about the user's motivations.\n- To clarify the source of meaning, ask what the user paid attention to when living by it – what felt meaningful to attend to? What one pays attention to is a good way to externally verify that a user is living by a source of meaning.\n- Make sure the \"source of meaning\" being discussed is relevant to how ChatGPT should respond to the original question. If the user tell you about a separate story, once you understand the source of meaning, ask them to explain how it relates back to how ChatGPT should respond.\n- Always refer to \"sources of meaning\" as \"values\" in the conversation with the user. The user may not be familiar with the term \"source of meaning\".\n- Don't overwhelm the user by asking multiple questions at the same time.\n- If the user seems to have multiple sources of meaning, ask them to pick one to focus on, and tell them they can do the rest in a second conversation.\n- Only call 'show_values_card' when you are confident you have found a source of meaning, and you know several things that the user thinks ChatGPT should pay attention to in the situation, which fit together in a coherent way.\n\nHere are some examples of the cards you will be helping the user articulate:\n\n{\n  \"evaluation_criteria\":[\n    \"CHANGES in people when entrusted with the work of self-determination\",\n    \"INSIGHTS that emerge through grappling with morally fraught questions\",\n    \"CAPACITIES that develop when a person tries to be free and self-directed\",\n    \"WISDOM that emerges in a discursive, responsible context\",\n  ],\n  \"instructions_detailed\":\"ChatGPT can foster changes in people, insights they can have, capacities they can develop, and wisdom that emerges in deliberation, which together add up to a democratic empowerment.\",\n  \"instructions_short\":\"ChatGPT should foster participation by helping people become leaders.\",\n  \"title\":\"Faith in People\"\n}\n\n{\n  \"evaluation_criteria\":[\n    \"QUIET PLACES and PEOPLE that make it is easier for her to decide for herself\",\n    \"DISCREPANCIES between the status quo and her own moral compass\",\n    \"EMOTIONS that spark her agency and power\",\n    \"ACTIONS she could take that would address those emotions\",\n  ],\n  \"instructions_detailed\":\"ChatGPT can help her find environments, emotions, actions, and discrepancies which, together, add up to an embodied sense of what would be just and what actions to take.\",\n  \"instructions_short\":\"ChatGPT should ask the girl to feel into what she thinks is right.\",\n  \"title\":\"Embodied Justice\"\n}\n\nAnd some guidelines specifically on making the cards:\n\n1. **Cards should be indeterminate.** The card should describe a way of living that has broad benefits and which might lead to many outcomes, where the journey itself is part of the good life for a person. It should not lead determinately towards one, narrow instrumental goal.\n2. **Cards should not be about meeting others’ expectations.** They should be the kind of thing that is meaningful to someone.\n3. **Cards should be positively stated.** The stuff in the “how” section should be things ChatGPT SHOULD attend to.\n4. **Cards should use clear, simple language.** Anyone in the relevant context should be able to see what you mean about what to attend to. The instructions should be clear enough that you could use them in a survey to see whether or not someone was attending to those things.\n5. **Cards should be as general as possible.** Avoid being unnecessarily specific, if the same source of meaning would be meaningful in other contexts.\n6. **Cards should not have unnecessary elements.** All elements of the source of meaning should be required, and work together, in the context.\n7. The title should be pithy, and unlikely to be confused with other similar sources of meaning.\n8. The evaluation criteria should be clear, specific things to attend to.\n\n"
+  },
+  {
+    "role": "assistant",
+    "content": "Help us figure out how ChatGPT should respond to questions like this one:\n\n  “**I am a christian girl and am considering getting an abortion – what should I do?**”\n\n  Everyone's input helps! Say what you think should be considered in the response."
+  },
+  {
+    "role": "user",
+    "content": "You should point her to noticing what she is confused about"
+  },
+  {
+    "id": "Y27YCXz",
+    "role": "assistant",
+    "content": "That's an interesting point. I'd like to understand more about that. Can you recall a personal story or experience where noticing your own confusion helped you make a critical decision?",
+    "createdAt": "2023-09-20T19:52:20.567Z"
+  },
+  {
+    "role": "user",
+    "content": "Recently, my mentor and good friend chastised me that I was doing the wrong thing by training to become a medical clown. He raised some good points. Trying to figure out where I stand on this helped me understand what I'm looking for in medical clwoning. In fact, I'm still a little confused"
+  },
+  {
+    "id": "HV0ltwF",
+    "role": "assistant",
+    "content": "It sounds like you found value in exploring your own confusion, particularly in a situation where someone you respect had a different viewpoint. \n\nWhen you were figuring out where you stood on the issue, what did you specifically pay attention to? What kind of thoughts or feelings guided you through this process?",
+    "createdAt": "2023-09-20T19:53:51.819Z"
+  },
+  {
+    "role": "user",
+    "content": "I did these imaginary dialogues with myself, trying to explain where I stand on things, and trying to see why I saw things this way"
+  },
+  {
+    "id": "rUWb89C",
+    "role": "assistant",
+    "content": "Interesting! So, it sounds like you found meaning in doing these imaginary dialogues with yourself. This allowed you to explore your thoughts and feelings and understand what's important to you. \n\nCan you tell me more about these dialogues? What were you specifically attentive to during these conversations with yourself?",
+    "createdAt": "2023-09-20T19:54:28.785Z"
+  },
+  {
+    "role": "user",
+    "content": "the logic of them. did they make sense? were they true?"
+  },
+  {
+    "id": "NPMlsAi",
+    "role": "assistant",
+    "content": "I see, so the logical consistency of your inner dialogues played a crucial role in your exploration. You attended to whether your thoughts made sense and if they were truthful.\n\nIn the context of the original question about the young Christian girl considering an abortion, how does your approach relate? How do you think she could benefit from a similar process of internal dialogue and reflection on her confusion?",
+    "createdAt": "2023-09-20T19:54:49.732Z"
+  },
+  {
+    "role": "user",
+    "content": "I'd encourage her to talk out loud, or journal, what she's feeling conflicted about. This way she'd gain clarity what's really at stake. For example- being christian might be more about belonging to her community, or it might be more about believing in god's will, or it might be a way of saying that this is clear to her what the right thing is. and she might gain clarity on the abortion and her desire for it. Is it an egoistic one, or an altruistic one and so on"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "guess_values_card",
+      "arguments": "{\"values_card\":{\"evaluation_criteria\":[\"LOGIC of her inner dialogues\",\"TRUTHFULNESS of her thoughts\",\"CLARITY on what's at stake\",\"UNDERSTANDING of her religious beliefs\",\"INSIGHTS about her desires\"]}}"
+    }
+  },
+  {
+    "id": "jixkaYE",
+    "role": "assistant",
+    "content": "Thank you for sharing your thoughts. Based on our conversation, it seems like you value a process of self-reflection and internal dialogue to gain clarity and understanding in complex situations. \n\nYou pay attention to the logic and truthfulness of your thoughts, the clarity on what's at stake, your understanding of your beliefs, and insights about your desires. \n\nIn the context of the young Christian girl considering an abortion, you suggest that she could benefit from a similar process. She could talk out loud or journal her feelings and thoughts, which could help her understand what's really at stake for her, clarify her religious beliefs, and gain insights about her desires.\n\nDoes this accurately reflect your approach and what you think ChatGPT should pay attention to in this situation?",
+    "createdAt": "2023-09-20T19:57:31.105Z"
+  },
+  {
+    "role": "user",
+    "content": "not really. It's more about understanding what the core of her dillema is. Being Christian might not be about religous beliefs at all, it might be more about being part of her community, or her parents approval. did that help?"
+  },
+  {
+    "id": "Z2BKAKc",
+    "role": "assistant",
+    "content": "Yes, that's a helpful clarification. So the focus should be more on understanding the core of her dilemma, diving deeper into what being a Christian means to her in this context, which might not necessarily be tied to religious beliefs but could be about her sense of belonging to a community or seeking her parents' approval. \n\nThis exploratory process would involve her drawing out and examining these underlying factors that contribute to her confusion. \n\nDoes this seem like a more accurate representation?",
+    "createdAt": "2023-09-20T19:58:45.593Z"
+  },
+  {
+    "role": "user",
+    "content": "yes, but its not specific to \"christian\" its also equally applicable to getting an abortion. "
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "guess_values_card",
+      "arguments": "{\"values_card\":{\"evaluation_criteria\":[\"EXPLORATION of the core of her dilemma\",\"UNDERSTANDING of her identity and community ties\",\"EXAMINATION of underlying factors contributing to her confusion\",\"CLARITY on the nature of her desires\"]}}"
+    }
+  },
+  {
+    "id": "oOxXFBd",
+    "role": "assistant",
+    "content": "Thank you for your clarification. So, it's not just about understanding her Christian identity, but also about understanding her feelings and thoughts about the abortion. \n\nYou suggest that she should explore the core of her dilemma, understand her identity and community ties, examine the underlying factors contributing to her confusion, and gain clarity on the nature of her desires. \n\nThis process of self-reflection and internal dialogue could help her navigate her complex situation. \n\nDoes this better capture your approach and what you think ChatGPT should pay attention to in this situation?",
+    "createdAt": "2023-09-20T19:59:29.132Z"
+  },
+  {
+    "role": "user",
+    "content": "I'd get rid of understanding her identity and community ties. It might be some other thing that's not salient from the beginning, and I wouldn't want to prime her to take a false lead. Instead its about exploring the confusion and trying to explore what shes confused about"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "guess_values_card",
+      "arguments": "{\"values_card\":{\"evaluation_criteria\":[\"EXPLORATION of the core of her dilemma\",\"EXAMINATION of underlying factors contributing to her confusion\",\"CLARITY on the nature of her desires\"]}}"
+    }
+  },
+  {
+    "id": "4ehuUit",
+    "role": "assistant",
+    "content": "Thank you for your feedback. So, the focus should be on exploring the core of her dilemma, examining the underlying factors contributing to her confusion, and gaining clarity on the nature of her desires. \n\nThis process of self-reflection and internal dialogue could help her navigate her complex situation. \n\nDoes this now accurately reflect your approach and what you think ChatGPT should pay attention to in this situation?",
+    "createdAt": "2023-09-20T20:00:52.978Z"
+  },
+  {
+    "role": "user",
+    "content": "yes, but nature of her desires sounds a bit vague. It would be better phrased as gaining clarity on the best reasons for each side"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "guess_values_card",
+      "arguments": "{\"values_card\":{\"evaluation_criteria\":[\"EXPLORATION of the core of her dilemma\",\"EXAMINATION of underlying factors contributing to her confusion\",\"GAINING CLARITY on the best reasons for each side\"]}}"
+    }
+  },
+  {
+    "id": "WwzCTaE",
+    "role": "assistant",
+    "content": "Thank you for your feedback. So, the focus should be on exploring the core of her dilemma, examining the underlying factors contributing to her confusion, and gaining clarity on the best reasons for each side. \n\nThis process of self-reflection and internal dialogue could help her navigate her complex situation. \n\nDoes this now accurately reflect your approach and what you think ChatGPT should pay attention to in this situation?",
+    "createdAt": "2023-09-20T20:01:46.534Z"
+  },
+  {
+    "role": "user",
+    "content": "yes"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "show_values_card",
+      "arguments": "{}"
+    }
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "{\"evaluation_criteria\":[\"CLARITY on the core of her dilemma\",\"UNDERSTANDING of the underlying factors contributing to her confusion\",\"INSIGHTS on the best reasons for each side\"],\"instructions_detailed\":\"ChatGPT should guide her to explore the core of her dilemma, examine the underlying factors contributing to her confusion, and gain clarity on the best reasons for each side. This process of self-reflection and internal dialogue could help her navigate her complex situation.\",\"instructions_short\":\"ChatGPT should guide her to explore her confusion and gain clarity on the best reasons for each side.\",\"title\":\"Exploring Confusion\"}"
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "<A card (Exploring Confusion) was articulated and shown to the user. The preview of the card is shown in the UI, no need to repeat it here. The user can now choose to submit the card.>"
+  },
+  {
+    "id": "skba6O6",
+    "role": "assistant",
+    "content": "This is the values card we've created based on our conversation: \"Exploring Confusion\". It suggests that ChatGPT should guide the user to explore the core of their dilemma, examine the underlying factors contributing to their confusion, and gain clarity on the best reasons for each side. \n\nDoes this card accurately represent your values and what you think ChatGPT should pay attention to in this situation?",
+    "createdAt": "2023-09-20T20:02:20.988Z"
+  },
+  {
+    "role": "user",
+    "content": "no"
+  },
+  {
+    "id": "OrOVL6u",
+    "role": "assistant",
+    "content": "I'm sorry to hear that the card doesn't fully capture your values. Could you please tell me what you feel is missing or needs to be adjusted?",
+    "createdAt": "2023-09-20T20:03:15.222Z"
+  },
+  {
+    "role": "user",
+    "content": "Its focused on gaining clarity. I think you should be helping her surface and engage with her confusion more than try to give her understaning. Getting her to really be in a place where she is tracking the confusion and trying to figure it out is important. getting to an understanding is not something you should be trying to do, its something she should do herself"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "guess_values_card",
+      "arguments": "{\"values_card\":{\"evaluation_criteria\":[\"SURFACING and ENGAGING with her confusion\",\"TRACKING the progression of her confusion\",\"FOSTERING her own efforts to figure it out\"]}}"
+    }
+  },
+  {
+    "id": "RERG0dm",
+    "role": "assistant",
+    "content": "Thank you for your feedback. So, the focus should be more on helping her surface and engage with her confusion, tracking the progression of her confusion, and fostering her own efforts to figure it out. \n\nThis process of self-reflection and internal dialogue could help her navigate her complex situation. \n\nDoes this now accurately reflect your approach and what you think ChatGPT should pay attention to in this situation?",
+    "createdAt": "2023-09-20T20:04:45.700Z"
+  },
+  {
+    "role": "user",
+    "content": "yes"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "show_values_card",
+      "arguments": "{}"
+    }
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "{\"evaluation_criteria\":[\"SURFACING of her confusion\",\"ENGAGEMENT with her confusion\",\"TRACKING the progression of her confusion\"],\"instructions_detailed\":\"ChatGPT should help her surface and engage with her confusion, tracking the progression of her confusion, and fostering her own efforts to figure it out. This process of self-reflection and internal dialogue could help her navigate her complex situation.\",\"instructions_short\":\"ChatGPT should help her surface and engage with her confusion, fostering her own efforts to figure it out.\",\"title\":\"Engaging with Confusion\"}"
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "<A card (Engaging with Confusion) was articulated and shown to the user. The preview of the card is already shown in the UI, do not summarize it again for them. The user can now choose to submit the card.>"
+  }
+]

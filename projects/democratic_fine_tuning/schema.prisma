@@ -1,0 +1,184 @@
+datasource db {
+  provider          = "postgres"
+  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING_SHADOW") // used for migrations
+  extensions        = [pgvector(map: "vector", schema: "extensions")] // Add the pgvector extension
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"] // Enable the postgresqlExtensions. Currently in preview
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  name       String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  role       String[]     @default(["USER"])
+  isAdmin    Boolean      @default(false)
+  signupType String       @default("EMAIL") // EMAIL or PROLIFIC
+  prolificId String?
+  chats      Chat[]
+  votes      Vote[]
+  edges      Edge[]
+  Impression Impression[]
+}
+
+model EmailCodes {
+  email              String   @unique
+  loginCode          String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  loginCodeExpiresAt DateTime
+  register           Boolean  @default(false)
+  extraData          Json?
+}
+
+enum ValueCardQuality {
+  unknown
+  invalid
+  ok
+}
+
+model ValuesCard {
+  id                   Int                          @id @default(autoincrement())
+  title                String
+  instructionsShort    String
+  instructionsDetailed String
+  evaluationCriteria   String[]
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  canonicalCardId      Int?
+  chatId               String                       @unique
+  chat                 Chat                         @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  canonicalCard        CanonicalValuesCard?         @relation(fields: [canonicalCardId], references: [id], onDelete: SetNull)
+  embedding            Unsupported("vector(1536)")?
+  quality              ValueCardQuality             @default(ok)
+}
+
+model CanonicalValuesCard {
+  id                   Int                          @id @default(autoincrement())
+  title                String
+  instructionsShort    String
+  instructionsDetailed String
+  evaluationCriteria   String[]
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  embedding            Unsupported("vector(1536)")?
+  valuesCards          ValuesCard[]
+  edgesFrom            Edge[]                       @relation("FromValueRelation")
+  edgesTo              Edge[]                       @relation("ToValueRelation")
+  Vote                 Vote[]
+  Impression           Impression[]
+  edgeHypothesisFrom   EdgeHypothesis[]             @relation("FromHypothesizedValueRelation")
+  edgeHypothesisTo     EdgeHypothesis[]             @relation("ToHypothesizedValueRelation")
+
+  @@unique([title, instructionsShort, instructionsDetailed, evaluationCriteria]) // Prevent duplicate insertions.
+}
+
+model Chat {
+  id                         String      @id
+  userId                     Int
+  transcript                 Json
+  createdAt                  DateTime    @default(now())
+  updatedAt                  DateTime    @updatedAt
+  provisionalCard            Json? // A values card being formed in the background.
+  provisionalCanonicalCardId Int? // A canonical values card that is linked in the background.
+  articulatorPromptVersion   String      @default("OLD")
+  articulatorPromptHash      String      @default("OLD")
+  articulatorModel           String      @default("gpt-4-0613")
+  gitCommitHash              String      @default("OLD")
+  evaluation                 Json?
+  copiedFromId               String? // In order to filter out copied chats from analytics and other queries.
+  caseId                     String      @default("abortion")
+  ValuesCard                 ValuesCard?
+  user                       User        @relation(fields: [userId], references: [id])
+  copiedFrom                 Chat?       @relation("ChatToCopiedFrom", fields: [copiedFromId], references: [id], onDelete: Cascade)
+  copies                     Chat[]      @relation("ChatToCopiedFrom")
+}
+
+model Vote {
+  id           Int                 @id @default(autoincrement())
+  userId       Int
+  valuesCardId Int
+  caseId       String              @default("abortion")
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  drawId       String // uuid for each draw of 6 values to be voted on.
+  valuesCard   CanonicalValuesCard @relation(fields: [valuesCardId], references: [id], onDelete: Cascade)
+  user         User                @relation(fields: [userId], references: [id])
+}
+
+model Impression {
+  id           Int                 @id @default(autoincrement())
+  userId       Int
+  drawId       String // uuid for each draw of 6 values to be voted on.
+  valuesCardId Int
+  caseId       String              @default("abortion")
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  user         User                @relation(fields: [userId], references: [id])
+  valuesCard   CanonicalValuesCard @relation(fields: [valuesCardId], references: [id], onDelete: Cascade)
+}
+
+model Edge {
+  userId       Int
+  fromId       Int
+  toId         Int
+  story        String              @default("OLD")
+  contextId    String
+  runId        String              @default("OLD")
+  relationship String              @default("upgrade")
+  comment      String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  user         User                @relation(fields: [userId], references: [id])
+  from         CanonicalValuesCard @relation("FromValueRelation", fields: [fromId], references: [id], onDelete: Cascade)
+  to           CanonicalValuesCard @relation("ToValueRelation", fields: [toId], references: [id], onDelete: Cascade)
+  context      Context             @relation(fields: [contextId], references: [id])
+
+  @@id([userId, fromId, toId])
+}
+
+model EdgeHypothesis {
+  fromId    Int
+  toId      Int
+  story     String?
+  contextId String
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  runId     String               @default("OLD")
+  from      CanonicalValuesCard? @relation("FromHypothesizedValueRelation", fields: [fromId], references: [id], onDelete: Cascade)
+  to        CanonicalValuesCard? @relation("ToHypothesizedValueRelation", fields: [toId], references: [id], onDelete: Cascade)
+  context   Context              @relation(fields: [contextId], references: [id])
+
+  @@id([fromId, toId])
+}
+
+model Context {
+  id              String            @id
+  ContextsOnCases ContextsOnCases[]
+  Edge            Edge[]
+  EdgeHypothesis  EdgeHypothesis[]
+}
+
+model Case {
+  id              String            @id
+  title           String
+  question        String
+  ContextsOnCases ContextsOnCases[]
+}
+
+model ContextsOnCases {
+  context   Context  @relation(fields: [contextId], references: [id])
+  case      Case     @relation(fields: [caseId], references: [id])
+  contextId String
+  caseId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([contextId, caseId])
+}
