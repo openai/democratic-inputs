@@ -31,7 +31,7 @@ export default function InvalidChatFlow() {
                             icon: faHomeAlt,
                             content: _(msg`Go back to profile page`),
                             onClick: async (helpers) => {
-                                helpers.goToPage('/proifle');
+                                helpers.goToPage('/profile');
                             },
                         }
                     ],
