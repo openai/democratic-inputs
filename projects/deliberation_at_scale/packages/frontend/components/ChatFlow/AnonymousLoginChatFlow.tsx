@@ -34,7 +34,7 @@ export default function AnonymousLoginChatFlow() {
                 },
                 {
                     name: "ask_for_identifiewr",
-                    messageOptions: [[_(msg`Will you please enter your Prolific ID below?`)]],
+                    messageOptions: [[_(msg`Please enter your Prolific ID below:`)]],
                     quickReplies: [resetQuickReply],
                     onInput: async (input, helpers) => {
                         const { content: identifier } = input;
