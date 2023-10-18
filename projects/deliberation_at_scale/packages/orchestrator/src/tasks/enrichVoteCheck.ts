@@ -292,14 +292,11 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
                 }),
                 taskContent,
             });
-            // guard: does string include NO_CONTENT_FOUND?
-            const hasValuableContent = contributionResult?.includes('NO_CONTENT_FOUND') ?? false;
+            const hasValuableContent = !contributionResult?.includes('NO_CONTENT_FOUND') ?? false;
+            const hasContribution = !!contributionResult && !isEmpty(contributionResult.trim()) && hasValuableContent;
 
-            // all checks passed
-            const hasContribution = !!contributionResult && !isEmpty(contributionResult.trim()) && !hasValuableContent;
-            
             // moderator sends message "i don't think this is valuable etc"
-            if (!isContribution) {
+            if (!hasValuableContent) {
                 await attemptSendBotMessage({
                     roomId,
                     content: getNoVerifiedContributionMessageContent(),
