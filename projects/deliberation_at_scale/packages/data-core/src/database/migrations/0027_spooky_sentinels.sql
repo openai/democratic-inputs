@@ -87,6 +87,19 @@ CREATE OR REPLACE TRIGGER participants_update_cls
   FOR EACH ROW
   EXECUTE FUNCTION allow_updating_only('last_seen_at', 'status');
 
+CREATE OR REPLACE FUNCTION public.get_room_ids_by_user_ids(user_ids uuid[])
+ RETURNS uuid[]
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+	BEGIN
+        RETURN (
+          SELECT ARRAY(select distinct "room_id" from "participants" where user_id = ANY(user_ids))
+        );
+      END;
+    $function$
+
+
 BEGIN;
   ALTER POLICY "Enable update for users based on logged in user" ON "public"."participants" RENAME TO "Enable update for users based on logged in user";
 COMMIT;
