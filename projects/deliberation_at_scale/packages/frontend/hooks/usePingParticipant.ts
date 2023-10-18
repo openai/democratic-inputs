@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { FullParticipantFragment, usePingParticipantMutation } from "@/generated/graphql";
 import { PARTICIPANT_PING_INTERVAL_DELAY_MS } from "@/utilities/constants";
 import useLocalizedPush from "./useLocalizedPush";
 import { supabaseClient } from "@/state/supabase";
+
+const MAX_FAILED_PINGS = 10;
 
 export function usePingParticipant(candidateParticipant?: FullParticipantFragment) {
     const participantId = candidateParticipant?.id;
@@ -11,6 +13,7 @@ export function usePingParticipant(candidateParticipant?: FullParticipantFragmen
     const participantStatus = candidateParticipant?.status;
     const [ping, { loading, error, data }] = usePingParticipantMutation();
     const { push } = useLocalizedPush();
+    const [failedPings, setFailedPings] = useState(0);
 
     useEffect(() => {
 
@@ -26,9 +29,12 @@ export function usePingParticipant(candidateParticipant?: FullParticipantFragmen
             });
             const affectedCount = data ? 1 : 0;
 
-            // reload the page when the participant got deactivated somehow
             if (error || affectedCount <= 0) {
-                document.location.reload();
+                setFailedPings((currentFailedPings) => {
+                    return currentFailedPings + 1;
+                });
+            } else {
+                setFailedPings(0);
             }
         }, PARTICIPANT_PING_INTERVAL_DELAY_MS);
 
@@ -36,6 +42,13 @@ export function usePingParticipant(candidateParticipant?: FullParticipantFragmen
             clearInterval(pingInterval);
         });
     }, [participantId, participantStatus, participantActive, ping, push]);
+
+    // reload the page when the participant got deactivated somehow
+    useEffect(() => {
+        if (failedPings >= MAX_FAILED_PINGS) {
+            document.location.reload();
+        }
+    }, [failedPings]);
 
     return { loading, error, data };
 }
