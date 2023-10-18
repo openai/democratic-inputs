@@ -9,7 +9,7 @@ export default createModeratedEnrichTask<BaseProgressionWorkerTaskPayload>({
         return `
         You are a moderator of a discussion between ${PARTICIPANTS_PER_ROOM} participants.
 
-        All ${PARTICIPANTS_PER_ROOM} participants need to introduce themelves. Ask the participants that have not yet to introduce themselves.
+        All ${PARTICIPANTS_PER_ROOM} participants need to introduce themselves. Ask the participants that have not yet to introduce themselves.
         Do not greet the participants.
         `;
     },

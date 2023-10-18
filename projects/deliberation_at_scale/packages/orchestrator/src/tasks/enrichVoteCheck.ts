@@ -409,7 +409,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
             roomId,
             content: getVoteInviteMessageContent(),
             tags: 'invite-to-vote',
-            tagCooldownMs: BOT_TAG_COOLDOWN_MS * 2,
+            tagCooldownMs: BOT_TAG_COOLDOWN_MS * 4,
         });
     }
 
@@ -567,7 +567,7 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
 // DONE
 function getVotedSameMessageContent(): string {
     return draw([
-        t`You share the same opinion. You can always discuss this a bit more or move on to a new statement using the next button.`,
+        t`You share the same opinion. When you are ready, you can move on to a new statement using the next button.`,
     ]) ?? '';
 }
 
@@ -599,33 +599,32 @@ function getLeavingParticipantsMessageContent(nickNames: string[]): string {
     const nickNamesString = nickNames.join(', ');
 
     return draw([
-        t`It seems like ${nickNamesString} have left the conversation. If you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using the red door icon next to your camera view.`,
+        t`It seems like ${nickNamesString} has **encountered an issue** or has **left the conversation**. Are they still in the call? Ask them to **refresh the page**. Af you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using **the red door icon** next to your camera view.`,
     ]) ?? '';
 }
 
 // DONE, TODO: rename this
 function getOpenDiscussionMessageContent(): string {
     return draw([
-        // t`Not everyone has voted. After voting you can choose to discuss the statement further or move to the next statement.`,
-        t`You can discuss this statement with the group, write new findings down in the chat or move on to the next statement when everyone voted.`,
+        t`You can discuss this statement with the group, write your thoughts down in the chat or move on to the next statement when everyone voted.`,
     ]) ?? '';
 }
 
 // DONE
 function getNewCrossPollinationMessageContent(statement: string, isFirst: boolean = false): string {
     return draw([
-        t`Here is a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on. Remember, if you have an interesting discussion, type out the key points and i will make a new statement that reflects your views!`,
+        t`Here is a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on. Remember, if you have an interesting discussion, type out the key points and I will make a new statement that reflects your views!`,
         t`I found a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on. Something to add? Type out your thoughts so I can create a new statement for you.`,
     ]) ?? '';
 }
 
 // DONE
 function getTimeKeepingMessageContent(timeMs: number, outcomeAmount: number): string {
-    let invitation = t`If you enjoying the conversation, keep going! If you're Interested in other people's opinions, you can move on to a new group.`;
+    let invitation = t`If you enjoying the conversation, keep going! If you're interested in other people's opinions, you can move on to a new group.`;
     let outcomeAmountMessage = ``;
 
     if (timeMs >= ONE_MINUTE_MS * 20) {
-        invitation = t`It seems you are really enjoying this conversation, but remember other people might also enjoy your contribution.`;
+        invitation = t`It seems you are really enjoying this conversation, but remember other people might also enjoy your contribution!`;
     }
 
     if (outcomeAmount > 1) {
@@ -665,6 +664,7 @@ function getNoVerifiedContributionMessageContent(): string {
 function getVerifiedContributionMessageContent(): string {
     return draw([
         t`I think I might've found a new statement based on your typed messages! Working on it...`,
+        t`It looks like you have shared your opinions with me. Let me synthesise them...`,
     ]) ?? '';
 }
 
@@ -681,24 +681,26 @@ function getSummarisationPrompt(options: SummarisationPromptOptions) {
         Context: You will receive some unstructured comments from the participants of a conversation about the following statement: ${statement}.
         These people do not know each other and may have very different views.
 
-        Task: Using only the comments, create one synthesising, standalone, normative "We should..." statement that captures the values of each participant and the nuance of what they have shared.
+        Task: Using only the comments, create one synthesising, standalone, normative statement that captures the values of each participant and the nuance of what they have shared.
+
+        A normative statement follows the structure (Who) (should/could/must) (not?) (do what) in order to (value).
 
         When formulating the statement, follow these rules:
         1. Don't use metaphors or similes. Say it how it is.
-        2. Never use a long word where a short one works.
         3. If it is possible to cut a word out, cut it out.
         4. Ensure the statement is short and to the point (less than two sentences).
         5. Never use the passive where you can use the active.
-        6. Never use a foreign phrase, a scientific word, or a jargon word if there exists an everyday equivalent.
+        6. Avoid using foreign phrases, scientific words, or jargon words an everyday equivalent exists.
         7. Remember the statement should be standalone. The statement you generate will be presented and voted on by people with no knowledge of how it was generated. Do not describe the discussion itself!
         8. Use only the comments that demonstrate an intent to contribute to the broader societal discussion: Meta commentary, comments directed at the participants themselves, and or filler content should be ignored for the analysis.
         9. Do not be biased towards any particular person or viewpoint in the conversation.
+        10. If someone shares a well structured normative statement and the others agree with it, you can use that statement as the output. Do not synthesise a new statement in this case.
     `;
     const completionPrompt = t`
-        10. If no relevant content is found, do not reply to the irrelevant content! Just say "NO_CONTENT_FOUND"
+        11. If no relevant content is found, do not reply to the irrelevant content! Just say "NO_CONTENT_FOUND"
     `;
     const verificationPrompt = t`
-        10. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!
+        11. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!
     `;
     const expandedPrompt = (mode === 'completion' ? completionPrompt : verificationPrompt);
 

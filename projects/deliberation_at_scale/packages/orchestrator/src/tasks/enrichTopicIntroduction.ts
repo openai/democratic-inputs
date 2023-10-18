@@ -45,35 +45,49 @@ export default createModeratedEnrichPromptTask<BaseProgressionWorkerTaskPayload>
         await sendBotMessage({
             roomId,
             content: t`
-                Hopefully you had the time to introduce yourselves.
+                I hope you have all had the time to introduce yourselves.
+            `,
+        });
+        await waitFor(ONE_SECOND_MS * 6);
+        await sendBotMessage({
+            roomId,
+            content: t`
+                The topic of today's conversation is: **${topicContent}**
+            `,
+        });
+        await waitFor(ONE_SECOND_MS * 4);
+        await sendBotMessage({
+            roomId,
+            content: t`
+                To help with the conversation, you will receive a statement and the chance to vote on whether you agree, disagree or if you think it should be skipped.
             `,
         });
         await waitFor(ONE_SECOND_MS * 5);
         await sendBotMessage({
             roomId,
             content: t`
-                Today's conversation is: **${topicContent}**
+                You can discuss the statements through the video call with your fellow participants and when you have made up your mind, you can vote.
             `,
         });
         await waitFor(ONE_SECOND_MS * 5);
         await sendBotMessage({
             roomId,
             content: t`
-                To help with the conversation, statements will be shared. You can discuss them and vote.
+                Do you want to create your **own statements**? You can do that at any time by **typing in the chat**.
             `,
         });
-        await waitFor(ONE_SECOND_MS * 5);
+        await waitFor(ONE_SECOND_MS * 6);
         await sendBotMessage({
             roomId,
             content: t`
-                Do you want to create your **own statements**? You can do that at any time by **typing in the chat**. Your humble AI moderator will summarize them automatically.
+                If anything seems broken, stuck or frozen, please **refresh the page**.
             `,
         });
-        await waitFor(ONE_SECOND_MS * 5);
+        await waitFor(ONE_SECOND_MS * 6);
         await sendBotMessage({
             roomId,
             content: t`
-                Who wants to start sharing their thoughts about this conversation?
+                Alright! Are you ready? Let's start with the first statement.
             `,
         });
 

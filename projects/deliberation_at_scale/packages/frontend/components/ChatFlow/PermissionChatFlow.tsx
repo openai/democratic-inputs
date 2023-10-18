@@ -30,8 +30,11 @@ export default function PermissionChatFlow() {
     const waitingForRoomMessageOptions = useMemo(() => {
         const messages = [
             _(msg`Waiting for a conversation to join...`),
-            _(msg`This may take a few seconds...`),
-            _(msg`If you want to cancel, click the button below.`),
+            _(msg`We do not record your video or audio.`),
+            _(msg`Want create a new statement? Just type and send your thoughts into the chat.`),
+            _(msg`Our AI is not listening in, it only understands what you type and send in the chat.`),
+            _(msg`We really care about what you care about! Type your thoughts into the chat to share them with us.`),
+            _(msg`This may take a few minutes...`),
             _(msg`Your vote is important. Give the system time to register it.`),
             _(msg`Your vote is important. It will be registered.`),
             _(msg`Share your opinions first. Then vote.`),
