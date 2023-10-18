@@ -419,7 +419,7 @@ msgstr "That is not a valid email address!"
 msgid "That looks like a valid e-mail. We're sending you an email now..."
 msgstr "That looks like a valid e-mail. We're sending you an email now..."
 
-#: components/ChatFlow/AnonymousLoginChatFlow.tsx:50
+#: components/ChatFlow/AnonymousLoginChatFlow.tsx:55
 msgid "There was an error getting the login details. Please try again!"
 msgstr "There was an error getting the login details. Please try again!"
 
