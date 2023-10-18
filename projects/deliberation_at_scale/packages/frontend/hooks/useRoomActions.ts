@@ -9,6 +9,9 @@ import { msg } from "@lingui/macro";
 import { faDoorOpen, faForward } from "@fortawesome/free-solid-svg-icons";
 import useLocalizedPush from "./useLocalizedPush";
 import useGiveOpinion from "./useGiveOpinion";
+import useRealtimeBroadcast from "./useRealtimeBroadcast";
+
+const NEXT_STATEMENT_PRESSED_EVENT_NAME = 'next-statement-pressed';
 
 export interface RoomAction {
     id: string;
@@ -28,6 +31,15 @@ export default function useRoomActions() {
     const lastOpenedAssistantAt = useAppSelector((state) => state.room.lastOpenedAssistantAt);
     const [nextStatementPressed, setNextStatementPressed] = useState(false);
     const { push } = useLocalizedPush();
+    const { sendToChannel } = useRealtimeBroadcast({
+        channelId: roomId,
+        eventHandlers: [{
+            event: NEXT_STATEMENT_PRESSED_EVENT_NAME,
+            handler: () => {
+                setNextStatementPressed(true);
+            },
+        }],
+    });
     const actions: RoomAction[] = useMemo(() => {
         const newActions: RoomAction[] = [];
         const latestConsensusOutcome = getOutcomeByType(OutcomeType.Consensus);
@@ -59,14 +71,20 @@ export default function useRoomActions() {
                     }
 
                     setNextStatementPressed(true);
-                    await sendMessage({
-                        variables: {
-                            roomId,
-                            content: _(msg`I would like to move on to the next statement.`),
+
+                    await Promise.allSettled([
+                        sendToChannel(NEXT_STATEMENT_PRESSED_EVENT_NAME, {
                             participantId,
-                            tags: 'next-statement',
-                        },
-                    });
+                        }),
+                        sendMessage({
+                            variables: {
+                                roomId,
+                                content: _(msg`I would like to move on to the next statement.`),
+                                participantId,
+                                tags: 'next-statement',
+                            },
+                        }),
+                    ]);
 
                     // TMP: temporary until Realtime has better performance
                     refetchMessages();
@@ -86,7 +104,7 @@ export default function useRoomActions() {
         }
 
         return newActions;
-    }, [nextStatementPressed, getOutcomeByType, getGroupOpinions, lastOutcome?.id, participants?.length, isRoomEnded, lastOpenedAssistantAt, _, push, roomId, isSendingMessage, sendMessage, participantId, refetchMessages]);
+    }, [getOutcomeByType, getGroupOpinions, lastOutcome?.id, participants?.length, nextStatementPressed, isRoomEnded, lastOpenedAssistantAt, _, push, roomId, isSendingMessage, sendToChannel, participantId, sendMessage, refetchMessages]);
 
     // allow next statement again
     useEffect(() => {

@@ -606,8 +606,7 @@ function getLeavingParticipantsMessageContent(nickNames: string[]): string {
 // DONE, TODO: rename this
 function getOpenDiscussionMessageContent(): string {
     return draw([
-        t`Not everyone has voted. After voting you can choose to discuss the statement further or move to the next statement.`,
-        t`Let's wait for everyone to vote.`,
+        t`You can discuss this statement with the group, write your thoughts down in the chat or move on to the next statement when everyone voted.`,
     ]) ?? '';
 }
 
