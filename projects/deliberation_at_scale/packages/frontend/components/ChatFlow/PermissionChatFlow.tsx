@@ -12,7 +12,7 @@ import { isEmpty } from "radash";
 import { useEffect, useMemo } from "react";
 import { msg } from "@lingui/macro";
 import { useDispatch } from "react-redux";
-import { setFlowStateEntry } from "@/state/slices/flow";
+import { resetFlowPosition, setFlowStateEntry } from "@/state/slices/flow";
 
 export default function PermissionChatFlow() {
     const { _ } = useLingui();
@@ -182,6 +182,9 @@ export default function PermissionChatFlow() {
 
     // on mount reset the state
     useEffect(() => {
+        dispatch(resetFlowPosition({
+            flowId: 'permission',
+        }));
         dispatch(setFlowStateEntry({
             flowId: 'permission',
             key: LOBBY_WANT_TO_JOIN_ROOM_STATE_KEY,
