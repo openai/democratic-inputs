@@ -47,7 +47,9 @@ export default function AnonymousLoginChatFlow() {
                             helpers.waitFor(DEFAULT_BOT_MESSAGE_SPEED_MS);
 
                             // if (true) {
-                            //     loginLink = loginLink.replace('https://findcommonground.vercel.app/', 'http://localhost:3200/');
+                            //     const localLoginLink = loginLink.replace('https://findcommonground.vercel.app/', 'http://localhost:3200/');
+                            //     window.location.assign(localLoginLink);
+                            //     return;
                             // }
 
                             window.location.assign(loginLink);
