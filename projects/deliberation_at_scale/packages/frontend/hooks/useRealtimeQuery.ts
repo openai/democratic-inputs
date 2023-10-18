@@ -220,7 +220,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                     },
                     (payload) => {
                         const newRow = payload.new;
-
+                        // console.log('INSERT', tableName, newRow);
                         if (shouldRefetchOnInsert) {
                             refetch();
                         }
@@ -277,6 +277,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
                                 ${Object.keys(newRow).join(", ")}
                             }
                         `;
+                        // console.log('UPDATE', tableName, newRow);
 
                         cache.writeFragment({
                             id: getNodeId(newRow?.id),
@@ -344,7 +345,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
             subscription.unsubscribe();
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.stringify(data), loading, maxNestedDepth, refetch, schemaName, JSON.stringify(tableEventsLookup), setTrackedSubscription]);
+    }, [channelPrefix, JSON.stringify(data), loading, maxNestedDepth, JSON.stringify(options), queryVariables, refetch, schemaName, setTrackedSubscription, JSON.stringify(tableEventsLookup)]);
 
     return queryResult;
 }
