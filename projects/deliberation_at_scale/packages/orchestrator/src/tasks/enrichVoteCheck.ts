@@ -292,7 +292,20 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
                 }),
                 taskContent,
             });
-            const hasContribution = !!contributionResult && !isEmpty(contributionResult.trim());
+            // guard: does string include NO_CONTENT_FOUND?
+            const hasValuableContent = contributionResult?.includes('NO_CONTENT_FOUND') ?? false;
+
+            // all checks passed
+            const hasContribution = !!contributionResult && !isEmpty(contributionResult.trim()) && !hasValuableContent;
+            
+            // moderator sends message "i don't think this is valuable etc"
+            if (!isContribution) {
+                await attemptSendBotMessage({
+                    roomId,
+                    content: getNoVerifiedContributionMessageContent(),
+                    tags: 'no-verified-contribution-yet',
+                });
+            }
 
             if (hasContribution) {
                 // store the consensus and send it over to the current room for them to vote on
@@ -504,14 +517,14 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
         if (timeSinceRoomStartedMs > TIMEKEEPING_MOMENTS[0]) {
             await attemptSendBotMessage({
                 roomId,
-                content: t`No new statements could be found unfortunately. You can continue the discussion if you want or join others in a new conversation!`,
+                content: t`Unfortunately, no new statements could be found. You can continue the discussion if you want or join others in a new conversation!`,
                 sendOnce: true,
                 scope: 'room',
             });
         } else {
             await attemptSendBotMessage({
                 roomId,
-                content: t`No new statements could be found unfortunately. You can continue the conversation yourself here!`,
+                content: t`No new statements could be found, Sorry! You can continue the conversation here or move on to the next conversation!`,
                 sendOnce: true,
                 scope: 'room',
             });
@@ -546,7 +559,7 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
 // DONE
 function getVotedSameMessageContent(): string {
     return draw([
-        t`You share the same opinion. You can discuss this a bit more or move on to a new statement using the next button.`,
+        t`You share the same opinion. You can always discuss this a bit more or move on to a new statement using the next button.`,
     ]) ?? '';
 }
 
@@ -560,7 +573,8 @@ function getVoteInviteMessageContent(): string {
 // DONE
 function getNotEveryoneVotedTheSameMessageContent(): string {
     return draw([
-        t`You are not sharing the same opinion. Perhaps you can discuss this a bit more?`,
+        t`You don't share the same opinion. That's usually the start of a great conversation! Perhaps you can discuss this a bit more and type out your thoughts?`,
+        t`You voted differently: not to worry, you can always agree to disagree or type out your thoughts and i'll try making a statement that better reflects all your views.`,
     ]) ?? '';
 }
 
@@ -584,24 +598,25 @@ function getLeavingParticipantsMessageContent(nickNames: string[]): string {
 // DONE, TODO: rename this
 function getOpenDiscussionMessageContent(): string {
     return draw([
-        t`Not everyone has voted. After voting you can choose to discuss it further or move to the next statement.`,
+        t`Not everyone has voted. After voting you can choose to discuss the statement further or move to the next statement.`,
     ]) ?? '';
 }
 
 // DONE
 function getNewCrossPollinationMessageContent(statement: string, isFirst: boolean = false): string {
     return draw([
-        t`Here is a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on.`,
+        t`Here is a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on. Remember, if you have an interesting discussion, type out the key points and i will make a new statement that reflects your views!`,
+        t`I found a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on. Something to add? Type out your thoughts so I can create a new statement for you.`,
     ]) ?? '';
 }
 
 // DONE
 function getTimeKeepingMessageContent(timeMs: number, outcomeAmount: number): string {
-    let invitation = t`Enjoying the conversation? Please continue. Interested in other people's opinions? Then you can move on to a new group!`;
+    let invitation = t`If you enjoying the conversation, keep going! If you're Interested in other people's opinions, you can move on to a new group.`;
     let outcomeAmountMessage = ``;
 
     if (timeMs >= ONE_MINUTE_MS * 20) {
-        invitation = t`You are really enjoying this conversation, but remember other people might also enjoy your contribution.`;
+        invitation = t`It seems you are really enjoying this conversation, but remember other people might also enjoy your contribution.`;
     }
 
     if (outcomeAmount > 1) {
@@ -628,19 +643,19 @@ function getTimeoutConversationMessageContent(): string {
 
 function getNewContributionMessageContent(): string {
     return draw([
-        t`A new statement has been created based on your messages! You can now vote on it whether you agree or disagree with the proposal.`,
+        t`A new statement has been created based on your messages! You can now vote on it whether you agree or disagree with the proposal. Do you think I have made a mistake? just click pass.`,
     ]) ?? '';
 }
 
 function getNoVerifiedContributionMessageContent(): string {
     return draw([
-        t`I could not yet find a new statement based on your messages. Perhaps you can expand on it a bit more in chat?`,
+        t`I couldn't find a new statement based on your messages. If you type out some more of your thoughts I can try again. Thanks!`,
     ]) ?? '';
 }
 
 function getVerifiedContributionMessageContent(): string {
     return draw([
-        t`I think I might've found a new statement based on your messages! Working on it...`,
+        t`I think I might've found a new statement based on your typed messages! Working on it...`,
     ]) ?? '';
 }
 
@@ -671,7 +686,7 @@ function getSummarisationPrompt(options: SummarisationPromptOptions) {
         9. Do not be biased towards any particular person or viewpoint in the conversation.
     `;
     const completionPrompt = t`
-        10. If no relevant content is found, do not reply to the irrelevant content! Just say a variant of: "I don't think you have all typed out your own thoughts on the subject yet. If you could all share what you think, then I can make a summary of your views. Thanks!"
+        10. If no relevant content is found, do not reply to the irrelevant content! Just say "NO_CONTENT_FOUND"
     `;
     const verificationPrompt = t`
         10. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!
