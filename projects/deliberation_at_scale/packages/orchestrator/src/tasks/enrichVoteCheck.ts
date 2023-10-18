@@ -33,10 +33,14 @@ const NEW_OUTCOME_AFTER_VOTE_TIMEOUT_MS = 5 * ONE_SECOND_MS * TIME_MULTIPLIER;
 // The time before the new outcome is shown after it is announced in chat
 const NEW_OUTCOME_AFTER_OUTCOME_INTRODUCTION_MS = 3 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
+// The time after the whole conversation is forcefully ended
 const TIMEOUT_CONVSERSATION_AFTER_MS = 40 * ONE_MINUTE_MS * TIME_MULTIPLIER;
 
 // The minimum time before a new outcome is allowed to be created
-const NEW_CROSS_POLLINATION_COOLDOWN_MS = 10 * ONE_SECOND_MS;
+const NEW_CROSS_POLLINATION_COOLDOWN_MS = 10 * ONE_SECOND_MS * TIME_MULTIPLIER;
+
+// The time before the remaining participants are notificed of another participant leaving
+const NOTIFY_LEAVING_PARTICIPANT_AFTER_MS = 15 * ONE_SECOND_MS * TIME_MULTIPLIER;
 
 // Timekeeping
 const TIMEKEEPING_MOMENTS = [
@@ -143,6 +147,17 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         requiredParticipantIds: contributingParticipantIds,
     });
 
+    // presence helpers
+    const presentParticipantIds = participants?.filter((participant) => {
+        const timeSinceLastSeenMs = Math.abs(dayjs().diff(dayjs(participant.last_seen_at), 'ms'));
+        return timeSinceLastSeenMs <= NOTIFY_LEAVING_PARTICIPANT_AFTER_MS;
+    }).map((participant) => participant.id) ?? [];
+    const hasLeavingParticipants = presentParticipantIds?.length < participantIds.length;
+    const lackingPresenceNicknames = getLackingNicknames({
+        participants,
+        requiredParticipantIds: presentParticipantIds,
+    });
+
     // request helpers
     const hasRequestedNextStatement = latestOutcomeMessages.some((message) => {
         return message.tags?.toLowerCase().includes('next-statement');
@@ -220,6 +235,15 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
             });
         }
     });
+
+    // send message when there are participants who have left
+    if (hasLeavingParticipants) {
+        await attemptSendBotMessage({
+            roomId,
+            content: getLeavingParticipantsMessageContent(lackingPresenceNicknames),
+            tags: 'leaving-participants',
+        });
+    }
 
     // send a message to invite others to contribute
     if (hasAnyoneContributed && !hasEveryoneContributed) {
@@ -545,6 +569,14 @@ function getInviteContributionMessageContent(nickNames: string[]): string {
 
     return draw([
         t`Hey ${nickNamesString}. Can you also share your thoughts in the chat?`,
+    ]) ?? '';
+}
+
+function getLeavingParticipantsMessageContent(nickNames: string[]): string {
+    const nickNamesString = nickNames.join(', ');
+
+    return draw([
+        t`It seems like ${nickNamesString} have left the conversation. If you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using the red door icon next to your camera view.`,
     ]) ?? '';
 }
 
