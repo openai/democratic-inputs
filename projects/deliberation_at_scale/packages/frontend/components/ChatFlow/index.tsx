@@ -293,7 +293,7 @@ export default function ChatFlow(props: Props) {
     return (
         <motion.div
             layoutId={`chat-flow-${flowId}`}
-            className="flex flex-col-reverse gap-2 pt-2 mt-auto h-full pb-2 px-2 md:px-4 pt-20"
+            className="flex flex-col-reverse gap-2 mt-auto h-full pb-2 px-2 md:px-4 pt-20"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
