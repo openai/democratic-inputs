@@ -10,7 +10,7 @@ import useRoom from "@/hooks/useRoom";
 import { OpinionOptionType, OpinionType, OutcomeType } from "@/generated/graphql";
 import useGiveOpinion, { SetOpinionOptions } from "@/hooks/useGiveOpinion";
 import useProfile from "@/hooks/useProfile";
-import { faArrowRight, faEnvelopeOpenText } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faComments, faEnvelopeOpenText, faHome } from "@fortawesome/free-solid-svg-icons";
 
 export default function EvaluateChatFlow() {
     const { _ } = useLingui();
@@ -87,6 +87,7 @@ export default function EvaluateChatFlow() {
                         },
                         {
                             id: "join_another_room",
+                            icon: faComments,
                             content: _(msg`Join another conversation`),
                             onClick: (helpers) => {
                                 helpers.goToPage("/lobby");
@@ -94,6 +95,7 @@ export default function EvaluateChatFlow() {
                         },
                         {
                             id: "go_to_profile",
+                            icon: faHome,
                             content: _(msg`Go back to the profile page`),
                             onClick: (helpers) => {
                                 helpers.goToPage("/profile");
