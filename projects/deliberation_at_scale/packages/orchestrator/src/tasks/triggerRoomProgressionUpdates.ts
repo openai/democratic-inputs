@@ -18,27 +18,45 @@ export interface TriggerRoomProgressionUpdatesPayload {
  */
 export default async function triggerRoomProgressionUpdates(payload: TriggerRoomProgressionUpdatesPayload, helpers: Helpers) {
     try {
-        // TODO: refine this query to only select rooms that are actually active
-        const minCreatedAt = dayjs().subtract(1, "hour").toISOString();
-        const [activeRoomsResult] = await Promise.allSettled([
+        const minRoomCreatedAt = dayjs().subtract(1, "hour").toISOString();
+        const minParticipantLastSeenAt = dayjs().subtract(60, "second").toISOString();
+        const [roomsResult, activeParticipantsResult] = await Promise.allSettled([
             supabaseClient
                 .from('rooms')
                 .select()
                 .eq('active', true)
                 .not('starts_at', 'is', null)
-                .gt('created_at', minCreatedAt),
+                .gt('created_at', minRoomCreatedAt),
+            supabaseClient
+                .from('participants')
+                .select()
+                .eq('active', true)
+                .gt('last_seen_at', minParticipantLastSeenAt),
         ]);
 
         // guard: check for rejections
-        if (activeRoomsResult.status === "rejected") {
+        if (roomsResult.status === "rejected" || activeParticipantsResult.status === "rejected") {
             throw new Error(`Error while fetching active rooms or locked jobs.`);
         }
 
-        const activeRooms = activeRoomsResult.value?.data ?? [];
+        const rooms = roomsResult.value?.data ?? [];
+        const activeParticipants = activeParticipantsResult.value?.data ?? [];
+        const activeParticipantsAmount = activeParticipants.length;
+        const activeParticipantsRoomIds = activeParticipants.map((participant) => participant.room_id);
+        const activeRooms = rooms.filter((room) => activeParticipantsRoomIds.includes(room.id));
         const activeRoomsAmount = activeRooms.length;
 
-        helpers.logger.info(`Scheduling progression updates for all ${activeRoomsAmount} active rooms...`);
+        helpers.logger.info(`Scheduling progression updates for all ${activeRoomsAmount} active rooms with ${activeParticipantsAmount} active participants...`);
 
+        // console.log(activeRoomAmount);
+        // await reschedule<TriggerRoomProgressionUpdatesPayload>({
+        //     workerTaskId: "triggerRoomProgressionUpdates",
+        //     jobKey: "triggerRoomProgressionUpdates",
+        //     intervalMs: UPDATE_ROOM_PROGRESSION_INTERVAL_MS,
+        //     payload: {},
+        //     helpers,
+        // });
+        // return;
         await Promise.allSettled(activeRooms.map(async (activeRoom) => {
             const { id: roomId } = activeRoom;
             const jobKey = `updateRoomProgression-${roomId}`;
