@@ -3,7 +3,7 @@ import { ONE_SECOND_MS } from "./constants";
 
 const INTRODUCE_CONVERSATION_AFTER_MS = 10 * ONE_SECOND_MS;
 const INTRODUCE_TOPIC_AFTER_MS = 45 * ONE_SECOND_MS;
-const START_STATEMENTS_AFTER_MS = 15 * ONE_SECOND_MS;
+const START_STATEMENTS_AFTER_MS = 5 * ONE_SECOND_MS;
 //const ALLOW_END_REQUEST_AFTER_MS = 10* 60 * ONE_SECOND_MS;
 
 export const progressionTopology: Readonly<ProgressionTopology> = {
