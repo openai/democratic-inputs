@@ -81,7 +81,7 @@ export const PARTICIPANT_CONFIRM_EXPIRY_TIME_MS = 60 * ONE_SECOND_MS;
 
 /* Tasks */
 export const HANDLE_QUEUED_PARTICIPANTS_INTERVAL_MS = 5 * ONE_SECOND_MS;
-export const UPDATE_ROOM_PROGRESSION_INTERVAL_MS = 10 * ONE_SECOND_MS;
+export const UPDATE_ROOM_PROGRESSION_INTERVAL_MS = 15 * ONE_SECOND_MS;
 
 /* Whereby */
 export const WHEREBY_API_URL = 'https://api.whereby.dev/v1/';
