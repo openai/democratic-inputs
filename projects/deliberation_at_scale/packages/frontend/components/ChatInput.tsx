@@ -120,7 +120,7 @@ export default function ChatInput(props: ChatInputProps) {
                         <FontAwesomeIcon icon={faQuestion} />
                     </motion.button>
                     {helpMenu && (
-                        <motion.div className="absolute w-max max-w-[70vw] z-50 hover:opacity-100 transition-opacity -translate-y-full top-0 text-black flex flex-col gap-1 pb-4">
+                        <motion.div className="absolute w-max max-w-[90vw] md:max-w-[350px] z-50 hover:opacity-100 transition-opacity -translate-y-full top-0 text-black flex flex-col gap-1 pb-4">
                             <div className="p-2 md:p-4 shadow-xl bg-white rounded-lg border">
                                 <p className="pb-2 md:pb-4">Running into technical problems? Try refreshing the page first. If that doesn&apos;t work, you can call a facilitator.</p>
                             
