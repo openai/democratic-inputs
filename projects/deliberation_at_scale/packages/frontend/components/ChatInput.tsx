@@ -120,62 +120,38 @@ export default function ChatInput(props: ChatInputProps) {
                         <FontAwesomeIcon icon={faQuestion} />
                     </motion.button>
                     {helpMenu && (
-                        <motion.div className="absolute w-max z-50 hover:opacity-100 transition-opacity -translate-y-full top-0 text-black flex flex-col gap-1 pb-4">
-                            <Button className="p-2 shadow-xl" onClick={function (): void {
-                                const promiseAdmin = fetchHelp(HelpRequestType.Facilitator);
-                                toast.promise(
-                                    promiseAdmin,
-                                    {
-                                        loading: _(msg`Looking for facilitator`),
-                                        success: () => _(msg`Facilitator on the way!`),
-                                        error: (err) => _(msg`This just happened: ${err.toString()}`),
-                                    },
-                                    {
-                                        style: {
-                                            minWidth: '250px',
+                        <motion.div className="absolute w-max max-w-[70vw] z-50 hover:opacity-100 transition-opacity -translate-y-full top-0 text-black flex flex-col gap-1 pb-4">
+                            <div className="p-2 md:p-4 shadow-xl bg-white rounded-lg border">
+                                <p className="pb-2 md:pb-4">Running into technical problems? Try refreshing the page first. If that doesn&apos;t work, you can call a facilitator.</p>
+                            
+                                <Button className="p-2 shadow-xl" onClick={function (): void {
+                                    const promiseAdmin = fetchHelp(HelpRequestType.Facilitator);
+                                    toast.promise(
+                                        promiseAdmin,
+                                        {
+                                            loading: _(msg`Looking for facilitator`),
+                                            success: () => _(msg`Facilitator on the way!`),
+                                            error: (err) => _(msg`This just happened: ${err.toString()}`),
                                         },
-                                        success: {
-                                            duration: 5000,
-                                            icon: '🤙',
-                                        },
-                                        loading: {
-                                            duration: 5000,
-                                            icon: '👀',
-                                        },
-                                    }
-                                );
-                            } }>
-                                <FontAwesomeIcon icon={faHandsHelping} />
-                                <Trans>Call a Facilitator</Trans>
-                            </Button>
-                            <Button className="p-2 shadow-xl" onClick={function (): void {
-                                const promiseAdmin = fetchHelp(HelpRequestType.Technician);
-                                toast.promise(
-                                    promiseAdmin,
-                                    {
-                                        loading: _(msg`Looking for technician`),
-                                        success: () => _(msg`Technician on the way!`),
-                                        error: (err) => _(msg`This just happened: ${err.toString()}`),
-                                    },
-                                    {
-                                        style: {
-                                            minWidth: '250px',
-                                        },
-                                        success: {
-                                            duration: 5000,
-                                            icon: '🏃‍♂️',
-                                        },
-                                        loading: {
-                                            duration: 5000,
-                                            icon: '👀',
-                                        },
-                                    }
-                                );
-                            } }>
-                                <FontAwesomeIcon icon={faHammer} />
-                                <Trans>Call a Technician</Trans>
-                            </Button>
-
+                                        {
+                                            style: {
+                                                minWidth: '250px',
+                                            },
+                                            success: {
+                                                duration: 5000,
+                                                icon: '🤙',
+                                            },
+                                            loading: {
+                                                duration: 5000,
+                                                icon: '👀',
+                                            },
+                                        }
+                                    );
+                                } }>
+                                    <FontAwesomeIcon icon={faHandsHelping} />
+                                    <Trans>Call a Facilitator</Trans>
+                                </Button>
+                            </div>
                         </motion.div>
                     )}
                 </div>

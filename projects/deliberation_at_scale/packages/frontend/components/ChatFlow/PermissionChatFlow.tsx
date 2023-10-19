@@ -35,6 +35,7 @@ export default function PermissionChatFlow() {
             _(msg`Tip: We really care about what you care about! Type your thoughts into the chat to share them with us.`),
             _(msg`Note: This may take a few minutes - don't leave the page!`),
             _(msg`Tip: Your vote is important. It will be registered.`),
+            _(msg`Note: If you are in **a call with less than three people, the system won't work**. Leave the conversation by clicking the red door next to your video feed and join a new one.`),
             _(msg`Tip: Share your opinions first. Then vote.`),
             _(msg`Tip: Is anything stuck or broken? Try refreshing the page.`),
             _(msg`Tip: Progressing after a conversation? Press 'next statement'.`),
@@ -54,7 +55,7 @@ export default function PermissionChatFlow() {
             content: _(msg`Leave the queue.`),
             icon: faCancel,
             onClick: async (helpers) => {
-                helpers.postBotMessages([[_(msg`Okay, cancelling...`)]]);
+                helpers.postBotMessages([[_(msg`Okay, leaving the queue...`)]]);
                 await helpers.waitFor(ONE_SECOND_MS);
                 helpers.goToPage(`/profile`);
             },
