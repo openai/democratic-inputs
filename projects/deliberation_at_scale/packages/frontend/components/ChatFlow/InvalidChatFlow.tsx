@@ -19,7 +19,7 @@ export default function InvalidChatFlow() {
                         {
                             id: 'retry',
                             icon: faRotate,
-                            content: _(msg`Retry joining a room`),
+                            content: _(msg`Retry joining a conversation`),
                             onClick: async (helpers) => {
                                 helpers.postBotMessages([[_(msg`Moving you to the lobby again, one moment please...`)]]);
                                 await helpers.waitFor(2000);

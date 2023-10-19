@@ -19,7 +19,7 @@ export default function IdleChatFlow() {
                         {
                             id: 'retry',
                             icon: faRotate,
-                            content: _(msg`Try joining a room again`),
+                            content: _(msg`Try joining a conversation again`),
                             onClick: async (helpers) => {
                                 helpers.postBotMessages([[_(msg`Okay! Moving you to the lobby.`)]]);
                                 await helpers.waitFor(2000);
