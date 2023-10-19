@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/tasks/enrichVoteCheck.ts:699
+#: src/tasks/enrichVoteCheck.ts:702
 msgid "11. If no relevant content is found, do not reply to the irrelevant content! Just say \"NO_CONTENT_FOUND\""
 msgstr "11. If no relevant content is found, do not reply to the irrelevant content! Just say \"NO_CONTENT_FOUND\""
 
-#: src/tasks/enrichVoteCheck.ts:702
+#: src/tasks/enrichVoteCheck.ts:705
 msgid "11. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!"
 msgstr "11. Search for any relevant content even if some of it is useless. Do not reply to the irrelevant content!"
 
-#: src/tasks/enrichVoteCheck.ts:654
+#: src/tasks/enrichVoteCheck.ts:657
 msgid "A new statement has been created based on your messages! You can now vote on it whether you agree or disagree with the proposal. Do you think I have made a mistake? just click pass."
 msgstr "A new statement has been created based on your messages! You can now vote on it whether you agree or disagree with the proposal. Do you think I have made a mistake? just click pass."
 
@@ -33,15 +33,15 @@ msgstr "Alright! Are you ready? Let's start with the first statement."
 msgid "Do you want to create your **own statements**? You can do that at any time by **typing in the chat**."
 msgstr "Do you want to create your **own statements**? You can do that at any time by **typing in the chat**."
 
-#: src/tasks/enrichVoteCheck.ts:577
+#: src/tasks/enrichVoteCheck.ts:580
 msgid "Don't forget to vote on the statement!"
 msgstr "Don't forget to vote on the statement!"
 
-#: src/tasks/enrichVoteCheck.ts:616
+#: src/tasks/enrichVoteCheck.ts:619
 msgid "Here is a {0} statement for you to discuss and vote on. Remember, if you have an interesting discussion, type out the key points and I will make a new statement that reflects your views!"
 msgstr "Here is a {0} statement for you to discuss and vote on. Remember, if you have an interesting discussion, type out the key points and I will make a new statement that reflects your views!"
 
-#: src/tasks/enrichVoteCheck.ts:594
+#: src/tasks/enrichVoteCheck.ts:597
 msgid "Hey {nickNamesString}. Can you also share your thoughts in the chat?"
 msgstr "Hey {nickNamesString}. Can you also share your thoughts in the chat?"
 
@@ -55,11 +55,11 @@ msgstr ""
 "Let's start by taking a brief moment for introductions.\n"
 "Perhaps **introduce yourself** and why **this conversation interests you**."
 
-#: src/tasks/enrichVoteCheck.ts:660
+#: src/tasks/enrichVoteCheck.ts:663
 msgid "I couldn't find a new statement based on your messages. If you type out some more of your thoughts I can try again. Thanks!"
 msgstr "I couldn't find a new statement based on your messages. If you type out some more of your thoughts I can try again. Thanks!"
 
-#: src/tasks/enrichVoteCheck.ts:617
+#: src/tasks/enrichVoteCheck.ts:620
 msgid "I found a {0} statement for you to discuss and vote on. Something to add? Type out your thoughts so I can create a new statement for you."
 msgstr "I found a {0} statement for you to discuss and vote on. Something to add? Type out your thoughts so I can create a new statement for you."
 
@@ -67,15 +67,15 @@ msgstr "I found a {0} statement for you to discuss and vote on. Something to add
 msgid "I hope you have all had the time to introduce yourselves."
 msgstr "I hope you have all had the time to introduce yourselves."
 
-#: src/tasks/enrichVoteCheck.ts:666
+#: src/tasks/enrichVoteCheck.ts:669
 msgid "I think I might've found a new statement based on your typed messages! Working on it..."
 msgstr "I think I might've found a new statement based on your typed messages! Working on it..."
 
-#: src/tasks/enrichVoteCheck.ts:642
+#: src/tasks/enrichVoteCheck.ts:645
 msgid "I've been instructed to introduce a new statement after {0} minutes. So here is a new statement!"
 msgstr "I've been instructed to introduce a new statement after {0} minutes. So here is a new statement!"
 
-#: src/tasks/enrichVoteCheck.ts:648
+#: src/tasks/enrichVoteCheck.ts:651
 msgid "I've been instructed to stop this conversation after {0} minutes. So we unfortunately need to stop this conversation!"
 msgstr "I've been instructed to stop this conversation after {0} minutes. So we unfortunately need to stop this conversation!"
 
@@ -83,27 +83,27 @@ msgstr "I've been instructed to stop this conversation after {0} minutes. So we 
 msgid "If anything seems broken, stuck or frozen, please **refresh the page**."
 msgstr "If anything seems broken, stuck or frozen, please **refresh the page**."
 
-#: src/tasks/enrichVoteCheck.ts:623
+#: src/tasks/enrichVoteCheck.ts:626
 msgid "If you enjoying the conversation, keep going! If you're interested in other people's opinions, you can move on to a new group."
 msgstr "If you enjoying the conversation, keep going! If you're interested in other people's opinions, you can move on to a new group."
 
-#: src/tasks/enrichVoteCheck.ts:667
+#: src/tasks/enrichVoteCheck.ts:670
 msgid "It looks like you have shared your opinions with me. Let me synthesise them..."
 msgstr "It looks like you have shared your opinions with me. Let me synthesise them..."
 
-#: src/tasks/enrichVoteCheck.ts:602
-msgid "It seems like {nickNamesString} has **encountered an issue** or has **left the conversation**. Are they still in the call? Ask them to **refresh the page**. Af you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using **the red door icon** next to your camera view."
-msgstr "It seems like {nickNamesString} has **encountered an issue** or has **left the conversation**. Are they still in the call? Ask them to **refresh the page**. Af you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using **the red door icon** next to your camera view."
+#: src/tasks/enrichVoteCheck.ts:605
+msgid "It seems like {nickNamesString} has **encountered an issue** or has **left the conversation**. Are they still in the call? Ask them to **refresh the page**. If you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using **the red door icon** next to your camera view. Leaving a room does not mean you are leaving the study. You can always join another conversation!"
+msgstr "It seems like {nickNamesString} has **encountered an issue** or has **left the conversation**. Are they still in the call? Ask them to **refresh the page**. If you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using **the red door icon** next to your camera view. Leaving a room does not mean you are leaving the study. You can always join another conversation!"
 
-#: src/tasks/enrichVoteCheck.ts:627
+#: src/tasks/enrichVoteCheck.ts:630
 msgid "It seems you are really enjoying this conversation, but remember other people might also enjoy your contribution!"
 msgstr "It seems you are really enjoying this conversation, but remember other people might also enjoy your contribution!"
 
-#: src/tasks/enrichVoteCheck.ts:535
+#: src/tasks/enrichVoteCheck.ts:538
 msgid "No new statements could be found, Sorry! You can continue the conversation here or move on to the next conversation!"
 msgstr "No new statements could be found, Sorry! You can continue the conversation here or move on to the next conversation!"
 
-#: src/tasks/enrichVoteCheck.ts:678
+#: src/tasks/enrichVoteCheck.ts:681
 msgid ""
 "Role: You are a democratic summarisation bot built by the consortium \"Deliberation at scale\".\n"
 "Context: You will receive some unstructured comments from the participants of a conversation about the following statement: {statement}.\n"
@@ -149,7 +149,7 @@ msgstr "This discussion has now come to an end. You can now say good-bye to each
 msgid "To help with the conversation, you will receive a statement and the chance to vote on whether you agree, disagree or if you think it should be skipped."
 msgstr "To help with the conversation, you will receive a statement and the chance to vote on whether you agree, disagree or if you think it should be skipped."
 
-#: src/tasks/enrichVoteCheck.ts:528
+#: src/tasks/enrichVoteCheck.ts:531
 msgid "Unfortunately, no new statements could be found. You can continue the discussion if you want or join others in a new conversation!"
 msgstr "Unfortunately, no new statements could be found. You can continue the discussion if you want or join others in a new conversation!"
 
@@ -157,26 +157,26 @@ msgstr "Unfortunately, no new statements could be found. You can continue the di
 msgid "You can discuss the statements through the video call with your fellow participants and when you have made up your mind, you can vote."
 msgstr "You can discuss the statements through the video call with your fellow participants and when you have made up your mind, you can vote."
 
-#: src/tasks/enrichVoteCheck.ts:609
+#: src/tasks/enrichVoteCheck.ts:612
 msgid "You can discuss this statement with the group, write your thoughts down in the chat or move on to the next statement when everyone voted."
 msgstr "You can discuss this statement with the group, write your thoughts down in the chat or move on to the next statement when everyone voted."
 
-#: src/tasks/enrichVoteCheck.ts:631
+#: src/tasks/enrichVoteCheck.ts:634
 msgid "You discussed and voted on {outcomeAmount} statements so far!"
 msgstr "You discussed and voted on {outcomeAmount} statements so far!"
 
-#: src/tasks/enrichVoteCheck.ts:584
+#: src/tasks/enrichVoteCheck.ts:587
 msgid "You don't share the same opinion. That's usually the start of a great conversation! Perhaps you can discuss this a bit more and type out your thoughts?"
 msgstr "You don't share the same opinion. That's usually the start of a great conversation! Perhaps you can discuss this a bit more and type out your thoughts?"
 
-#: src/tasks/enrichVoteCheck.ts:570
+#: src/tasks/enrichVoteCheck.ts:573
 msgid "You share the same opinion. When you are ready, you can move on to a new statement using the next button."
 msgstr "You share the same opinion. When you are ready, you can move on to a new statement using the next button."
 
-#: src/tasks/enrichVoteCheck.ts:585
+#: src/tasks/enrichVoteCheck.ts:588
 msgid "You voted differently: not to worry, you can always agree to disagree or type out your thoughts and i'll try making a statement that better reflects all your views."
 msgstr "You voted differently: not to worry, you can always agree to disagree or type out your thoughts and i'll try making a statement that better reflects all your views."
 
-#: src/tasks/enrichVoteCheck.ts:635
+#: src/tasks/enrichVoteCheck.ts:638
 msgid "You've been having a conversation for {0} minutes. {outcomeAmountMessage} {invitation}"
 msgstr "You've been having a conversation for {0} minutes. {outcomeAmountMessage} {invitation}"

@@ -51,13 +51,9 @@ msgstr "Assistant"
 msgid "Before joining the conversation, let's pick a nickname and configure your camera and microphone."
 msgstr "Before joining the conversation, let's pick a nickname and configure your camera and microphone."
 
-#: components/ChatInput.tsx:149
+#: components/ChatInput.tsx:152
 msgid "Call a Facilitator"
 msgstr "Call a Facilitator"
-
-#: components/ChatInput.tsx:176
-msgid "Call a Technician"
-msgstr "Call a Technician"
 
 #: components/ChatFlow/ProfileChatFlow.tsx:83
 msgid "Change my profile"
@@ -125,7 +121,7 @@ msgstr "Everything seems to be working fine. Let's get started!"
 msgid "Experience and influence AI! Welcome to a conversation about AI in your city."
 msgstr "Experience and influence AI! Welcome to a conversation about AI in your city."
 
-#: components/ChatInput.tsx:130
+#: components/ChatInput.tsx:133
 msgid "Facilitator on the way!"
 msgstr "Facilitator on the way!"
 
@@ -142,7 +138,7 @@ msgstr "Go back to home"
 msgid "Go back to profile page"
 msgstr "Go back to profile page"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:97
+#: components/ChatFlow/EvaluateChatFlow.tsx:99
 msgid "Go back to the profile page"
 msgstr "Go back to the profile page"
 
@@ -198,15 +194,15 @@ msgstr "In case the button does not work: [{prolificSurveyUrl}]({prolificSurveyU
 msgid "It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above."
 msgstr "It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:131
+#: components/ChatFlow/EvaluateChatFlow.tsx:133
 msgid "It was bad."
 msgstr "It was bad."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:111
+#: components/ChatFlow/EvaluateChatFlow.tsx:113
 msgid "It was great!"
 msgstr "It was great!"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:121
+#: components/ChatFlow/EvaluateChatFlow.tsx:123
 msgid "It was okay."
 msgstr "It was okay."
 
@@ -214,7 +210,7 @@ msgstr "It was okay."
 msgid "It's happening now! Enjoy!"
 msgstr "It's happening now! Enjoy!"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:90
+#: components/ChatFlow/EvaluateChatFlow.tsx:91
 msgid "Join another conversation"
 msgstr "Join another conversation"
 
@@ -255,13 +251,9 @@ msgstr "Login"
 msgid "Logout"
 msgstr "Logout"
 
-#: components/ChatInput.tsx:129
+#: components/ChatInput.tsx:132
 msgid "Looking for facilitator"
 msgstr "Looking for facilitator"
-
-#: components/ChatInput.tsx:156
-msgid "Looking for technician"
-msgstr "Looking for technician"
 
 #: components/RoomOutcome.tsx:44
 msgid "Milestone"
@@ -274,6 +266,10 @@ msgstr "Moving you to the lobby again, one moment please..."
 #: hooks/useRoomActions.ts:67
 msgid "Next statement"
 msgstr "Next statement"
+
+#: components/ChatFlow/PermissionChatFlow.tsx:38
+msgid "Note: If you are in **a call with less than three people, the system won't work**. Leave the conversation by clicking the red door next to your video feed and join a new one."
+msgstr "Note: If you are in **a call with less than three people, the system won't work**. Leave the conversation by clicking the red door next to your video feed and join a new one."
 
 #: components/ChatFlow/PermissionChatFlow.tsx:34
 msgid "Note: Our AI is not listening in, it only understands what you type and send in the chat."
@@ -295,13 +291,13 @@ msgstr "Now your camera and microphone need to be configured."
 msgid "Off Topic"
 msgstr "Off Topic"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:58
-msgid "Okay, cancelling..."
-msgstr "Okay, cancelling..."
-
 #: components/ChatFlow/LobbyChatFlow.tsx:67
 msgid "Okay, from now on your nickname will be \"[nickName]\"."
 msgstr "Okay, from now on your nickname will be \"[nickName]\"."
+
+#: components/ChatFlow/PermissionChatFlow.tsx:58
+msgid "Okay, leaving the queue..."
+msgstr "Okay, leaving the queue..."
 
 #: components/ChatFlow/LobbyChatFlow.tsx:59
 msgid "Okay, your nickname will be \"[nickName]\"."
@@ -344,8 +340,8 @@ msgid "Rejoining your last conversation..."
 msgstr "Rejoining your last conversation..."
 
 #: components/ChatFlow/InvalidChatFlow.tsx:22
-msgid "Retry joining a room"
-msgstr "Retry joining a room"
+msgid "Retry joining a conversation"
+msgstr "Retry joining a conversation"
 
 #: components/ChatFlow/index.tsx:77
 msgid "Select a button above..."
@@ -386,10 +382,6 @@ msgstr "Sure!"
 msgid "Tap to type"
 msgstr "Tap to type"
 
-#: components/ChatInput.tsx:157
-msgid "Technician on the way!"
-msgstr "Technician on the way!"
-
 #: components/ChatFlow/PermissionChatFlow.tsx:42
 msgid "Thank you for participating in this test!"
 msgstr "Thank you for participating in this test!"
@@ -403,7 +395,7 @@ msgstr "Thank you! You will find an email with a login link in your inbox. Be su
 msgid "Thank you. Getting login details..."
 msgstr "Thank you. Getting login details..."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:144
+#: components/ChatFlow/EvaluateChatFlow.tsx:146
 msgid "Thanks for the feedback [nickName]!"
 msgstr "Thanks for the feedback [nickName]!"
 
@@ -423,8 +415,7 @@ msgstr "There was an error getting the login details. Please try again!"
 msgid "There was an error sending you an email. Please try again!"
 msgstr "There was an error sending you an email. Please try again!"
 
-#: components/ChatInput.tsx:131
-#: components/ChatInput.tsx:158
+#: components/ChatInput.tsx:134
 msgid "This just happened: {0}"
 msgstr "This just happened: {0}"
 
@@ -469,10 +460,6 @@ msgid "Tip: You can actually share what you really think!"
 msgstr "Tip: You can actually share what you really think!"
 
 #: components/ChatFlow/PermissionChatFlow.tsx:37
-msgid "Tip: Your vote is important. Give the system time to register it."
-msgstr "Tip: Your vote is important. Give the system time to register it."
-
-#: components/ChatFlow/PermissionChatFlow.tsx:38
 msgid "Tip: Your vote is important. It will be registered."
 msgstr "Tip: Your vote is important. It will be registered."
 
@@ -493,8 +480,8 @@ msgid "To join conversations, we need your Prolific ID to verify that you are a 
 msgstr "To join conversations, we need your Prolific ID to verify that you are a Prolific user."
 
 #: components/ChatFlow/IdleChatFlow.tsx:22
-msgid "Try joining a room again"
-msgstr "Try joining a room again"
+msgid "Try joining a conversation again"
+msgstr "Try joining a conversation again"
 
 #: components/ChatFlow/LobbyChatFlow.tsx:33
 msgid "Use my current nickname: \"[nickName]\"."
@@ -540,7 +527,7 @@ msgstr "What do you want to do next?"
 msgid "What nickname would you like to use?"
 msgstr "What nickname would you like to use?"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:107
+#: components/ChatFlow/EvaluateChatFlow.tsx:109
 msgid "What was your general impression of the conversation?"
 msgstr "What was your general impression of the conversation?"
 
