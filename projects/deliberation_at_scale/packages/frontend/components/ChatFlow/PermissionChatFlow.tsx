@@ -34,7 +34,6 @@ export default function PermissionChatFlow() {
             _(msg`Note: Our AI is not listening in, it only understands what you type and send in the chat.`),
             _(msg`Tip: We really care about what you care about! Type your thoughts into the chat to share them with us.`),
             _(msg`Note: This may take a few minutes - don't leave the page!`),
-            _(msg`Tip: Your vote is important. Give the system time to register it.`),
             _(msg`Tip: Your vote is important. It will be registered.`),
             _(msg`Tip: Share your opinions first. Then vote.`),
             _(msg`Tip: Is anything stuck or broken? Try refreshing the page.`),
