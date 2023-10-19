@@ -51,13 +51,9 @@ msgstr "Assistent"
 msgid "Before joining the conversation, let's pick a nickname and configure your camera and microphone."
 msgstr "Voordat je aan het gesprek deelneemt, laten we een bijnaam kiezen en je camera en microfoon configureren."
 
-#: components/ChatInput.tsx:149
+#: components/ChatInput.tsx:152
 msgid "Call a Facilitator"
 msgstr "Roep een facilitator op"
-
-#: components/ChatInput.tsx:176
-msgid "Call a Technician"
-msgstr "Roep een technicus op"
 
 #: components/ChatFlow/ProfileChatFlow.tsx:83
 msgid "Change my profile"
@@ -125,7 +121,7 @@ msgstr "Alles lijkt goed te werken. Laten we beginnen!"
 msgid "Experience and influence AI! Welcome to a conversation about AI in your city."
 msgstr ""
 
-#: components/ChatInput.tsx:130
+#: components/ChatInput.tsx:133
 msgid "Facilitator on the way!"
 msgstr "Een facilitator is onderweg!"
 
@@ -142,7 +138,7 @@ msgstr "Terug naar startpagina"
 msgid "Go back to profile page"
 msgstr "Terug naar de profielpagina"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:97
+#: components/ChatFlow/EvaluateChatFlow.tsx:99
 msgid "Go back to the profile page"
 msgstr "Terug naar de profielpagina"
 
@@ -198,15 +194,15 @@ msgstr ""
 msgid "It appears that you have not enabled the use of your microphone and camera, or they may be disabled. Please click the button below to try again or enable them using the buttons above."
 msgstr "Het lijkt erop dat je het gebruik van je microfoon en camera niet hebt ingeschakeld, of dat ze zijn uitgeschakeld. Klik op de knop hieronder om het opnieuw te proberen of schakel ze in met de knoppen hierboven."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:131
+#: components/ChatFlow/EvaluateChatFlow.tsx:133
 msgid "It was bad."
 msgstr "Het was slecht."
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:111
+#: components/ChatFlow/EvaluateChatFlow.tsx:113
 msgid "It was great!"
 msgstr "Het was geweldig!"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:121
+#: components/ChatFlow/EvaluateChatFlow.tsx:123
 msgid "It was okay."
 msgstr "Het was oké."
 
@@ -214,7 +210,7 @@ msgstr "Het was oké."
 msgid "It's happening now! Enjoy!"
 msgstr "Het gebeurt nu! Geniet ervan!"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:90
+#: components/ChatFlow/EvaluateChatFlow.tsx:91
 msgid "Join another conversation"
 msgstr "Doe mee aan een ander gesprek"
 
@@ -255,13 +251,9 @@ msgstr "Log in"
 msgid "Logout"
 msgstr "Uitloggen"
 
-#: components/ChatInput.tsx:129
+#: components/ChatInput.tsx:132
 msgid "Looking for facilitator"
 msgstr "Zoekend naar een facilitator"
-
-#: components/ChatInput.tsx:156
-msgid "Looking for technician"
-msgstr "Zoekend naar een technicus"
 
 #: components/RoomOutcome.tsx:44
 msgid "Milestone"
@@ -273,6 +265,10 @@ msgstr "We verplaatsen je naar de wachtruimte, een momentje..."
 
 #: hooks/useRoomActions.ts:67
 msgid "Next statement"
+msgstr ""
+
+#: components/ChatFlow/PermissionChatFlow.tsx:38
+msgid "Note: If you are in **a call with less than three people, the system won't work**. Leave the conversation by clicking the red door next to your video feed and join a new one."
 msgstr ""
 
 #: components/ChatFlow/PermissionChatFlow.tsx:34
@@ -295,12 +291,12 @@ msgstr "Nu moeten je camera en microfoon worden geconfigureerd."
 msgid "Off Topic"
 msgstr "Niet relevant"
 
-#: components/ChatFlow/PermissionChatFlow.tsx:58
-msgid "Okay, cancelling..."
-msgstr "Oké, annuleren..."
-
 #: components/ChatFlow/LobbyChatFlow.tsx:67
 msgid "Okay, from now on your nickname will be \"[nickName]\"."
+msgstr ""
+
+#: components/ChatFlow/PermissionChatFlow.tsx:58
+msgid "Okay, leaving the queue..."
 msgstr ""
 
 #: components/ChatFlow/LobbyChatFlow.tsx:59
@@ -344,8 +340,8 @@ msgid "Rejoining your last conversation..."
 msgstr "Je laatste gesprek wordt geladen..."
 
 #: components/ChatFlow/InvalidChatFlow.tsx:22
-msgid "Retry joining a room"
-msgstr "Probeer opnieuw een kamer te betreden"
+msgid "Retry joining a conversation"
+msgstr ""
 
 #: components/ChatFlow/index.tsx:77
 msgid "Select a button above..."
@@ -386,10 +382,6 @@ msgstr "Zeker!"
 msgid "Tap to type"
 msgstr "Tik om te typen"
 
-#: components/ChatInput.tsx:157
-msgid "Technician on the way!"
-msgstr "Een technicus is onderweg!"
-
 #: components/ChatFlow/PermissionChatFlow.tsx:42
 msgid "Thank you for participating in this test!"
 msgstr ""
@@ -403,7 +395,7 @@ msgstr "Bedankt! Je vindt een e-mail met een aanmeldlink in je inbox. Controleer
 msgid "Thank you. Getting login details..."
 msgstr ""
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:144
+#: components/ChatFlow/EvaluateChatFlow.tsx:146
 msgid "Thanks for the feedback [nickName]!"
 msgstr "Bedankt voor de feedback [nickName]!"
 
@@ -423,8 +415,7 @@ msgstr ""
 msgid "There was an error sending you an email. Please try again!"
 msgstr "Er is een fout opgetreden bij het versturen van een e-mail. Probeer het opnieuw!"
 
-#: components/ChatInput.tsx:131
-#: components/ChatInput.tsx:158
+#: components/ChatInput.tsx:134
 msgid "This just happened: {0}"
 msgstr "Dit is er gebeurd: {0}"
 
@@ -469,10 +460,6 @@ msgid "Tip: You can actually share what you really think!"
 msgstr ""
 
 #: components/ChatFlow/PermissionChatFlow.tsx:37
-msgid "Tip: Your vote is important. Give the system time to register it."
-msgstr ""
-
-#: components/ChatFlow/PermissionChatFlow.tsx:38
 msgid "Tip: Your vote is important. It will be registered."
 msgstr ""
 
@@ -493,8 +480,8 @@ msgid "To join conversations, we need your Prolific ID to verify that you are a 
 msgstr ""
 
 #: components/ChatFlow/IdleChatFlow.tsx:22
-msgid "Try joining a room again"
-msgstr "Probeer opnieuw een kamer te betreden"
+msgid "Try joining a conversation again"
+msgstr ""
 
 #: components/ChatFlow/LobbyChatFlow.tsx:33
 msgid "Use my current nickname: \"[nickName]\"."
@@ -540,7 +527,7 @@ msgstr "Wat wil je hierna doen?"
 msgid "What nickname would you like to use?"
 msgstr "Welke bijnaam wil je gebruiken?"
 
-#: components/ChatFlow/EvaluateChatFlow.tsx:107
+#: components/ChatFlow/EvaluateChatFlow.tsx:109
 msgid "What was your general impression of the conversation?"
 msgstr "Wat was je algemene indruk van het gesprek?"
 
