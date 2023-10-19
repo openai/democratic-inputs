@@ -224,13 +224,12 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     }
 
     // send message when there are participants who have left
-    // todo: pepijn how can we do this?
     if (hasLeavingParticipants) {
         await attemptSendBotMessage({
             roomId,
             content: getLeavingParticipantsMessageContent(lackingPresenceNicknames),
             tags: 'leaving-participants',
-            sendOnce: true
+            tagCooldownMs: BOT_TAG_COOLDOWN_MS * 3,
         });
         return;
     }
