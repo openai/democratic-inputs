@@ -223,6 +223,18 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         return;
     }
 
+    // send message when there are participants who have left
+    // todo: pepijn how can we do this?
+    if (hasLeavingParticipants) {
+        await attemptSendBotMessage({
+            roomId,
+            content: getLeavingParticipantsMessageContent(lackingPresenceNicknames),
+            tags: 'leaving-participants',
+            sendOnce: true
+        });
+        return;
+    }
+
     // always notify the participants of the timekeeping
     TIMEKEEPING_MOMENTS.forEach((timekeepingTimeMs) => {
         if (timeSinceRoomStartedMs > timekeepingTimeMs) {
@@ -235,15 +247,6 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
             });
         }
     });
-
-    // send message when there are participants who have left
-    if (hasLeavingParticipants) {
-        await attemptSendBotMessage({
-            roomId,
-            content: getLeavingParticipantsMessageContent(lackingPresenceNicknames),
-            tags: 'leaving-participants',
-        });
-    }
 
     // send a message to invite others to contribute
     if (hasAnyoneContributed && !hasEveryoneContributed) {
@@ -599,7 +602,7 @@ function getLeavingParticipantsMessageContent(nickNames: string[]): string {
     const nickNamesString = nickNames.join(', ');
 
     return draw([
-        t`It seems like ${nickNamesString} has **encountered an issue** or has **left the conversation**. Are they still in the call? Ask them to **refresh the page**. Af you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using **the red door icon** next to your camera view.`,
+        t`It seems like ${nickNamesString} has **encountered an issue** or has **left the conversation**. Are they still in the call? Ask them to **refresh the page**. If you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using **the red door icon** next to your camera view. Leaving a room does not mean you are leaving the study. You can always join another conversation!`,
     ]) ?? '';
 }
 
