@@ -1,4 +1,7 @@
 # Research log
+
+## 9/2/23 - Research log retired, moving over to Process Hub
+
 ## 8/31/23 - Preparing for large-scale policy test
 We are now preparing to run the large-scale policy test where we will ask a large representative public to evaluate their support for the policy our process has produced. Our goal is to capture participants' *informed* evaluation of the policy. As part of this we will include the same education materials as we're given to the participants who were part of the deliberative collective dialogues to develop the policy. However, this group will themselves be deliberating. To increase the degree to which participants evaluations are informed by similar understanding as the participants who did the deliberating, we provide them with a *citizens statement* which includes arguments provided by participants after deliberation most participants view as good (ie. they had relatively high agreement -- 70%). Here is the citizens' statement:
 
