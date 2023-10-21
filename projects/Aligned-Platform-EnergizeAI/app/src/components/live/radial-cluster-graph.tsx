@@ -2,7 +2,6 @@ import { motion } from "framer-motion"
 import React, { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
 
 export type ConstitutionTab = "live" | "demographics"
 

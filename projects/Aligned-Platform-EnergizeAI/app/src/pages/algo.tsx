@@ -4,8 +4,78 @@ import { Eye, Gavel, Globe, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ScrollProgressCircle from "@/components/ui/scroll-progress-circle"
 import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 import Image from "next/image"
 import Link from "next/link"
+
+interface Props {
+  className?: string
+}
+
+export const HowItWorksCards = ({ className }: Props) => (
+  <div className={cn("mt-4 mt-8 space-y-4", className)}>
+    <div className="flex items-start rounded border bg-muted p-4">
+      <div className="mr-4">
+        <Users className="h-6 w-6" />
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold">Contributors propose and rate guidelines</h2>
+        <p className="pt-2">
+          Our community consists of people from around the world, just like you, who propose and rate guidelines.
+          Join&nbsp;
+          <Link rel="noopener noreferrer" href="https://app.energize.ai/" target="_blank">
+            <u>here</u>
+          </Link>
+          .
+        </p>
+      </div>
+    </div>
+    <div className="flex items-start rounded border bg-muted p-4">
+      <div className="mr-4">
+        <Globe className="h-6 w-6" />
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold">
+          Only guidelines supported by people from diverse perspectives are used
+        </h2>
+        <p className="pt-2">
+          Decisions are not made by majority rule. The algorithm requires people from a diverse set of perspectives to
+          support a guideline before it is constitution-ready. This ensures that approved guidelines are helpful to a
+          wide range of people.
+        </p>
+      </div>
+    </div>
+    <div className="flex items-start rounded border bg-muted p-4">
+      <div className="mr-4">
+        <Gavel className="h-6 w-6" />
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold">Resulting guidelines are principled and practical</h2>
+        <p className="pt-2">
+          This is not a research experiment where a select group sits in a room to talk about human morality in an
+          artificial, sanitized environment. Instead, we record the real-world issues that users find and what those
+          users think should be done to resolve them. We prioritize human and machine-interpretable guidelines that
+          successfully shape AI behavior.
+        </p>
+      </div>
+    </div>
+    <div className="flex items-start rounded border bg-muted p-4">
+      <div className="mr-4">
+        <Eye className="h-6 w-6" />
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold">Open and transparent</h2>
+        <p className="pt-2">
+          The algorithm and platform frontend are fully open-source and accessible. We invite&nbsp;
+          <Link rel="noopener noreferrer" href="https://app.energize.ai/feedback" target="_blank">
+            <u>input and feedback</u>
+          </Link>
+          &nbsp;from the community.
+        </p>
+      </div>
+    </div>
+  </div>
+)
 
 export default function Algo() {
   var Latex = require("react-latex")
@@ -50,68 +120,7 @@ export default function Algo() {
         algorithm around three core principles: <b>simplicity</b>, <b>scalability</b>, and <b>practicality</b>.
       </p>
 
-      <div className="mt-4 mt-8 space-y-4">
-        <div className="flex items-start rounded border bg-muted p-4">
-          <div className="mr-4">
-            <Users className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">Contributors propose and rate guidelines</h2>
-            <p className="pt-2">
-              Our community consists of people from around the world, just like you, who propose and rate guidelines.
-              Join&nbsp;
-              <Link rel="noopener noreferrer" href="https://app.energize.ai/" target="_blank">
-                <u>here</u>
-              </Link>
-              .
-            </p>
-          </div>
-        </div>
-        <div className="flex items-start rounded border bg-muted p-4">
-          <div className="mr-4">
-            <Globe className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">
-              Only guidelines supported by people from diverse perspectives are used
-            </h2>
-            <p className="pt-2">
-              Decisions are not made by majority rule. The algorithm requires people from a diverse set of perspectives
-              to support a guideline before it is constitution-ready. This ensures that approved guidelines are helpful
-              to a wide range of people.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-start rounded border bg-muted p-4">
-          <div className="mr-4">
-            <Gavel className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">Resulting guidelines are principled and practical</h2>
-            <p className="pt-2">
-              This is not a research experiment where a select group sits in a room to talk about human morality in an
-              artificial, sanitized environment. Instead, we record the real-world issues that users find and what those
-              users think should be done to resolve them. We prioritize human and machine-interpretable guidelines that
-              successfully shape AI behavior.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-start rounded border bg-muted p-4">
-          <div className="mr-4">
-            <Eye className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">Open and transparent</h2>
-            <p className="pt-2">
-              The algorithm and platform frontend are fully open-source and accessible. We invite&nbsp;
-              <Link rel="noopener noreferrer" href="https://app.energize.ai/feedback" target="_blank">
-                <u>input and feedback</u>
-              </Link>
-              &nbsp;from the community.
-            </p>
-          </div>
-        </div>
-      </div>
+      <HowItWorksCards />
 
       <Separator className="my-8 mt-10" />
 

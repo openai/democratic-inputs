@@ -25,9 +25,10 @@ export const UserRoleCell = ({ userId }: Props) => {
   const { toast } = useToast()
   const { space_id } = useRouter().query
 
-  const roleQuery = energizeEngine.roles.getRoleInSpace.useQuery(
+  const roleQuery = energizeEngine.roles.getRoleForUserInSpace.useQuery(
     {
       spaceId: space_id as string,
+      userId,
     },
     {
       retry: false,

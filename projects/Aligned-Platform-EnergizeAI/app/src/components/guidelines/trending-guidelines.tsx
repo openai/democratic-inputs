@@ -25,7 +25,8 @@ export const TrendingGuidelines = ({ handleGuidelineClick }: Props) => {
   }
 
   const formatGuidelineValue = (value: string) => {
-    const parts = value.split(/(\[[^\]]+\])/)
+    const parts = value.replaceAll("]:", "]").split(/(\[[^\]]+\])/)
+
     return (
       <span className="inline">
         {parts.map((part, index) => {

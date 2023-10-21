@@ -3,7 +3,6 @@ import { useState } from "react"
 
 import QueryDataLoader from "../ui/query-data-loader"
 import { Skeleton } from "../ui/skeleton"
-import { SkeletonCard } from "../ui/skeleton-card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { CardHeader } from "@/components/ui/card"
@@ -17,7 +16,7 @@ import { HandRaisedIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 
 const formatGuidelineValue = (value: string) => {
-  const parts = value.split(/(\[[^\]]+\])/)
+  const parts = value.replaceAll("]:", "]").split(/(\[[^\]]+\])/)
   return (
     <span className="inline">
       {parts.map((part, index) => {
@@ -60,12 +59,13 @@ const Dot = ({ variant, className }: DotProps) => {
 type GuidelineItemProps = {
   guideline: EnergizeEngineOutputs["guidelines"]["getLiveConstitution"]["items"][number]
   isOpen: boolean
+  spaceId: string
 }
 
-const GuidelineItem = ({ guideline, isOpen }: GuidelineItemProps) => {
+const GuidelineItem = ({ guideline, isOpen, spaceId }: GuidelineItemProps) => {
   const graphQuery = energizeEngine.guidelines.getHistogramDataForGuideline.useQuery(
     {
-      spaceId: DEFAULT_SPACE_ID,
+      spaceId,
       guidelineId: guideline.id,
     },
     {
@@ -75,19 +75,43 @@ const GuidelineItem = ({ guideline, isOpen }: GuidelineItemProps) => {
     },
   )
 
+  const constitution = energizeEngine.guidelines.getLiveConstitution.useQuery({
+    spaceId,
+  })
+
+  const embeddings = constitution.data?.embeddings.filter((v) => v !== undefined) ?? []
+
   const NUM_BUCKETS = 15
-  const BUCKET_SIZE = 2 / NUM_BUCKETS
+
+  const isLoaded = graphQuery.isSuccess && constitution.isSuccess
 
   type BucketItem = EnergizeEngineOutputs["guidelines"]["getHistogramDataForGuideline"][number]
-  const buckets: BucketItem[][] = graphQuery.isSuccess
+  const buckets: BucketItem[][] = isLoaded
     ? Array.from({ length: NUM_BUCKETS }).map((_, index) => {
-        const min = -1
+        const min = Math.min(...embeddings)
+        const max = Math.max(...embeddings)
+
+        const BUCKET_SIZE = (max - min) / NUM_BUCKETS
+
         const bucketStart = min + index * BUCKET_SIZE
         const bucketEnd = bucketStart + BUCKET_SIZE
 
-        return graphQuery.data.filter((rating) => {
-          return rating.userIntercept >= bucketStart && rating.userIntercept < bucketEnd
+        const items = graphQuery.data.filter((rating) => {
+          return rating.embedding.length > 0 && rating.embedding[0] >= bucketStart && rating.embedding[0] < bucketEnd
         })
+
+        // put the not helpful ratings first
+        const sortedItems = items.sort((a, b) => {
+          if (a.rating === "not_helpful" && b.rating === "helpful") {
+            return -1
+          }
+          if (a.rating === "helpful" && b.rating === "not_helpful") {
+            return 1
+          }
+          return 0
+        })
+
+        return sortedItems
       })
     : []
 
@@ -106,20 +130,27 @@ const GuidelineItem = ({ guideline, isOpen }: GuidelineItemProps) => {
 
   const main = (
     <div className="flex flex-row items-end gap-[4px]">
-      {buckets.map((bucket, index) => (
-        <div key={index + "bucket"} className="flex h-full flex-1 flex-col justify-end gap-[4px]">
-          {bucket.map((v) => (
-            <>{v.rating === "helpful" ? <Dot variant="helpful" /> : <Dot variant="not-helpful" />}</>
+      {isLoaded && !buckets.some((b) => b.length > 0) ? (
+        <div className="w-full rounded border border-dashed py-5 text-center">No data to display.</div>
+      ) : (
+        <>
+          {buckets.map((bucket, index) => (
+            <div key={index + "bucket"} className="flex h-full flex-1 flex-col justify-end gap-[4px]">
+              {bucket.map((v) => (
+                <>{v.rating === "helpful" ? <Dot variant="helpful" /> : <Dot variant="not-helpful" />}</>
+              ))}
+              {bucket.length === 0 && <Dot variant="placeholder" />}
+            </div>
           ))}
-          {bucket.length === 0 && <Dot variant="placeholder" />}
-        </div>
-      ))}
+        </>
+      )}
     </div>
   )
 
   const footer = (
     <>
       <div className="mt-[4px] h-[2px] w-full bg-muted-foreground"></div>
+      <div className="mt-4 text-center text-muted-foreground">Range of Perspectives</div>
     </>
   )
 
@@ -159,16 +190,21 @@ const GuidelineItem = ({ guideline, isOpen }: GuidelineItemProps) => {
   )
 }
 
-export const ConstitutionOutline = () => {
+interface Props {
+  showStart?: boolean
+  spaceId?: string
+}
+
+export const ConstitutionOutline = ({ showStart = true, spaceId = DEFAULT_SPACE_ID }: Props) => {
   const { userId } = useAuth()
   const [open, setOpen] = useState<string[]>([])
 
   const constitution = energizeEngine.guidelines.getLiveConstitution.useQuery({
-    spaceId: DEFAULT_SPACE_ID,
+    spaceId,
   })
 
   const topicTreeQuery = energizeEngine.topics.getTopicsTree.useQuery({
-    spaceId: DEFAULT_SPACE_ID as string,
+    spaceId,
   })
 
   const gradients = [
@@ -196,7 +232,12 @@ export const ConstitutionOutline = () => {
         approvedGuidelines && approvedGuidelines.length > 0 ? (
           <Accordion onValueChange={setOpen} type="multiple" className="ml-6 flex flex-grow flex-col">
             {approvedGuidelines.map((guideline) => (
-              <GuidelineItem key={guideline.id} guideline={guideline} isOpen={open.includes(guideline.id)} />
+              <GuidelineItem
+                key={guideline.id}
+                guideline={guideline}
+                isOpen={open.includes(guideline.id)}
+                spaceId={spaceId}
+              />
             ))}
           </Accordion>
         ) : null
@@ -213,7 +254,7 @@ export const ConstitutionOutline = () => {
             <div className="ml-6 mt-4 flex items-center justify-center rounded border border-dashed px-3 py-2 text-sm text-muted-foreground">
               No approved guidelines yet.
               {userId && (
-                <Link href={`/spaces/${DEFAULT_SPACE_ID}?${SEARCH_PARAM_KEYS[Paths.Playground].topicId}=${topicId}`}>
+                <Link href={`/spaces/${spaceId}?${SEARCH_PARAM_KEYS[Paths.Playground].topicId}=${topicId}`}>
                   <Button variant={"ghost"} size={"sm"} className="ml-2 flex items-center justify-center gap-1 px-2">
                     Contribute
                     <ExternalLink className="ml-1 h-4 w-4" />
@@ -234,14 +275,16 @@ export const ConstitutionOutline = () => {
 
   return (
     <>
-      <div className="relative my-14">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
+      {showStart && (
+        <div className="relative my-14">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="flex bg-background px-2 text-muted-foreground">Start of the Constitution</span>
+          </div>
         </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="flex bg-background px-2 text-muted-foreground">Start of the Constitution</span>
-        </div>
-      </div>
+      )}
       <QueryDataLoader queryResults={constitution}>
         <QueryDataLoader.IsSuccess>
           <QueryDataLoader queryResults={topicTreeQuery} skeletonItems={1}>
