@@ -1,5 +1,6 @@
 import { CheckCircle, CircleDotIcon } from "lucide-react"
 
+import { ProlificCompletionDialog } from "../prolific/prolific-completion-dialog"
 import { Button } from "../ui/button"
 import {
   DropdownMenu,
@@ -15,7 +16,6 @@ import { Skeleton } from "../ui/skeleton"
 import { energizeEngine } from "@/lib/energize-engine"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@clerk/clerk-react"
-import Link from "next/link"
 import { useRouter } from "next/router"
 
 export const TasksDropdown = () => {
@@ -70,23 +70,14 @@ export const TasksDropdown = () => {
       return <Skeleton className="h-8 w-32" />
     }
 
-    const code = completionCode.data ?? ""
-    const baseUrl = new URL("https://app.prolific.co/submissions/complete")
-    baseUrl.searchParams.set("cc", code ?? "")
-
-    if (!code) {
+    if (!completionCode.data) {
       return null
     }
 
     return (
       <QueryDataLoader queryResults={prolificQuery} skeletonItems={1}>
         <QueryDataLoader.IsSuccess>
-          <Link href={baseUrl} target="_blank">
-            <Button variant={"success"}>
-              <CheckCircle className="mr-2 h-4 w-4" />
-              Click here to finish
-            </Button>
-          </Link>
+          <ProlificCompletionDialog code={completionCode.data} />
         </QueryDataLoader.IsSuccess>
         <QueryDataLoader.IsLoading>
           <Skeleton className="h-8 w-32" />

@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
+import { HowItWorksCards } from "../algo"
 import { Redirect } from "@/components/redirect"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -11,9 +12,8 @@ import { Input } from "@/components/ui/input"
 import { SmallSpinner } from "@/components/ui/small-spinner"
 import { useToast } from "@/components/ui/use-toast"
 import { energizeEngine } from "@/lib/energize-engine"
-import { DEFAULT_SPACE_ID } from "@/lib/spaces"
 import { sleep } from "@/lib/utils"
-import { useAuth, useSignIn, useSignUp } from "@clerk/clerk-react"
+import { useAuth, useSignIn } from "@clerk/clerk-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
@@ -30,6 +30,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 export default function ProlificCapturePage() {
+  const { space_id } = useRouter().query
   const { signIn, setActive, isLoaded } = useSignIn()
 
   const [isLoadingSignup, setIsLoadingSignup] = useState(false)
@@ -41,6 +42,7 @@ export default function ProlificCapturePage() {
   const prolificPid = searchParams.get("PROLIFIC_PID")
   const studyId = searchParams.get("STUDY_ID")
   const sessionId = searchParams.get("SESSION_ID")
+  const accessToken = searchParams.get("ACCESS_TOKEN")
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -52,8 +54,10 @@ export default function ProlificCapturePage() {
   const valid = energizeEngine.prolific.verifyProlificParams.useQuery(
     {
       prolificPid: prolificPid ?? "",
+      spaceId: space_id as string,
       studyId: studyId ?? "",
       sessionId: sessionId ?? "",
+      accessToken: accessToken ?? "",
     },
     {
       enabled: Boolean(prolificPid && studyId && sessionId),
@@ -65,10 +69,10 @@ export default function ProlificCapturePage() {
   const { toast } = useToast()
 
   const handleGetStarted = () => {
-    if (!userId || !valid.data?.valid || !prolificPid) return
+    if (!userId || !valid.data?.valid || !prolificPid || !space_id) return
 
     const goToOrg = () => {
-      const url = new URL(`/spaces/${DEFAULT_SPACE_ID}`, window.location.href)
+      const url = new URL(`/spaces/${space_id}`, window.location.href)
       router.push(url)
     }
 
@@ -77,7 +81,7 @@ export default function ProlificCapturePage() {
         prolificPid,
         studyId: studyId ?? "",
         sessionId: sessionId ?? "",
-        spaceId: DEFAULT_SPACE_ID,
+        spaceId: space_id as string,
       },
       {
         onSuccess: async () => {
@@ -220,22 +224,31 @@ export default function ProlificCapturePage() {
   }
 
   return (
-    <div className="flex h-[90vh] w-full flex-col items-center justify-center gap-6">
-      <h1 className="flex items-center gap-2 text-xl">
-        Hey! 👋 Welcome to Aligned!
-        <Link href={"/"}>
-          <img src="/logo.png" alt="Logo" className="h-6 text-primary-foreground" />
-        </Link>
-      </h1>
+    <div className="flex w-full flex-col items-center justify-center gap-6">
       {!userId ? (
-        emailForm
+        <>
+          <h1 className="mt-36 flex items-center gap-2 text-xl">
+            Hey! 👋 Welcome to Aligned!
+            <Link href={"/"}>
+              <img src="/logo.png" alt="Logo" className="h-6 text-primary-foreground" />
+            </Link>
+          </h1>
+          {emailForm}
+        </>
       ) : (
         <>
-          <p className="flex items-center text-sm text-muted-foreground">
-            <CheckIcon className="mr-1 h-4 w-4" />
-            You&apos;re logged in and ready to go!
-          </p>
-          <Button disabled={prolificIdMutation.isLoading} className="animate-fade-in px-24" onClick={handleGetStarted}>
+          <h1 className="mt-10 flex items-center gap-2 text-xl">
+            How it works
+            <Link href={"/"}>
+              <img src="/logo.png" alt="Logo" className="h-6 text-primary-foreground" />
+            </Link>
+          </h1>
+          <HowItWorksCards className="mt-0 max-w-4xl" />
+          <Button
+            disabled={prolificIdMutation.isLoading}
+            className="animate-fade-in whitespace-nowrap px-24"
+            onClick={handleGetStarted}
+          >
             Get Started
             {prolificIdMutation.isLoading && <SmallSpinner className="ml-2" />}
           </Button>

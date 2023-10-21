@@ -21,6 +21,8 @@ export default function LivePage() {
     spaceId: DEFAULT_SPACE_ID,
   })
 
+  const sampleData = constitution.data?.embeddings.filter((v) => v !== undefined) ?? []
+
   const totalConsensusScore = constitution.data?.items.length
     ? Math.floor(
         (constitution.data?.items.reduce((acc, curr) => acc + curr.consensusScore, 0) /
@@ -28,8 +30,6 @@ export default function LivePage() {
           100,
       )
     : 0
-
-  const sampleData = constitution.data?.embeddings.filter((v) => v !== undefined) ?? []
 
   const isSwitching = useRef(false)
   const handleTabSwitch = async (newTab: ConstitutionTab) => {

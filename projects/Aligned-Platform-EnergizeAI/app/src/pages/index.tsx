@@ -224,14 +224,14 @@ export default function Home() {
       <Head>
         <title>Aligned - Democratizing Model Alignment</title>
       </Head>
-      <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center gap-16 lg:-mt-7 lg:h-screen lg:gap-0 lg:overflow-y-hidden">
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center gap-16 lg:-mt-7 lg:min-h-screen lg:gap-0">
         <div className="flex w-full flex-col justify-center gap-4 lg:flex-row lg:justify-end">
           <Link href="/live" className="mx-auto lg:mx-0">
             <Button variant="link">View constitution</Button>
           </Link>
           {userId && <UserDropdown />}
         </div>
-        <div className="flex w-full flex-col items-center gap-16 overflow-hidden text-center lg:flex-row lg:text-left">
+        <div className="flex w-full flex-col items-center gap-16 text-center lg:flex-row lg:text-left">
           <motion.img
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 20, ease: "linear" }}

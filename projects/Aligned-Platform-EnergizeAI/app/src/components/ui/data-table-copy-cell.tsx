@@ -5,9 +5,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 
 type Props = {
   value: string | null
+  text?: string
 }
 
-export const DataTableCopyCell = ({ value }: Props) => {
+export const DataTableCopyCell = ({ value, text }: Props) => {
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
 
@@ -27,7 +28,7 @@ export const DataTableCopyCell = ({ value }: Props) => {
       <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger asChild>
           <button className="cursor-pointer" onClick={handleCopy}>
-            {value}
+            {text ?? value}
           </button>
         </TooltipTrigger>
         <TooltipContent className="flex items-center gap-2">

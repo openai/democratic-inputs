@@ -59,7 +59,11 @@ export const OrgAdminLayout = ({ children }: Props) => {
       href: Paths.Export,
     },
     {
-      title: "Prolific",
+      title: "Prolific Integration",
+      href: Paths.ProlificIntegrations,
+    },
+    {
+      title: "Prolific Members",
       href: Paths.ProlificMembers,
     },
   ].map((item) => ({
