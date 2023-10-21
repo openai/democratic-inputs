@@ -64,6 +64,17 @@ const TransitionDown = (props) => {
   return <Slide {...props} direction="down" />;
 };
 
+let forCleanup = [];
+
+const cleanupListeners = () => {
+  for (let x = 0; x < forCleanup.length; x++) {
+    // console.log("cleaning up", x);
+    const fn = forCleanup[x];
+    fn();
+  }
+  forCleanup = [];
+};
+
 const ResponseBox = () => {
   const { activeQuestion } = useContext(Question_data);
   const { activeUser } = useContext(User_data);
@@ -153,16 +164,18 @@ const ResponseBox = () => {
   }, [activeQuestion]);
 
   useEffect(() => {
+    cleanupListeners();
     setResponses([]);
     let qId = activeQuestion.id ? activeQuestion.id : "";
     setLoading(true);
     setSubmittingresponse(false);
-    const questionQuery = query(
+    const q = query(
       collection(db, "responses"),
       where("questionId", "==", qId),
       orderBy("createdAt", "asc")
     );
-    const unsubscribe = onSnapshot(questionQuery, (QuerySnapshot) => {
+    const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+      // console.log("onsnapshot", qId, q);
       let activeUserHasResponded = false;
       const fetchedResponses = [];
       QuerySnapshot.forEach(async (doc) => {
@@ -177,11 +190,12 @@ const ResponseBox = () => {
       });
       setResponsecount(fetchedResponses.length);
       setUserresponded(activeUserHasResponded);
-      if (activeUserHasResponded || activeUser.isadmin === true) {
+      if (activeUserHasResponded || activeUser.isadmin === true || activeUser.readonly === true) {
         setResponses(fetchedResponses);
       }
       setLoading(false);
     });
+    forCleanup.push(unsubscribe);
     return () => unsubscribe;
   }, [activeQuestion]);
 
@@ -210,6 +224,7 @@ const ResponseBox = () => {
       behavior: "smooth",
     });
     await updateUserStatus(activeUser.uid, "online");
+    // console.log("submit active question", activeQuestion);
   };
 
   const vote = (v, u, p) => {
@@ -495,7 +510,7 @@ const ResponseBox = () => {
       ) : (
         ""
       )}
-      {activeQuestion.id ? (
+      {activeQuestion.id && activeUser.readonly !== true ? (
         <Box
           component="form"
           onSubmit={(event) => sendResponse(event)}

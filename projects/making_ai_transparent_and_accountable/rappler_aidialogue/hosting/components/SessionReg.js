@@ -21,31 +21,19 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateField } from "@mui/x-date-pickers/DateField";
 import { LoadingButton } from "@mui/lab";
 
-import { auth, db } from "../lib/firebase";
+import { auth } from "../lib/firebase";
 import { signInWithCustomToken } from "firebase/auth";
-import {
-  doc,
-  collection,
-  getDoc,
-  setDoc,
-  serverTimestamp,
-  arrayUnion,
-  updateDoc,
-} from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "../lib/firebase";
 
 import PolicyGuidelinesTerms from "../components/PolicyGuidelinesTerms";
 
-import { User_data, Session_data } from "../lib/context";
+import { Session_data } from "../lib/context";
 
-import { updateUserStatus, isValidEmail } from "../lib/utils";
-import anonymous from "../lib/anonanimals";
-import uniqolor from "uniqolor";
+import { isValidEmail } from "../lib/utils";
 
 const SessionReg = () => {
   const { session, setSession } = useContext(Session_data);
-  const { activeUser, setActiveuser } = useContext(User_data);
   const [submittingRegistration, setSubmittingRegistration] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const [birthDate, setBirthdate] = useState(null);
@@ -152,8 +140,6 @@ const SessionReg = () => {
     // parse response
     const {
       success = false,
-      existing = true,
-      uid = null,
       token = null,
       field = null,
       message = null,
@@ -167,34 +153,9 @@ const SessionReg = () => {
       if (token) {
         signInWithCustomToken(auth, token)
           .then(async () => {
-            let userRecord;
-            if (!existing) {
-              // user is a new user let's get random color imsgsrc and name
-              let { name, animal } = await anonymous.generate();
-              userRecord = {
-                name,
-                status: "online",
-                imgsrc: `/static/images/${animal}.png`,
-                color: uniqolor(name).color,
-                lastactive: serverTimestamp(),
-                sessions: [session.id],
-              };
-              await setDoc(doc(collection(db, "users"), uid), userRecord, {
-                merge: true,
-              });
-            } else {
-              // user already exists, query from firestore
-              const df = doc(db, "users", uid);
-              const d = await getDoc(df);
-              userRecord = d.data();
-            }
-            let u = {
-              ...userRecord,
-              uid,
-            };
-            updateUserStatus(uid, "online");
-            setActiveuser(u);
-            window.scrollTo(0, 0);
+            // user is already logged in at this point
+            // checkUser function in index.js effect
+            // should take over
           })
           .catch((error) => {
             console.error(error);

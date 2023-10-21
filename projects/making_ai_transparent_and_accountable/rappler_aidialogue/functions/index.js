@@ -80,27 +80,32 @@ exports.talkToAI = onDocumentCreated(
 
       let response = "";
 
-      switch (prompt.type) {
-        case "followup": {
-          response = await chatGPT.sendFollowupPrompt(prompt, db);
-          break;
+      // Check createdAt. If it has been more then 10 minutes, do not process
+      const secondsElapsed = Timestamp.now() - prompt.createdAt;
+      if (secondsElapsed > AI_TIMEOUT_SECONDS) {
+        response = "ERROR: Cancelled by moderator";
+        return event.data.ref.set({response}, {merge: true});
+      } else {
+        switch (prompt.type) {
+          case "followup": {
+            response = await chatGPT.sendFollowupPrompt(prompt, db);
+            break;
+          }
+          case "summary": {
+            response = await chatGPT.sendSummaryPrompt(prompt, db);
+            break;
+          }
+          case "policy": {
+            response = await chatGPT.sendPolicyPrompt(prompt, db);
+            break;
+          }
         }
-        case "summary": {
-          response = await chatGPT.sendSummaryPrompt(prompt, db);
-          break;
+        if (!response) {
+          await aiSaid(prompt.session,
+              aierrors[Math.floor(Math.random() * aierrors.length)]);
         }
-        case "policy": {
-          response = await chatGPT.sendPolicyPrompt(prompt, db);
-          break;
-        }
+        return event.data.ref.set({response}, {merge: true});
       }
-
-      if (!response) {
-        await aiSaid(prompt.session,
-            aierrors[Math.floor(Math.random() * aierrors.length)]);
-      }
-
-      return event.data.ref.set({response}, {merge: true});
     },
 );
 
@@ -224,7 +229,7 @@ exports.generatePolicies = onCall(// { enforceAppCheck: true, },
             love to get your reactions to what she comes up with. 
             This may take a minute or so...`);
 
-          await FGDAIprompts.getPolicies(data.session.id, db);
+          await FGDAIprompts.getPolicyFromSummaries(data.session.id, db);
         }
       }
       return;
@@ -450,9 +455,30 @@ ${currentQuestion.data().seq + 1}`);
                 .where("visible", "==", true)
                 .get();
 
+            let hasOneSummary = false;
+            let summariesComplete = true;
+            let noPoliciesYet = true;
             for (const question of questions.docs) {
-              await FGDAIprompts.getSummary(question, db,
-                  minRespondersForSummary);
+              // Generate summary only for main and followup types
+              if (question.data().type == "main" ||
+                  question.data().type == "followup") {
+                if (question.get("summary") == undefined) {
+                  summariesComplete = false;
+                } else {
+                  hasOneSummary = true;
+                }
+
+                await FGDAIprompts.getSummary(question, db,
+                    minRespondersForSummary);
+              }
+
+              if (noPoliciesYet && question.data().type == "policycheck") {
+                noPoliciesYet = false;
+              }
+            }
+
+            if (summariesComplete && hasOneSummary && noPoliciesYet) {
+              await FGDAIprompts.getPolicyFromSummaries(session.id, db);
             }
           } // else we do nothing, giving more users time to respond
         } // else we do nothing, we're still waiting for a response

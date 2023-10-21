@@ -65,6 +65,9 @@ OpenAI powered focus group discussion built on Firebase.
 
 To run the web application locally, execute the following command inside the project folder. This will 
 
-```firebase emulators:start import=seed/```
+```
+export NODE_ENV=development
+firebase emulators:start import=seed/
+```
 
 Open a browser window and go to http://localhost:4000. Click on ```View Website``` under the *Hosting Emulator* card.

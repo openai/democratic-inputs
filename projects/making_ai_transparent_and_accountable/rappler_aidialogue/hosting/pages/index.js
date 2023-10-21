@@ -113,26 +113,30 @@ export default function Home() {
   };
 
   const checkUser = async (uid) => {
+    // console.log("checkUser", uid, session);
     const df = doc(db, "users", uid);
     const d = await getDoc(df);
     const userRecord = d.data();
-    if (!d.exists() || !userRecord?.name) {
+    if (!d.exists() || !userRecord.name) {
       let { name, animal } = await anonymous.generate();
       if (name === null) {
         firebaseSignOut();
         alert("Unable to register user. Please try again later.");
       } else {
-        let u = {
-          uid,
-          name,
-          status: "online",
-          imgsrc: `/static/images/${animal}.png`,
-          color: uniqolor(name).color,
-          lastactive: serverTimestamp(),
-          sessions: ["main"],
-        };
-        await setDoc(doc(collection(db, "users"), uid), u, { merge: true });
-        setActiveuser(u);
+        if (session && session.id) {
+          // console.log("creating new name");
+          let u = {
+            uid,
+            name,
+            status: "online",
+            imgsrc: `/static/images/${animal}.png`,
+            color: uniqolor(name).color,
+            lastactive: serverTimestamp(),
+            sessions: [session.id],
+          };
+          await setDoc(doc(collection(db, "users"), uid), u, { merge: true });
+          setActiveuser(u);
+        }
       }
     } else {
       let u = {
@@ -162,14 +166,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (user) {
-      let { uid } = user;
-      checkUser(uid);
-      window.scrollTo(0, 0);
-    }
-  }, [user]);
-
-  useEffect(() => {
+    // check session state
     const urlParams = new URLSearchParams(window.location.search);
     const sessionQs = urlParams.get("session");
     if (sessionQs === null || sessionQs === "main") {
@@ -180,18 +177,25 @@ export default function Home() {
       // set session state
       checkSession(sessionQs);
     }
+    // check user state
+    if (user) {
+      let { uid } = user;
+      checkUser(uid, session);
+      window.scrollTo(0, 0);
+    }
   }, [user]);
 
   useEffect(() => {
     if (user && session) {
       if (!activeUser.isadmin) {
+        // console.log("session check", activeUser, session.id);
         if (
           activeUser &&
           activeUser.sessions &&
           !activeUser.sessions.includes(session.id)
         ) {
           // user is not suppose to be in this session
-          // logout
+          // logout          
           firebaseSignOut();
         }
       }

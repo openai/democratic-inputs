@@ -193,13 +193,13 @@ ${topic}.
 // TODO: Needs optimization, check if chatgpt can accept file uploads
 // or base policies on summaries only.
 // - See https://js.langchain.com/docs/modules/chains/additional/analyze_document
-exports.getPolicies = async (session, db) => {
+exports.getPolicies = async (sessionId, db) => {
   logger.debug(`getPolicies start.`);
   let transcript = [];
 
   const mainQuestions = await db.collection("questions")
       .where("type", "==", "main")
-      .where("session", "==", session)
+      .where("session", "==", sessionId)
       .orderBy("seq", "asc")
       .get();
 
@@ -227,7 +227,81 @@ ${topic}.
   db.collection("prompts").add({
     humanMessage: humanMessage,
     systemMessage: systemMessage,
-    session: session,
+    session: sessionId,
+    type: "policy",
+    createdAt: Timestamp.now(),
+  });
+
+  return;
+};
+
+exports.getPolicyFromSummaries = async (sessionId, db) => {
+  const summaries = [];
+
+  // Get all questions main questions
+  const mainQuestions = await db.collection("questions")
+      .where("type", "==", "main")
+      .where("session", "==", sessionId)
+      .orderBy("seq", "asc")
+      .get();
+
+  let counter = 0;
+  for (const questionDoc of mainQuestions.docs) {
+    if (questionDoc.get("summary")) {
+      counter = counter + 1;
+      summaries.push(`Question #${counter}: ${questionDoc.data().question}`);
+      const summary = questionDoc.data().summary.split("<b>");
+      // Remove the first one element of the array. It's empty
+      summary.shift();
+      for (const summaryPoint of summary) {
+        summaries.push(summaryPoint.slice(0,
+            summaryPoint.indexOf("</b>")));
+        summaries.push(summaryPoint.slice(summaryPoint.indexOf("Details:"),
+            summaryPoint.indexOf("<br />") - 1));
+      }
+    }
+    const followupQuestions = await db.collection("questions")
+        .where("parentId", "==", questionDoc.id)
+        .where("type", "==", "followup")
+        .orderBy("seq", "asc")
+        .get();
+
+    for (const fquestionDoc of followupQuestions.docs) {
+      if (fquestionDoc.get("summary")) {
+        counter = counter + 1;
+        summaries.push(`Question #${counter}: ${fquestionDoc.data().question}`);
+        const summary = fquestionDoc.data().summary.split("<b>");
+        summary.shift();
+        for (const summaryPoint of summary) {
+          summaries.push(summaryPoint.slice(0,
+              summaryPoint.indexOf("</b>")));
+          summaries.push(summaryPoint.slice(summaryPoint.indexOf("Details:"),
+              summaryPoint.indexOf("<br />") - 1));
+        }
+      }
+    }
+  }
+
+  const humanMessage = `
+Generate a list of 5-8 specific, actionable policies for the creation 
+and use of AI based on the sentiments below. The policies should be grouped 
+into at least three categories. Use third person POV. Format 
+the list as a json object whose keys are the categories and values are 
+arrays of strings containing the policies.
+
+These are the questions and sentiments: 
+${summaries}.
+  `;
+
+  const systemMessage = `
+Act as ${AI_MODERATOR_NAME}, the moderator of a focus group discussing 
+${topic}. 
+  `;
+
+  db.collection("prompts").add({
+    humanMessage: humanMessage,
+    systemMessage: systemMessage,
+    session: sessionId,
     type: "policy",
     createdAt: Timestamp.now(),
   });
