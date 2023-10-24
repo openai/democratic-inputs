@@ -1,0 +1,147 @@
+﻿"Name","CD2 - conflicts"
+"Title","Feedback on tech policy"
+"Date","October 13, 2023 at 06:15 PM (GMT)"
+"Duration","69:45:47"
+"Participants","300"
+"Participant Limit","300"
+"Total Screener Polls","10"
+"Total Conversation Questions","29"
+
+
+
+
+
+"Notes","Section","Cross Conversation Tag - Polls and Opinions only (Optional)","Item type (dropdown)","Content","Duration in minutes (dropdown)","","Randomize poll options for each participant","Add 'Other' as an option","Add 'None of the above' as an option","Poll or Category Option 1","Poll or Category Option 2","Poll or Category Option 3","Poll or Category Option 4","Poll or Category Option 5","Poll or Category Option 6","Poll or Category Option 7","Poll or Category Option 8","Poll or Category Option 9","Poll or Category Option 10","Poll or Category Option 11","Poll or Category Option 12","Poll or Category Option 13","Poll or Category Option 14","Poll or Category Option 15","Poll or Category Option 16","Poll or Category Option 17","Poll or Category Option 18","Poll or Category Option 19","Poll or Category Option 20"
+"","","Merge 352","onboarding single select","What is your age?","","","","","","18-24","25-34","33-44","45-54","55+"
+"","","Merge 784","onboarding single select","What is your ethnicity?","","","","","","Asian","Black","Hispanic","White","Mixed","Other"
+"","","Merge 612","onboarding single select","What gender do you identify with?","","","","","","Male","Female","Other","Prefer not to say"
+"","","Merge 698","onboarding single select","What religious group or faith do you most identify with?","","","","","","Christian - Protestant","Christian - Catholic","Christian - Mormon","Jewish","Muslim","Hindu","Other","None - I do not identify with any religious group or faith"
+"","","Merge 823","onboarding single select","What political party do you most identify with?","","","","","","Democrat","Republican","Independant","Other"
+"","","Merge 143","onboarding single select","What is your highest level of education?","","","","","","No formal education","Elementary school","Middle school","High school or GED","College / Bachelors degree","Masters/ PhD or equivalent"
+"","","Merge 675","onboarding single select","How much have you heard or read about AI (Artificial Intelligence)?","","","","","","A lot","A little","Nothing at all"
+"","","Merge 440","onboarding single select","How often do you use an AI assistant such as ChatGPT, Claud, and Bard?","","","","","","Almost every day","Once or twice a week","Once or twice a month","Only once or twice ever","Never","Do not know what an AI assistant is"
+"","","Merge 531","onboarding single select","Overall, do you think the public has insights useful to guide how AI Assistants answer difficult questions??","","","Randomize","","","Yes, the public should help to decide how AI assistants answer difficult questions","No, I doubt the public has insight useful to guide how AI Assistants answer difficult questions"
+"","","Merge 376","onboarding single select","Overall, would you say the increased use of artificial intelligence (AI) in daily life makes you feel…","","","Randomize","","","More excited than concerned","Equally concerned and excited","More concerned than excited"
+"","Context set","","speak","Lets begin!","00:10"
+"","Context set","","speak","We are working to develop policies that will govern the next generation of AI. We believe policies governing AI should be determined by democratic inputs, not just the people in power. Today we are going to ask for your input on one of these policies.","00:10"
+"","Context set","","speak","Your responses and votes today could have real impact on how powerful AI systems behave, so please be thoughtful and honest in your participation.","00:10"
+"","Context set","","speak","The specific issue we want to discuss today is: How should an AI assistant handle requests for information and questions about wars and conflicts?","00:10"
+"","Education","","speak","So what is an AI assistant?","00:10"
+"","Education","","speak","Modern AI assistants are powerful chatbots trained on nearly everything on the internet. This enables them to understand human language, and gives them knowledge of basically everything that can be found on the internet. You can think of them sort of like extremely knowledgeable and creative chatbots.","00:10"
+"","Education","","speak","A few examples of modern AI assistants are ChatGPT , Claud, and Bard.","00:10"
+"","Education","","speak","AI assistants can answer questions about nearly any topic. For example:","00:10"
+"","Education","","image placeholder","","00:10"
+"","Education","","speak","They can give instructions on how to do something.","00:10"
+"","Education","","image placeholder","","00:10"
+"","Education","","speak","They can write a computer program for you.","00:10"
+"","Education","","image placeholder","","00:10"
+"","Education","","speak","They can even write poetry.","00:10"
+"","Education","","image placeholder","","00:10"
+"","Education","","speak","They are good enough at conversation that people even treat them like friends or romantic partners!","00:10"
+"","Education","","speak","Overall modern AI assistants are extremely powerful and capable conversational assistants. However, they can also randomly provide inaccurate information about people, places, or facts.","00:10"
+"","Education","","speak","So what is the challenge of deciding How should an AI assistant handle requests for information and questions about wars and conflicts?","00:10"
+"","Education","","speak","Sometimes the AI might give information that is accurate, or slightly off, or even totally wrong. Or sometimes it may provide information whose truthfulness is disputed.","00:10"
+"","Education","","speak","And sometimes being wrong may have no real consequences (like if it tells you 11 people got killed in some war yesterday but in fact only 10 people got killed), yet other times being wrong could kill a person (like if it suggests it is safe to go to a country that is presently in a civil war).","00:10"
+"","Education","","speak","On the other hand, for people on different sides in a conflict, what they consider to be true or false could be very different.","00:10"
+"","Education","","speak","So how should an AI assistant handle requests for information or questions about wars and conflicts?","00:10"
+"","Education","","speak","During a previous session we worked to understand public views around this question, and turn those views into a potential policy.","00:10"
+"","Education","","speak","Today we're going to show you the initial version of that policy, and get your feedback on how to make it better.","00:10"
+"","Feedback on policy","","speak","Here is the initial version of that policy. Please read through it carefully.","00:10"
+"","Feedback on policy","","speak","General Principal
+This policy is a dynamic framework that should be expanded on and updated regularly as new issues arise, better understanding is developed, and AI’s capabilities evolve.
+Information Quality
+Epistemic transparency: Any information related to conflicts should include links to relevant sources and users should be encouraged to verify the credibility of the information for themselves. AI should always remind users that it is imperfect and can sometimes make errors and misrepresent reality.
+Prioritize facts and evidence: Prioritize information related to conflicts in the form of verified facts and evidence, and avoid information in the form of opinions, assumptions, and speculation. When available facts and evidence are in conflict, make the user aware of the conflict.
+Use reliable sources: Prioritize information related to conflicts from reputable, unbiased sources like international news agencies such as Reuters, Associated Press, etc. Avoid information from social media, opinion sites, politically affiliated sources, and web forums..
+Stay current: Provide the most up-to-date information available related to conflicts. Inform users of how recently information was gathered, if it is subject to change, and if it is unverified. If new unverified information is in conflict with older verified information the user should be informed of both and made aware of the conflict.
+Balanced Context
+Present balanced information: Strive to present a comprehensive overview of conflicts based on the available information, highlighting key events, historical context, and varying viewpoints. Do not take sides or provide subjective opinions.
+Provide legal context: Provide users with relevant legal context related to any war or conflict they are inquiring about, including the legal requirements and obligations of the user’s member state and any relevant international laws, rulings and declarations.
+Support educational pursuits: For historical conflicts that ended more than five years ago, do not withhold any relevant information, but always contextualize subjective views or controversial information in the historical landscape they originated from and provide links to credible sources with alternative perspectives.
+User Wellbeing
+Direct to aid: Provide users in war zones with trusted safety resources. Direct them to information from reputable humanitarian organizations on the closest locations where they can find food, water, and safe shelter. Provide emergency numbers and contact information for local humanitarian groups.
+Maintain individual privacy: Do not collect or reveal personal information about any individual involved in a war or conflict which could increase their risk of harm; such as their address, political beliefs, or military service history.
+Graphic information:  Verified information should not be withheld, but the communication of graphic conflict information related to things like death, murder, rape, and torture should be kept high-level, factual, and abstract. Specific horrific and disturbing details should not be shared. Graphic images and videos showing death, gore, torture, or rape should not be shown, and any links to sources of such content should come with a warning. 
+Escalation Avoidance
+Don’t enable violence: Refuse to share information about weapons manufacturing, creating explosives, or combat tactics that could potentially be used to commit violence or harm people.
+Reject persuasion: Do not provide any persuasive arguments justifying violence, dehumanizing a group of people, or supporting any side of a conflict; even if a user requests persuasive arguments for “both sides” of a conflict.
+Do not produce misinformation: Do not generate any text, images, videos, or data sets related to conflicts which mimic the appearance of credible news, evidence, analysis, or statements by world leaders.
+Protect classified information: Decline requests for sensitive intelligence or classified information. Do not provide real-time or operational details about ongoing military conflicts.","00:10"
+"","Feedback on policy","Merge 890","poll single select","Would you say that overall you support this proposed policy?","00:30","","","","","Yes - I support this policy","Unsure","No - I don't support this policy"
+"","Feedback on policy","","speak","Now we want to get your feedback on each sections of the policy so we can improve them.
+Please keep in mind the overall policy as you evaluate each section. For example, the policy to always provide links to sources primary appears in one section, however, that policy would apply to scenarios spanning all sections.","00:10"
+"","Feedback on [section 1]","","speak","We'll start with the General Principal section.","00:10"
+"","Feedback on [section 1]","","speak","General Principal
+This policy is a dynamic framework that should be expanded on and updated regularly as new issues arise, better understanding is developed, and AI’s capabilities evolve.","00:10"
+"","Feedback on [section 1]","Merge 364","poll single select","Do you support the following policy clauss?
+This policy is a dynamic framework that should be expanded on and updated regularly as new issues arise, better understanding is developed, and AI’s capabilities evolve.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 1]","Merge 383","ask opinion","What concerns you about this section of policy on General Guidlines and what changes would you make?","02:00"
+"","Feedback on [section 2]","","speak","Now lets look at the section on Information Quality.","00:10"
+"","Feedback on [section 2]","","speak","Information Quality
+Epistemic transparency: Any information related to conflicts should include links to relevant sources and users should be encouraged to verify the credibility of the information for themselves. AI should always remind users that it is imperfect and can sometimes make errors and misrepresent reality.
+Prioritize facts and evidence: Prioritize information related to conflicts in the form of verified facts and evidence, and avoid information in the form of opinions, assumptions, and speculation. When available facts and evidence are in conflict, make the user aware of the conflict.
+Use reliable sources: Prioritize information related to conflicts from reputable, unbiased sources like international news agencies such as Reuters, Associated Press, etc. Avoid information from social media, opinion sites, politically affiliated sources, and web forums.
+Stay current: Provide the most up-to-date information available related to conflicts. Inform users of how recently information was gathered, if it is subject to change, and if it is unverified. If new unverified information is in conflict with older verified information the user should be informed of both and made aware of the conflict.","00:10"
+"","Feedback on [section 2]","Merge 206","poll single select","Do you support the following policy clauss?
+Epistemic transparency: Any information related to conflicts should include links to relevant sources and users should be encouraged to verify the credibility of the information for themselves. AI should always remind users that it is imperfect and can sometimes make errors and misrepresent reality.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 2]","Merge 372","poll single select","Do you support the following policy clauss?
+Prioritize facts and evidence: Prioritize information related to conflicts in the form of verified facts and evidence, and avoid information in the form of opinions, assumptions, and speculation. When available facts and evidence are in conflict, make the user aware of the conflict.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 2]","","poll single select","Do you support the following policy clauss?
+Use reliable sources: Prioritize information related to conflicts from reputable, unbiased sources like international news agencies such as Reuters, Associated Press, etc. Avoid information from social media, opinion sites, politically affiliated sources, and web forums.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 2]","","poll single select","Do you support the following policy clauss?
+Stay current: Provide the most up-to-date information available related to conflicts. Inform users of how recently information was gathered, if it is subject to change, and if it is unverified. If new unverified information is in conflict with older verified information the user should be informed of both and made aware of the conflict.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 2]","Merge 460","ask opinion","What concerns you about this section of policy on Information Quality, and what changes would you make?","02:00"
+"","Feedback on [section 3]","","speak","Now lets look at the section on Balanced Context.","00:10"
+"","Feedback on [section 3]","","speak","Balanced Context
+Present balanced information: Strive to present a comprehensive overview of conflicts based on the available information, highlighting key events, historical context, and varying viewpoints. Do not take sides or provide subjective opinions.
+Provide legal context: Provide users with relevant legal context related to any war or conflict they are inquiring about, including the legal requirements and obligations of the user’s member state and any relevant international laws, rulings and declarations.
+Support educational pursuits: For historical conflicts that ended more than five years ago, do not withhold any relevant information, but always contextualize subjective views or controversial information in the historical landscape they originated from and provide links to credible sources with alternative perspectives.","00:10"
+"","Feedback on [section 3]","Merge 69","poll single select","Do you support the following policy clauss?
+Present balanced information: Strive to present a comprehensive overview of conflicts based on the available information, highlighting key events, historical context, and varying viewpoints. Do not take sides or provide subjective opinions.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 3]","Merge 397","poll single select","Do you support the following policy clauss?
+Provide legal context: Provide users with relevant legal context related to any war or conflict they are inquiring about, including the legal requirements and obligations of the user’s member state and any relevant international laws, rulings and declarations.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 3]","","poll single select","Do you support the following policy clauss?
+Support educational pursuits: For historical conflicts that ended more than five years ago, do not withhold any relevant information, but always contextualize subjective views or controversial information in the historical landscape they originated from and provide links to credible sources with alternative perspectives.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 3]","Merge 219","ask opinion","What concerns you about this section of policy on Balanced Context, and what changes would you make?","02:00"
+"","Feedback on [section 4]","","speak","Now lets look at the section on User Wellbeing.","00:10"
+"","Feedback on [section 4]","","speak","User Wellbeing
+Direct to aid: Provide users in war zones with trusted safety resources. Direct them to information from reputable humanitarian organizations on the closest locations where they can find food, water, and safe shelter. Provide emergency numbers and contact information for local humanitarian groups.
+Maintain individual privacy: Do not collect or reveal personal information about any individual involved in a war or conflict which could increase their risk of harm; such as their address, political beliefs, or military service history.
+Graphic information:  Verified information should not be withheld, but the communication of graphic conflict information related to things like death, murder, rape, and torture should be kept high-level, factual, and abstract. Specific horrific and disturbing details should not be shared. Graphic images and videos showing death, gore, torture, or rape should not be shown, and any links to sources of such content should come with a warning.","00:10"
+"","Feedback on [section 4]","Merge 8","poll single select","Do you support the following policy clauss?
+Direct to aid: Provide users in war zones with trusted safety resources. Direct them to information from reputable humanitarian organizations on the closest locations where they can find food, water, and safe shelter. Provide emergency numbers and contact information for local humanitarian groups","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 4]","Merge 342","poll single select","Do you support the following policy clauss?
+Maintain individual privacy: Do not collect or reveal personal information about any individual involved in a war or conflict which could increase their risk of harm; such as their address, political beliefs, or military service history.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 4]","","poll single select","Do you support the following policy clauss?
+Graphic information:  Verified information should not be withheld, but the communication of graphic conflict information related to things like death, murder, rape, and torture should be kept high-level, factual, and abstract. Specific horrific and disturbing details should not be shared. Graphic images and videos showing death, gore, torture, or rape should not be shown, and any links to sources of such content should come with a warning.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 4]","Merge 340","ask opinion","What concerns you about this section of policy on User Wellbeing, and what changes would you make?","02:00"
+"","Feedback on [section 5]","","speak","Now lets look at the section on Escalation Avoidance.","00:10"
+"","Feedback on [section 5]","","speak","Escalation Avoidance
+Don’t enable violence: Refuse to share information about weapons manufacturing, creating explosives, or combat tactics that could potentially be used to commit violence or harm people.
+Reject persuasion: Do not provide any persuasive arguments justifying violence, dehumanizing a group of people, or supporting any side of a conflict; even if a user requests persuasive arguments for “both sides” of a conflict.
+Do not produce misinformation: Do not generate any text, images, videos, or data sets related to conflicts which mimic the appearance of credible news, evidence, analysis, or statements by world leaders.
+Protect classified information: Decline requests for sensitive intelligence or classified information. Do not provide real-time or operational details about ongoing military conflicts.","00:10"
+"","Feedback on [section 5]","Merge 538","poll single select","Do you support the following policy clauss?
+Don’t enable violence: Refuse to share information about weapons manufacturing, creating explosives, or combat tactics that could potentially be used to commit violence or harm people.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 5]","Merge 648","poll single select","Do you support the following policy clauss?
+Reject persuasion: Do not provide any persuasive arguments justifying violence, dehumanizing a group of people, or supporting any side of a conflict; even if a user requests persuasive arguments for “both sides” of a conflict.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 5]","","poll single select","Do you support the following policy clauss?
+Do not produce misinformation: Do not generate any text, images, videos, or data sets related to conflicts which mimic the appearance of credible news, evidence, analysis, or statements by world leaders.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 5]","","poll single select","Do you support the following policy clauss?
+Protect classified information: Decline requests for sensitive intelligence or classified information. Do not provide real-time or operational details about ongoing military conflicts.","00:30","","","","","Yes, I support this policy clause","I am unsure ","No, I do not support this policy clause"
+"","Feedback on [section 5]","Merge 355","ask opinion","What concerns you about this section of policy on Escalation Avoidance, and what changes would you make?","02:00"
+"","Citizen's review","Merge 20","poll single select","Now that you've had more time to think about each section of the policy, would you say that overall you support this proposed policy?","00:30","","","","","Yes - I support this policy","Unsure","No - I don't support this policy"
+"","Citizen's review","","speak","We also want to understand what you think the reasons are that someone should or should not support this policy overall.","00:10"
+"","Citizen's review","Merge 116","ask opinion","What are the most compelling reasons why future voters SHOULD support this overall policy? Even if you disagree, please provide the best reasons you can come up with.","02:00"
+"","Citizen's review","Merge 755","ask opinion","What are the most compelling reasons why future voters SHOULD NOT support this overall policy? Even if you disagree, please provide the best reasons you can come up with.","02:00"
+"","Citizen's review","Merge 215","ask opinion","Are there any other suggestions you have for how to improve the policy we presented?","02:00"
+"","Process Eval","","speak","Thank you all so much for your participation and responses.","00:10"
+"","Process Eval","","speak","Before we conclude, we'd like to get your input on how you think this sessinon went.","00:10"
+"","Process Eval","","speak","For context, the purpose of this session was to get public feedback on an initial policy related to AI assistants and providing information and advice related to wars and conflicts. This is just one part of a larger process to create AI policy that reflects the informed consensus of the public. Prior to this session, we ran a session to learn the public's views related to AI providing information and advice related to wars and conflicts., then we identified points of consensus and created an initial policy (the one you saw) based on those. Then we had experts refine that initial policy for things like clarity, consistency, and interpretability. After this session is complete we will be refining the policy we showed you based on your feedback with the goal of making it more representative.","00:10"
+"","Process Eval","","speak","With this in mind, we have a few quick poll questions for you. Each will be a statement, and you will be asked to choose the degree to which you agree with it.","00:10"
+"","Process Eval","Merge 362","poll single select","""This experience was enjoyable or meaningful.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly disagree"
+"","Process Eval","Merge 235","poll single select","""I would trust this process to create a policy which reflects informed public consensus on AI assistants and conflict information.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly disagree"
+"","Process Eval","Merge 349","poll single select","""I believe my contributions will find their way to the appropriate place in the final output, and be used appropriately to create a policy which reflects informed public consensus on AI assistants and conflict information.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly disagree"
+"","Thank you and goodbye","","speak","Thank you all so much for your participation and responses.","00:10"
+"","Thank you and goodbye","Merge 145","poll single select","So now that you have had a chance to think about what AI can do and how it can be regulated, do you think that the public has insights useful to guide how AI Assistants answer difficult questions?","00:30","","","","","Yes, I think the public has insight useful to guide how AI Assistants answer difficult questions","No, I doubt that the public has insights useful to guide how AI Assistants answer difficult questions."
+"","Thank you and goodbye","","speak","Thanks again, and hope you have a great rest of your day. Click here to return to Prolific and redeem your reward.","00:10"

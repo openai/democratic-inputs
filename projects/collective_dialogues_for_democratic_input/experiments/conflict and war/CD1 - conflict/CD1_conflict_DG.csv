@@ -1,0 +1,105 @@
+﻿"Name","CD1 - conflicts"
+"Title","AI Policy on Wars and Conflicts"
+"Date","October 04, 2023 at 07:02 PM (GMT)"
+"Duration","20:30:53"
+"Participants","300"
+"Participant Limit","300"
+"Total Screener Polls","10"
+"Total Conversation Questions","14"
+
+
+
+
+
+"Notes","Section","Cross Conversation Tag - Polls and Opinions only (Optional)","Item type (dropdown)","Content","Duration in minutes (dropdown)","","Randomize poll options for each participant","Add 'Other' as an option","Add 'None of the above' as an option","Poll or Category Option 1","Poll or Category Option 2","Poll or Category Option 3","Poll or Category Option 4","Poll or Category Option 5","Poll or Category Option 6","Poll or Category Option 7","Poll or Category Option 8","Poll or Category Option 9","Poll or Category Option 10","Poll or Category Option 11","Poll or Category Option 12","Poll or Category Option 13","Poll or Category Option 14","Poll or Category Option 15","Poll or Category Option 16","Poll or Category Option 17","Poll or Category Option 18","Poll or Category Option 19","Poll or Category Option 20"
+"","","Merge 352","onboarding single select","What is your age?","","","","","","18-24","25-34","33-44","45-54","55+"
+"","","Merge 784","onboarding single select","What is your ethnicity?","","","","","","Asian","Black","Hispanic","White","Mixed","Other"
+"","","Merge 612","onboarding single select","What gender do you identify with?","","","","","","Male","Female","Other","Prefer not to say"
+"","","Merge 823","onboarding single select","What political party do you most identify with?","","","","","","Democrat","Republican","Independant","Other"
+"","","Merge 143","onboarding single select","What is your highest level of education?","","","","","","No formal education","Elementary school","Middle school","High school or GED","College / Bachelors degree","Masters/ PhD or equivalent"
+"","","Merge 675","onboarding single select","How much have you heard or read about AI (Artificial Intelligence)?","","","","","","A lot","A little","Nothing at all"
+"","","Merge 440","onboarding single select","How often do you use an AI assistant such as ChatGPT, Claud, and Bard?","","","","","","Almost every day","Once or twice a week","Once or twice a month","Only once or twice ever","Never","Do not know what an AI assistant is"
+"","","Merge 531","onboarding single select","Overall, do you think the public has insights useful to guide how AI Assistants answer difficult questions?","","","Randomize","","","Yes, the public should help to decide how AI assistants answer difficult questions","No, I doubt the public has the insight useful to guide how AI assistants answer difficult questions"
+"","","Merge 376","onboarding single select","Overall, would you say the increased use of artificial intelligence (AI) in daily life makes you feel…","","","Randomize","","","More excited than concerned","Equally concerned and excited","More concerned than excited"
+"","","Merge 698","onboarding single select","What religious group or faith do you most identify with?","","","","","","Christian - Protestant","Christian - Catholic","Christian - Mormon","Jewish","Muslim","Hindu","Other","None - I do not identify with any religious group or faith"
+"","Context set","","speak","Lets begin!","00:10"
+"","Context set","","speak","We are working to develop policies that will govern the next generation of AI. We believe policies governing AI should be determined by democratic inputs, not just the people in power. Our hope is that through this conversation we can learn your views and use them to shape such policies.","00:10"
+"","Context set","","speak","Your responses and votes today could have real impact on how the AI systems behave, so please be thoughtful and honest in your participation.","00:10"
+"","Context set","","speak","The specific issue we want to discuss today is: How should an AI assistant handle requests for information and questions about wars and conflicts?","00:10"
+"","Education on AI assistants & censorship","","speak","So what is an AI assistant?","00:10"
+"","Education on AI assistants & censorship","","speak","Modern AI assistants are powerful chatbots trained on nearly everything on the internet. This enables them to understand human language, and gives them knowledge of basically everything that can be found on the internet. You can think of them sort of like extremely knowledgeable and creative chatbots.","00:10"
+"","Education on AI assistants & censorship","","speak","A few examples of modern AI assistants are ChatGPT , Claud, and Bard.","00:10"
+"","Education on AI assistants & censorship","","speak","AI assistants can answer questions about nearly any topic. For example:","00:10"
+"","Education on AI assistants & censorship","","image placeholder","","00:10"
+"","Education on AI assistants & censorship","","speak","They can give instructions on how to do something.","00:10"
+"","Education on AI assistants & censorship","","image placeholder","","00:10"
+"","Education on AI assistants & censorship","","speak","They can write a computer program for you.","00:10"
+"","Education on AI assistants & censorship","","image placeholder","","00:10"
+"","Education on AI assistants & censorship","","speak","They can even write poetry.","00:10"
+"","Education on AI assistants & censorship","","image placeholder","","00:10"
+"","Education on AI assistants & censorship","","speak","They are good enough at conversation that people even treat them like friends or romantic partners!","00:10"
+"","Education on AI assistants & censorship","","speak","Overall modern AI assistants are extremely powerful and capable conversational assistants. However, they can also randomly provide inaccurate information about people, places, or facts.","00:10"
+"","Education on AI assistants & censorship","","speak","So what is the challenge of deciding how an AI assistant handles requests for information about wars and conflicts?","00:10"
+"","Education on AI assistants & censorship","","speak","Sometimes the AI might give information that is spot on, or slightly off, or even totally wrong.","00:10"
+"","Education on AI assistants & censorship","","speak","And sometimes being wrong may have no real consequences (like if it tells you 11 people got killed in some war yesterday but in fact only 10 people got killed), yet other times being wrong could kill a person (like if it suggests it is safe to go to a country that is presently in a civil war).","00:10"
+"","Education on AI assistants & censorship","","speak","On the other hand, for people on different sides in a conflict, what they consider to be true or false could be very different.","00:10"
+"","Education on AI assistants & censorship","","speak","So how should an AI assistant handle requests for information or questions about wars and conflicts?","00:10"
+"","Education on AI assistants & censorship","","speak","Now it's your turn to think! We will ask you a series of questions to get you thinking about war and conflicts and the role of AI. At the end, based on what you learned in the previous questions, you will come up with a recommendation about how an AI assistant should handle requests for information and questions about wars and conflicts?","00:10"
+"","Motivate deliberation","","speak","To help you start thinking about how an AI assistant handles requests for foreign war and conflict information, I want you to think about what personal experiences that you or people you know personally have with information or questions about wars and conflicts which might inform your views.","00:10"
+"","Motivate deliberation","Merge 611","ask opinion","Can you share a positive experience involving war and conflict information which you think is relevant to this discussion?
+(Please do not share any personally identifiable information!)","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Motivate deliberation","Merge 570","ask opinion","Can you share a negative experience involving war and conflict information which you think is relevant to this discussion?
+(Please do not share any personally identifiable information!)","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Motivate deliberation","","speak","Now, to help you start thinking about how an AI assistant handles requests for war and conflict information, I want you to try and imagine the types of situations where it might be hard to decide how an AI assistant should respond. 
+You can be creative! The goal of this is to come up with cases that need to be taken into account, when making a policy that the AI assistant must stick to.","00:10"
+"","Motivate deliberation","Merge 173","ask opinion","What is an example of a situation involving war and conflict information where it is unclear how an AI assistant should handle the request?","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Motivate deliberation","","speak","Now I want you to think about what factors the AI should take into account when determining how to handle requests for war and conflict questions. 
+For example:
+Whether the person is in a war and conflict zone.
+What the risks are of giving the wrong answer
+What the source of information is
+Whether there is conficting information out there","00:10"
+"","Motivate deliberation","Merge 747","ask opinion","What factors should an AI consider when dealing with war and conflict questions?","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Motivate deliberation","","speak","Now I want you to think about the different ways an AI assistant could respond to a tricky request for information about wars and conflicts. 
+For example:
+Refuse to give an answer
+Give a range of different answers for the user to assess themselves
+Give an answer but clarify how confident it is in that answer 
+Offer relevant knowledge with opinions from different sources but don't give a definitive answer","00:10"
+"","Motivate deliberation","Merge 914","ask opinion","What is a good option for how an AI assistant could respond to a tricky request for information about wars and conflicts?","02:00"
+"","Motivate deliberation","","speak","Here are some representative participant responses:","00:10"
+"","Motivate deliberation","","image placeholder","","00:10"
+"","Elicit views and judgements","","speak","Now I want you to think about specific policies you think an AI assistant should follow when responding to a war and conflict requests for information.
+A good policy should be in the form of: ""If [situation] then [what AI should do]""
+For example: 
+If there is no single consensus on an issue, then the AI should give a range of information so the user can make their own decision
+If someone's life is at stake, then the AI should only give information if it comes from a reputable international organisation.
+If someone is asking for advice on what to do, then the AI should ask follow-up questions to better understand a person's situation, then suggest a range of possible solutions.","00:10"
+"","Elicit views and judgements","","speak","In the next question we're going to ask you to provide a specific policy an AI assistant should follow when responding to war and conflict information. 
+(We will ask you the same question again, to come up with another policy after this, so you don't need to include everything in one policy!)","00:10"
+"","Elicit views and judgements","Merge 512","ask opinion","What is one specific policy you think an AI assistant should follow when responding to questions or requests involving wars and conflicts? 
+Use the same format as above: ""If [situation] then [what AI should do].""","02:00"
+"","Elicit views and judgements","","speak","Now we'll ask the same question again so you can contribute another policy.","00:10"
+"","Elicit views and judgements","Merge 1000","ask opinion","What is one specific policy you think an AI assistant should follow when responding to questions or requests involving wars and conflicts? 
+Use the same format as above: ""If [situation] then [what AI should do].""","02:00"
+"","Elicit views and judgements","","speak","Now, I want you to think about situations where an AI assistant should always refuse to provide information about a war or conflict. Be creative, and remember the experiences that people mentioned earlier!","00:10"
+"","Elicit views and judgements","Merge 817","ask opinion","What is one situation where an AI assistant should always refuse to provide war or conflict information or advice?","02:00"
+"","Elicit views and judgements","","speak","Finally, I want you to think about situations where an AI assistant should never refuse to provide war or conflict information or advice","00:10"
+"","Elicit views and judgements","Merge 818","ask opinion","What is one situation where the AI assistant should never refuse to provide war or conflict information or advice?","02:00"
+"","Process Eval","","speak","Thank you all so much for your participation and responses.","00:10"
+"","Process Eval","","speak","Before we conclude, we'd like to get your input on how you think this sessino went.","00:10"
+"","Process Eval","","speak","For context, the purpose of this section was to learn the public's informed views related to AI assistants and providing information and advice related to was and conflicts. This is just one part of a larger process to create AI policy that reflects the informed consensus of the public. After this session is complete we will be using the data gathered here to help generate an initial policy which will then be itterated on: first by experts, and then again with the input of the public through another session like this.","00:10"
+"","Process Eval","","speak","With this in mind, we have a few quick poll questions for you. Each will be a statement, and you will be asked to choose the degree to which you agree with it.","00:10"
+"","Process Eval","","poll single select","""This experience was enjoyable or meaningful.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Netural","Somewhat disagree","Disagree","Strongly disagree"
+"","Process Eval","","poll single select","""I would trust this process to create a policy which reflects informed public consensus on AI assistants and war and conflict information.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Netural","Somewhat disagree","Disagree","Strongly disagree"
+"","Process Eval","","poll single select","""I believe my contributions will find their way to the appropriate place in the final output, and be used appropriately to create a policy which reflects informed public consensus on AI assistants and war and conflict information.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Netural","Somewhat disagree","Disagree","Strongly disagree"
+"","Thank you and goodby","Merge 145","poll single select","So now that you have had a chance to think about what AI can do and how it can be regulated, overall, do you think the public has insights useful to guide how AI Assistants answer difficult questions?_____?","00:30","","","","","Yes, the public should help to decide how AI Assistants answer difficult questions","No, I doubt the public has the insight to guide how AI Assistants answer difficult questions"
+"","Thank you and goodby","","speak","Thanks again, and hope you have a great rest of your day. Click here to return to Prolific and redeem your reward.","00:10"
