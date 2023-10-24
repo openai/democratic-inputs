@@ -20,9 +20,9 @@
 
 This repository contains 10+ jupyter notebooks developed and used as part of this process. Here we highlight two key types:
 
-**Policy clause generator** -- [This jupyter notebook](add.link) accelerates step 2. It takes data generated from the collective dialogue in step 1, identifies points of consensus using bridging-based ranking, generates potential policy clauses based on consensus points using GPT4, then builds a list of generated policy clauses along with the evidence that justifies them. 
+**Policy clause generator** -- [This jupyter notebook](https://github.com/openai/democratic-inputs/blob/main/projects/collective_dialogues_for_democratic_input/tools/policy%20generation/policy_gen.ipynb) accelerates step 2. It takes data generated from the collective dialogue in step 1, identifies points of consensus using bridging-based ranking, generates potential policy clauses based on consensus points using GPT4, then builds a list of generated policy clauses along with the evidence that justifies them. 
 
-**Human rights consistency check** -- [This jupyter notebook](add.link) accelerates step 5. It checks individual policy clauses for their consistency with the Universal Deceleration of Human Rights using GPT4. 
+**Human rights consistency check** -- [This jupyter notebook](https://github.com/openai/democratic-inputs/blob/main/projects/collective_dialogues_for_democratic_input/tools/human%20rights%20consitency%20check/check_against_universal_human_rights.ipynb) accelerates step 5. It checks individual policy clauses for their consistency with the Universal Deceleration of Human Rights using GPT4. 
 
 ## Results
 
