@@ -2,9 +2,9 @@
 
 ***TLDR**: We develop and test a deliberative process to produce policy guidelines for AI that reflect informed public will. Full paper [here](https://www.overleaf.com/read/ntjgywkstxzw). This repository contains tools, data, and results created as the process was developed and tested during OpenAI's [Democratic inputs to AI](https://openai.com/blog/democratic-inputs-to-ai) program.*  
 
-## Deliberative process 
+## Process 
 
-![](https://i.ibb.co/WGg4WBs/process-diagram.png)
+![](img/process-diagram.png)
 
 **We introduce a deliberative process for developing bridging policies that reflect informed public will**. The process integrates democratic inputs with subject matter expertise to yield policies that are both representative and high quality. Collective dialogues via [Remesh](https://www.remesh.ai/politics-government) make deliberation democratically viable at scale. Bridging-based ranking enables rapid consensus discovery. GPT4-powered tools make the process efficient. Modularization makes the process reproducible.
 
