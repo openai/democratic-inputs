@@ -6,7 +6,7 @@
 
 ![](img/process-diagram.png)
 
-**We introduce a deliberative process for developing bridging policies that reflect informed public will**. The process integrates democratic inputs with subject matter expertise to yield policies that are both representative and high quality. Collective dialogues via [Remesh](https://www.remesh.ai/politics-government) make deliberation democratically viable at scale. Bridging-based ranking enables rapid consensus discovery. GPT4-powered tools make the process efficient. Modularization makes the process reproducible.
+**We introduce a deliberative process for developing bridging policies that reflect informed public will**. The process integrates democratic inputs with subject matter expertise to yield policies that are both representative and high quality. Collective dialogues via [Remesh](https://www.remesh.ai/politics-government) make deliberation democratically viable at scale. Bridging-based ranking enables rapid consensus discovery. GPT4-powered [tools](https://github.com/openai/democratic-inputs/tree/main/projects/collective_dialogues_for_democratic_input/tools) make the process efficient. Modularization makes the process reproducible.
 
 *The process*:
 
