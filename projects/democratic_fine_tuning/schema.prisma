@@ -12,19 +12,37 @@ generator client {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  email      String       @unique
-  name       String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  role       String[]     @default(["USER"])
-  isAdmin    Boolean      @default(false)
-  signupType String       @default("EMAIL") // EMAIL or PROLIFIC
-  prolificId String?
-  chats      Chat[]
-  votes      Vote[]
-  edges      Edge[]
-  Impression Impression[]
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  role        String[]     @default(["USER"])
+  isAdmin     Boolean      @default(false)
+  signupType  String       @default("EMAIL") // EMAIL or PROLIFIC
+  prolificId  String?
+  chats       Chat[]
+  votes       Vote[]
+  edges       Edge[]
+  Impression  Impression[]
+  Demographic Demographic?
+}
+
+model Demographic {
+  id                     Int      @id @default(autoincrement())
+  userId                 Int      @unique
+  user                   User     @relation(fields: [userId], references: [id])
+  usPoliticalAffiliation String? // Could be "republican", "independent", "democrat", or NULL
+  fluentLanguages        String[] // An array of languages the user is fluent in
+  age                    Int?
+  sex                    String? // e.g., "Male", "Female", "Other", "Prefer not to say"
+  ethnicitySimplified    String? // e.g., "Asian", "White", "Black", "Hispanic", "Other"
+  countryOfBirth         String?
+  countryOfResidence     String?
+  nationality            String?
+  language               String? // Primary language spoken
+  studentStatus          String? // e.g., "Full-time", "Part-time", "Not a student"
+  employmentStatus       String? // e.g., "Employed", "Unemployed", "Self-Employed", "Retired"
 }
 
 model EmailCodes {
