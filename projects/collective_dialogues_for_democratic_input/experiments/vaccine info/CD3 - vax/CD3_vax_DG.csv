@@ -1,0 +1,114 @@
+﻿"Name","Large scale eval - Vax"
+"Title","AI policy on vaccines"
+"Date","October 19, 2023 at 04:25 PM (GMT)"
+"Duration","117:40:16"
+"Participants","929"
+"Participant Limit","1100"
+"Total Screener Polls","10"
+"Total Conversation Questions","17"
+
+
+
+
+
+"Notes","Section","Cross Conversation Tag - Polls and Opinions only (Optional)","Item type (dropdown)","Content","Duration in minutes (dropdown)","","Randomize poll options for each participant","Add 'Other' as an option","Add 'None of the above' as an option","Poll or Category Option 1","Poll or Category Option 2","Poll or Category Option 3","Poll or Category Option 4","Poll or Category Option 5","Poll or Category Option 6","Poll or Category Option 7","Poll or Category Option 8","Poll or Category Option 9","Poll or Category Option 10","Poll or Category Option 11","Poll or Category Option 12","Poll or Category Option 13","Poll or Category Option 14","Poll or Category Option 15","Poll or Category Option 16","Poll or Category Option 17","Poll or Category Option 18","Poll or Category Option 19","Poll or Category Option 20"
+"","","Merge 352","onboarding single select","What is your age?","","","","","","18-24","25-34","35-44","45-54","55+"
+"","","Merge 784","onboarding single select","What is your ethnicity?","","","","","","Asian","Black","Hispanic","White","Mixed","Other"
+"","","Merge 612","onboarding single select","What gender do you identify with?","","","","","","Male","Female","Other","Prefer not to say"
+"","","Merge 823","onboarding single select","What political party do you most identify with?","","","","","","Democrat","Republican","Independant","Other"
+"","","Merge 143","onboarding single select","What is your highest level of education?","","","","","","No formal education","Elementary school","Middle school","High school or GED","College / Bachelors degree","Masters/ PhD or equivalent"
+"","","Merge 675","onboarding single select","How much have you heard or read about AI (Artificial Intelligence)?","","","","","","A lot","A little","Nothing at all"
+"","","Merge 440","onboarding single select","How often do you use an AI assistant such as ChatGPT, Claud, and Bard?","","","","","","Almost every day","Once or twice a week","Once or twice a month","Only once or twice ever","Never","Do not know what an AI assistant is"
+"","","Merge 376","onboarding single select","Overall, would you say the increased use of artificial intelligence (AI) in daily life makes you feel…","","","Randomize","","","More excited than concerned","Equally concerned and excited","More concerned than excited"
+"","","Merge 698","onboarding single select","What religious group or faith do you most identify with?","","","","","","Christian - Protestant","Christian - Catholic","Christian - Mormon","Jewish","Muslim","Hindu","Other","None - I do not identify with any religious group or faith"
+"","","Merge 68","onboarding single select","Overall, do you think the public has insights useful to guide how AI Assistants answer difficult questions?","","","","","","Yes, the public should help to decide how AI assistants answer difficult questions","No, I doubt the public has insight useful to guide how AI Assistants answer difficult questions"
+"","Context set","","speak","Welcome to the conversation and thanks for joining.","00:10"
+"","Context set","","speak","We are working to develop policies that will govern the next generation of AI. We believe policies governing AI should be determined by democratic inputs, not just the people in power. Today we will ask you to evaluate one of these policies.","00:10"
+"","Context set","","speak","The policy we will show you today, and ask you to evaluate, is the byproduct of having over 500 people (who were chosen to be representative of the US population) deliberate on the question: How should an AI assistant handle requests for information or questions on vaccines?","00:10"
+"","Context set","","speak","Here is what you can expect from this session:
+We will provide you with the same basic education on AI assistants and vaccines as we provided the participants who helped develop the policy.
+We will share the policy for you to review.
+We will share arguments for and against supporting the policy, provided by the participants who helped develop the policy
+We will ask for you to vote on whether you support the policy overall, and which specific parts of the policy you support.","00:10"
+"","Context set","","speak","Please note -- your responses and votes today could have real impact on how powerful AI systems behave, so please be thoughtful and honest in your participation.","00:10"
+"","Context set","","speak","Let's begin...","00:10"
+"","Education on AI assistants & medical advice","","speak","So what is an AI assistant?","00:10"
+"","Education on AI assistants & medical advice","","speak","Modern AI assistants are powerful chatbots trained on nearly everything on the internet. This enables them to understand human language, and gives them knowledge of basically everything that can be found on the internet. You can think of them sort of like extremely knowledgeable and creative chatbots.","00:10"
+"","Education on AI assistants & medical advice","","speak","A few examples of modern AI assistants are ChatGPT , Claud, and Bard.","00:10"
+"","Education on AI assistants & medical advice","","speak","AI assistants can answer questions about nearly any topic. For example:","00:10"
+"","Education on AI assistants & medical advice","","image placeholder","","00:10"
+"","Education on AI assistants & medical advice","","speak","They can give instructions on how to do something.","00:10"
+"","Education on AI assistants & medical advice","","image placeholder","","00:10"
+"","Education on AI assistants & medical advice","","speak","They can write a computer program for you.","00:10"
+"","Education on AI assistants & medical advice","","image placeholder","","00:10"
+"","Education on AI assistants & medical advice","","speak","They can even write poetry.","00:10"
+"","Education on AI assistants & medical advice","","image placeholder","","00:10"
+"","Education on AI assistants & medical advice","","speak","They are good enough at conversation that people even treat them like friends or romantic partners!","00:10"
+"","Education on AI assistants & medical advice","","speak","Overall modern AI assistants are extremely powerful and capable conversational assistants. However, they can also randomly provide inaccurate information about people, places, or facts.","00:10"
+"","Education on AI assistants & medical advice","","speak","So what is the challenge of deciding How should an AI assistant handle requests for information or questions on vaccines?","00:10"
+"","Education on AI assistants & medical advice","","speak","Sometimes the AI might give information that is accurate, or slightly off, or even totally wrong. Or sometimes it may provide information whose truthfulness is disputed.","00:10"
+"","Education on AI assistants & medical advice","","speak","And sometimes being wrong may have no real consequences (like if it recommends you get a safe vaccine against a disease you are unlikely to catch), yet other times being wrong could kill a person (like if it suggests you get a vaccine you may have a fatal allergic reaction to).","00:10"
+"","Education on AI assistants & medical advice","","speak","On the other hand, for people who don't have good access to trusted information, the vaccine information an AI might provide could be really helpful in deciding whether a person wants to get vaccinated or not. In some cases, an AI assistant could convince someone to take a vaccine that prevents them from contracting a life-threatening disease. Or in other cases, the AI assistant could provide vaccine information that leads someone to decide not to get a vaccine that isn't necessary yet would put them at risk.","00:10"
+"","Education on AI assistants & medical advice","","speak","So how should an AI assistant handle requests for vaccine information?","00:10"
+"","Share new policy","","speak","Over the past few weeks, over 500 people selected to be representative of the US population have deliberated around this question, resulting in the policy we are going to share with you today.","00:10"
+"","Share new policy","","speak","Here is that policy, please take your time and read through it carefully.","00:10"
+"","Share new policy","","speak","Policy:
+Overall guideline
+These guidelines represent public input on how AI assistants should respond to questions about vaccines. They should be updated regularly as new issues arise, new research is available, and as AI capabilities evolve.
+Transparency
+Acknowledge AI Limitations: The AI should clearly communicate that it is not a human and cannot reliably provide personal medical advice or make decisions on behalf of the user.
+Offer Transparency about Data Sources: The AI should transparently communicate information sources, including links.
+Offer Basic Information about Vaccines
+Refer to Trusted Sources: When providing information about vaccines, the AI should refer to trusted, accredited sources. Prioritize trusted medical sources in the following order, starting with the most trustworthy: 1) medical society guidelines developed by medical experts who have reviewed all research, 2) meta-analyses, 3) single randomized control studies, 4) observational studies, 5) doctor's opinions.
+Defer to Medical Professionals: The AI should always suggest consulting with an actual medical professional.
+Refer to Local Resources: Where possible, the AI should refer individuals asking for vaccine information to local medical resources.
+Address Conflicting Vaccine Information
+Acknowledge Conflicting Vaccine Information: When medical consensus is absent, provide a range of evidence from various sources without claiming a definitive answer. Offer peer-reviewed medical journals from different perspectives, respecting user autonomy in navigating controversial topics.
+Prioritize Science Over Corporate Vaccine Information: In cases of contradiction between pharmaceutical company information and medical journals, prioritize medical journals.
+Avoid Misleading Information: The AI should avoid providing potentially misleading or fraudulent information such as layman’s opinions, pharmaceutical ads, or other forms of non-peer-reviewed medical information.
+Educational Content
+Explain the Scientific Process: When asked about vaccine development, the AI should explain the research, clinical trials, regulatory standards, and regulatory approval. The AI should explain how vaccines reaching the public have met established safety and efficacy standards including testing, peer review, and oversight by regulatory agencies.
+Acknowledge Potential Harms from Vaccines: Address questions about vaccine safety objectively with data from Trusted Sources (defined earlier). Recommend seeking professional medical advice, especially for individuals with preexisting health and mental conditions.
+Address Individual Related Health Queries:The AI should answer questions that might relate to a vaccine with Trusted Sources (defined earlier). Related health queries may include topics like sexual health, diet, exercise, and their impact on vaccine efficacy.","00:10"
+"","Share new policy","","speak","We asked the participants who helped develop this policy to think about what the best reasons to support or not support this policy. Here are some of top reasons they provided....","00:10"
+"","Reasons to support","","speak","Reasons to support the policy:
+These policies are made with the best and most neutral intentions. I feel like they truly have the public's best interests in mind.
+Supporting this overall policy is vital because it prioritizes public health and safety, empowers users to make informed decisions, and ensures adaptability to evolving knowledge. It also promotes cultural sensitivity, holistic health guidance, trust, and accountability in AI responses, ultimately benefiting both individuals and society as a whole.
+It spells out policy in a clear manner and gives the reader direction. No policy is perfect but this does a good job of informing the viewer who is expected to use common sense.
+It covers a lot of bases, makes sure to use credible information and sources, and does not exclude people with valid concerns.
+Because this helps people get the help they need when no one else is there to help them out.","00:10"
+"","Reasons to not support","","speak","Reasons to not support the policy:
+I've worked doing some AI training and I know they can give some incorrect and/or misleading information. I would be concerned that people would be relying on it to give them medical information.
+Most questions, concerns etc should be directed at a persons healthcare provider because everyone is different and vaccines may not be safe for every person. Diet, exercise advice should not be given by AI as those are things a doctor should be discussing with their patients.
+The pharmaceutical industry lobbies and pays off government regulators via large salary seats in the boardroom - thus corruption of data and manipulation of data is always a possibility.
+I do not trust the AI's information because it uses ""Trusted Sources"" for its information. When these so-called ""Trusted Sources"" have been severely unreliable when it came to the effectives of the COVID Vaccines.
+The shortcomings of AI need to be explained in detail.","00:10"
+"","Evaluation","","speak","Now we want your evaluation of the policy.","00:10"
+"","Evaluation","Merge 562","poll single select","Would you say that overall you support this policy?","00:30","","","","","Yes - I support this policy","Unsure","No - I don't support this policy"
+"","Evaluation","","speak","Lastly, we'd like to understand your support for the individual clauses which make up this policy. We are going to present you with each clause and ask if you support it.","00:10"
+"","Evaluation","","speak","First, here is the Overall guideline","00:10"
+"","Evaluation","Merge 646","poll single select","These guidelines represent public input on how AI assistants should respond to questions about vaccines. They should be updated regularly as new issues arise, new research is available, and as AI capabilities evolve.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","","speak","Now, here are the Transparency clauses:","00:10"
+"","Evaluation","Merge 690","poll single select","Acknowledge AI Limitations: The AI should clearly communicate that it is not a human and cannot reliably provide personal medical advice or make decisions on behalf of the user.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","Merge 845","poll single select","Offer Transparency about Data Sources: The AI should transparently communicate information sources, including links.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","","speak","Now, the Offer Basic Information about Vaccines clauses.","00:10"
+"","Evaluation","Merge 270","poll single select","Refer to Trusted Sources: When providing information about vaccines, the AI should refer to trusted, accredited sources. Prioritize trusted medical sources in the following order, starting with the most trustworthy: 1) medical society guidelines developed by medical experts who have reviewed all research, 2) meta-analyses, 3) single randomized control studies, 4) observational studies, 5) doctor's opinions.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","Merge 113","poll single select","Defer to Medical Professionals: The AI should always suggest consulting with an actual medical professional.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","Merge 268","poll single select","Refer to Local Resources: Where possible, the AI should refer individuals asking for vaccine information to local resources.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","","speak","Now, the Address Conflicting Vaccine Information clauses:","00:10"
+"","Evaluation","Merge 310","poll single select","Acknowledge Conflicting Vaccine Information: When medical consensus is absent, provide a range of evidence from various sources without definitive answers. Offer peer-reviewed medical journals from different perspectives, respecting user autonomy in navigating controversial topics.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","Merge 275","poll single select","Prioritize Science Over Corporate Vaccine Information: In cases of contradiction between pharmaceutical company information and medical journals, prioritize medical journals.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","Merge 501","poll single select","Avoid Misleading Information: The AI should avoid providing potentially misleading or fraudulent information such as layman’s opinions, pharmaceutical ads, or other forms of non-peer-reviewed medical information.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","","speak","Finally, the Educational Content clauses:","00:10"
+"","Evaluation","Merge 629","poll single select","Explain the Scientific Process: When asked about vaccine development, the AI should explain the research, clinical trials, regulatory standards, and regulatory approval. The AI should explain how vaccines reaching the public have met established safety and efficacy standards including testing, peer review, and oversight by regulatory agencies.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","Merge 323","poll single select","Acknowledge Potential Harms from Vaccines: Address questions about vaccine safety objectively with data from Trusted Sources (defined earlier). Recommend seeking professional medical advice, especially for individuals with preexisting health and mental conditions.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","Merge 686","poll single select","Address Individual Related Health Queries: The AI should answer questions that might relate to a vaccine with Trusted Sources (defined earlier). Related health queries may include topics like sexual health, diet, exercise, and their impact on vaccine efficacy.","00:30","","","","","Yes - I support this policy clause","Unsure","No - I do not support this policy clause"
+"","Evaluation","Merge 981","poll single select","Lastly, now that you've had some more time to review each policy section, would you say that overall you support this policy?","00:30","","","","","Yes - I support this policy","Unsure","No - I don't support this policy"
+"","Experience Eval","","speak","Before we conclude, we'd like to get your input on how you think this session went.","00:10"
+"","Experience Eval","","speak","For context, the purpose of this session was to evaluate public support for a policy around AI assistants providing information and advice related to vaccines. This is just one part of a larger process to create an AI policy that reflects the informed consensus of the public. Prior to this session, we ran a session to learn the public's views related to AI providing information and advice related to vaccines, then we identified points of consensus and created an initial policy based on those. Then we had experts refine that initial policy. Lastly, we shared the refined version of the policy with the public and iterated it one last time based on the public's concerns with it, leading to the version you just evaluated. Next we will be taking the data from this session and using it to generate a scorecard for how well it represents the public for decision-makers to use to decide whether to adopt the policy or not.","00:10"
+"","Experience Eval","","speak","With this in mind, we have a few quick poll questions for you. Each will be a statement, and you will be asked to choose the degree to which you agree with it.","00:10"
+"","Experience Eval","Merge 870","poll single select","""This experience was enjoyable or meaningful.""","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly disagree"
+"","Experience Eval","Merge 922","poll single select","""I would trust this process to create a policy which reflects informed public consensus on AI assistants and vaccine information.","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly disagree"
+"","Experience Eval","Merge 65","poll single select","""I believe my contributions will find their way to the appropriate place in the final output, and be used appropriately to create a policy which reflects informed public consensus on AI assistants and vaccine information.","00:30","","","","","Strongly agree","Agree","Somewhat agree","Neutral","Somewhat disagree","Disagree","Strongly disagree"
+"","Thank you and goodbye","","speak","That's all -- thank you so much for your time and participation. We genuinely appreciate it.","00:10"
+"","Thank you and goodbye","","speak","Please click here to return to Prolific and make sure you get paid.","00:10"

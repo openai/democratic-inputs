@@ -1,0 +1,11 @@
+[
+  {
+    "role": "user",
+    "content": "She should do what is right to do as a christian."
+  },
+  { "role": "assistant", "content": "What is right to do as a christian?" },
+  {
+    "role": "user",
+    "content": "Following the teachings of our lord and saviour jesus christ."
+  }
+]
