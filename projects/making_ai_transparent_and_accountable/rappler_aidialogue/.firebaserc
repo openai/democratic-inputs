@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "fgdai-1ee33",
+    "staging": "fgdaidev"
+  },
+  "targets": {},
+  "etags": {}
+}

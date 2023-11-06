@@ -1,0 +1,5 @@
+.next
+coverage
+dist
+compiled
+build-next-static

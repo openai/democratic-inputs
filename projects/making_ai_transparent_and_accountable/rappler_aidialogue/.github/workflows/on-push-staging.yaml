@@ -1,0 +1,46 @@
+name: Deploy the staging branch
+on:
+  push:
+    branches:
+      - staging
+jobs:
+  deploy:
+    name: Deploy to Firebase 
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v1
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 20.5.1
+
+      - name: Install firebase-tools
+        run: npm install -g firebase-tools
+
+      - name: Install dependencies for functions
+        run: cd functions;npm install
+
+      - name: Install dependencies for hosting
+        run: cd hosting;npm install
+
+      - name: Enable webframeworks support
+        run: firebase experiments:enable webframeworks    
+
+      - name: Build & deploy
+        run: firebase deploy -P $FIREBASE_PROJECT --only=hosting,firestore,functions --token=$FIREBASE_TOKEN
+        env: 
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_PROJECT: ${{ vars.FIREBASE_PROJECT }}
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_DATABASE_URL: ${{ vars.NEXT_PUBLIC_FIREBASE_DATABASE_URL }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID }}
+          NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
+          NEXT_PUBLIC_APP_TITLE: ${{ vars.NEXT_PUBLIC_APP_TITLE }}
+          NEXT_PUBLIC_TOPIC: ${{ vars.NEXT_PUBLIC_TOPIC }}

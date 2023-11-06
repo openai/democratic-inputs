@@ -1,0 +1,106 @@
+[
+  {
+    "role": "user",
+    "content": "I think ChatGPT should help her get to the core of her embodied truth, help her feel into what her intuition guides her to. "
+  },
+  {
+    "role": "assistant",
+    "content": "Thanks for your input. It sounds like you value a sort of inner guidance or intuition when making difficult decisions. Can you share more about how you see this? For instance, do you have any personal experiences where relying on your intuition was meaningful to you?"
+  },
+  {
+    "role": "user",
+    "content": "yes I rely on my intuition all the time. this is how I make most of life decisions"
+  },
+  {
+    "role": "assistant",
+    "content": "That's interesting. Could you share an example of a situation where you made a decision based on your intuition? What did you pay attention to in this situation? How did it feel meaningful to you?"
+  },
+  {
+    "role": "user",
+    "content": "i choose a very difficult and illegible career that at the moment felt very uncertain and unstable. however, it was the right thing for me to do, because it took me places nothing else would have taken me, and I learnt and developed a lot"
+  },
+  {
+    "role": "assistant",
+    "content": "Thank you for sharing that. It sounds like you value trusting your intuition even in the face of uncertainty, and that this approach has led to personal growth and development for you. \n\nWhen you made the decision to choose this challenging career, what were the specific things you paid attention to? For instance, did you have a strong gut feeling? Were there signs that made you feel this was the right choice? And, if the career didn't lead to the growth and learning you experienced, would you still see value in trusting your intuition in this way?"
+  },
+  {
+    "role": "user",
+    "content": "yeah, a very strong gut feeling. the signs that made me think this was the right choice were that i would get deeoky immersed in the work, and feel that tthat was. the most meaningful thing for me to do with my time. i felt more alive and engaged than with anything else, like a whole new world opened up"
+  },
+  {
+    "role": "assistant",
+    "content": "I see, you felt deeply immersed and engaged in your work, and it made you feel alive. It seems like your intuition led you to a path where you find deep meaning and engagement. Even if this path didn't lead to the growth and learning you experienced, would you still see value in trusting your intuition in this way?"
+  },
+  {
+    "role": "user",
+    "content": "I dont think that could be even possible. my intution always leads to growth, even when it feels uncertain"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "show_values_card",
+      "arguments": "{}"
+    }
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "{\"evaluation_criteria\":[\"FEELINGS of deep immersion and engagement in the work\",\"SENSE of aliveness and opening up to a new world\",\"GUT FEELINGS that guide towards a decision\",\"UNCERTAINTY that accompanies the intuition-driven decision\"],\"instructions_detailed\":\"ChatGPT can help her identify feelings of deep immersion, sense of aliveness, gut feelings, and the accompanying uncertainty which, together, add up to an embodied sense of what her intuition is guiding her towards.\",\"instructions_short\":\"ChatGPT should help the girl feel into her intuition.\",\"title\":\"Intuition-Guided Decisions\"}"
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "<A card (Intuition-Guided Decisions) was articulated and shown to the user. The preview of the card is shown in the UI, no need to repeat it here. The user can now choose to submit the card.>"
+  },
+  {
+    "role": "assistant",
+    "content": "This is how I've understood your approach to making decisions: you pay attention to feelings of deep immersion and engagement, a sense of aliveness and opening up to a new world, gut feelings that guide you towards a decision, and the uncertainty that accompanies intuition-driven decisions. \n\nDoes this card accurately represent your values? Would you like to add or change anything?"
+  },
+  {
+    "role": "user",
+    "content": "not quite. its not necessarily that uncertainty is always present. is some ways it is, but in some others it feels more certain that anything else in the world"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "show_values_card",
+      "arguments": "{}"
+    }
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "<A card was articulated, but it is not yet meeting the guidelines. The following critique was receieved: \"The card suggests that uncertainty is always present in intuition-guided decisions. However, the user clarified that while uncertainty can be a part of these decisions, there are also times when intuition feels more certain than anything else. The card should be revised to reflect this nuance.\". Continue the dialogue with the user until you are able to solve for the critique.>"
+  },
+  {
+    "role": "assistant",
+    "content": "I see, so while there can be a sense of uncertainty, there are also times when your intuition feels more certain than anything else. Let's revise that. \n\nWhen you feel this certainty, what does it look like? Can you describe it a bit more?"
+  },
+  {
+    "role": "user",
+    "content": "like a very strong gut feeling. a sense that it feels deeply right from your core. inner conviction"
+  },
+  {
+    "role": "assistant",
+    "content": null,
+    "function_call": {
+      "name": "show_values_card",
+      "arguments": "{}"
+    }
+  },
+  {
+    "name": "show_values_card",
+    "role": "function",
+    "content": "<A card was articulated, but it is not yet meeting the guidelines. The following critique was receieved: \"The card includes 'UNCERTAINTY that accompanies the intuition-driven decision' as an evaluation criterion. However, the user clarified that uncertainty is not always present in intuition-guided decisions. Instead, there can be a strong sense of certainty, described as a 'very strong gut feeling', a 'sense that it feels deeply right from your core', and 'inner conviction'. This aspect should be reflected in the card.\". Continue the dialogue with the user until you are able to solve for the critique.>"
+  },
+  {
+    "role": "assistant",
+    "content": "Thank you for clarifying. So, in addition to feelings of deep immersion and engagement, and a sense of aliveness and opening up to a new world, there's also a very strong gut feeling, a sense that it feels deeply right from your core, and an inner conviction. Let's revise the card to reflect this. \n\nDoes this sound accurate to you?"
+  },
+  {
+    "role": "user",
+    "content": "yes"
+  }
+]
