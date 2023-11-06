@@ -128,6 +128,9 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
         limit: DEFAULT_MESSAGE_LIMIT,
         fromDate: dayjs(latestOutcome?.created_at),
     });
+    const latestOutcomeMessagesWithoutTags = latestOutcomeMessages.filter((message) => {
+        return isEmpty(message.tags);
+    });
 
     // time helpers
     const timeSinceRoomStartedMs = Math.abs(dayjs().diff(dayjs(room?.created_at), 'ms'));
@@ -139,7 +142,7 @@ export default async function enrichVoteCheck(payload: BaseProgressionWorkerTask
     const shouldTimeoutConversation = timeSinceRoomStartedMs > TIMEOUT_CONVSERSATION_AFTER_MS;
 
     // contribution helpers
-    const contributingParticipantIds = unique(latestOutcomeMessages.map((message) => message.participant_id)).filter((id) => id !== null) as string[];
+    const contributingParticipantIds = unique(latestOutcomeMessagesWithoutTags.map((message) => message.participant_id)).filter((id) => id !== null) as string[];
     const hasEveryoneContributed = contributingParticipantIds.length === participantIds.length;
     const hasAnyoneContributed = contributingParticipantIds.length > 0;
     const lackingContributingNicknames = getLackingNicknames({
