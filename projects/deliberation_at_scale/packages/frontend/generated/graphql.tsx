@@ -3006,7 +3006,7 @@ export type EnterRoomMutationOptions = Apollo.BaseMutationOptions<EnterRoomMutat
 export const GetLobbyParticipantsDocument = gql`
     query GetLobbyParticipants($userId: UUID!) {
   participantsCollection(
-    filter: {user_id: {eq: $userId}, status: {in: [waiting_for_confirmation, queued]}, active: {eq: true}}
+    filter: {user_id: {eq: $userId}, active: {eq: true}}
     orderBy: {created_at: DescNullsLast}
   ) {
     edges {

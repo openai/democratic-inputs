@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
     ParticipantStatusType,
@@ -36,10 +36,16 @@ export default function useLobby() {
     }, [rawRefetchParticipants, userId]);
     const [createParticipant, { loading: isCreatingParticipant }] = useCreateParticipantMutation();
     const [enterRoomMutation, { loading: isEnteringRoom }] = useEnterRoomMutation();
-    const candidateParticipant = participantData?.participantsCollection?.edges?.[0]?.node;
+    const participants = useMemo(() => {
+        return participantData?.participantsCollection?.edges?.map((edge) => edge?.node) ?? [];
+    }, [participantData?.participantsCollection?.edges]);
+    const candidateParticipant = participants.find((participant) => {
+        return participant?.status === ParticipantStatusType.Queued || participant?.status === ParticipantStatusType.WaitingForConfirmation;
+    });
     const candidateParticipantId = candidateParticipant?.id;
     const candidateRoomId = candidateParticipant?.room_id;
-    const canEnterRoom = !!candidateRoomId && (candidateParticipant?.status === ParticipantStatusType.WaitingForConfirmation);
+    const confirmingParticipant = participants.find((participant) => participant?.id === confirmingParticipantId);
+    const canEnterRoom = !!confirmingParticipantId && (confirmingParticipant?.status === ParticipantStatusType.WaitingForConfirmation);
     const { push } = useLocalizedPush();
     const enterRoom = useCallback(async () => {
         const enterResult = await enterRoomMutation({
@@ -62,6 +68,7 @@ export default function useLobby() {
 
     // ping the participant entry to make sure it is still alive for the group slicer
     usePingParticipant(candidateParticipant);
+    usePingParticipant(confirmingParticipant);
 
     // create a queued participant when the user has none yet
     // block this when no valid user is found OR when we are already waiting for a confirm
@@ -88,21 +95,25 @@ export default function useLobby() {
     }, [participantsLoading, candidateParticipant, createParticipant, userId, refetchParticipants, isConfirming, isCreatingParticipant, setLastCreatedAt, lastCreatedAt, nickName]);
 
     // store the the participant ID when a confirm is requested
-    // this will help us redirect the user back to the timeed out flow when not responding quickly enough
+    // this will help us redirect the user back to the timed out flow when not responding quickly enough
     useEffect(() => {
-        if (candidateParticipant?.status !== ParticipantStatusType.WaitingForConfirmation) {
-            return;
+        if (candidateParticipant?.status === ParticipantStatusType.WaitingForConfirmation) {
+            setConfirmingParticipantId(candidateParticipantId);
         }
-
-        setConfirmingParticipantId(candidateParticipantId);
     }, [candidateParticipant, setConfirmingParticipantId, candidateParticipantId]);
 
     // navigate to the page to mention the timeout
     useEffect(() => {
-        if (isConfirming && (!candidateParticipant || candidateParticipant.status === ParticipantStatusType.EndOfSession )) {
+        // console.log('isConfirming', isConfirming);
+        // console.log('confirmingParticipantId', confirmingParticipantId);
+        // console.log('confirmingParticipant', confirmingParticipant);
+        // console.log('candidateParticipant', candidateParticipant);
+        // console.log('participants', participants);
+
+        if (isConfirming && (!confirmingParticipant || confirmingParticipant.status === ParticipantStatusType.EndOfSession)) {
             push('/lobby/idle');
         }
-    }, [candidateParticipant, isConfirming, push]);
+    }, [confirmingParticipant, confirmingParticipantId, isConfirming, participants, candidateParticipant, push]);
 
     // refetch participants when the user id changes
     useEffect(() => {
@@ -113,6 +124,8 @@ export default function useLobby() {
         candidateParticipant,
         candidateRoomId,
         canEnterRoom,
+        isConfirming,
+        confirmingParticipant,
         isEnteringRoom,
         enterRoom,
     };

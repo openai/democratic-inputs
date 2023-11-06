@@ -2,7 +2,6 @@ query GetLobbyParticipants($userId: UUID!) {
     participantsCollection(
         filter: {
             user_id: { eq: $userId },
-            status: { in: [waiting_for_confirmation, queued] },
             active: { eq: true },
         },
         orderBy: {

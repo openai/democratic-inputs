@@ -37,6 +37,7 @@ export default function useRoomMessages(options?: UseMessagesOptions) {
             participantMessageHistoryAmount
         },
     }), {
+        enableSubscriptions: hasRoom,
         autoRefetch: hasRoom,
         autoRefetchIntervalMs: ONE_SECOND_MS * 4,
         tableEventsLookup: {

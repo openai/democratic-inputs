@@ -1,12 +1,16 @@
 /* eslint-disable no-console */
 import { QueryResult, gql } from "@apollo/client";
 import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, RealtimeChannel } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import objectHash from "object-hash";
 import { get, isEmpty, set } from "radash";
 
 import { supabaseClient } from "@/state/supabase";
 import { AUTO_QUERY_REFETCH_INTERVAL_MS, ENABLE_AUTO_QUERY_REFETCH, ENABLE_REALTIME_SUBSCRIPTIONS } from "@/utilities/constants";
+import { useAppSelector } from "@/state/store";
+import dayjs from "dayjs";
+import { useDispatch } from "react-redux";
+import { updateAutoFetchedAt } from "@/state/slices/fetches";
 
 export interface UseNestedLiveQueryOptions {
     channelPrefix?: string;
@@ -15,6 +19,7 @@ export interface UseNestedLiveQueryOptions {
     maxNestedDepth?: number;
     autoRefetch?: boolean;
     autoRefetchIntervalMs?: number;
+    enableSubscriptions?: boolean;
 }
 
 export interface TableEvents {
@@ -51,15 +56,24 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         maxNestedDepth = 9999,
         autoRefetch = ENABLE_AUTO_QUERY_REFETCH,
         autoRefetchIntervalMs = AUTO_QUERY_REFETCH_INTERVAL_MS,
+        enableSubscriptions = true,
     } = options ?? {};
     const {
         data, loading, refetch,
         client: apolloClient,
-        observable: { query: query, variables: queryVariables },
+        observable: { query, variables: queryVariables },
     } = queryResult;
     const { cache } = apolloClient;
     const [trackedSubscription, setTrackedSubscription] = useState<RealtimeChannel | null>(null);
+    const autoFetchId = useMemo(() => {
+        return objectHash({
+            query: JSON.stringify(query.definitions),
+            variables: queryVariables,
+        });
+    }, [query, queryVariables]);
+    const lastAutoFetchedAt = useAppSelector((state) => state.fetches.autoFetchedAtLookup[autoFetchId]);
     const trackedSubscriptionState = trackedSubscription?.state;
+    const dispatch = useDispatch();
 
     // handle auto refetching
     useEffect(() => {
@@ -68,15 +82,23 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
         }
 
         const refetchInterval = setInterval(() => {
-            if (!loading) {
-                refetch();
+            const shouldRefetch = !lastAutoFetchedAt || Math.abs(dayjs().diff(lastAutoFetchedAt, 'millisecond')) > autoRefetchIntervalMs;
+
+            if (!shouldRefetch || loading) {
+
+                return;
             }
+
+            dispatch(updateAutoFetchedAt({
+                autoFetchId,
+            }));
+            refetch(queryVariables);
         }, autoRefetchIntervalMs);
 
         return () => {
             clearInterval(refetchInterval);
         };
-    }, [autoRefetch, autoRefetchIntervalMs, refetch, loading]);
+    }, [autoFetchId, autoRefetch, autoRefetchIntervalMs, dispatch, lastAutoFetchedAt, loading, queryVariables, refetch]);
 
     // handle disconnects
     useEffect(() => {
@@ -146,7 +168,7 @@ export default function useRealtimeQuery<DataType>(queryResult: QueryResult<Data
             const operations = tableEvents?.[operationsKey] ?? defaultOperations;
             const shouldHandleOperation = operations.includes(operation) || operations.includes('*');
 
-            return shouldHandleTable && shouldHandleOperation;
+            return enableSubscriptions && shouldHandleTable && shouldHandleOperation;
         };
         const shouldListenToOperation = (operation: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, tableName: string) => {
             return shouldHandleOperation('listenOperations', defaultListenOperations, operation, tableName);

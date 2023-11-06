@@ -43,8 +43,8 @@ export default function LocalParticipantControls() {
     const handleLeaveRoomClick = useCallback(async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        await leaveRoom();
         push(`/evaluate/${roomId}`);
+        await leaveRoom();
     }, [leaveRoom, push, roomId]);
 
     return (

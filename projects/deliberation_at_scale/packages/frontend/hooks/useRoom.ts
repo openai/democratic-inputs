@@ -23,11 +23,11 @@ export function useExternalRoomId() {
     const roomId = params?.roomId as RoomId;
 
     // Retrieve the room from Supabase
-    const { data: roomData } = useRealtimeQuery(useGetRoomsQuery({
+    const { data: roomData } = useGetRoomsQuery({
         variables: {
             roomId,
         }
-    }));
+    });
 
     // Find the correct node and room
     const roomNode = roomData?.roomsCollection?.edges?.find((roomEdge) => {
@@ -55,9 +55,9 @@ export default function useRoom(options?: UseRoomOptions) {
         },
     }), {
         autoRefetch: hasRoom,
-        autoRefetchIntervalMs: ONE_SECOND_MS * 10,
+        autoRefetchIntervalMs: ONE_SECOND_MS * 5,
     });
-    const participants = participantsData?.participantsCollection?.edges?.map(participant => participant.node);
+    const participants = !hasRoom ? [] : participantsData?.participantsCollection?.edges?.map(participant => participant.node);
     const participantIds = participants?.map(participant => participant.id);
     const { data: outcomesData } = useRealtimeQuery(useGetRoomOutcomesQuery({
         variables: {
