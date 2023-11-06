@@ -48,15 +48,6 @@ export default async function triggerRoomProgressionUpdates(payload: TriggerRoom
 
         helpers.logger.info(`Scheduling progression updates for all ${activeRoomsAmount} active rooms with ${activeParticipantsAmount} active participants...`);
 
-        // console.log(activeRoomAmount);
-        // await reschedule<TriggerRoomProgressionUpdatesPayload>({
-        //     workerTaskId: "triggerRoomProgressionUpdates",
-        //     jobKey: "triggerRoomProgressionUpdates",
-        //     intervalMs: UPDATE_ROOM_PROGRESSION_INTERVAL_MS,
-        //     payload: {},
-        //     helpers,
-        // });
-        // return;
         await Promise.allSettled(activeRooms.map(async (activeRoom) => {
             const { id: roomId } = activeRoom;
             const jobKey = `updateRoomProgression-${roomId}`;
