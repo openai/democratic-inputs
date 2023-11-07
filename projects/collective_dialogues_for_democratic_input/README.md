@@ -1,6 +1,6 @@
 # Collective dialogues for democratic input
 
-***TLDR**: We develop and test a democratic process to produce policy guidelines for AI that reflect informed public will. Full paper [here](https://www.overleaf.com/read/ntjgywkstxzw). This repository contains [tools](https://github.com/openai/democratic-inputs/tree/main/projects/collective_dialogues_for_democratic_input/tools), [data, and results](https://github.com/openai/democratic-inputs/tree/main/projects/collective_dialogues_for_democratic_input/experiments) created as the process was developed and tested during OpenAI's [Democratic inputs to AI](https://openai.com/blog/democratic-inputs-to-ai) program.*  
+***TLDR**: We develop and test a democratic process to produce policy guidelines for AI that reflect informed public will. Full paper [here](https://arxiv.org/pdf/2311.02242.pdf). This repository contains [tools](https://github.com/openai/democratic-inputs/tree/main/projects/collective_dialogues_for_democratic_input/tools), [data, and results](https://github.com/openai/democratic-inputs/tree/main/projects/collective_dialogues_for_democratic_input/experiments) created as the process was developed and tested during OpenAI's [Democratic inputs to AI](https://openai.com/blog/democratic-inputs-to-ai) program.*  
 
 ## Process 
 
