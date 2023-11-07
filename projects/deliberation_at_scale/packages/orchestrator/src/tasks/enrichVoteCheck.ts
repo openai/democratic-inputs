@@ -573,6 +573,8 @@ async function sendNewCrossPollination(options: SendCrossPollinationOptions) {
 function getVotedSameMessageContent(): string {
     return draw([
         t`You share the same opinion. When you are ready, you can move on to a new statement using the next button.`,
+        t`It seems there's a consensus here. Feel free to proceed to the next statement whenever you're all set.`,
+        t`Looks like everyone agrees! Hit the next button when you want to see the next statement.`,
     ]) ?? '';
 }
 
@@ -580,6 +582,8 @@ function getVotedSameMessageContent(): string {
 function getVoteInviteMessageContent(): string {
     return draw([
         t`Don't forget to vote on the statement!`,
+        t`Remember to cast your vote on this statement!`,
+        t`Make sure you've voted before we move on!`,
     ]) ?? '';
 }
 
@@ -588,6 +592,8 @@ function getNotEveryoneVotedTheSameMessageContent(): string {
     return draw([
         t`You don't share the same opinion. That's usually the start of a great conversation! Perhaps you can discuss this a bit more and type out your thoughts?`,
         t`You voted differently: not to worry, you can always agree to disagree or type out your thoughts and i'll try making a statement that better reflects all your views.`,
+        t`Diverse opinions detected! This could lead to a rich discussion. Feel free to express your differing views in the chat.`,
+        t`Not on the same page, huh? That's the beauty of discussion. Share your individual insights in the chat!`,
     ]) ?? '';
 }
 
@@ -597,6 +603,8 @@ function getInviteContributionMessageContent(nickNames: string[]): string {
 
     return draw([
         t`Hey ${nickNamesString}. Can you also share your thoughts in the chat?`,
+        t`${nickNamesString}, we'd love to hear your take on this. Mind sharing in the chat?`,
+        t`Your input is valuable, ${nickNamesString}. Could you share your perspective in the chat?`,
     ]) ?? '';
 }
 
@@ -605,6 +613,7 @@ function getLeavingParticipantsMessageContent(nickNames: string[]): string {
 
     return draw([
         t`It seems like ${nickNamesString} has **encountered an issue** or has **left the conversation**. Are they still in the call? Ask them to **refresh the page**. If you think this was an accident you can wait while they try to fix it. Otherwise you can leave the conversation using **the red door icon** next to your camera view. Leaving a room does not mean you are leaving the study. You can always join another conversation!`,
+        t`Looks like ${nickNamesString} might have **dropped out** or hit a snag. Can you see if they're still with us? They may need to **refresh the page**. If it's a hiccup, wait a bit for them to return. Or you can exit the chat with **the red door icon** by your camera view.`,
     ]) ?? '';
 }
 
@@ -612,6 +621,8 @@ function getLeavingParticipantsMessageContent(nickNames: string[]): string {
 function getOpenDiscussionMessageContent(): string {
     return draw([
         t`You can discuss this statement with the group, write your thoughts down in the chat or move on to the next statement when everyone voted.`,
+        t`Feel free to openly discuss the current statement with the group, jot down your ideas in the chat, or advance to the following statement once all votes are in.`,
+        t`Engage with the group on this statement, pen down your thoughts, or proceed to the next one after all votes are cast.`,
     ]) ?? '';
 }
 
@@ -620,6 +631,8 @@ function getNewCrossPollinationMessageContent(statement: string, isFirst: boolea
     return draw([
         t`Here is a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on. Remember, if you have an interesting discussion, type out the key points and I will make a new statement that reflects your views!`,
         t`I found a ${!isFirst ? 'new' : ''} statement for you to discuss and vote on. Something to add? Type out your thoughts so I can create a new statement for you.`,
+        t`A ${!isFirst ? 'fresh' : ''} statement awaits your discussion and vote. Contribute to the conversation and I'll craft a statement that captures your collective insights!`,
+        t`Check out this ${!isFirst ? 'new' : ''} statement for discussion. Don't hold back your thoughts in the chat – they can shape a new statement!`,
     ]) ?? '';
 }
 
@@ -627,24 +640,32 @@ function getNewCrossPollinationMessageContent(statement: string, isFirst: boolea
 function getTimeoutVoteMessageContent(): string {
     return draw([
         t`I've been instructed to introduce a new statement after ${TIMEOUT_VOTE_AFTER_MS / ONE_MINUTE_MS} minutes. So here is a new statement!`,
+        t`Time's up! As per the rules, here's a new statement after ${TIMEOUT_VOTE_AFTER_MS / ONE_MINUTE_MS} minutes of waiting.`,
+        t`The timer has ticked down ${TIMEOUT_VOTE_AFTER_MS / ONE_MINUTE_MS} minutes, and it's time for a new statement!`,
     ]) ?? '';
 }
 
 function getTimeoutConversationMessageContent(): string {
     return draw([
         t`I've been instructed to stop this conversation after ${TIMEOUT_CONVSERSATION_AFTER_MS / ONE_MINUTE_MS} minutes. So we unfortunately need to stop this conversation!`,
+        t`Our allotted ${TIMEOUT_CONVSERSATION_AFTER_MS / ONE_MINUTE_MS} minutes for discussion have passed. We must conclude this conversation now.`,
+        t`The ${TIMEOUT_CONVSERSATION_AFTER_MS / ONE_MINUTE_MS} minute mark has been reached, signaling the end of our conversation. Thank you for participating!`,
     ]) ?? '';
 }
 
 function getNewContributionMessageContent(): string {
     return draw([
         t`A new statement has been created based on your messages! You can now vote on it whether you agree or disagree with the proposal. Do you think I have made a mistake? just click pass.`,
+        t`Inspired by your messages, a new statement is ready for your votes! Unsure about it? Feel free to pass.`,
+        t`Your discussions have borne fruit - a new statement is born! Agree, disagree, or pass - the choice is yours.`,
     ]) ?? '';
 }
 
 function getNoVerifiedContributionMessageContent(): string {
     return draw([
         t`I couldn't find a new statement based on your messages. If you type out some more of your thoughts I can try again. Thanks!`,
+        t`No new statement has emerged from the chat just yet. Share more of your thoughts, and I'll give it another shot!`,
+        t`It seems I'm at a loss for a new statement from the conversation. Could you elaborate your thoughts a bit more?`,
     ]) ?? '';
 }
 
@@ -652,6 +673,8 @@ function getVerifiedContributionMessageContent(): string {
     return draw([
         t`I think I might've found a new statement based on your typed messages! Working on it...`,
         t`It looks like you have shared your opinions with me. Let me synthesise them...`,
+        t`Your typed insights are intriguing! I'm on the verge of formulating a new statement...`,
+        t`From your dialogue, a new statement is taking shape. Give me a moment to piece it together...`,
     ]) ?? '';
 }
 
