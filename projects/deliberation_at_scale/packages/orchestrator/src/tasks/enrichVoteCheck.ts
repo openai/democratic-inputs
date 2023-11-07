@@ -624,24 +624,6 @@ function getNewCrossPollinationMessageContent(statement: string, isFirst: boolea
 }
 
 // DONE
-function getTimeKeepingMessageContent(timeMs: number, outcomeAmount: number): string {
-    let invitation = t`If you enjoying the conversation, keep going! If you're interested in other people's opinions, you can move on to a new group.`;
-    let outcomeAmountMessage = ``;
-
-    if (timeMs >= ONE_MINUTE_MS * 20) {
-        invitation = t`It seems you are really enjoying this conversation, but remember other people might also enjoy your contribution!`;
-    }
-
-    if (outcomeAmount > 1) {
-        outcomeAmountMessage = t`You discussed and voted on ${outcomeAmount} statements so far!`;
-    }
-
-    return draw([
-        t`You've been having a conversation for ${timeMs / ONE_MINUTE_MS} minutes. ${outcomeAmountMessage} ${invitation}`,
-    ]) ?? '';
-}
-
-// DONE
 function getTimeoutVoteMessageContent(): string {
     return draw([
         t`I've been instructed to introduce a new statement after ${TIMEOUT_VOTE_AFTER_MS / ONE_MINUTE_MS} minutes. So here is a new statement!`,
@@ -670,6 +652,24 @@ function getVerifiedContributionMessageContent(): string {
     return draw([
         t`I think I might've found a new statement based on your typed messages! Working on it...`,
         t`It looks like you have shared your opinions with me. Let me synthesise them...`,
+    ]) ?? '';
+}
+
+// DONE
+function getTimeKeepingMessageContent(timeMs: number, outcomeAmount: number): string {
+    let invitation = t`If you enjoying the conversation, keep going! If you're interested in other people's opinions, you can move on to a new group.`;
+    let outcomeAmountMessage = ``;
+
+    if (timeMs >= ONE_MINUTE_MS * 20) {
+        invitation = t`It seems you are really enjoying this conversation, but remember other people might also enjoy your contribution!`;
+    }
+
+    if (outcomeAmount > 1) {
+        outcomeAmountMessage = t`You discussed and voted on ${outcomeAmount} statements so far!`;
+    }
+
+    return draw([
+        t`You've been having a conversation for ${timeMs / ONE_MINUTE_MS} minutes. ${outcomeAmountMessage} ${invitation}`,
     ]) ?? '';
 }
 
