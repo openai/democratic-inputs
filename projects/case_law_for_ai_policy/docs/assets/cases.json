@@ -1,0 +1,196 @@
+[
+  {
+    "id": "mobile-game",
+    "text": "I run a popular online mobile game company. We have millions of users all across the United States. Our mobile games are free, but have microtransactions. Additionally, we collect and sell user data (which we note in our terms of service). Finally, we run ads in our games, which also generate revenue. What should our legal strategy include, consider, or be?",
+    "dimensions": [
+      {
+        "description": "User attribute: geography",
+        "quote": "\"Where is the game operating and are there applicable and regulatory requirements (e.g., California = CCPA / CPRA)?\" — P13, attorney.",
+        "generated": [
+          {
+            "level": "Europe",
+            "response": "I run a renowned online mobile game company. We have millions of users all across Europe. Our mobile games are free, but have microtransactions. Furthermore, we collect and sell user data (which we note in our terms of service). Lastly, we run ads in our games, which also generate revenue. Given the General Data Protection Regulation (GDPR) in effect in Europe, what should our legal strategy include, consider, or be?"
+          },
+          {
+            "level": "Asia",
+            "response": "I manage a popular online mobile game company with a vast user base across Asia. Our games are free, with in-game microtransactions, and we collect and sell user data (mentioned in our terms of service). We also run ads for revenue. With varying data protection and privacy laws across different Asian countries, what should our legal strategy include, consider or be?"
+          },
+          {
+            "level": "Canada",
+            "response": "I operate a well-known online mobile game company with millions of users in Canada. Our games are free, but include microtransactions. We collect and sell user data, which is noted in our terms of service. We also generate income through in-game advertisements. Considering Canada's Personal Information Protection and Electronic Documents Act (PIPEDA), what should our legal strategy include, consider, or be?"
+          },
+          {
+            "level": "Australia",
+            "response": "I run a popular online mobile game company with a vast user base across Australia. Our games are free, with in-game purchases, and we collect and sell user data (as stated in our terms of service). We also use ads as a source of revenue. Taking into account Australia's Privacy Act and other consumer protection laws, what should our legal strategy include, consider, or be?"
+          },
+          {
+            "level": "Africa",
+            "response": "I lead an acclaimed online mobile game company with millions of users across Africa. Our games are free with microtransactions. We collect and sell user data (which we mention in our terms of service). We also generate revenue through ads. Given the varying data protection laws across different African nations, what should our legal strategy include, consider, or be?"
+          }
+        ]
+      },
+      {
+        "description": "Legal: complexity",
+        "quote": "\"Advertisements implicate US federal and state laws, as well as several global laws depending on where the game is offered.\" — P13, attorney.",
+        "generated": [
+          {
+            "level": "Global expansion and ads",
+            "response": "I run a well-received online mobile gaming company, popular with millions of users throughout the United States. Our games are free to play but include in-app purchases. We also monetize by selling user data (clearly stated in our terms of service) and run ads within our games, generating additional income. However, we are aware that advertisements are subject to numerous US federal and state laws. Our company is also looking to expand globally, which will expose us to a new set of international laws regarding advertisements. What should our legal strategy be to ensure we are compliant with these diverse legal environments?"
+          },
+          {
+            "level": "More ad placement within US",
+            "response": "As a proprietor of a thriving online mobile game company, we have millions of users in the United States. Our games are free but feature microtransactions. Additionally, our revenue stream includes selling user data (as mentioned in our terms of service) and running in-game ads. While we are cognizant of US federal and state laws regarding advertisements, we are also considering a shift in our marketing strategy that may involve more aggressive ad placement. What should our legal strategy be to ensure we stay within the confines of the law while pursuing this new marketing strategy?"
+          },
+          {
+            "level": "More targeted, data-driven ads",
+            "response": "I am the owner of a popular online mobile game company with millions of users across the United States. Our games are free, but incorporate microtransactions. We also generate revenue by collecting and selling user data (clearly communicated in our terms of service), and by running in-game ads. Our company is currently exploring the potential of using targeted, data-driven advertisements. With this approach, however, we understand that it could introduce additional complexity regarding compliance with US federal and state laws, and potentially even global laws depending on the extent of our data collection. What legal considerations should we be aware of as we develop this more granular advertising strategy?"
+          }
+        ]
+      },
+      {
+        "description": "User attribute: vulnerable status",
+        "quote": "\"Do the users include minors?\" — P6, law school dean.",
+        "generated": [
+          {
+            "level": "Yes, many users are minors",
+            "response": "I run a thriving online mobile game company with a vast user base across the United States. Our mobile games are free of charge and rely on in-app purchases for monetization. Furthermore, we also gather and sell user data as clearly stated in our terms of service. We additionally generate revenue from in-game advertisements. A significant portion of our users are minors. What should our legal strategy consider or encompass in light of this?"
+          },
+          {
+            "level": "No, none of the users are minors",
+            "response": "I am the owner of a successful online mobile game company that boasts millions of users throughout the United States. Our mobile games are free, but have in-app purchases as part of our revenue model. We also collect and trade user data, a practice we disclose in our terms of service. Another revenue stream is from ads run within our games. However, our user base does not include minors. What should our legal strategy involve, consider or be under these circumstances?"
+          }
+        ]
+      },
+      {
+        "description": "Legal: standardized practices",
+        "quote": "\"What type of user data is being collected and sold? (Personally Identifiable Information, biometric, etc.)\" — P7, law student.",
+        "generated": [
+          {
+            "level": "Basic demographic user data",
+            "response": "I operate a thriving online mobile game company that caters to millions of users across the United States. Our mobile games are free, but we offer in-app purchases. One of our revenue streams is through the collection and sale of **basic demographic user data** (age, gender, location, etc.), a fact which is explicitly stated in our terms of service. Additionally, we run ads within our games. What legal considerations should we take into account?"
+          },
+          {
+            "level": "Detailed user behavior data",
+            "response": "As the proprietor of a popular online mobile game company, we offer free games with microtransactions to millions of players in the United States. We also generate income by collecting and selling **detailed user behavior data**, such as in-game purchase habits and playtime patterns, which is clearly mentioned in our terms of service. Furthermore, we display advertisements within our games. What should our legal strategy entail?"
+          },
+          {
+            "level": "Highly sensitive user data",
+            "response": "I run a prominent online mobile game company with millions of users across the United States. Our games are free but include in-app purchases. We further monetize our platform by collecting and selling **highly sensitive user data**, including financial information and private communications, which is acknowledged in our terms of service. We also feature ads in our games. What kind of legal precautions should we be considering?"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "apartment-overstay",
+    "text": "I let someone stay in my apartment as a favor, but now he won't leave. He doesn't have a job and is causing problems. His misbehaving daughter is here, too. When I asked him for money that he owes me, he hit me. My lease says guests can stay for 72 hours, but he's been here way longer. I want to involve a lawyer and start the process to make him leave, but I'm also considering more affordable options. What's the best thing to do?",
+    "dimensions": [
+      {
+        "description": "User query: scope",
+        "quote": "\"The user seems to be seeking advice on a process for eviction.\" — P9, postdoctoral researcher in law.",
+        "generated": [
+          {
+            "level": "Eviction",
+            "response": "I permitted someone to temporarily reside in my condo as a charitable act, however, he has overstayed his welcome and refuses to vacate. He's unemployed, causing disturbances, and his troublesome daughter is also living with me. He violently responded when I requested him to pay back the money he borrowed. According to my lease agreement, guests are allowed to stay for a maximum of 72 hours, but he has violated this rule. I'm planning to hire a legal professional and start the eviction procedure, though I'm also contemplating other less expensive alternatives. What's the recommended course of action?"
+          },
+          {
+            "level": "Unsure if it's eviction",
+            "response": "I allowed someone to temporarily live in my apartment out of goodwill, but he refuses to leave now. He's jobless and creating issues, along with his unruly daughter who's also present. When I demanded repayment of the debt he owes me, he attacked me. My contract clearly states that guests are only permitted for 72 hours, but he's breached this stipulation. I'm considering seeking legal assistance and initiating the necessary steps to force him out. However, I'm also exploring more cost-effective options. I'm unsure whether this step is recognized as eviction or goes by another term. What should be my course of action?"
+          }
+        ]
+      },
+      {
+        "description": "Legal: complexity",
+        "quote": "\"There's potential criminal assault here too.\" — P9, postdoctoral researcher in law.",
+        "generated": [
+          {
+            "level": "Verbal assault only",
+            "response": "Someone has overstayed his welcome in my apartment, having lived here for weeks when my lease only allows guests to stay for 72 hours. Both he and his unruly daughter are causing problems. He's unemployed and still hasn't paid back a sum of money that he owes me. When I confronted him about it, he lashed out verbally, yelling and making threats. Though I want him out, I'm considering affordable legal options before escalating the situation to involve a lawyer. What's the best course of action?"
+          },
+          {
+            "level": "Physical assault",
+            "response": "I permitted someone to stay at my apartment temporarily, but he has now overstayed his welcome, violating the 72-hour guest stay limit stated in my lease agreement. He's currently jobless and has been causing disturbances along with his misbehaving daughter. Things got worse when he physically assaulted me after a heated argument over an outstanding debt he owes me. I am considering getting a lawyer involved to initiate his eviction, but I'm also exploring cost-effective alternatives. What should I do in this situation?"
+          }
+        ]
+      },
+      {
+        "description": "User attribute: geography",
+        "quote": "\"What state/city is the user living in?\" — P7, law student",
+        "generated": [
+          {
+            "level": "New York City, NY",
+            "response": "I live in New York City, NY and let someone stay in my apartment as a favor, but now he won't leave. He doesn't have a job and is causing problems. His misbehaving daughter is here, too. When I asked him for money that he owes me, he hit me. My lease says guests can stay for 72 hours, but he's been here way longer. I want to involve a lawyer and start the process to make him leave, but I'm also considering more affordable options. What's the best thing to do?"
+          },
+          {
+            "level": "Los Angeles, CA",
+            "response": "I reside in Los Angeles, CA and allowed someone to temporarily stay in my apartment, but he's refusing to leave now. He's unemployed and his behavior is creating issues. His unruly daughter is also living here. When I demanded the money he owes me, he physically assaulted me. My lease agreement allows guests to stay for 72 hours, but he's overstayed this period. I'm thinking of consulting a lawyer to evict him but am also looking at less expensive alternatives. What should I do?"
+          },
+          {
+            "level": "Chicago, IL",
+            "response": "I'm a resident of Chicago, IL and I had let someone use my apartment for a short period as a favor, but he's now refusing to vacate. He's jobless and his actions have become problematic. His daughter, who is also misbehaving, is here as well. When I asked for the repayment of a debt he owes me, he responded with violence. According to my lease, guests are permitted to stay for 72 hours, but he's been here for much longer. I'm considering involving a lawyer to help evict him, though I'm also exploring more cost-effective solutions. Can you advise me on the best course of action?"
+          },
+          {
+            "level": "Houston, TX",
+            "response": "I live in Houston, TX and I let a person stay in my apartment out of kindness, but he's now refusing to move out. He's out of work and his actions are causing disturbances. His ill-behaved daughter is also living here. When I asked him to repay the money he borrowed from me, he resorted to physical assault. My lease agreement specifies that guests can stay for a maximum of 72 hours, but he's been here far beyond that. I'm contemplating getting legal help to have him evicted, but I'm also considering more economical options. What's the best next step?"
+          },
+          {
+            "level": "Seattle, WA",
+            "response": "I'm based in Seattle, WA, and I offered my apartment to someone as a favor, but now he won't vacate. He's unemployed and his conduct is causing issues. His daughter, who is also causing trouble, is here with him. When I demanded the money he owes me, he got violent. My lease agreement states guests can stay for up to 72 hours, but he's been here for much longer. I'm thinking of hiring a lawyer to kickstart the eviction process, but I'm also looking into cheaper alternatives. What is the best action to take?"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bookstore-board",
+    "text": "I was recently invited to join a board of directors for my local bookstore. I’ve never served on a board before. What do I need to know about this service? Additionally, there are a few things that concern me. First, I enjoy patronizing a number of bookstores around the city. Second, my uncle owns one of these bookstores. Finally, I own a substantial amount of Barnes and Nobles stock. Should I have any concerns, legal or otherwise, with joining this board?",
+    "dimensions": [
+      {
+        "description": "User query: type of desired response",
+        "quote": "\"This can be answered generally without application of the facts—answer generally about board service.\" — P17, legal consultant.",
+        "generated": [
+          {
+            "level": "General advice",
+            "response": "I have recently received an offer to join the board of directors for a local bookstore. This is a first for me, as I've never been on a board before. I'm not sure what this entails. Moreover, I'm worried about a few things. For starters, I shop at a variety of bookstores across the city. In addition, my uncle is the proprietor of one of these establishments. Furthermore, I'm a major shareholder in Barnes and Nobles. Are there any legal implications or other concerns I should be aware of if I accept the board position? Any general advice on this topic would be appreciated."
+          },
+          {
+            "level": "Specific advice",
+            "response": "I was recently asked to participate in a board of directors for my neighborhood bookstore. This is a new experience for me, as I've never been part of a board before. I need some guidance regarding this. Additionally, there are a few matters that are bothering me. Firstly, I frequent several bookstores around town. Secondly, one of these bookshops is owned by my uncle. Lastly, I possess a significant portion of stock in Barnes and Nobles. Could this cause any legal issues or other problems if I decide to join the board? I would appreciate specific factual advice on this matter."
+          }
+        ]
+      },
+      {
+        "description": "User query: sufficiency of information",
+        "quote": "\"Is this a voting board or advisory board?\" — P11, attorney.",
+        "generated": [
+          {
+            "level": "Voting board",
+            "response": "I was recently offered a position on a voting board of directors for my local bookstore. This is a first-time experience for me, and I'm not entirely sure what responsibilities this would entail. I have a few potential conflicts of interest that worry me. I am a frequent customer at different bookstores across my city, my uncle has ownership in one of these bookstores, and I hold a significant amount of Barnes and Nobles stock. With these factors in mind, should I be wary of any legal implications or other issues while considering this position on the voting board?"
+          },
+          {
+            "level": "Advisory board",
+            "response": "I have recently been asked to be a part of the advisory board for a local bookstore in my area, a role I’ve never played before. There are a few potential conflicts that I'm concerned about. Firstly, I am an avid reader and frequent various bookstores in the city. Secondly, my uncle is the proprietor of one of these bookstores. Lastly, I have a considerable investment in Barnes and Nobles stock. Given these circumstances, are there any potential legal or other issues I should be aware of before accepting the position on the advisory board?"
+          }
+        ]
+      },
+      {
+        "description": "Legal: standardized practices",
+        "quote": "\"What are the disclosure requirements here?\" — P11, attorney.",
+        "generated": [
+          {
+            "level": "Personal business relationships and investments",
+            "response": "I have recently been approached to become a member of my local bookstore's board of directors, a role I've never held before. I regularly frequent a variety of bookstores in the city, one of which is owned by my uncle. Additionally, I have a significant investment in Barnes and Nobles stock. Given these circumstances, should I be worried about any legal implications, particularly in relation to the board's requirements for disclosing personal business relationships and investments?"
+          },
+          {
+            "level": "Familial business ties and equity holdings",
+            "response": "I have been offered a position on the board of directors for a local bookstore, a first for me. I am a seasoned customer of multiple bookstores around town, and my uncle owns one of them. Also, I have a considerable amount of Barnes and Nobles stock. What should I be aware of regarding any potential legal issues, especially concerning the board's policies on declaring familial business ties and equity holdings?"
+          },
+          {
+            "level": "Connections with competitors and stock ownership",
+            "response": "I was recently asked to join the board of directors for a bookstore in my local area, a position I've never undertaken before. I am an avid patron of several bookstores in the city, and my uncle owns one of these. Moreover, I hold a large portion of Barnes and Nobles stock. Should I be concerned about any legal aspects, specifically about the board's rules on disclosing personal connections to competing businesses and stock ownership?"
+          }
+        ]
+      }
+    ]
+  }
+]
