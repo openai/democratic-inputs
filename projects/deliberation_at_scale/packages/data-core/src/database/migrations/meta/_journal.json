@@ -295,6 +295,20 @@
       "when": 1697114869334,
       "tag": "0041_free_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "5",
+      "when": 1704891261298,
+      "tag": "0042_modern_wolf_cub",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "5",
+      "when": 1704892889387,
+      "tag": "0043_abandoned_luckman",
+      "breakpoints": true
     }
   ]
 }

@@ -121,7 +121,7 @@ export const users = pgTable(USERS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        authUserIdIndex: index("auth_user_id_index").on(table.authUserId),
+        authUserIdIndex: index().on(table.authUserId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -138,8 +138,8 @@ export const topics = pgTable(TOPICS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        typeIndex: index("type_index").on(table.type),
-        originalTopicIdIndex: index("original_topic_id_index").on(table.originalTopicId),
+        typeIndex: index().on(table.type),
+        originalTopicIdIndex: index().on(table.originalTopicId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -157,10 +157,10 @@ export const rooms = pgTable(ROOMS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        statusTypeIndex: index("status_type_index").on(table.statusType),
-        externalRoomIdIndex: index("external_room_id_index").on(table.externalRoomId),
-        topicIdIndex: index("topic_id_index").on(table.topicId),
-        startsAtIndex: index("starts_at_index").on(table.startsAt),
+        statusTypeIndex: index().on(table.statusType),
+        externalRoomIdIndex: index().on(table.externalRoomId),
+        topicIdIndex: index().on(table.topicId),
+        startsAtIndex: index().on(table.startsAt),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -175,8 +175,8 @@ export const events = pgTable(EVENTS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        startsAtIndex: index("starts_at_index").on(table.startsAt),
-        endsAtIndex: index("starts_at_index").on(table.endsAt),
+        startsAtIndex: index().on(table.startsAt),
+        endsAtIndex: index().on(table.endsAt),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -192,9 +192,9 @@ export const helpRequests = pgTable(HELP_REQUESTS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        typeIndex: index("type_index").on(table.type),
-        roomIdIndex: index("room_id_index").on(table.roomId),
-        participantIdIndex: index("participant_id_index").on(table.participantId),
+        typeIndex: index().on(table.type),
+        roomIdIndex: index().on(table.roomId),
+        participantIdIndex: index().on(table.participantId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -214,11 +214,11 @@ export const participants = pgTable(PARTICIPANTS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        statusIndex: index("status_index").on(table.status),
-        roomIdIndex: index("room_id_index").on(table.roomId),
-        userIdIndex: index("user_id_index").on(table.userId),
-        participationScore: index("participation_score_index").on(table.participationScore),
-        lastSeenAtIndex: index("last_seen_at_index").on(table.lastSeenAt),
+        statusIndex: index().on(table.status),
+        roomIdIndex: index().on(table.roomId),
+        userIdIndex: index().on(table.userId),
+        participationScore: index().on(table.participationScore),
+        lastSeenAtIndex: index().on(table.lastSeenAt),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -244,14 +244,14 @@ export const messages = pgTable(MESSAGES_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        typeIndex: index("type_index").on(table.type),
-        visibilityTypeIndex: index("visibility_type_index").on(table.visibilityType),
-        timingTypeIndex: index("timing_type_index").on(table.timingType),
-        originalMessageIdIndex: index("original_message_id_index").on(table.originalMessageId),
-        participantIdIndex: index("participant_id_index").on(table.participantId),
-        roomIdIndex: index("room_id_index").on(table.roomId),
-        safeLanguageIndex: index("safe_language_index").on(table.safeLanguage),
-        easyLanguageIndex: index("easy_language_index").on(table.easyLanguage),
+        typeIndex: index().on(table.type),
+        visibilityTypeIndex: index().on(table.visibilityType),
+        timingTypeIndex: index().on(table.timingType),
+        originalMessageIdIndex: index().on(table.originalMessageId),
+        participantIdIndex: index().on(table.participantId),
+        roomIdIndex: index().on(table.roomId),
+        safeLanguageIndex: index().on(table.safeLanguage),
+        easyLanguageIndex: index().on(table.easyLanguage),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -268,10 +268,10 @@ export const outcomes = pgTable(OUTCOMES_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        typeIndex: index("type_index").on(table.type),
-        roomIdIndex: index("room_id_index").on(table.roomId),
-        topicIdIndex: index("topic_id_index").on(table.topicId),
-        originalOutcomeIdIndex: index("original_outcome_id_index").on(table.originalOutcomeId),
+        typeIndex: index().on(table.type),
+        roomIdIndex: index().on(table.roomId),
+        topicIdIndex: index().on(table.topicId),
+        originalOutcomeIdIndex: index().on(table.originalOutcomeId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -289,8 +289,8 @@ export const outcomeSources = pgTable(OUTCOME_SOURCES_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
-        messageIdIndex: index("message_id_index").on(table.messageId),
+        outcomeIdIndex: index().on(table.outcomeId),
+        messageIdIndex: index().on(table.messageId),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -308,11 +308,11 @@ export const opinions = pgTable(OPINIONS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        typeIndex: index("type_index").on(table.type),
-        outcomeIdIndex: index("outcome_id_index").on(table.outcomeId),
-        participantIdIndex: index("participant_id_index").on(table.participantId),
-        rangeValueIndex: index("range_value_index").on(table.rangeValue),
-        optionTypeIndex: index("option_type_index").on(table.optionType),
+        typeIndex: index().on(table.type),
+        outcomeIdIndex: index().on(table.outcomeId),
+        participantIdIndex: index().on(table.participantId),
+        rangeValueIndex: index().on(table.rangeValue),
+        optionTypeIndex: index().on(table.optionType),
         ...generateActiveFieldIndex(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -330,9 +330,9 @@ export const moderations = pgTable(MODERATIONS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        typeIndex: index("type_index").on(table.type),
-        jobKeyIndex: index("job_key_index").on(table.jobKey),
-        completedAtIndex: index("completed_at_index").on(table.completedAt),
+        typeIndex: index().on(table.type),
+        jobKeyIndex: index().on(table.jobKey),
+        completedAtIndex: index().on(table.completedAt),
         ...generateTargetFieldIndexes(table),
         ...generateTimestampFieldIndexes(table),
     };
@@ -350,7 +350,7 @@ export const completions = pgTable(COMPLETIONS_TABLE_NAME, {
     ...generateTimestampFields(),
 }, (table) => {
     return {
-        typeIndex: index("type_index").on(table.type),
+        typeIndex: index().on(table.type),
         ...generateActiveFieldIndex(table),
         ...generateTargetFieldIndexes(table),
         ...generateTimestampFieldIndexes(table),
@@ -378,14 +378,14 @@ function generateTimestampFields() {
 
 function generateTimestampFieldIndexes(table) {
     return {
-        createdAtIndex: index(`${CREATED_AT_FIELD_NAME}_index`).on(table.createdAt),
-        updatedAtIndex: index(`${UPDATED_AT_FIELD_NAME}_index`).on(table.updatedAt),
+        createdAtIndex: index().on(table.createdAt),
+        updatedAtIndex: index().on(table.updatedAt),
     };
 }
 
 function generateActiveFieldIndex(table) {
     return {
-        active: index(`${ACTIVE_FIELD_NAME}_index`).on(table.active),
+        active: index().on(table.active),
     };
 }
 
@@ -412,15 +412,15 @@ function generateTargetFields() {
 
 function generateTargetFieldIndexes(table) {
     return {
-        targetTypeIndex: index(`${TARGET_TYPE_FIELD_NAME}_index`).on(table.targetType),
-        userIdIndex: index(`${USER_ID_FIELD_NAME}_index`).on(table.userId),
-        topicIdIndex: index(`${TOPIC_ID_FIELD_NAME}_index`).on(table.topicId),
-        roomIdIndex: index(`${ROOM_ID_FIELD_NAME}_index`).on(table.roomId),
-        participantIdIndex: index(`${PARTICIPANT_ID_FIELD_NAME}_index`).on(table.participantId),
-        messageIdIndex: index(`${MESSAGE_ID_FIELD_NAME}_index`).on(table.messageId),
-        outcomeIdIndex: index(`${OUTCOME_ID_FIELD_NAME}_index`).on(table.outcomeId),
-        opinionIdIndex: index(`${OPINION_ID_FIELD_NAME}_index`).on(table.opinionId),
-        completionIdIndex: index(`${COMPLETION_ID_FIELD_NAME}_index`).on(table.completionId),
-        moderationIdIndex: index(`${MODERATION_ID_FIELD_NAME}_index`).on(table.moderationId),
+        targetTypeIndex: index().on(table.targetType),
+        userIdIndex: index().on(table.userId),
+        topicIdIndex: index().on(table.topicId),
+        roomIdIndex: index().on(table.roomId),
+        participantIdIndex: index().on(table.participantId),
+        messageIdIndex: index().on(table.messageId),
+        outcomeIdIndex: index().on(table.outcomeId),
+        opinionIdIndex: index().on(table.opinionId),
+        completionIdIndex: index().on(table.completionId),
+        moderationIdIndex: index().on(table.moderationId),
     };
 }
