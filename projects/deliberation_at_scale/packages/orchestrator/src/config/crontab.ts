@@ -7,16 +7,10 @@ interface ToggleableCronItem extends CronItem {
 
 const crontab: ToggleableCronItem[] = [
     {
-        active: false,
+        active: true,
         pattern: '* * * * *',
-        task: 'triggerRoomProgressionUpdates',
-        identifier: 'triggerRoomProgressionUpdates',
-    },
-    {
-        active: false,
-        pattern: '* * * * *',
-        task: 'handleQueuedParticipants',
-        identifier: 'handleQueuedParticipants',
+        task: 'reschedule',
+        identifier: 'reschedule',
     },
 ];
 
