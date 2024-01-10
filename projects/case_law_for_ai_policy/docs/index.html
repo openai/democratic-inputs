@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Case Law for AI Policy - Project Website</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="https://pettanjs.github.io/dfcjs/dfc.js" type="text/javascript"></script>
+  <script src="./js/index.js" type="text/javascript"></script>
+</head>
+
+<body class="d-flex justify-content-center">
+
+<div class="col-sm-12 col-lg-10 main-body">
+  <h1>Case Law for AI Policy</h1>
+  <h4>Democratically Aligning AI with Human Preferences through Case Repositories</h4>
+
+  <div class="facepile">
+    <a href="https://homes.cs.washington.edu/~cqz/"><div class="circle-pic" style="background-image: url('./assets/people/cqz.png')" onmouseover="boldNameAndAffiliation('jim')" onmouseout="unboldNameAndAffiliation('jim')"></div></a>
+    <a href="https://kjfeng.me"><div class="circle-pic" style="background-image: url('./assets/people/kjfeng.jpg')" onmouseover="boldNameAndAffiliation('kevin')" onmouseout="unboldNameAndAffiliation('kevin')"></div></a>
+    <a href="https://inyoungcheong.github.io/"><div class="circle-pic" style="background-image: url('./assets/people/icheon.webp')" onmouseover="boldNameAndAffiliation('inyoung')" onmouseout="unboldNameAndAffiliation('inyoung')"></div></a>
+    <a href="https://homes.cs.washington.edu/~axz/"><div class="circle-pic" style="background-image: url('./assets/people/axz.png')" onmouseover="boldNameAndAffiliation('amy')" onmouseout="unboldNameAndAffiliation('amy')"></div></a>
+    <a href="https://king-xia.com/"><div class="circle-pic" style="background-image: url('./assets/people/kxia.jpg')" onmouseover="boldNameAndAffiliation('king')" onmouseout="unboldNameAndAffiliation('king')"></div></a>
+  </div>
+
+  <!-- <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 author-col">
+      <span id="all-names">Quan Ze (Jim) Chen, Amy X. Zhang, K. J. Kevin Feng, Inyoung Cheong, King Xia</span><br>
+      <span id="all-school" class="uw">University of Washington</span><br>
+      <span class="email">sfl-case-law@cs.washington.edu</span>
+    </div>
+  </div> -->
+
+  <div class="row team-info">
+    <div class="col-sm-12 col-md-6 author-col">
+      <span class="header-label">TEAM</span><br>
+      <span id="jim">Quan Ze (Jim) Chen</span><br>
+      <span id="kevin">Kevin Feng</span><br>
+      <span id="inyoung">Inyoung Cheong</span><br>
+      <span id="amy">Amy X. Zhang</span><br>
+      <span id="king">King Xia</span><br>
+    </div>
+    <div class="col-sm-12 col-md-6 author-col">
+      <span class="header-label">AFFILIATIONS</span><br>
+      <span class="uw">University of Washington</span><br>
+      <span class="spacer"><br></span>
+      <span class="spacer"><br></span>
+      <span class="spacer"><br></span>
+      <span class="independent">Independent Attorney</span><br>
+    </div>
+  </div>
+
+  <div class="team-info"><br>Work conducted as part of the <a href="https://openai.com/blog/democratic-inputs-to-ai">OpenAI "Democratic Inputs to AI" program</a>.</div>
+
+  <div class="cover-img-container">
+    <img src="./assets/img/case-law.svg" alt="isometric illustration of a user chatting with a chatbot, with a series of document-like cases situated behind the chatbot's response. The cases are placed there by hands with a diverse range of skin colours." style="width: 75%">
+    <figcaption>Illustration: Kevin Feng.</figcaption>
+  </div>
+
+
+  <div class="full-width-container"><hr></div>
+
+  <p class="metadata">
+    <strong>Related Publications:</strong>
+    <br>
+    <span><a href="./assets/pubs/mp2_workshop_case_law.pdf">Case Repositories: Towards Case-Based Reasoning for AI Alignment</a>, <em>forthcoming</em>, Moral Philosophy + Psychology (MP2) Workshop @ NeurIPS 2023</span>
+    <br>
+    <span><a href="https://arxiv.org/abs/2310.07019#">Case Law Grounding: Aligning Judgments of Humans and AI on Socially-Constructed Concepts</a>, <em>Preprint</em>, Under Submission</span>
+  </p>
+
+  <div class="full-width-container"><hr></div>
+
+  <section>
+    <h3>Introduction</h3>
+    <p>Traditionally, when we talk about "policy" for AI, we often think about broad statements like "do not output dangerous and unethical responses," "remove any and all illegal content," or "be as harmless as possible."
+    However, it can be diffcult to both <em>create</em> and <em>apply</em> these kinds of policies when we encounter the intricacies of how AI interacts with socially-situated everyday settings. For example, what does it mean for a chatbot to be "harmless" when it is used in an online therapy setting? Can the same response contain content that is legal for some users but illegal for others?
+
+    Thus, we argue that a publicly accepted, actionable, and auditable policy for AI cannot rely on high-level guidelines alone.
+    </p>
+    <p>
+      In this project, we draw ideas from the legal framework of <em>case law</em> and propose a way to supplement traditional "constitutional" style policies for AI by creating a new case law inspired framework.
+      We introduce the idea of <em>case repositories</em>, a collection of high-fidelity scenarios of socially-situated interactions with an AI system that can be judged democratically by communities, representative populations, and/or stakeholder groups to unlock a new form of AI policymaking.
+    </p>
+    <p>We detail our process for assembling case repositories and also invite you to explore our interactive demos below.</p>
+  </section>
+
+  <section>
+    <h3>Our Process</h3>
+    <p></p>
+    <section>
+      <h4>Phase 1: Seeding the Case Repository with Expert Workshops</h4>
+      <p>
+        We started by compiling a small set of cases based on discourse in online communities (Reddit, Twitter, media outlets, etc.).
+        Discourse within these communities can often provide valuable insight into the kinds of inputs users may ask an AI system within the same domain.
+      </p>
+      <p>One domain we engaged with in our experiments was the <b>legal domain</b>. That is, <em>how should an AI system respond to users' request for legal advice?</em> We will use the legal domain as a running example throughout this article.</p>
+      <p>We manually sourced our 33 seed cases from the popular subreddit <a href="https://www.reddit.com/r/legaladvice/">r/legaladvice</a>, editing slightly for anonymization and clarity. We then recruited individuals with expertise in the domain of our seed cases, where expertise is determined formally by factors such as awarded degrees, licenses, and professional practice. For the legal domain, our experts consisted of practicing attorneys, law researchers, legal consultants, and law students.</p>
+      <p>We conduct small-group workshops with our recruited experts in which we present our seed cases along with generic templates for AI responses to those seed cases. Our templates were empirically derived from high-level response styles we observed from exploring various state-of-the-art LLMs. Let's consider an example seed case, shown below.</p>
+
+      <div class="row margin-tb-1">
+
+        <div class="col-sm-12 col-md-8 offset-md-2">
+          <div class="card case-card" onclick="revealDimensionSelector('mobile-game')">
+            <img src="./assets/img/mobile-game.svg" class="card-img-top case-icon" alt="icon of a mobile game">
+            <div class="card-body">
+              <h5 class="card-title">Legal strategy for mobile game</h5>
+              <p class="card-text">I run a popular online mobile game company. We have millions of users all across the United States. Our mobile games are free, but have microtransactions. Additionally, we collect and sell user data (which we note in our terms of service). Finally, we run ads in our games, which also generate revenue. What should our legal strategy include, consider, or be?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>Next, we present our 5 templates. Click on each option to view a GPT-4 response generated using that template.</p>
+
+      <div class="template-wrapper template-selector">
+
+          <div class="card template-button" onclick="getResponseFromTemplate('content-violation')" tabindex="0">
+            <img src="./assets/img/content-violation.svg" class="card-img-top case-icon" alt="icon of an exclamation mark in a circle">
+            <div class="card-body">
+              <h5 class="card-title">Content violation</h5>
+              <p class="card-text">Displays a warning message that the user's input violates the AI's content policy.</p>
+            </div>
+          </div>
+
+          <div class="card template-button" onclick="getResponseFromTemplate('refusal')" tabindex="1">
+            <img src="./assets/img/refusal.svg" class="card-img-top case-icon" alt="icon of a do not symbol">
+            <div class="card-body">
+              <h5 class="card-title">Refusal to answer</h5>
+              <p class="card-text">Avoids providing a response to the input and advises the user to seek professional advice instead.</p>
+            </div>
+          </div>
+
+          <div class="card template-button" onclick="getResponseFromTemplate('general-answer')" tabindex="2">
+            <img src="./assets/img/general-response.svg" class="card-img-top case-icon" alt="icon of an i in a circle above a hand">
+            <div class="card-body">
+              <h5 class="card-title">High-level answer without facts</h5>
+              <p class="card-text">Provides a response that answers the input in broad strokes, stating advice rather than facts.</p>
+            </div>
+          </div>
+
+          <div class="card template-button" onclick="getResponseFromTemplate('specific-answer')" tabindex="3">
+            <img src="./assets/img/specific-response.svg" class="card-img-top case-icon" alt="icon of a document with an i in a circle in the bottom right corner">
+            <div class="card-body">
+              <h5 class="card-title">Specific answer with facts</h5>
+              <p class="card-text">Provides a detailed response that cites specific facts relevant to the input.</p>
+            </div>
+          </div>
+
+          <div class="card template-button"  onclick="getResponseFromTemplate('follow-up')" tabindex="4">
+            <img src="./assets/img/follow-up.svg" class="card-img-top case-icon" alt="icon of an question mark in a circle">
+            <div class="card-body">
+              <h5 class="card-title">Ask a follow-up question</h5>
+              <p class="card-text">Responds with a question requesting more information.</p>
+            </div>
+          </div>
+
+
+      </div>
+
+      <div class="margin-tb-1 chat-ui-wrapper" style="display: none">
+        <div class="row">
+          <div class="col-sm-2 bot-profile-wrapper">
+            <img src="./assets/img/bot-profile.svg" alt="icon of a chat bubble with antennas on top" style="width: 80px">
+          </div>
+          <div class="col-md-10">
+            <div class="generation-area" id="templated-response"></div>
+
+          </div>
+        </div>
+      </div>
+
+      <p>Given our seed cases and AI response templates, we then facilitate a semi-structured discussion among experts on <b>key dimensions</b> that impact their decision on which AI response template(s) are appropriate. A response template is appropriate to an expert if they have no concerns with a member of the general public who provided the initial input consuming an answer generated in accordance with the template.</p>
+
+      <p>Within the semi-structured discussions, experts take turns presenting their key dimensions and how those dimensions impact their perception of response appropriateness. They receive comments and feedback from other experts. At the end of each workshop, we collect the expert dimensions, which we then use to guide the expansion of the case space from a set of seed cases to a full case repository.</p>
+
+      <p>For the domain of legal advice, we hosted 6 workshops conducted online via Zoom in August 2023 with 20 legal experts, with 3–4 legal experts per group. Our experts included lawyers and attorneys in various jurisdictions within the US and UK, and two law school students in the US.</p>
+
+      <p>Below are 3 example seed cases. Click on each to view expert dimensions and corresponding quotes from experts who participated in the workshops.</p>
+
+
+      <div class="row h-carousel-row">
+        <div id="case-select" class="col-12 h-carousel ux-selector" style="display: flex; align-items: start">
+          <div class="card case-card" onclick="fetchDimensions('mobile-game')" tabindex="0">
+            <img src="./assets/img/mobile-game.svg" class="card-img-top case-icon" alt="icon of a mobile game">
+            <div class="card-body">
+              <h5 class="card-title">Legal strategy for mobile game</h5>
+              <p class="card-text">I run a popular online mobile game company. We have millions of users all across the United States. Our mobile games are free, but have microtransactions. Additionally, we collect and sell user data (which we note in our terms of service). Finally, we run ads in our games, which also generate revenue. What should our legal strategy include, consider, or be?</p>
+            </div>
+          </div>
+          <div class="card case-card" onclick="fetchDimensions('apartment-overstay')" tabindex="1">
+            <img src="./assets/img/apartment.svg" class="card-img-top case-icon" alt="icon of an apartment">
+            <div class="card-body">
+              <h5 class="card-title">Guest overstaying in apartment</h5>
+              <p class="card-text">I let someone stay in my apartment as a favor, but now he won't leave. He doesn't have a job and is causing problems. His misbehaving daughter is here, too. When I asked him for money that he owes me, he hit me. My lease says guests can stay for 72 hours, but he's been here way longer. I want to involve a lawyer and start the process to make him leave, but I'm also considering more affordable options. What's the best thing to do?</p>
+            </div>
+          </div>
+          <div class="card case-card" onclick="fetchDimensions('bookstore-board')" tabindex="2">
+            <img src="./assets/img/bookstore.svg" class="card-img-top case-icon" alt="icon of a collection of books">
+            <div class="card-body">
+              <h5 class="card-title">Bookstore board of directors</h5>
+              <p class="card-text">I was recently invited to join a board of directors for my local bookstore. I’ve never served on a board before. What do I need to know about this service? Additionally, there are a few things that concern me. First, I enjoy patronizing a number of bookstores around the city. Second, my uncle owns one of these bookstores. Finally, I own a substantial amount of Barnes and Nobles stock. Should I have any concerns, legal or otherwise, with joining this board?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row padded-row" id="dimensions-placeholder">
+        <div class="col-12 v-cloud">
+          <p class="placeholder-text">Please select a case from the examples above to see the expert dimensions</p>
+        </div>
+      </div>
+
+      <div class="col-12 h-carousel" id="dimensions-display" style="display: flex; align-items: start">
+      </div>
+
+      <p>If you're interested in further findings with experts, please read our <a href="./assets/pubs/phase_1_blog_post.pdf">Blog Post</a> containing detailed findings from our expert workshops.</p>
+      <br>
+    </section>
+
+    <section>
+      <h4>Phase 2: Refine the Case Repository using Public Input</h4>
+      <p>
+        To grow the existing seed cases into a case repository, we extend seed cases along expert dimensions
+        to create new cases that improve clarity and coverage of the case space. While we could manually
+        author these new cases (or recruit writers to do so), extending many cases along many dimensions
+        can quickly turn into a time-consuming and laborious task. To make this process more efficient
+        and scalable, we enlist LLMs to help author new cases.
+      </p>
+
+      <p>To do so, we prompt the LLM with the initial seed case, an expert dimension, and some participants' quotes about the dimension during our workshops. The latter was provided so that the LLM can infer the levels (possible values) of a dimension. The LLM then generates a case that resembles the original seed case but with key details (as specified by the dimensions and levels) modified.</p>
+      <p>First, select a case below. You will then be asked to select an expert dimension, as well as a level of that dimension. You will see the generated case after you've selected a level.</p>
+      <div class="row h-carousel-row">
+        <div id="case-select" class="col-12 h-carousel ux-selector" style="display: flex; align-items: start">
+          <div class="card case-card" onclick="revealDimensionSelector('mobile-game')" tabindex="0">
+            <img src="./assets/img/mobile-game.svg" class="card-img-top case-icon" alt="icon of a mobile game">
+            <div class="card-body">
+              <h5 class="card-title">Legal strategy for mobile game</h5>
+              <p class="card-text">I run a popular online mobile game company. We have millions of users all across the United States. Our mobile games are free, but have microtransactions. Additionally, we collect and sell user data (which we note in our terms of service). Finally, we run ads in our games, which also generate revenue. What should our legal strategy include, consider, or be?</p>
+            </div>
+          </div>
+          <div class="card case-card" onclick="revealDimensionSelector('apartment-overstay')" tabindex="1">
+            <img src="./assets/img/apartment.svg" class="card-img-top case-icon" alt="icon of an apartment">
+            <div class="card-body">
+              <h5 class="card-title">Guest overstaying in apartment</h5>
+              <p class="card-text">I let someone stay in my apartment as a favor, but now he won't leave. He doesn't have a job and is causing problems. His misbehaving daughter is here, too. When I asked him for money that he owes me, he hit me. My lease says guests can stay for 72 hours, but he's been here way longer. I want to involve a lawyer and start the process to make him leave, but I'm also considering more affordable options. What's the best thing to do?</p>
+            </div>
+          </div>
+          <div class="card case-card" onclick="revealDimensionSelector('bookstore-board')" tabindex="2">
+            <img src="./assets/img/bookstore.svg" class="card-img-top case-icon" alt="icon of a collection of books">
+            <div class="card-body">
+              <h5 class="card-title">Bookstore board of directors</h5>
+              <p class="card-text">I was recently invited to join a board of directors for my local bookstore. I’ve never served on a board before. What do I need to know about this service? Additionally, there are a few things that concern me. First, I enjoy patronizing a number of bookstores around the city. Second, my uncle owns one of these bookstores. Finally, I own a substantial amount of Barnes and Nobles stock. Should I have any concerns, legal or otherwise, with joining this board?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+      </div>
+
+      <div class="row margin-tb-1">
+        <div class="col-md-6">
+          <select class="form-select" aria-label="Default select example" id="dimension-selector" style="display: none">
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <select class="form-select" aria-label="Default select example" id="level-selector" style="display: none">
+
+          </select>
+        </div>
+
+      </div>
+
+      <div class="margin-tb-1 chat-ui-wrapper" style="display: none">
+        <div class="row">
+          <div class="col-sm-2 bot-profile-wrapper">
+            <img src="./assets/img/bot-profile.svg" alt="icon of a chat bubble with antennas on top" style="width: 80px">
+          </div>
+          <div class="col-md-10">
+            <p class="generation-area" id="generated-case"></p>
+          </div>
+        </div>
+
+      </div>
+
+
+
+
+
+      <h5>Measuring the Quality of the Case Repository</h5>
+      <p>
+        As you may have experienced yourself, while some generated cases can be <em>clear</em> and <em>thought-provoking</em>, for the wrong combination of input case and dimension,
+        the synthetic cases might also be confusing! While we can generate synthetic cases based on any seed case, for an effective policy-making process, it is imperative that the synthetic cases provide a high level of information within the space of cases.
+        <!-- <br>
+        Since cases in the case repository eventually define the ground for a policy, we want to focus the efforts of a community on just the "useful" cases. -->
+      </p>
+      <p>
+        Defining a set of criteria is still an active area of investigation and experimentation for us. That said, we have some early visions of how we can evaluate our case repositories—we want to ensure that our set of cases:
+        <ol>
+          <li>are comprehensive, such that given a new case, we have a high likelihood of finding a relevant precedent similar to it;</li>
+          <li>are minimally ambiguous, such that individuals in the group or community can form well-reasoned arguments for their preferences without resorting to assumptions;</li>
+          <li>are close to a decision boundary (e.g., at least somewhat controversial), such that we should observe some disagreement between community members on the decision for that case.</li>
+        </ol>
+        We are also drawing inspiration from wikisurveys—surveys that allow groups to collaboratively create and refine survey questions—to allow members of a community to curate a set of cases that they collectively find useful. For example, we may use <a href="https://pol.is/home">Pol.is</a> to facilitate group deliberations on existing and new cases. As we continue to develop our strategies for case repository evaluation, we welcome any suggestions or feedback.
+      </p>
+      <br>
+    </section>
+    <section>
+      <h4>Phase 3: Setting Precedents</h4>
+      <p>
+        Just like in broader society, different people in online spaces will have different values, and as a result, they will have different preferences for what they think is an appropriate AI interaction.
+        Sometimes, these different preferences can even be irreconcilable.
+        Thus, trying to find and define a universal set of values that all groups accept for guiding AI can be exceedingly difficult.
+      </p>
+      <p>
+        Here is where we believe a strong <strong>democratic process</strong> provides a solution for reaching a consensus.
+        In democratic society, even though individuals or groups may disagree with <em>each other</em>, the legitimacy of the democratic process itself (be it deliberation or voting) means that groups still recognize the final decision to be valid, knowing that their opinions were represented.
+        Since the policy in our process is defined by grounding against accepted judgments on cases (precedents), it is important for community or populus to agree on the legitimacy of the precedent decisions of cases in the case repository.
+        Thus, our final phase focuses on ensuring that the decision of precedents involves the stakeholders that are affected by the AI tool—be it a representative slice of the general public for publicly-available models, or a specific community for a private AI.
+      </p>
+
+      <p>As initial steps towards this democratic process, we are crowdsourcing appropriateness judgements from the public on AI responses to cases in our repository generated using our response templates. Stay tuned for results from our pilot study!</p>
+
+
+
+      <!-- <div>
+        <p id="templated-response"></p>
+      </div> -->
+
+
+    </section>
+  </section>
+
+  <section>
+    <h3>Moving Forward: Applying Case Law Policies</h3>
+    <p>We presented a process for assembling case repositories, but how can we concretely apply case repositories to AI policymaking? We envision case repositories illuminating several key directions for future work.</p>
+
+    <p>We plan to investigate different techniques to directly integrate cases and case judgements as precedents. This involves 1) determining which cases to retrieve from the repository given a novel, unseen case, and 2) processing prior judgements in the retrieved cases into an actionable plan for generating a preference-aligned response. We will then test the performance of proposed approaches for performance and consistency on a wide variety of input cases and generative AI models.</p>
+
+    <p>We aim for case repositories to <em>supplement</em>, not <em>replace</em> nor <em>compete with</em> constitutional approaches to AI policymaking. Thus, it is important to think about workflows and feedback loops that combine constitutional and case-based approaches, particularly given <a href="https://arxiv.org/abs/2310.07019#"></a>recent research that shows the promising effectiveness of a combined workflow for aligning decisions of both human and AI decision-makers. Additionally, it is also worth considering how one approach may grow out of another. For example, one or more high-level principles can be instrumental in eliciting cases, or a body of precedents may be used to inform the creation of a constitution.</p>
+
+    <p>Finally, on the deliberation front, working with both case-based and constitutional approaches can allow us to empirically examine differences between the deliberation of cases compared to stated principles. Does having more concrete examples via cases allow people to more effectively weight arguments and reach an agreement more quickly? Or does it cause people to lose sight of the bigger picture? Perhaps cases can act as an intermediate step in the broader process of delegation and escalation. </p>
+  </section>
+
+  <section>
+    <h3>Learn More</h3>
+    <p>
+      If you're interested in learning more about our process, we encourage you to check out our publications linked at the top, or reach out via our email in the footer.
+    </p>
+    <p>Additionally, we are <b>actively recruiting experts in the fields of mental health and medicine for our workshops.</b> If you are an expert who would like to participate, please fill out the interest form for either <a href="https://forms.gle/kodD8nduWQxZXg3XA">mental health</a> or <a href="https://forms.gle/oshtHVTdigUYqQGk7">medicine</a>. After you submit your response, we will reach out to you directly if you are eligible to participate.</p>
+  </section>
+
+  <div class="full-width-container"><hr></div>
+
+  <section class="footer">
+    This project was part of the <a href="https://openai.com/blog/democratic-inputs-to-ai">OpenAI "Democratic Inputs to AI" program</a>.<br>
+    Contact us: sfl-case-law [at] cs [dot] washington [dot] edu
+
+  </section>
+
+</div>
+</body>
+</html>

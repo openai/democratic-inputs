@@ -1,0 +1,5 @@
+python-dotenv
+openai
+langchain
+numpy
+pandas

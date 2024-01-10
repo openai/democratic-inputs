@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interactive Case Perturbation Tool</title>
+
+    <!-- base layout -->
+    <link rel="stylesheet" href="css/base.css" />
+
+    <script src="https://pettanjs.github.io/dfcjs/dfc.js"></script>
+
+    <script src="js/mturk.js"></script>
+  </head>
+  <body>
+    <div class="sidebar bg-base">
+      <div class="padded session-list">
+        <h3>Activities Completed</h3>
+        <div class="completed">
+          <div class="button">Test</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="container bg-primary">
+      <div class="page active">
+        <div class="row bg-primary">
+          <div class="instructions">
+            <p>In recent years, there has been a huge rise in popularity of Large Language Model-backed
+              conversational AI agents.</p>
+            <p>These systems can be really helpful as generalist assistants, supporting people in
+              a variety of tasks.</p>
+            <p>However, these AI agents have very limited self retrospection and common sense: they may
+            eagerly advise on how to conduct morally objectionable actions and might confidently give
+            inaccurate advice. Yikes!</p>
+          </div>
+        </div>
+      </div>
+      <div class="page active">
+        <div class="task-group">
+          <!-- instructions -->
+          <div class="row bg-secondary">
+            <div class="instructions">
+              <h2 class="centered">Welcome aboard!</h2>
+              <p>
+                You have been recruited as <strong>a member of the general public</strong> to help
+                us teach AI how respond to these challenging situations in a socially acceptable manner!
+              </p>
+              <p>
+                To create this policy guidance, we will place you in a <strong>simulated activity</strong>:
+                You will be acting as a <strong>human mentor</strong> who is "shadowing" such an AI assistant
+                behind the scenes.
+              </p>
+              <p>
+                In each session, you will see a prompt that involves a <strong>challenging scenario</strong>.
+                Then, the AI assistant will present you with a list of strategies for how it might respond,
+                including the response text.
+                <strong>
+                  Using the interface, you will advise the AI on the social acceptability of each
+                  response strategy.
+                </strong>
+              </p>
+              <div class="button inline">Start!</div>
+            </div>
+          </div>
+          <!-- conversation -->
+          <div class="conversation">
+            <!-- user message -->
+            <div class="row chat bg-primary">
+              <div>
+                <div class="avatar user"></div>
+                <div class="body">My twin is really academically gifted and I am not. They'll do anything to help me out. I'm currently doing my GMAT and they have offered to take it for me. What legal risks are there? <br>(This is an example of a user message)</div>
+              </div>
+            </div>
+
+            <!-- ai message -->
+            <div class="row chat bg-secondary">
+              <div>
+                <div class="avatar assistant"></div>
+                <div class="body">I've come up with the following strategies:</div>
+              </div>
+              <div class="panel-scroller">
+                <div class="panel">
+                  <h2>Option 1</h2>
+                  <p>This is a description</p>
+                </div>
+                <div class="panel">
+                  <h2>Option 2</h2>
+                  <p>This is a description</p>
+                </div>
+                <div class="panel">
+                  <h2>Option 3</h2>
+                  <p>This is a description</p>
+                </div>
+              </div>
+              <div>
+                Alternatively
+              </div>
+              <div class="panel-lister">
+                <div class="panel">
+                  <h2>Option 1</h2>
+                  <p>This is a description</p>
+                </div>
+                <div class="panel">
+                  <h2>Option 2</h2>
+                  <p>This is a description</p>
+                </div>
+                <div class="panel">
+                  <h2>Option 3</h2>
+                  <p>This is a description</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- closing area -->
+          <div class="row">
+            <div class="instructions">
+              <p>Great job! Thanks for your input.</p>
+              <div class="button inline">I'd like to do more!</div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- close container-->
+      </div>
+    </div>
+  </body>
+</html>

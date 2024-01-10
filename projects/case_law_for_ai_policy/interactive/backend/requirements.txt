@@ -1,0 +1,4 @@
+python-dotenv
+flask
+flask-restful
+flask-socketio
