@@ -38,7 +38,6 @@ This repository hosts the project code for the 10 recipients of the OpenAI Democ
 - Andrew Konya
 - Lisa Schirch
 - Colin Irwin
-- Aviv Ovadya
 
 **Description**: Developing policies that reflect informed public will using collective dialogues to efficiently scale democratic deliberation and find areas of consensus.
 
