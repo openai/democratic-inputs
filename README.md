@@ -8,16 +8,16 @@ If you would like to see the teams describe their ambitions during the September
 
 ## Table of Contents
 
-- [Case Law for AI Policy](#project-1-case-law-for-ai-policy)
-- [Collective Dialogues for Democratic Policy Development](#project-2-collective-dialogues-for-democratic-policy-development)
-- [Deliberation at Scale: Socially democratic inputs to AI](#project-3-deliberation-at-scale-socially-democratic-inputs-to-ai)
-- [Democratic Fine-Tuning](#project-4-democratic-fine-tuning)
-- [Aligned: An Alignment Platform](#project-5-aligned-an-alignment-platform)
-- [Generative Social Choice](#project-6-generative-social-choice)
-- [Inclusive.AI: Engaging Underserved Populations in Democratic Decision-Making on AI](#project-7-inclusiveai-engaging-underserved-populations-in-democratic-decision-making-on-ai)
-- [Making AI Transparent and Accountable by Rappler](#project-8-making-ai-transparent-and-accountable-by-rappler)
-- [Ubuntu-AI: A Platform for Equitable and Inclusive Model Training](#project-9-ubuntu-ai-a-platform-for-equitable-and-inclusive-model-training)
-- [vTaiwan and Chatham House: Bridging the Recursive Public](#project-10-vtaiwan-and-chatham-house-bridging-the-recursive-public)
+- [Case Law for AI Policy](#case-law-for-ai-policy)
+- [Collective Dialogues for Democratic Policy Development](#collective-dialogues-for-democratic-policy-development)
+- [Deliberation at Scale: Socially democratic inputs to AI](#deliberation-at-scale-socially-democratic-inputs-to-ai)
+- [Democratic Fine-Tuning](#democratic-fine-tuning)
+- [Aligned: An Alignment Platform](#aligned-an-alignment-platform)
+- [Generative Social Choice](#generative-social-choice)
+- [Inclusive.AI: Engaging Underserved Populations in Democratic Decision-Making on AI](#inclusiveai-engaging-underserved-populations-in-democratic-decision-making-on-ai)
+- [Making AI Transparent and Accountable by Rappler](#making-ai-transparent-and-accountable-by-rappler)
+- [Ubuntu-AI: A Platform for Equitable and Inclusive Model Training](#ubuntu-ai-a-platform-for-equitable-and-inclusive-model-training)
+- [vTaiwan and Chatham House: Bridging the Recursive Public](#vtaiwan-and-chatham-house-bridging-the-recursive-public)
 
 ---
 
