@@ -21,7 +21,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 1: [Case Law for AI Policy](https://github.com/openai/democratic-inputs/tree/main/projects/case_law_for_ai_policy)
+## [Case Law for AI Policy](https://github.com/openai/democratic-inputs/tree/main/projects/case_law_for_ai_policy)
 
 **Description**: Creating a robust case repository around AI interaction scenarios that can be used to make case-law-inspired judgments through a process that democratically engages experts, laypeople, and key stakeholders.
 
@@ -37,7 +37,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 2: [Collective Dialogues for Democratic Policy Development](https://github.com/openai/democratic-inputs/tree/main/projects/collective_dialogues_for_democratic_input)
+## [Collective Dialogues for Democratic Policy Development](https://github.com/openai/democratic-inputs/tree/main/projects/collective_dialogues_for_democratic_input)
 
 **Description**: Developing policies that reflect informed public will using collective dialogues to efficiently scale democratic deliberation and find areas of consensus.
 
@@ -51,7 +51,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 3: [Deliberation at Scale: Socially democratic inputs to AI](https://github.com/openai/democratic-inputs/tree/main/projects/deliberation_at_scale)
+## [Deliberation at Scale: Socially democratic inputs to AI](https://github.com/openai/democratic-inputs/tree/main/projects/deliberation_at_scale)
 
 **Description**: Enabling democratic deliberation in small group conversations conducted via AI-facilitated video calls.
 
@@ -74,7 +74,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 4: [Democratic Fine-Tuning](https://github.com/openai/democratic-inputs/tree/main/projects/democratic_fine_tuning)
+## [Democratic Fine-Tuning](https://github.com/openai/democratic-inputs/tree/main/projects/democratic_fine_tuning)
 
 **Description**: Eliciting values from participants in a chat dialogue in order to create a moral graph of values that can be used to fine-tune models.
 
@@ -88,7 +88,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 5: [Aligned: An Alignment Platform](https://github.com/openai/democratic-inputs/tree/main/projects/Aligned-Platform-EnergizeAI)
+## [Aligned: An Alignment Platform](https://github.com/openai/democratic-inputs/tree/main/projects/Aligned-Platform-EnergizeAI)
 
 **Description**: Developing guidelines for aligning AI models with live, large-scale participation and a 'community notes' algorithm.
 
@@ -102,7 +102,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 6: [Generative Social Choice](https://github.com/openai/democratic-inputs/tree/main/projects/generative_social_choice)
+## [Generative Social Choice](https://github.com/openai/democratic-inputs/tree/main/projects/generative_social_choice)
 
 **Description**: Distilling a large number of free-text opinions into a concise slate that guarantees fair representation using mathematical arguments from social choice theory.
 
@@ -119,7 +119,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 7: [Inclusive.AI: Engaging Underserved Populations in Democratic Decision-Making on AI](https://github.com/openai/democratic-inputs/tree/main/projects/inclusive_ai_a_chatgpt_plugin_and_dao_to_engage_marginalized_groups_in_ai)
+## [Inclusive.AI: Engaging Underserved Populations in Democratic Decision-Making on AI](https://github.com/openai/democratic-inputs/tree/main/projects/inclusive_ai_a_chatgpt_plugin_and_dao_to_engage_marginalized_groups_in_ai)
 
 **Description**: Facilitating decision-making processes related to AI using a platform with decentralized governance (e.g., DAO) mechanisms that empower underserved groups.
 
@@ -136,7 +136,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 8: [Making AI Transparent and Accountable by Rappler](https://github.com/openai/democratic-inputs/tree/main/projects/making_ai_transparent_and_accountable)
+## [Making AI Transparent and Accountable by Rappler](https://github.com/openai/democratic-inputs/tree/main/projects/making_ai_transparent_and_accountable)
 
 **Description**: Enabling discussion and understanding of participants' views on complex, polarizing topics via linked offline and online processes.
 
@@ -152,7 +152,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 9: [Ubuntu-AI: A Platform for Equitable and Inclusive Model Training](https://github.com/openai/democratic-inputs/tree/main/projects/Ubuntu_AI_a_platform_for_equitable_and_inclusive_model_training)
+## [Ubuntu-AI: A Platform for Equitable and Inclusive Model Training](https://github.com/openai/democratic-inputs/tree/main/projects/Ubuntu_AI_a_platform_for_equitable_and_inclusive_model_training)
 
 **Description**: Returning value to those who help create it while facilitating LLM development and ensuring more inclusive knowledge of African creative work.
 
@@ -168,7 +168,7 @@ If you would like to see the teams describe their ambitions during the September
 
 ---
 
-## Project 10: [vTaiwan and Chatham House: Bridging the Recursive Public](https://github.com/openai/democratic-inputs/tree/main/projects/vtaiwan_and_chatham_house_bridging_the_recursive_public)
+## [vTaiwan and Chatham House: Bridging the Recursive Public](https://github.com/openai/democratic-inputs/tree/main/projects/vtaiwan_and_chatham_house_bridging_the_recursive_public)
 **Description**: Using an adapted vTaiwan methodology to create a recursive, connected participatory process for AI.
 
 **LINKS**: [Report](https://vtaiwan-openai-2023.vercel.app/Report_%20Recursive%20Public.pdf); [Contact](https://www.recursivepublic.com/)
