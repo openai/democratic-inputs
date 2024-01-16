@@ -171,7 +171,7 @@ If you would like to see the teams describe their ambitions during the September
 ## [vTaiwan and Chatham House: Bridging the Recursive Public](https://github.com/openai/democratic-inputs/tree/main/projects/vtaiwan_and_chatham_house_bridging_the_recursive_public)
 **Description**: Using an adapted vTaiwan methodology to create a recursive, connected participatory process for AI.
 
-**LINKS**: [Report](https://vtaiwan-openai-2023.vercel.app/Report_%20Recursive%20Public.pdf); [Contact](https://www.recursivepublic.com/)
+**LINKS**: [Report](https://vtaiwan-openai-2023.vercel.app/Report_%20Recursive%20Public.pdf); [Website](https://www.recursivepublic.com/); [Contact](mailto:akrasodomski@chathamhouse.org)
 
 **Team members**:
 - Alex Krasodomski-Jones
