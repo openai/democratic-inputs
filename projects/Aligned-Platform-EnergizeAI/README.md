@@ -16,7 +16,7 @@ A special thanks to [X Community Notes](https://communitynotes.twitter.com/guide
 
 ## Components
 
-1. Platform Fronteend (/app): Collect public inputs via Energize Engine
+1. Platform Frontend (/app): Collect public inputs via Energize Engine
 2. Consensus Algorithm (/aggregation): X Community Notes-inspired bridging algorithm for identifying consensus
 3. Taxonomy Builder Module (/taxonomybuilder): Refine a constitutional taxonomy
 
